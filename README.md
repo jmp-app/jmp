@@ -1,1 +1,1 @@
-# jmp-web-client
+# jmp
