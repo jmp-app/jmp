@@ -1,10 +1,28 @@
 # jmp
 
-## Docker
+## Gettings Started
+
+### Pre-requisites
+
+Make sure that you have docker and composer installed on your machine.
+
+### Installation
+
+#### Frontend
+
+#### Backend
+
+Everything related to the backend is located in [api](api). The backend uses the **[Slim Framework](https://www.slimframework.com/)**.
+> Install Dependencies
+```bash
+composer install -d api
+```
+
+### Docker
 
 You can use docker-compose to start PHP, MariaDB and Nginx:
 
-```
+```bash
 docker-compose up -d
 ```
 
