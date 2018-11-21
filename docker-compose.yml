@@ -1,0 +1,55 @@
+version: '3'
+
+volumes:
+  dbdata:
+    driver: local
+
+services:
+  
+  # PHP
+  app:
+    build:
+      context: ./api/
+      dockerfile: docker/app/Dockerfile
+    image: php:7.2-fpm
+    container_name: app
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./api/:/var/www
+
+  # Nginx
+  webserver:
+    image: nginx:alpine
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/log/nginx/:/var/log/nginx/
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+
+  # MariaDB
+  db:
+    image: mariadb:10.3
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: jmp
+      MYSQL_ROOT_PASSWORD: jmp_docker_local
+      MYSQL_USER: jmp_user
+      MYSQL_PASSWORD: pass4dev
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./docker/db/setup.sql:/docker-entrypoint-initdb.d/setup.sql
