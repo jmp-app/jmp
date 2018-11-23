@@ -8,9 +8,9 @@ services:
   
   # PHP
   app:
-    build:
-      context: ./api/
-      dockerfile: docker/app/Dockerfile
+    # build:
+    #   context: ./api/
+    #   dockerfile: docker/app/Dockerfile
     image: php:7.2-fpm
     container_name: app
     restart: unless-stopped
