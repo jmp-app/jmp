@@ -34,6 +34,7 @@ services:
     volumes:
       - ./docker/log/nginx/:/var/log/nginx/
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./vue/dist/:/var/www/public
 
   # MariaDB
   db:
