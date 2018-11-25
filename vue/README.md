@@ -15,7 +15,14 @@ npm run serve
 npm run build
 ```
 
+### Compiles for production and automatically rebuilds on changes
+
+```
+npm run watch
+```
+
 ### Run your tests
+
 ```
 npm run test
 ```

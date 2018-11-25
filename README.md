@@ -4,11 +4,19 @@
 
 ### Pre-requisites
 
-Make sure that you have docker and composer installed on your machine.
+Make sure that you have docker, npm and composer installed on your machine.
 
 ### Installation
 
 #### Frontend
+
+Everything related to the frontend is located in [vue](vue). The frontend uses **[Vue.js](https://vuejs.org/)**.
+
+> Install Dependencies
+
+```bash
+npm install --prefix ./vue
+```
 
 #### Backend
 
