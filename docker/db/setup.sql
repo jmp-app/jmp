@@ -16,9 +16,10 @@ USE `jmp` ;
 DROP TABLE IF EXISTS `jmp`.`event_type` ;
 
 CREATE TABLE IF NOT EXISTS `jmp`.`event_type` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(50) NOT NULL,
   `color` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`title`))
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
