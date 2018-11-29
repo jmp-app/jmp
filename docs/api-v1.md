@@ -480,6 +480,16 @@ Example request data:
 
 Returns: the [Registration State](#Registration State)
 
+### List Registration States
+
+```http
+GET /v1/registration-state/
+```
+
+Parameters: none
+
+Returns: List of all event types
+
 ### Get Registration State
 
 ```http
@@ -498,4 +508,4 @@ DELETE /v1/registration_state/{id}
 
 Parameters: none
 
-___TODO:___ Registration, Presence and User Meta; Errors
+___TODO:___ Registration, Presence and User Meta; Errors; Authentication
