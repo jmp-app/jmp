@@ -16,13 +16,19 @@
                     Login
                 </router-link>
             </ul>
+            <div class="my-2 my-lg-0">
+                <LocalChanger class="nav-item dropdown"/>
+            </div>
         </div>
     </nav>
 </template>
 
 <script>
+    import LocalChanger from '@/components/local-changer';
+
     export default {
-        name: 'Navigation'
+        name: 'Navigation',
+        components: {LocalChanger}
     };
 </script>
 
