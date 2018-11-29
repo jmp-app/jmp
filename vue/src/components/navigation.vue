@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-colored">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-colored" v-if="show()">
         <button aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation"
                 class="navbar-toggler"
                 data-target="#navbarToggler" data-toggle="collapse" type="button">
@@ -11,9 +11,6 @@
                 </router-link>
                 <router-link class="nav-item nav-link" to="/about" v-bind:class="{active: $route.name === 'about'}">
                     About
-                </router-link>
-                <router-link class="nav-item nav-link" to="/login" v-bind:class="{active: $route.name === 'login'}">
-                    Login
                 </router-link>
             </ul>
             <div class="my-2 my-lg-0">
@@ -28,7 +25,12 @@
 
     export default {
         name: 'Navigation',
-        components: {LocalChanger}
+        components: {LocalChanger},
+        methods: {
+            show() {
+                return this.$route.name !== 'login';
+            }
+        }
     };
 </script>
 

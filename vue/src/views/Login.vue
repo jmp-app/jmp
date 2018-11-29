@@ -1,27 +1,37 @@
 <template>
     <div>
-        <h1>Login</h1>
-        <form>
+        <div class="text-center">
+            <img alt="Logo" class="img-fluid" src="../assets/jmp.svg" style="width: 30%;">
+        </div>
+        <div class="row">
+            <h1 class="col-sm-11">{{ $t("login") }}</h1>
+            <LocalChanger class="col-sm-1"/>
+        </div>
+        <form method="post">
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="username">Benutzername</label>
+                <label class="col-sm-3 col-form-label" for="username">{{ $t("user.username") }}</label>
                 <div class="col-sm-9">
-                    <input class="form-control" id="username" placeholder="Benutzername eingeben" type="text">
+                    <input class="form-control" id="username" type="text" v-bind:placeholder="$t('user.username')">
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="password">Passwort</label>
+                <label class="col-sm-3 col-form-label" for="password">{{ $t("user.password") }}</label>
                 <div class="col-sm-9">
-                    <input class="form-control" id="password" placeholder="Passwort eingeben" type="password">
+                    <input class="form-control" id="password" type="password"
+                           v-bind:placeholder="$t('user.password')">
                 </div>
             </div>
-            <button class="btn btn-primary" type="submit">Anmelden</button>
+            <button class="btn btn-primary" type="submit">{{ $t("login") }}</button>
         </form>
     </div>
 </template>
 
 <script>
+    import LocalChanger from '@/components/local-changer';
+
     export default {
-        name: 'Login'
+        name: 'Login',
+        components: {LocalChanger}
     };
 </script>
 

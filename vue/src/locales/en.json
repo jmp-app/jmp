@@ -1,3 +1,5 @@
 {
-  "message": "hello i18n !!"
+  "user.username": "Username",
+  "user.password": "Password",
+  "login": "Login"
 }
