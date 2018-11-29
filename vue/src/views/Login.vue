@@ -7,22 +7,20 @@
             <h1 class="col-sm-11">{{ $t("login") }}</h1>
             <LocalChanger class="col-sm-1"/>
         </div>
-        <form method="post">
-            <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="username">{{ $t("user.username") }}</label>
-                <div class="col-sm-9">
-                    <input class="form-control" id="username" type="text" v-bind:placeholder="$t('user.username')">
-                </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for="username">{{ $t("user.username") }}</label>
+            <div class="col-sm-9">
+                <input class="form-control" id="username" type="text" v-bind:placeholder="$t('user.username')">
             </div>
-            <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="password">{{ $t("user.password") }}</label>
-                <div class="col-sm-9">
-                    <input class="form-control" id="password" type="password"
-                           v-bind:placeholder="$t('user.password')">
-                </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for="password">{{ $t("user.password") }}</label>
+            <div class="col-sm-9">
+                <input class="form-control" id="password" type="password"
+                       v-bind:placeholder="$t('user.password')">
             </div>
-            <button class="btn btn-primary" type="submit">{{ $t("login") }}</button>
-        </form>
+        </div>
+        <button class="btn btn-primary" type="submit">{{ $t("login") }}</button>
     </div>
 </template>
 
