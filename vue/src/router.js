@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './views/Home.vue';
+import EventOverview from './views/event/Overview.vue';
 
 Vue.use(Router);
 
@@ -10,8 +10,15 @@ export default new Router({
     routes: [
         {
             path: '/',
+            name: 'eventOverview',
+            component: EventOverview
+        },
+        {
+            path: '/home',
             name: 'home',
-            component: Home
+            component: function () {
+                return import('./views/Home.vue');
+            }
         },
         {
             path: '/about',
@@ -21,13 +28,6 @@ export default new Router({
             // which is lazy-loaded when the route is visited.
             component: function () {
                 return import(/* webpackChunkName: "about" */ './views/About.vue');
-            }
-        },
-        {
-            path: '/login',
-            name: 'login',
-            component: function () {
-                return import('./views/Login.vue');
             }
         }
     ]

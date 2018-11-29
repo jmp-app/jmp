@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-colored" v-if="show()">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-colored mb-3" v-if="show()">
         <button aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation"
                 class="navbar-toggler"
                 data-target="#navbarToggler" data-toggle="collapse" type="button">
@@ -7,7 +7,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarToggler">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <router-link class="nav-item nav-link" to="/" v-bind:class="{active: $route.name === 'home'}">Home
+                <router-link class="nav-item nav-link" to="/" v-bind:class="{active: $route.name === 'eventOverview'}">
+                    Overview
+                </router-link>
+                <router-link class="nav-item nav-link" to="/home" v-bind:class="{active: $route.name === 'home'}">
+                    Home
                 </router-link>
                 <router-link class="nav-item nav-link" to="/about" v-bind:class="{active: $route.name === 'about'}">
                     About
