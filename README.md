@@ -1,4 +1,4 @@
-# jmp
+# ![JMP](logo.png)
 
 ## Gettings Started
 
