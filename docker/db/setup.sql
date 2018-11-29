@@ -1,7 +1,7 @@
 -- -----------------------------------------------------
 -- Schema jmp
 -- -----------------------------------------------------
-DROP SCHEMA `jmp`;
+DROP SCHEMA IF EXISTS `jmp`;
 
 CREATE SCHEMA IF NOT EXISTS `jmp` DEFAULT CHARACTER SET utf8 ;
 USE `jmp` ;
