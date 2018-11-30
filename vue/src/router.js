@@ -14,20 +14,27 @@ export default new Router({
             component: EventOverview
         },
         {
-            path: '/home',
+            path: '/sample-home',
             name: 'home',
             component: function () {
                 return import('./views/Home.vue');
             }
         },
         {
-            path: '/about',
+            path: '/sample-about',
             name: 'about',
             // route level code-splitting
             // this generates a separate chunk (about.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
             component: function () {
                 return import(/* webpackChunkName: "about" */ './views/About.vue');
+            }
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: function () {
+                return import('./views/Login.vue');
             }
         }
     ]

@@ -10,10 +10,12 @@
                 <router-link class="nav-item nav-link" to="/" v-bind:class="{active: $route.name === 'eventOverview'}">
                     Overview
                 </router-link>
-                <router-link class="nav-item nav-link" to="/home" v-bind:class="{active: $route.name === 'home'}">
+                <router-link class="nav-item nav-link" to="/sample-home"
+                             v-bind:class="{active: $route.name === 'home'}">
                     Home
                 </router-link>
-                <router-link class="nav-item nav-link" to="/about" v-bind:class="{active: $route.name === 'about'}">
+                <router-link class="nav-item nav-link" to="/sample-about"
+                             v-bind:class="{active: $route.name === 'about'}">
                     About
                 </router-link>
             </ul>
