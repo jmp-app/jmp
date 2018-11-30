@@ -1,6 +1,6 @@
 # Database documentation
 
-![Database_model](docs/database_model.png)
+![Database_model](database_model.png)
 
 ## Registration
 In the table "registration" the information is stored, which feedback the users have given to an event before it has started.
