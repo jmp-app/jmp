@@ -13,25 +13,27 @@ use Interop\Container\ContainerInterface;
  */
 class LoginController
 {
-    protected $container;
+    protected $db;
 
     // constructor receives container instance
     public function __construct(ContainerInterface $container)
     {
-        $this->container = $container;
+        //$this->db = $container->get('database');
     }
 
     public function login($request, $response, $args)
     {
-        // your code
-        // to access items in the container... $this->container->get('');
-        return $response->withJson(['username' => 'dominik']);
+        //$db = $this->container->get('database');
+
+        if ($request->getAttribute('has_errors')) {
+            $errors = $request->getAttribute('errors');
+            return $response->withJson($errors);
+        }
+
+        $body = $request->getParsedBody();
+
+
+        return $response->withJson($body);
     }
 
-    public function contact($request, $response, $args)
-    {
-        // your code
-        // to access items in the container... $this->container->get('');
-        return $response->withJson(['username' => 'dominik']);
-    }
 }
