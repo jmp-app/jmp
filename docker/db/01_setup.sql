@@ -186,7 +186,6 @@ CREATE TABLE IF NOT EXISTS `jmp`.`presence` (
   `user_id` INT(11) NOT NULL,
   `revisor_id` INT(11) NOT NULL,
   `has_attended` TINYINT NOT NULL,
-  `registration_state_id` INT(11) NOT NULL,
   PRIMARY KEY (`event_id`, `user_id`, `revisor_id`),
   CONSTRAINT `presence_actually_ibfk_1`
     FOREIGN KEY (`event_id`)
@@ -196,12 +195,7 @@ CREATE TABLE IF NOT EXISTS `jmp`.`presence` (
     REFERENCES `jmp`.`user` (`id`),
   CONSTRAINT `presence_actually_ibfk_3`
     FOREIGN KEY (`revisor_id`)
-    REFERENCES `jmp`.`user` (`id`),
-  CONSTRAINT `fk_presence_registration_state1`
-    FOREIGN KEY (`registration_state_id`)
-    REFERENCES `jmp`.`registration_state` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `jmp`.`user` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
