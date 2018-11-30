@@ -25,6 +25,7 @@ class Auth
     {
         //$this->db = $container->get('database');
         $this->appConfig = $container->get('settings')['jwt'];
+        $this->db = $container->get('database');
     }
 
     public function generateToken(array $user)
@@ -49,11 +50,23 @@ class Auth
 
     public function attempt($username, $password)
     {
+        $stmt = $this->db->prepare("Select * from user where username = :username");
+        $stmt->bindParam(':username', $username);
+
+        $stmt->execute();
+
+        $data = $stmt->fetch();
+
+        if (sizeof($data) === 0) {
+            return false;
+        }
+
+        return password_verify($password, $data['passwort']);
+
         // TODO: select user where username = username
         // TODO: hash given password
         // TODO: password_verify
         // TODO: return user when true else false
-        return true;
     }
 
     public function requestUser(Request $request)

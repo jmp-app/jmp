@@ -7,7 +7,7 @@ return [
         // Database settings
         'database' => [
             'engine' => 'mysql',
-            'host' => 'localhost',
+            'host' => 'db', // name of the docker container running the database
             'database' => 'jmp',
             'username' => 'jmp_user',
             'password' => 'pass4dev',
