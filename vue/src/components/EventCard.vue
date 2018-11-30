@@ -5,9 +5,8 @@
         </div>
         <div class="card-body">
             <p class="card-text">
-                Bla
-                Bla
-                Bla
+                {{getDateTime()}} <br>
+                {{event.location}}
             </p>
         </div>
     </div>
@@ -15,6 +14,7 @@
 
 <script>
     import fontColorContrast from 'font-color-contrast';
+    import dateFormat from 'dateformat';
 
     export default {
         name: 'EventCard',
@@ -24,6 +24,19 @@
         methods: {
             getColor: function () {
                 return fontColorContrast(this.event.color);
+            },
+            getDateTime: function () {
+                const from = this.event.from;
+                const to = this.event.to;
+                let string = '';
+                if (dateFormat(from, 'shortDate') === dateFormat(to, 'shortDate')) {
+                    string = dateFormat(this.event.from, 'dd.mm.yyyy hh:MM "- "');
+                    string += dateFormat(this.event.to, 'hh:MM "Uhr"');
+                    return string;
+                }
+                string = dateFormat(this.event.from, 'dd.mm.yyyy hh:MM "Uhr - "');
+                string += dateFormat(this.event.to, 'dd.mm.yyyy hh:MM "Uhr"');
+                return string;
             }
         }
     };
