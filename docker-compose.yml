@@ -53,4 +53,4 @@ services:
       SERVICE_NAME: mysql
     volumes:
       - dbdata:/var/lib/mysql/
-      - ./docker/db/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+      - ./docker/db/:/docker-entrypoint-initdb.d/
