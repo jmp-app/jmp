@@ -10,9 +10,11 @@
     "username": "jake",
     "lastname": "Smith",
     "firstname": "Jacob",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
     "email": "jake@example.com"
 }
 ```
+**Note:** token is a jwt token used for authorization. See more: https://jwt.io/
 
 ### Group
 
