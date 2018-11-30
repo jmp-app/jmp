@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <form @submit.prevent="handleSubmit">
         <div class="text-center">
             <img alt="Logo" class="img-fluid" src="../assets/jmp.svg" style="width: 30%;">
         </div>
@@ -10,18 +10,19 @@
         <div class="form-group row">
             <label class="col-sm-3 col-form-label" for="username">{{ $t("user.username") }}</label>
             <div class="col-sm-9">
-                <input class="form-control" id="username" type="text" v-bind:placeholder="$t('user.username')">
+                <input class="form-control" id="username" type="text" v-bind:placeholder="$t('user.username')"
+                       v-model="username">
             </div>
         </div>
         <div class="form-group row">
             <label class="col-sm-3 col-form-label" for="password">{{ $t("user.password") }}</label>
             <div class="col-sm-9">
-                <input class="form-control" id="password" type="password"
+                <input class="form-control" id="password" type="password" v-model="password"
                        v-bind:placeholder="$t('user.password')">
             </div>
         </div>
-        <button class="btn btn-primary" type="submit">{{ $t("login") }}</button>
-    </div>
+        <button :disabled="loggingIn" class="btn btn-primary">{{ $t("login") }}</button>
+    </form>
 </template>
 
 <script>
@@ -29,7 +30,33 @@
 
     export default {
         name: 'Login',
-        components: {LocalChanger}
+        components: {LocalChanger},
+        data() {
+            return {
+                username: '',
+                password: '',
+                submited: false
+            };
+        },
+        computed: {
+            loggingIn() {
+                return this.$store.state.authentication.status.loggingIn;
+            }
+        },
+        created() {
+            // reset login status
+            this.$store.dispatch('authentication/logout');
+        },
+        methods: {
+            handleSubmit(e) {
+                this.submited = true;
+                const {username, password} = this;
+                const {dispatch} = this.$store;
+                if (username && password) {
+                    dispatch('authentication/login', {username, password});
+                }
+            }
+        }
     };
 </script>
 
