@@ -1,7 +1,7 @@
 <template>
-    <div class="card mb-3">
+    <div :style="{ backgroundColor: event.color, color: getColor() }" class="card mb-3">
         <div class="card-header">
-            <h5>Title</h5>
+            <h5>{{event.title}}</h5>
         </div>
         <div class="card-body">
             <p class="card-text">
@@ -14,8 +14,18 @@
 </template>
 
 <script>
+    import fontColorContrast from 'font-color-contrast';
+
     export default {
-        name: 'EventCard'
+        name: 'EventCard',
+        props: {
+            event: {}
+        },
+        methods: {
+            getColor: function () {
+                return fontColorContrast(this.event.color);
+            }
+        }
     };
 </script>
 
