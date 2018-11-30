@@ -1,10 +1,11 @@
 {
-    "require": {
-        "slim/slim": "^3.11"
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "src/App"
-        }
+  "require": {
+    "slim/slim": "^3.11",
+    "ext-pdo": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "JMP\\": "src/JMP"
     }
+  }
 }
