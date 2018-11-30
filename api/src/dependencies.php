@@ -3,9 +3,9 @@
 $container = $app->getContainer();
 
 $container['database'] = function ($c) {
-    $settings = $c->get('database');
+    $config = $c->get('settings')['database'];
 
-    $dsn = "${settings['driver']}:host=${settings['host']};dbname=${settings['database']};charset=${settings['charset']}";
+    $dsn = "{$config['engine']}:host={$config['host']};dbname={$config['database']};charset={$config['charset']}";;
 
-    return new PDO($dsn, $settings['username'], $settings['password'], $settings['options']);
+    return new PDO($dsn, $config['username'], $config['password'], $config['options']);
 };
