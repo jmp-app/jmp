@@ -18,6 +18,8 @@ services:
       SERVICE_NAME: app
       SERVICE_TAGS: dev
     working_dir: /var/www
+    volumes:
+      - ./api/:/var/www
 
   # Nginx
   webserver:
