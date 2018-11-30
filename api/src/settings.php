@@ -21,10 +21,17 @@ return [
             ]
         ],
         'validation' => [
-            'user' => [
+            'login' => [
                 'username' => v::notEmpty()->noWhitespace()->contains('.')->length(1, 101),
                 'password' => v::notEmpty()->length(6, 255),
             ]
-        ]
+        ],
+        'jwt' => [
+            'secret' => 'secret',
+            'secure' => false,
+            "header" => "Authorization",
+            "regexp" => "/Token\s+(.*)$/i",
+            'passthrough' => ['OPTIONS']
+        ],
     ]
 ];

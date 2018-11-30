@@ -1,7 +1,10 @@
 {
   "require": {
     "slim/slim": "^3.11",
-    "davidepastore/slim-validation": "^0.5.1"
+    "davidepastore/slim-validation": "^0.5.1",
+    "ext-pdo": "*",
+    "odan/slim-session": "^1.0",
+    "tuupola/slim-jwt-auth": "^3.1"
   },
   "autoload": {
     "psr-4": {
