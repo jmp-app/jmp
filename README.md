@@ -1,4 +1,4 @@
-# jmp
+# ![JMP](logo.png)
 
 ## Gettings Started
 
@@ -35,6 +35,12 @@ docker-compose up -d
 ```
 
 The frontend will be served under `localhost/` and the backend under `localhost/api/`.
+
+## Authors
+
+- Simon Friedli - [@Simai00](https://github.com/Simai00)
+- Dominik Strässle - [@dominikstraessle](https://github.com/dominikstraessle)
+- Kay Mattern - [@mtte](https://github.com/mtte)
 
 ## License
 
