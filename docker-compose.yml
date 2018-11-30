@@ -8,10 +8,9 @@ services:
   
   # PHP
   app:
-    # build:
-    #   context: ./api/
-    #   dockerfile: docker/app/Dockerfile
-    image: php:7.2-fpm
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
     container_name: app
     restart: unless-stopped
     tty: true
@@ -19,8 +18,6 @@ services:
       SERVICE_NAME: app
       SERVICE_TAGS: dev
     working_dir: /var/www
-    volumes:
-      - ./api/:/var/www
 
   # Nginx
   webserver:
