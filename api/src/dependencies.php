@@ -26,11 +26,28 @@ $container['session'] = function ($container) {
 
 $container['jwt'] = function ($c) {
 
-    $jws_settings = $c->get('settings')['jwt'];
 
-    return new JwtAuthentication($jws_settings);
+    //TODO: add logger to middleware
+    $jwt_settings = $c->get('settings')['jwt'];
+    //TODO: authorization here?
+//    $jwt_settings['callback'] = function (\Slim\Http\Request $request, \Slim\Http\Response $response, array $args) use ($c) {
+    $auth = $c['auth'];
+//        return false;
+//    };
+
+    return new JwtAuthentication($jwt_settings);
 };
 
 $container['auth'] = function ($container) {
     return new \JMP\Services\Auth($container);
+};
+
+// monolog
+$container['logger'] = function ($c) {
+    $settings = $c->get('settings')['logger'];
+    $logger = new Monolog\Logger($settings['name']);
+    $logger->pushProcessor(new Monolog\Processor\UidProcessor());
+    $logger->pushHandler(new Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
+
+    return $logger;
 };

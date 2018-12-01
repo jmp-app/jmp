@@ -2,10 +2,11 @@
 
 use Respect\Validation\Validator as v;
 
+//TODO: add .env support
 return [
     'settings' => [
         // Database settings
-        'database' => [
+        'database' => [ //TODO: .env
             'engine' => 'mysql',
             'host' => 'db', // name of the docker container running the database
             'database' => 'jmp',
@@ -27,11 +28,18 @@ return [
             ]
         ],
         'jwt' => [
-            'secret' => 'secret',
-            'secure' => false,
-            "header" => "Authorization",
-            "regexp" => "/Token\s+(.*)$/i",
-            'passthrough' => ['OPTIONS']
+            //TODO: save as cookie?
+            'secret' => 'secret',//TODO: .env
+            'secure' => false, //TODO: secure
+//            "header" => "Authorization",
+//            "regexp" => "/Token\s+(.*)$/i", //TODO: required?
+//            'passthrough' => ['OPTIONS'] //TODO: required?
+        ],
+        // Monolog settings
+        'logger' => [
+            'name' => 'JMP', //TODO: .env
+            'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log', //TODO: docker logging?
+            'level' => \Monolog\Logger::DEBUG, //TODO: .env
         ],
     ]
 ];
