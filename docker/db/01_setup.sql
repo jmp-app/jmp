@@ -116,13 +116,14 @@ CREATE TABLE IF NOT EXISTS `jmp`.`user` (
   `lastname` VARCHAR(50) NOT NULL,
   `firstname` VARCHAR(50) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-  `token` TEXT null ,
+  `token` TEXT,
   `password` VARCHAR(255) NOT NULL,
   `password_change` TINYINT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 160
 DEFAULT CHARACTER SET = utf8;
+
 
 -- -----------------------------------------------------
 -- Table `jmp`.`membership`
