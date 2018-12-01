@@ -28,6 +28,11 @@ composer install -d api
 
 ### Docker
 
+Use the following command to start the environment for the first time:
+```bash
+docker-compose up -d --build
+```
+
 You can use docker-compose to start PHP, MariaDB and Nginx:
 
 ```bash
