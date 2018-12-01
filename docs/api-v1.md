@@ -62,6 +62,35 @@
 }
 ```
 
+## Error Handling
+
+### HTTP Status Codes
+
+The following errors may occur:
+
+| Status Code | Name               | Description                                           |
+| ----------- | ------------------ | ----------------------------------------------------- |
+| 400         | Bad request        | The request                                           |
+| 401         | Unauthorized       | Request requires authentication but it isn't provided |
+| 403         | Forbidden          | The user has no rights to access the requested URI    |
+| 404         | Resource Not Found | The requested resource can't be found                 |
+
+### JSON Error Objects
+
+Further details to the errors are provided as JSON Objects:
+
+```json
+{
+    "errors": {
+        "authentication": "authentication required"
+    }
+}
+```
+
+## Authentication
+
+> __TODO__: Describe how to authenticate
+
 ## Endpoints
 
 ### Authentication
@@ -233,14 +262,18 @@ GET /v1/events/
 
 Parameters:
 
-| Field     | Description                    | Required |
-| --------- | ------------------------------ | -------- |
-| group     | To get all events by the group | ❌        |
-| eventType | To get all events by type      | ❌        |
+| Field     | Description                          | Required |
+| --------- | ------------------------------------ | -------- |
+| group     | To get all events by the group       | ❌        |
+| eventType | To get all events by type            | ❌        |
+| limit     | Limit the amount of events retrieved | ❌        |
+| offset    | Skip the fist _x_ events             | ❌        |
 
-___TODO___: Example
+```http
+GET /v1/events?limit=5&offset=10?eventType=1
+```
 
-Returns: List of queried events
+Returns: List of queried events, sorted __descending__ by their __start date__.
 
 ### Get Event
 
@@ -495,7 +528,7 @@ Returns: List of all event types
 ### Get Registration State
 
 ```http
-GET /v1/registration_state/{id}
+GET /v1/registration-state/{id}
 ```
 
 Parameters: none
@@ -505,9 +538,9 @@ Returns: the [Registration State](#Registration State)
 ### Delete Registration State
 
 ```http
-DELETE /v1/registration_state/{id}
+DELETE /v1/registration-state/{id}
 ```
 
 Parameters: none
 
-___TODO:___ Registration, Presence and User Meta; Errors; Authentication
+___TODO:___ Registration, Presence and User Meta
