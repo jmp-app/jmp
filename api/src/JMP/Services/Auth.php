@@ -26,7 +26,7 @@ class Auth
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->appConfig = $container->get('settings')['jwt'];
+        $this->appConfig = $container->get('settings');
         $this->db = $container->get('database');
         $this->logger = $container->get('logger');
     }
@@ -39,15 +39,14 @@ class Auth
     public function generateToken(array $user)
     {
         $now = new DateTime();
-        $future = new DateTime("now +2 hours");//TODO: expiration of token?
+        $future = new DateTime("now +2 hours");
 
         $payload = [
             "iat" => $now->getTimeStamp(),
             "exp" => $future->getTimeStamp(),
             "jti" => base64_encode(random_bytes(16)),
-            'iss' => 'change_it',  // TODO: Issuer
+            'iss' => $this->appConfig['app']['url'],
             "sub" => $user[self::SUBJECT_IDENTIFIER],
-            "admin" => true
         ];
 
         $secret = $this->appConfig['jwt']['secret'];
@@ -57,6 +56,7 @@ class Auth
     }
 
     /**
+     * Verify the login request by username and password
      * @param $username string
      * @param $password string
      * @return bool|array
@@ -83,6 +83,7 @@ class Auth
     }
 
     /**
+     * Returns the user if the jwt token is valid and authenticated and the subject exists
      * @param Request $request
      * @return bool|array
      */

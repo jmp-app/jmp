@@ -16,10 +16,6 @@ use Slim\Http\Response;
 class LoginController
 {
     /**
-     * @var \PDO
-     */
-    protected $db;
-    /**
      * @var \JMP\Services\Auth
      */
     protected $auth;
@@ -35,6 +31,7 @@ class LoginController
     }
 
     /**
+     * Response contains an user with a token if the login was successful
      * @param $request Request
      * @param $response Response
      * @param $args array

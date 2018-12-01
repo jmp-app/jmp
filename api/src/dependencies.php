@@ -15,7 +15,7 @@ $container['database'] = function ($container) {
     return new PDO($dsn, $config['username'], $config['password'], $config['options']);
 };
 
-$container['session'] = function ($container) {
+$container['session'] = function (\Psr\Container\ContainerInterface $container) {
     $settings = $container->get('settings')['session'];
     $adapter = new PhpSessionAdapter();
     $session = new Session($adapter);
@@ -24,27 +24,20 @@ $container['session'] = function ($container) {
     return $session;
 };
 
-$container['jwt'] = function ($c) {
+$container['jwt'] = function (\Psr\Container\ContainerInterface $container) {
 
-
-    //TODO: add logger to middleware
-    $jwt_settings = $c->get('settings')['jwt'];
-    //TODO: authorization here?
-//    $jwt_settings['callback'] = function (\Slim\Http\Request $request, \Slim\Http\Response $response, array $args) use ($c) {
-    $auth = $c['auth'];
-//        return false;
-//    };
+    $jwt_settings = $container->get('settings')['jwt'];
 
     return new JwtAuthentication($jwt_settings);
 };
 
-$container['auth'] = function ($container) {
+$container['auth'] = function (\Psr\Container\ContainerInterface $container) {
     return new \JMP\Services\Auth($container);
 };
 
 // monolog
-$container['logger'] = function ($c) {
-    $settings = $c->get('settings')['logger'];
+$container['logger'] = function (\Psr\Container\ContainerInterface $container) {
+    $settings = $container->get('settings')['logger'];
     $logger = new Monolog\Logger($settings['name']);
     $logger->pushProcessor(new Monolog\Processor\UidProcessor());
     $logger->pushHandler(new Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
