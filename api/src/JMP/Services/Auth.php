@@ -12,6 +12,9 @@ class Auth
 
     const SUBJECT_IDENTIFIER = 'username';
 
+    /**
+     * @var \PDO
+     */
     private $db;
     /**
      * @var array
@@ -23,21 +26,26 @@ class Auth
      */
     public function __construct(ContainerInterface $container)
     {
-        //$this->db = $container->get('database');
         $this->appConfig = $container->get('settings')['jwt'];
         $this->db = $container->get('database');
+        $this->logger = $container->get('logger');
     }
 
+    /**
+     * @param array $user
+     * @return string
+     * @throws \Exception
+     */
     public function generateToken(array $user)
     {
         $now = new DateTime();
-        $future = new DateTime("now +2 hours");
+        $future = new DateTime("now +2 hours");//TODO: expiration of token?
 
         $payload = [
             "iat" => $now->getTimeStamp(),
             "exp" => $future->getTimeStamp(),
             "jti" => base64_encode(random_bytes(16)),
-            'iss' => 'change_it',  // Issuer
+            'iss' => 'change_it',  // TODO: Issuer
             "sub" => $user[self::SUBJECT_IDENTIFIER],
             "admin" => true
         ];
@@ -48,6 +56,11 @@ class Auth
         return $token;
     }
 
+    /**
+     * @param $username string
+     * @param $password string
+     * @return bool|array
+     */
     public function attempt($username, $password)
     {
         $stmt = $this->db->prepare("Select * from user where username = :username");
@@ -55,24 +68,46 @@ class Auth
 
         $stmt->execute();
 
-        $data = $stmt->fetch();
-
-        if (sizeof($data) === 0) {
+        if ($stmt->rowCount() === 0) {
             return false;
         }
 
-        return password_verify($password, $data['passwort']);
+        $data = $stmt->fetch();
 
-        // TODO: select user where username = username
-        // TODO: hash given password
-        // TODO: password_verify
-        // TODO: return user when true else false
+        if (password_verify($password, $data['password'])) {
+            unset($data['password']);
+            return $data;
+        }
+
+        return false;
     }
 
+    /**
+     * @param Request $request
+     * @return bool|array
+     */
     public function requestUser(Request $request)
     {
-        // TODO: select user where username = token['sub']
-        // TODO: return user when one exists else null
+        if ($token = $request->getAttribute('token')) {
+
+            $stmt = $this->db->prepare(
+                "select id, username, lastname, firstname, email, token, password_change from user where username = :username"
+            );
+
+            $stmt->bindParam(':username', $token['sub']);
+
+            $stmt->execute();
+
+            if ($stmt->rowCount() === 0) {
+                return false;
+            }
+
+            $data = $stmt->fetch();
+
+            return $data;
+        } else {
+            return false;
+        }
     }
 
 }

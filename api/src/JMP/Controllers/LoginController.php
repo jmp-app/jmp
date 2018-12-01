@@ -3,6 +3,8 @@
 namespace JMP\Controllers;
 
 use Interop\Container\ContainerInterface;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 
 /**
@@ -13,41 +15,49 @@ use Interop\Container\ContainerInterface;
  */
 class LoginController
 {
+    /**
+     * @var \PDO
+     */
     protected $db;
+    /**
+     * @var \JMP\Services\Auth
+     */
     protected $auth;
 
-    // constructor receives container instance
+
+    /**
+     * LoginController constructor.
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
-        $this->db = $container->get('database');
         $this->auth = $container->get('auth');
     }
 
+    /**
+     * @param $request Request
+     * @param $response Response
+     * @param $args array
+     * @return Response
+     * @throws \Exception
+     */
     public function login($request, $response, $args)
     {
 
         if ($request->getAttribute('has_errors')) {
             $errors = $request->getAttribute('errors');
-            return $response->withJson($errors);
+            return $response->withJson(['errors' => $errors]);
         }
 
 
         $body = $request->getParsedBody();
 
-        if ($this->auth->attempt($body['username'], $body['password'])) {
-            //$body['token'] = $this->auth->generateToken($body);
-            return $response->withJson($body);
+        if ($user = $this->auth->attempt($body['username'], $body['password'])) {
+            $user['token'] = $this->auth->generateToken($body);
+            return $response->withJson($user);
         } else {
             return $response->withJson(['errors' => ['email or password' => ['is invalid']]], 422);
         }
-        // select user by username
-
-        // hash password from request
-
-        // verify passwords
-
-        // return unauthorized or user
-
     }
 
 }
