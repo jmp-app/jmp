@@ -53,7 +53,7 @@ class LoginController
             $user['token'] = $this->auth->generateToken($body);
             return $response->withJson($user);
         } else {
-            return $response->withJson(['errors' => ['email or password' => ['is invalid']]], 422);
+            return $response->withJson(['errors' => ['email or password' => ['is invalid']]], 400);
         }
     }
 
