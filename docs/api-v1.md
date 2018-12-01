@@ -79,9 +79,9 @@ Further details to the errors are provided as JSON Objects:
 
 ```json
 {
-    "errors": [
+    "errors": {
         "authentication": "authentication required"
-    ]
+    }
 }
 ```
 
@@ -260,14 +260,18 @@ GET /v1/events/
 
 Parameters:
 
-| Field     | Description                    | Required |
-| --------- | ------------------------------ | -------- |
-| group     | To get all events by the group | ❌        |
-| eventType | To get all events by type      | ❌        |
+| Field     | Description                          | Required |
+| --------- | ------------------------------------ | -------- |
+| group     | To get all events by the group       | ❌        |
+| eventType | To get all events by type            | ❌        |
+| limit     | Limit the amount of events retrieved | ❌        |
+| offset    | Skip the fist _x_ events             | ❌        |
 
-___TODO___: Example
+```http
+GET /v1/events?limit=5&offset=10?eventType=1
+```
 
-Returns: List of queried events
+Returns: List of queried events, sorted __descending__ by their __start date__.
 
 ### Get Event
 
