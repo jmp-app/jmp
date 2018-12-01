@@ -10,7 +10,7 @@
     "username": "jake",
     "lastname": "Smith",
     "firstname": "Jacob",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NDM2ODUwMzYsImV4cCI6MTU0MzY5MjIzNiwianRpIjoiczlKSmErMGpPb2FGaWFxMTd6VHU5dz09IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdCIsInN1YiI6InNpbWkuZ3VsaSJ9.khH8KxrUWBco5eoiMHVgVRk2BMx1cMpvjDJH8j24sXs",
     "email": "jake@example.com"
 }
 ```
