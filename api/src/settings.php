@@ -2,17 +2,34 @@
 
 use Respect\Validation\Validator as v;
 
-//TODO: add .env support
+// Define root path
+defined('DS') ?: define('DS', DIRECTORY_SEPARATOR);
+defined('ROOT') ?: define('ROOT', dirname(__DIR__) . DS);
+
+// Load .env file
+if (file_exists(ROOT . '.env')) {
+    $dotenv = new Dotenv\Dotenv(ROOT);
+    $dotenv->load();
+}
+
 return [
     'settings' => [
+
+        // App settings
+        'app' => [
+            'name' => getenv('APP_NAME'),
+            'url' => getenv('APP_URL'),
+            'env' => getenv('APP_ENV'),
+        ],
+
         // Database settings
-        'database' => [ //TODO: .env
-            'engine' => 'mysql',
-            'host' => 'db', // name of the docker container running the database
-            'database' => 'jmp',
-            'username' => 'jmp_user',
-            'password' => 'pass4dev',
-            'port' => '3306',
+        'database' => [
+            'engine' => getenv('DB_ENGINE'),
+            'host' => getenv('DB_HOST'), // name of the docker container running the database
+            'database' => getenv('DB_DATABASE'),
+            'username' => getenv('DB_USERNAME'),
+            'password' => getenv('DB_PASSWORD'),
+            'port' => getenv('DB_PORT'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'options' => [
@@ -21,25 +38,26 @@ return [
                 PDO::ATTR_EMULATE_PREPARES => true,
             ]
         ],
+
+        // Input validations
         'validation' => [
             'login' => [
                 'username' => v::notEmpty()->noWhitespace()->contains('.')->length(1, 101),
                 'password' => v::notEmpty()->length(6, 255),
             ]
         ],
+
+        // JWT settings
         'jwt' => [
-            //TODO: save as cookie?
-            'secret' => 'secret',//TODO: .env
-            'secure' => false, //TODO: secure
-//            "header" => "Authorization",
-//            "regexp" => "/Token\s+(.*)$/i", //TODO: required?
-//            'passthrough' => ['OPTIONS'] //TODO: required?
+            'secret' => getenv('JWT_SECRET'),
+            'secure' => getenv('JWT_SECURE') === 'true' ? true : false,
         ],
+
         // Monolog settings
         'logger' => [
-            'name' => 'JMP', //TODO: .env
-            'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log', //TODO: docker logging?
-            'level' => \Monolog\Logger::DEBUG, //TODO: .env
+            'name' => getenv('APP_NAME'),
+            'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
+            'level' => \Monolog\Logger::DEBUG,
         ],
     ]
 ];
