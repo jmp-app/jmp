@@ -29,12 +29,33 @@ export const router = new Router({
             component: function () {
                 return import('../views/Login.vue');
             }
+        },
+        {
+            path: '/users',
+            name: 'users',
+            component: function () {
+                return import('../views/user/Users.vue');
+            }
+        },
+        {
+            path: '/users/create',
+            name: 'createUser',
+            component: function () {
+                return import('../views/user/UserCreate.vue');
+            }
+        },
+        {
+            path: '/users/:id',
+            name: 'user',
+            component: function () {
+                return import('../views/user/UserEdit.vue');
+            }
         }
     ]
 });
 
 router.beforeEach((to, from, next) => {
-// redirect to login page if not logged in and trying to access a restricted page
+    // redirect to login page if not logged in and trying to access a restricted page
     const publicPages = ['/login']; // TODO: Add page for testing
     const authRequired = !publicPages.includes(to.path);
     const loggedIn = localStorage.getItem('user');

@@ -7,7 +7,7 @@ import i18n from './i18n';
 
 Vue.config.productionTip = false;
 
-new Vue({
+new Vue({ // eslint-disable-line no-new
     el: '#app',
     router,
     store,
