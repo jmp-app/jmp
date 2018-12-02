@@ -23,6 +23,7 @@ class Auth
 
     /**
      * Auth constructor.
+     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
@@ -36,7 +37,7 @@ class Auth
      * @return string
      * @throws \Exception
      */
-    public function generateToken(array $user)
+    public function generateToken(array $user): string
     {
         $now = new DateTime();
         $future = new DateTime("now +2 hours");
@@ -52,7 +53,7 @@ class Auth
         $secret = $this->appConfig['jwt']['secret'];
         $token = JWT::encode($payload, $secret, "HS256");
 
-        $stmt = $this->db->prepare("update user set token=:token  where username = :username");
+        $stmt = $this->db->prepare("UPDATE user SET token=:token WHERE username=:username");
         $stmt->bindParam(':token', $token);
         $stmt->bindParam(':username', $user['username']);
         $stmt->execute();
@@ -68,7 +69,7 @@ class Auth
      */
     public function attempt($username, $password)
     {
-        $stmt = $this->db->prepare("Select * from user where username = :username");
+        $stmt = $this->db->prepare("SELECT * FROM user WHERE username=:username");
         $stmt->bindParam(':username', $username);
 
         $stmt->execute();
@@ -81,6 +82,7 @@ class Auth
 
         if (password_verify($password, $data['password'])) {
             unset($data['password']);
+            unset($data['token']);
             return $data;
         }
 
@@ -97,7 +99,7 @@ class Auth
         if ($token = $request->getAttribute('token')) {
 
             $stmt = $this->db->prepare(
-                "select id, username, lastname, firstname, email, token, password_change from user where username = :username"
+                "SELECT id, username, lastname, firstname, email, token, password_change FROM user WHERE username=:username"
             );
 
             $stmt->bindParam(':username', $token['sub']);

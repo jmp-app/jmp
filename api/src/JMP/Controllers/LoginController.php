@@ -6,7 +6,6 @@ use Interop\Container\ContainerInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-
 /**
  * Created by PhpStorm.
  * User: dominik
@@ -38,7 +37,7 @@ class LoginController
      * @return Response
      * @throws \Exception
      */
-    public function login($request, $response, $args)
+    public function login(Request $request, Response $response, array $args): Response
     {
 
         if ($request->getAttribute('has_errors')) {
@@ -50,10 +49,13 @@ class LoginController
         $body = $request->getParsedBody();
 
         if ($user = $this->auth->attempt($body['username'], $body['password'])) {
-            $user['token'] = $this->auth->generateToken($body);
-            return $response->withJson($user);
+            $data = [
+                'token' => $this->auth->generateToken($body),
+                'user' => $user
+            ];
+            return $response->withJson($data);
         } else {
-            return $response->withJson(['errors' => ['email or password' => ['is invalid']]], 400);
+            return $response->withJson(['errors' => ['username or password' => ['is invalid']]], 400);
         }
     }
 

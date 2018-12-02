@@ -42,7 +42,7 @@ return [
         // Input validations
         'validation' => [
             'login' => [
-                'username' => v::notEmpty()->noWhitespace()->contains('.')->length(1, 101),
+                'username' => v::notEmpty()->noWhitespace()->length(1, 101),
                 'password' => v::notEmpty()->length(6, 255),
             ]
         ],
