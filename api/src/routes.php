@@ -1,14 +1,16 @@
 <?php
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use DavidePastore\Slim\Validation\Validation;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 // API Routes - version 1
-$app->group('/v1', function() {
+$app->group('/v1', function () {
 
-    $this->get('/hello', function (Request $request, Response $response, array $args) {
-        $response->getBody()->write("Hello World");
-        return $response;
-    });
+    $jwtMiddleware = $this->getContainer()->get('jwt');
+
+    $this->post('/login', \JMP\Controllers\LoginController::class . ':login')->add(
+        new Validation($this->getContainer()['settings']['validation']['login'])
+    );
 
 });

@@ -2,38 +2,22 @@ FROM php:7.2-fpm
 
 WORKDIR /var/www
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    zip \
-    unzip \
-    git \
-    curl
+# install curl and php
+RUN apt-get update -y
+RUN apt-get install curl git zip -y
 
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# call PHP images script `docker-php-ext-install` and install language extensions
+RUN docker-php-ext-install pdo pdo_mysql
 
-# Install extensions
-RUN docker-php-ext-install pdo_mysql
-
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Add user for application
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
+# install composer & app deps; then remove
+# RUN curl -sS https://getcomposer.org/installer | php
+# RUN mv composer.phar /usr/local/bin/composer
 
 # Copy existing application directory contents
 COPY api/ /var/www/
 
-# Set permissions for user www
-RUN chown www:www .
-
-# Change current user to www
-USER www
-
 # Install dependecies form composer
-RUN composer install
+# RUN composer install
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000

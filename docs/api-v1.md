@@ -13,7 +13,6 @@
     "email": "jake@example.com"
 }
 ```
-
 ### Group
 
 ```json
@@ -113,7 +112,23 @@ Example request data:
 }
 ```
 
-Returns: the [User](#User)
+Returns: the user's token and the user data
+
+```JSON
+{
+    "token": "thesecrettoken",
+    "user": {
+        "id": 1,
+    	"username": "jake",
+    	"lastname": "Smith",
+    	"firstname": "Jacob",
+    	"email": "jake@example.com",
+        "passwordChange": false
+    }
+}
+```
+
+**Note:** token is a jwt token used for authorization. See more: https://jwt.io/
 
 ### Create User
 
