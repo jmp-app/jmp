@@ -55,7 +55,7 @@ class LoginController
             ];
             return $response->withJson($data);
         } else {
-            return $response->withJson(['errors' => ['username or password' => ['is invalid']]], 400);
+            return $response->withJson(['errors' => ['username or password' => ['is invalid']]], 401);
         }
     }
 

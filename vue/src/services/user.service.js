@@ -10,7 +10,7 @@ function login(username, password) {
         body: JSON.stringify({username, password})
     };
 
-    return fetch(`localhost/api/v1/login`, requestOptions)
+    return fetch(`api/v1/login`, requestOptions)
         .then(handleResponse)
         .then(user => {
             // login successful if there's a jwt token in the response
