@@ -1,18 +1,26 @@
 {
-  "require": {
-    "slim/slim": "^3.11",
-    "davidepastore/slim-validation": "^0.5.1",
-    "ext-pdo": "*",
-    "monolog/monolog": "^1.23",
-    "odan/slim-session": "^1.0",
-    "tuupola/slim-jwt-auth": "^3.1",
-    "vlucas/phpdotenv": "^2.5"
-  },
-  "autoload": {
-    "psr-4": {
-      "JMP\\": "src/JMP"
-    }
-  },
+    "name": "JMP/JMP",
+    "homepage": "https://github.com/Simai00/jmp#readme",
+    "license": "MIT",
+    "authors": [
+        {"name": "Dominik Strässle"},
+        {"name": "Simon Friedli"},
+        {"name": "Kay Mattern"}
+    ],
+    "require": {
+        "slim/slim": "^3.11",
+        "davidepastore/slim-validation": "^0.5.1",
+        "ext-pdo": "*",
+        "monolog/monolog": "^1.23",
+        "odan/slim-session": "^1.0",
+        "tuupola/slim-jwt-auth": "^3.1",
+        "vlucas/phpdotenv": "^2.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "JMP\\": "src/JMP"
+        }
+    },
     "scripts": {
         "post-install-cmd": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
