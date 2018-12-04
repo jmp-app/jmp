@@ -26,25 +26,32 @@
 ### Event
 
 ```json
-{
-    "id": 1,
-    "title": "GA",
-    "description": "General Assembly",
-    "from": "2018-11-28T10:00:00Z",
-    "to": "2018-11-29T18:00:00Z",
-    "place": "Earth",
+[
+  {
+    "id": "29",
+    "title": "Test event",
+    "description": "This is a test event!",
+    "from": "2019-01-15 12:12:12",
+    "to": "2019-01-15 13:13:13",
+    "place": "GibmIT, Pratteln",
     "eventType": {
-        "id": 1,
-        "title": "Default",
-        "color": "#ff0000"
+      "id": "1",
+      "title": "Test",
+      "color": "#d6f936"
     },
     "defaultRegistrationState": {
-        "id": 1,
-        "name": "Accepted",
-        "requiresReason": false
+      "id": "2",
+      "name": "Angemeldet",
+      "reason_required": "0"
     },
-    "groups": [1, 4]
-}
+    "groups": [
+      {
+        "id": "5",
+        "name": "Admin"
+      }
+    ]
+  }
+]
 ```
 
 ### Event Type
