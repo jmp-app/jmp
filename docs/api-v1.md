@@ -33,8 +33,16 @@
     "from": "2018-11-28T10:00:00Z",
     "to": "2018-11-29T18:00:00Z",
     "place": "Earth",
-    "eventType": [Event Type](#event-type),
-    "defaultRegistrationState": "2",
+    "eventType": {
+        "id": 1,
+        "title": "Default",
+        "color": "#ff0000"
+    },
+    "defaultRegistrationState": {
+        "id": 1,
+        "name": "Accepted",
+        "requiresReason": false
+    },
     "groups": [1, 4]
 }
 ```
