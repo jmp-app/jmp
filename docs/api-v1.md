@@ -26,32 +26,30 @@
 ### Event
 
 ```json
-[
-  {
-    "id": "29",
-    "title": "Test event",
-    "description": "This is a test event!",
-    "from": "2019-01-15 12:12:12",
-    "to": "2019-01-15 13:13:13",
-    "place": "GibmIT, Pratteln",
-    "eventType": {
-      "id": "1",
-      "title": "Test",
-      "color": "#d6f936"
-    },
-    "defaultRegistrationState": {
-      "id": "2",
-      "name": "Angemeldet",
-      "reason_required": "0"
-    },
-    "groups": [
-      {
-        "id": "5",
-        "name": "Admin"
-      }
-    ]
-  }
-]
+{
+  "id": "29",
+  "title": "Test event",
+  "description": "This is a test event!",
+  "from": "2019-01-15 12:12:12",
+  "to": "2019-01-15 13:13:13",
+  "place": "GibmIT, Pratteln",
+  "eventType": {
+    "id": "1",
+    "title": "Test",
+    "color": "#d6f936"
+  },
+  "defaultRegistrationState": {
+    "id": "2",
+    "name": "Angemeldet",
+    "reason_required": "0"
+  },
+  "groups": [
+    {
+      "id": "5",
+      "name": "Admin"
+    }
+  ]
+}
 ```
 
 ### Event Type
