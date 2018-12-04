@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from '../views/Home.vue';
 import EventOverview from '../views/event/Overview.vue';
 
 Vue.use(Router);
@@ -43,7 +42,7 @@ export const router = new Router({
 
 router.beforeEach((to, from, next) => {
 // redirect to login page if not logged in and trying to access a restricted page
-    const publicPages = ['/login']; // TODO: Add page for testing
+    const publicPages = ['/login'];
     const authRequired = !publicPages.includes(to.path);
     const loggedIn = localStorage.getItem('user');
 
