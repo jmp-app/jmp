@@ -11,7 +11,7 @@ $app->group('/v1', function () {
         new Validation($this->getContainer()['settings']['validation']['login'])//TODO: translation for password validation
     );
 
-    $this->get('/events', \JMP\Controllers\EventController::class . ':listEvents')->add(
+    $this->get('/events', \JMP\Controllers\EventsController::class . ':listEvents')->add(
         new Validation($this->getContainer()['settings']['validation']['listEvents'])
     )->add(
         $jwtMiddleware
