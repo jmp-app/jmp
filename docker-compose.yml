@@ -8,10 +8,9 @@ services:
   
   # PHP
   app:
-    # build:
-    #   context: ./api/
-    #   dockerfile: docker/app/Dockerfile
-    image: php:7.2-fpm
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
     container_name: app
     restart: unless-stopped
     tty: true
@@ -53,4 +52,4 @@ services:
       SERVICE_NAME: mysql
     volumes:
       - dbdata:/var/lib/mysql/
-      - ./docker/db/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+      - ./docker/db/:/docker-entrypoint-initdb.d/

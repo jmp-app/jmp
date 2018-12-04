@@ -1,25 +1,23 @@
 FROM php:7.2-fpm
 
-# Copy composer files
-COPY composer.lock composer.json /var/www/
-
 WORKDIR /var/www
 
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# install curl and php
+RUN apt-get update -y
+RUN apt-get install curl git zip -y
 
-# Add user for laravel application
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
+# call PHP images script `docker-php-ext-install` and install language extensions
+RUN docker-php-ext-install pdo pdo_mysql
+
+# install composer & app deps; then remove
+# RUN curl -sS https://getcomposer.org/installer | php
+# RUN mv composer.phar /usr/local/bin/composer
 
 # Copy existing application directory contents
-COPY . /var/www
+COPY api/ /var/www/
 
-# Copy existing application directory permissions
-COPY --chown=www:www . /var/www
-
-# Change current user to www
-USER www
+# Install dependecies form composer
+# RUN composer install
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000

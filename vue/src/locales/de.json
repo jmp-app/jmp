@@ -1,5 +1,7 @@
 {
   "user.username": "Benutzername",
   "user.password": "Passwort",
-  "login": "Anmelden"
+  "login": "Anmelden",
+  "login.passwordRequired": "Passwort ist Pflichtfeld",
+  "login.usernameRequired": "Benutzername ist Pflichtfeld"
 }
