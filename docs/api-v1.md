@@ -33,7 +33,7 @@
     "from": "2018-11-28T10:00:00Z",
     "to": "2018-11-29T18:00:00Z",
     "place": "Earth",
-    "eventType": "3",
+    "eventType": [Event Type](#event-type),
     "defaultRegistrationState": "2",
     "groups": [1, 4]
 }
