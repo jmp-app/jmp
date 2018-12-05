@@ -4,8 +4,46 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e14bdfeedc7dac8101aaaf27547a9e4d",
+    "content-hash": "148ea531b0ff71508bf49c548b011bb4",
     "packages": [
+        {
+            "name": "aaronmacaron/reaction",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Aaronmacaron/reaction.git",
+                "reference": "242fd8747f9cf94111d5fa0ea4ff65ad89c87c1b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Aaronmacaron/reaction/zipball/242fd8747f9cf94111d5fa0ea4ff65ad89c87c1b",
+                "reference": "242fd8747f9cf94111d5fa0ea4ff65ad89c87c1b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpmd/phpmd": "^2.6",
+                "phpunit/phpunit": "^7.1",
+                "squizlabs/php_codesniffer": "^3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aaronmacaron\\Reaction\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Aaron Ebnöther",
+                    "email": "aaron.ebnoether@gmail.com"
+                }
+            ],
+            "description": "Library for dealing with reactions of actions",
+            "time": "2018-09-02T09:40:46+00:00"
+        },
         {
             "name": "container-interop/container-interop",
             "version": "1.2.0",
@@ -1086,7 +1124,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-json": "*"
     },
     "platform-dev": []
 }
