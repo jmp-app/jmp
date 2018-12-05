@@ -35,6 +35,22 @@ $container['auth'] = function (\Psr\Container\ContainerInterface $container) {
     return new \JMP\Services\Auth($container);
 };
 
+$container['eventService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\EventService($container);
+};
+
+$container['groupService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\GroupService($container);
+};
+
+$container['registrationStateService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\RegistrationStateService($container);
+};
+
+$container['eventTypeService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\EventTypeService($container);
+};
+
 // monolog
 $container['logger'] = function (\Psr\Container\ContainerInterface $container) {
     $settings = $container->get('settings')['logger'];
