@@ -1,5 +1,7 @@
 {
   "user.username": "Username",
   "user.password": "Password",
-  "login": "Login"
+  "login": "Login",
+  "login.passwordRequired": "Password is required",
+  "login.usernameRequired": "Username is required"
 }

@@ -53,7 +53,7 @@
 
 ```
 
-**Note:** The [Event](#Event) includes an [Event Type](#Event Type), an [Registration State](#Registration State) and a list of [Groups](#Group)
+**Note:** The [Event](#Event) includes an [Event Type](#event_type), an [Registration State](#registration_state) and a list of [Groups](#Group)
 
 
 ### Event Type
@@ -300,7 +300,7 @@ Parameters:
 | offset     | Skip the fist _x_ events             | ❌        |
 
 ```http
-GET /v1/events?limit=5&offset=10?eventType=1
+GET /v1/events?limit=5&offset=10&eventType=1
 ```
 **Note:** limit and offset are either both or none required
 
@@ -392,7 +392,7 @@ Example request data:
 }
 ```
 
-Returns: the [Event Type](#Event Type)
+Returns: the [Event Type](#event_type)
 
 ### List Event Types
 
@@ -412,7 +412,7 @@ GET /v1/event-types/{id}
 
 Parameters: none
 
-Returns: the [Event Type](#Event Type)
+Returns: the [Event Type](#event_type)
 
 ### Delete Event Type
 
@@ -580,7 +580,7 @@ GET /v1/registration-state/{id}
 
 Parameters: none
 
-Returns: the [Registration State](#Registration State)
+Returns: the [Registration State](#registration_state)
 
 ### Delete Registration State
 
