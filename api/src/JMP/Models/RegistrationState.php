@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dominik
- * Date: 04.12.18
- * Time: 16:31
- */
 
 namespace JMP\Models;
 

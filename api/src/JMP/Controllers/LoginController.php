@@ -6,12 +6,6 @@ use Interop\Container\ContainerInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-/**
- * Created by PhpStorm.
- * User: dominik
- * Date: 29.11.18
- * Time: 19:17
- */
 class LoginController
 {
     /**
