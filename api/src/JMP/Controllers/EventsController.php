@@ -86,8 +86,8 @@ class EventsController
     private function fetchArgsWithPagination(array $params)
     {
         return [
-            'groupId' => isset($params['groupId']) ? (int)$params['groupId'] : null,
-            'eventTypeId' => isset($params['eventTypeId']) ? (int)$params['eventTypeId'] : null,
+            'groupId' => isset($params['group']) ? (int)$params['group'] : null,
+            'eventTypeId' => isset($params['eventType']) ? (int)$params['eventType'] : null,
             'limit' => (int)$params['limit'],
             'offset' => (int)$params['offset']
         ];
