@@ -292,35 +292,17 @@ GET /v1/events/
 
 Parameters:
 
-| Field      | Description                          | Required |
-| ---------  | ------------------------------------ | -------- |
-| group      | To get all events by the group id    | ❌        |
-| eventType  | To get all events by type            | ❌        |
-| limit      | Limit the amount of events retrieved | ❌        |
-| offset     | Skip the fist _x_ events             | ❌        |
+| Field     | Description                          | Required |
+| --------- | ------------------------------------ | -------- |
+| group     | To get all events by the group id    | ❌        |
+| eventType | To get all events by type id         | ❌        |
+| limit     | Limit the amount of events retrieved | ❌        |
+| offset    | Skip the fist _x_ events             | ❌        |
 
 ```http
 GET /v1/events?limit=5&offset=10&eventType=1
 ```
-**Note:** limit and offset are either both or none required
-
 Returns: List of queried events, sorted __descending__ by their __start date__.
-
-Errors: 
-```json
-{
-  "errors": {
-    "query": {
-      "message": "Incorrect parameter combination: limit and offset are either both or none required",
-      "params": {
-        "limit": "5",
-        "eventType": "1",
-        "groupId": "5"
-      }
-    }
-  }
-}
-```
 
 ### Get Event
 

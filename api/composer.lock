@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "148ea531b0ff71508bf49c548b011bb4",
+    "content-hash": "a552fe1507f4373a395089b8030f0cd0",
     "packages": [
         {
             "name": "aaronmacaron/reaction",
@@ -601,16 +601,16 @@
         },
         {
             "name": "psr/http-server-middleware",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-server-middleware.git",
-                "reference": "ea17eb1fb2c8df6db919cc578451a8013c6a0ae5"
+                "reference": "2296f45510945530b9dceb8bcedb5cb84d40c5f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-server-middleware/zipball/ea17eb1fb2c8df6db919cc578451a8013c6a0ae5",
-                "reference": "ea17eb1fb2c8df6db919cc578451a8013c6a0ae5",
+                "url": "https://api.github.com/repos/php-fig/http-server-middleware/zipball/2296f45510945530b9dceb8bcedb5cb84d40c5f5",
+                "reference": "2296f45510945530b9dceb8bcedb5cb84d40c5f5",
                 "shasum": ""
             },
             "require": {
@@ -650,7 +650,7 @@
                 "request",
                 "response"
             ],
-            "time": "2018-01-22T17:08:31+00:00"
+            "time": "2018-10-30T17:12:04+00:00"
         },
         {
             "name": "psr/log",

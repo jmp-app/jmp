@@ -42,7 +42,7 @@ class EventService
      * @param int $eventTypeId
      * @return Event[]
      */
-    public function getEventsByGroupAndEventType($groupId, $eventTypeId)
+    public function getEventsByGroupAndEventType(?int $groupId, ?int $eventTypeId): array
     {
         $sql = <<< SQL
                 SELECT event.id,
@@ -77,7 +77,7 @@ SQL;
      * @param int $offset
      * @return Event[]
      */
-    public function getEventsByGroupAndEventTypeWithPagination($groupId, $eventTypeId, int $limit, int $offset)
+    public function getEventsByGroupAndEventTypeWithPagination(?int $groupId, ?int $eventTypeId, int $limit, int $offset = 0): array
     {
         $sql = <<< SQL
                 SELECT event.id,
@@ -101,18 +101,31 @@ SQL;
 
         $stmt->bindValue(':groupId', $groupId, PDO::PARAM_INT);
         $stmt->bindValue(':eventType', $eventTypeId, PDO::PARAM_INT);
-        $stmt->bindParam(':lim', $limit);
-        $stmt->bindParam(':off', $offset);
-
+        $stmt->bindParam(':lim', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':off', $offset, PDO::PARAM_INT);
 
         return $this->fetchAllEvents($stmt);
     }
 
     /**
+     * Get all events with offset.
+     * @param int $groupId
+     * @param int $eventTypeId
+     * @param int $offset
+     * @return Event[]
+     */
+    public function getEventByGroupAndEventWithOffset(int $groupId, int $eventTypeId, int $offset = 0): array
+    {
+        $events = $this->getEventsByGroupAndEventType($groupId, $eventTypeId);
+        return array_slice($events, $offset);
+    }
+
+    /**
+     * Executes the statement and parses its result to return a list of events.
      * @param \PDOStatement $stmt
      * @return Event[]
      */
-    private function fetchAllEvents(\PDOStatement $stmt)
+    private function fetchAllEvents(\PDOStatement $stmt): array
     {
         $stmt->execute();
 

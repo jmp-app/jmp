@@ -35,69 +35,64 @@ class EventsController
     }
 
 
-    public function listEvents(Request $request, Response $response, array $args)
+    /**
+     * Retrieves events from the database queried by the args.
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function listEvents(Request $request, Response $response): Response
     {
         // TODO: use reactions library from aarone
         if ($this->auth->requestUser($request) === false) {
             return $response->withStatus(401);
         }
 
+        // check validation errors
         if ($request->getAttribute('has_errors')) {
             $errors = $request->getAttribute('errors');
             return $response->withJson(['errors' => $errors])->withStatus(400);
         }
 
-        if ($pagination = $this->extendedValidation($request->getQueryParams()) === false) {
-            return $response->withJson([
-                'errors' => [
-                    'query' => [
-                        'message' => "Incorrect parameter combination: limit or offset are either both or not required",
-                        'params' => $request->getQueryParams()
-                    ]
-                ]
-            ])->withStatus(400);
-        }
-
-        if ($pagination) {
-            $args = $this->fetchArgsWithPagination($request->getQueryParams());
-            return $response->withJson((array)$this->eventService->getEventsByGroupAndEventTypeWithPagination($args['groupId'], $args['eventTypeId'], $args['limit'], $args['offset']));
+        // if limit and offset are not set do not use pagination
+        if (empty($request->getQueryParam('limit')) && empty($request->getQueryParam('offset'))) {
+            $arguments = $this->fetchArgs($request->getQueryParams());
+            $events = (array)$this->eventService->getEventsByGroupAndEventType($arguments['group'], $arguments['eventType']);
+            return $response->withJson($events);
         } else {
-            $args = $this->fetchArgs($request->getQueryParams());
-            return $response->withJson((array)$this->eventService->getEventsByGroupAndEventType($args['groupId'], $args['eventTypeId']));
+            $arguments = $this->fetchArgsWithPagination($request->getQueryParams());
+
+            if (is_null($arguments['limit'])) {
+                // no limit, just use offset
+                $events = (array)$this->eventService->getEventByGroupAndEventWithOffset($arguments['group'],
+                    $arguments['eventType'], $arguments['offset']);
+            } else {
+                $events = (array)$this->eventService->getEventsByGroupAndEventTypeWithPagination($arguments['group'],
+                    $arguments['eventType'], $arguments['limit'], $arguments['offset']);
+            }
+
+            return $response->withJson($events);
         }
+
+
     }
 
-    private function extendedValidation(array $query)
-    {
-        if (isset($query['limit'])) {
-            if (isset($query['offset'])) {
-                return true;
-            }
-        }
-
-        if (!isset($query['limit'])) {
-            if (!isset($query['offset'])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function fetchArgsWithPagination(array $params)
+    private function fetchArgsWithPagination(array $params): array
     {
         return [
-            'groupId' => isset($params['group']) ? (int)$params['group'] : null,
-            'eventTypeId' => isset($params['eventType']) ? (int)$params['eventType'] : null,
-            'limit' => (int)$params['limit'],
+            'group' => isset($params['group']) ? (int)$params['group'] : null,
+            'eventType' => isset($params['eventType']) ? (int)$params['eventType'] : null,
+            'limit' => isset($params['limit']) ? (int)$params['limit'] : null,
             'offset' => (int)$params['offset']
         ];
     }
 
-    private function fetchArgs(array $params)
+    private function fetchArgs(array $params): array
     {
         return [
-            'groupId' => isset($params['groupId']) ? (int)$params['groupId'] : null,
-            'eventTypeId' => isset($params['eventTypeId']) ? (int)$params['eventTypeId'] : null,
+            'group' => isset($params['group']) ? (int)$params['group'] : null,
+            'eventType' => isset($params['eventType']) ? (int)$params['eventType'] : null,
         ];
     }
 
