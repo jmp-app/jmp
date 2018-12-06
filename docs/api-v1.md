@@ -27,17 +27,34 @@
 
 ```json
 {
+  "id": 29,
+  "title": "GA",
+  "from": "2019-01-15 12:12:12",
+  "to": "2019-01-15 13:13:13",
+  "place": "Earth",
+  "description": "General Assembly",
+  "eventType": {
     "id": 1,
-    "title": "GA",
-    "description": "General Assembly",
-    "from": "2018-11-28T10:00:00Z",
-    "to": "2018-11-29T18:00:00Z",
-    "place": "Earth",
-    "eventType": "3",
-    "defaultRegistrationState": "2",
-    "groups": [1, 4]
+    "title": "Default",
+    "color": "#d6f936"
+  },
+  "defaultRegistrationState": {
+    "id": "2",
+    "name": "Accepted",
+    "reasonRequired": false
+  },
+  "groups": [
+    {
+      "id": 5,
+      "name": "Members"
+    }
+  ]
 }
+
 ```
+
+**Note:** The [Event](#Event) includes an [Event Type](#Event Type), an [Registration State](#Registration State) and a list of [Groups](#Group)
+
 
 ### Event Type
 
@@ -275,18 +292,35 @@ GET /v1/events/
 
 Parameters:
 
-| Field     | Description                          | Required |
-| --------- | ------------------------------------ | -------- |
-| group     | To get all events by the group       | ❌        |
-| eventType | To get all events by type            | ❌        |
-| limit     | Limit the amount of events retrieved | ❌        |
-| offset    | Skip the fist _x_ events             | ❌        |
+| Field      | Description                          | Required |
+| ---------  | ------------------------------------ | -------- |
+| groupId    | To get all events by the group       | ❌        |
+| eventTypeId| To get all events by type            | ❌        |
+| limit      | Limit the amount of events retrieved | ❌        |
+| offset     | Skip the fist _x_ events             | ❌        |
 
 ```http
 GET /v1/events?limit=5&offset=10?eventType=1
 ```
+**Note:** limit and offset are either both or none required
 
 Returns: List of queried events, sorted __descending__ by their __start date__.
+
+Errors: 
+```json
+{
+  "errors": {
+    "query": {
+      "message": "Incorrect parameter combination: limit and offset are either both or none required",
+      "params": {
+        "limit": "5",
+        "eventType": "1",
+        "groupId": "5"
+      }
+    }
+  }
+}
+```
 
 ### Get Event
 
