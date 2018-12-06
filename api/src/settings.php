@@ -46,8 +46,8 @@ return [
                 'password' => v::notEmpty()->length(6, 255),
             ],
             'listEvents' => [
-                'group' => v::optional(v::numeric()),
-                'eventType' => v::optional(v::numeric()),
+                'groupId' => v::optional(v::numeric()),
+                'eventTypeId' => v::optional(v::numeric()),
                 'limit' => v::optional(v::numeric()),
                 'offset' => v::optional(v::numeric()),
             ]
