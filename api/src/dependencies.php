@@ -10,7 +10,7 @@ $container = $app->getContainer();
 $container['database'] = function ($container) {
     $config = $container->get('settings')['database'];
 
-    $dsn = "{$config['engine']}:host={$config['host']};dbname={$config['database']};charset={$config['charset']}";;
+    $dsn = "{$config['engine']}:host={$config['host']};port={$config['port']};dbname={$config['database']};charset={$config['charset']}";
 
     return new PDO($dsn, $config['username'], $config['password'], $config['options']);
 };

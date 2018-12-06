@@ -300,7 +300,7 @@ Parameters:
 | offset     | Skip the fist _x_ events             | ❌        |
 
 ```http
-GET /v1/events?limit=5&offset=10?eventType=1
+GET /v1/events?limit=5&offset=10&eventType=1
 ```
 **Note:** limit and offset are either both or none required
 

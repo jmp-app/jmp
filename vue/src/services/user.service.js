@@ -10,7 +10,7 @@ function login(username, password) {
         body: JSON.stringify({username, password})
     };
 
-    return fetch(`localhost/api/v1/login`, requestOptions)
+    return fetch(`api/v1/login`, requestOptions)
         .then(handleResponse)
         .then(user => {
             // login successful if there's a jwt token in the response
@@ -35,10 +35,11 @@ function handleResponse(response) {
             if (response.status === 401) {
                 // auto logout if 401 response returned from api
                 logout();
-                location.reload(true);
+                // location.reload(true);
             }
 
-            const error = (data && data.message) || response.statusText;
+            // const error = (data && data.message) || response.statusText;
+            const error = 'Username or password is incorrect' || response.statusText;
             return Promise.reject(error);
         }
 
