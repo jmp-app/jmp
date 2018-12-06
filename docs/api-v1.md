@@ -295,7 +295,7 @@ Parameters:
 | Field      | Description                          | Required |
 | ---------  | ------------------------------------ | -------- |
 | group      | To get all events by the group id    | ❌        |
-| eventTypeId| To get all events by type            | ❌        |
+| eventType  | To get all events by type            | ❌        |
 | limit      | Limit the amount of events retrieved | ❌        |
 | offset     | Skip the fist _x_ events             | ❌        |
 
