@@ -50,8 +50,10 @@ class EventsController
         if ($pagination = $this->extendedValidation($request->getQueryParams()) === false) {
             return $response->withJson([
                 'errors' => [
-                    'message' => "Wrong parameter combination: limit or offset are both or neither required",
-                    'params' => $request->getQueryParams()
+                    'query' => [
+                        'message' => "Incorrect parameter combination: limit or offset are either both or not required",
+                        'params' => $request->getQueryParams()
+                    ]
                 ]
             ])->withStatus(400);
         }
