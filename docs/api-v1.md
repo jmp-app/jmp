@@ -27,30 +27,34 @@
 
 ```json
 {
-  "id": "29",
-  "title": "Test event",
-  "description": "This is a test event!",
+  "id": 29,
+  "title": "GA",
   "from": "2019-01-15 12:12:12",
   "to": "2019-01-15 13:13:13",
-  "place": "GibmIT, Pratteln",
+  "place": "Earth",
+  "description": "General Assembly",
   "eventType": {
-    "id": "1",
-    "title": "Test",
+    "id": 1,
+    "title": "Default",
     "color": "#d6f936"
   },
   "defaultRegistrationState": {
     "id": "2",
-    "name": "Angemeldet",
-    "reason_required": "0"
+    "name": "Accepted",
+    "reasonRequired": false
   },
   "groups": [
     {
-      "id": "5",
-      "name": "Admin"
+      "id": 5,
+      "name": "Members"
     }
   ]
 }
+
 ```
+
+**Note:** The [Event](#Event) includes an [Event Type](#event_type), an [Registration State](#registration_state) and a list of [Groups](#Group)
+
 
 ### Event Type
 
@@ -290,15 +294,14 @@ Parameters:
 
 | Field     | Description                          | Required |
 | --------- | ------------------------------------ | -------- |
-| group     | To get all events by the group       | ❌        |
-| eventType | To get all events by type            | ❌        |
+| group     | To get all events by the group id    | ❌        |
+| eventType | To get all events by type id         | ❌        |
 | limit     | Limit the amount of events retrieved | ❌        |
 | offset    | Skip the fist _x_ events             | ❌        |
 
 ```http
 GET /v1/events?limit=5&offset=10&eventType=1
 ```
-
 Returns: List of queried events, sorted __descending__ by their __start date__.
 
 ### Get Event
@@ -371,7 +374,7 @@ Example request data:
 }
 ```
 
-Returns: the [Event Type](#Event Type)
+Returns: the [Event Type](#event_type)
 
 ### List Event Types
 
@@ -391,7 +394,7 @@ GET /v1/event-types/{id}
 
 Parameters: none
 
-Returns: the [Event Type](#Event Type)
+Returns: the [Event Type](#event_type)
 
 ### Delete Event Type
 
@@ -559,7 +562,7 @@ GET /v1/registration-state/{id}
 
 Parameters: none
 
-Returns: the [Registration State](#Registration State)
+Returns: the [Registration State](#registration_state)
 
 ### Delete Registration State
 
