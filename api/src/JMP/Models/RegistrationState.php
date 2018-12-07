@@ -26,7 +26,7 @@ class RegistrationState
      */
     public function __construct(array $args)
     {
-        $this->id = $args['id'];
+        $this->id = (int)$args['id'];
         $this->name = $args['name'];
         $this->reasonRequired = $args['reasonRequired'] === "0" ? false : true;
     }
