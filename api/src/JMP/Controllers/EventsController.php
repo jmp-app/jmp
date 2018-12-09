@@ -44,8 +44,7 @@ class EventsController
      */
     public function listEvents(Request $request, Response $response): Response
     {
-        // TODO: use reactions library from aarone
-        if ($this->auth->requestUser($request) === false) {
+        if ($this->auth->requestUser($request)->isFailure()) {
             return $response->withStatus(401);
         }
 

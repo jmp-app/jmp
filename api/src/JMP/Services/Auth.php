@@ -4,6 +4,7 @@ namespace JMP\Services;
 
 use DateTime;
 use Firebase\JWT\JWT;
+use JMP\Utils\Optional;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
 
@@ -62,34 +63,37 @@ class Auth
      * Verify the login request by username and password
      * @param $username string
      * @param $password string
-     * @return bool|array
+     * @return Optional
      */
     public function attempt($username, $password)
     {
+        // search user in db
         $stmt = $this->db->prepare("SELECT * FROM user WHERE username=:username");
         $stmt->bindParam(':username', $username);
 
         $stmt->execute();
 
+        // check if results are present
         if ($stmt->rowCount() === 0) {
-            return false;
+            return Optional::failure();
         }
 
         $data = $stmt->fetch();
 
+        // 
         if (password_verify($password, $data['password'])) {
             unset($data['password']);
             unset($data['token']);
-            return $data;
+            return Optional::success($data);
         }
 
-        return false;
+        return Optional::failure();
     }
 
     /**
      * Returns the user if the jwt token is valid and authenticated and the subject exists
      * @param Request $request
-     * @return bool|array
+     * @return Optional
      */
     public function requestUser(Request $request)
     {
@@ -104,14 +108,14 @@ class Auth
             $stmt->execute();
 
             if ($stmt->rowCount() === 0) {
-                return false;
+                return Optional::failure();
             }
 
             $data = $stmt->fetch();
 
-            return $data;
+            return Optional::success($data);
         } else {
-            return false;
+            return Optional::failure();
         }
     }
 

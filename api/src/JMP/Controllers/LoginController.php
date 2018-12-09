@@ -27,11 +27,10 @@ class LoginController
      * Response contains an user with a token if the login was successful
      * @param $request Request
      * @param $response Response
-     * @param $args array
      * @return Response
      * @throws \Exception
      */
-    public function login(Request $request, Response $response, array $args): Response
+    public function login(Request $request, Response $response): Response
     {
 
         if ($request->getAttribute('has_errors')) {
@@ -42,10 +41,12 @@ class LoginController
 
         $body = $request->getParsedBody();
 
-        if ($user = $this->auth->attempt($body['username'], $body['password'])) {
+        $optional = $this->auth->attempt($body['username'], $body['password']);
+
+        if ($optional->getData()) {
             $data = [
                 'token' => $this->auth->generateToken($body),
-                'user' => $user
+                'user' => $optional->getData()
             ];
             return $response->withJson($data);
         } else {
