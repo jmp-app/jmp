@@ -4,8 +4,46 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e14bdfeedc7dac8101aaaf27547a9e4d",
+    "content-hash": "a552fe1507f4373a395089b8030f0cd0",
     "packages": [
+        {
+            "name": "aaronmacaron/reaction",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Aaronmacaron/reaction.git",
+                "reference": "242fd8747f9cf94111d5fa0ea4ff65ad89c87c1b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Aaronmacaron/reaction/zipball/242fd8747f9cf94111d5fa0ea4ff65ad89c87c1b",
+                "reference": "242fd8747f9cf94111d5fa0ea4ff65ad89c87c1b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpmd/phpmd": "^2.6",
+                "phpunit/phpunit": "^7.1",
+                "squizlabs/php_codesniffer": "^3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aaronmacaron\\Reaction\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Aaron Ebnöther",
+                    "email": "aaron.ebnoether@gmail.com"
+                }
+            ],
+            "description": "Library for dealing with reactions of actions",
+            "time": "2018-09-02T09:40:46+00:00"
+        },
         {
             "name": "container-interop/container-interop",
             "version": "1.2.0",
@@ -563,16 +601,16 @@
         },
         {
             "name": "psr/http-server-middleware",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-server-middleware.git",
-                "reference": "ea17eb1fb2c8df6db919cc578451a8013c6a0ae5"
+                "reference": "2296f45510945530b9dceb8bcedb5cb84d40c5f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-server-middleware/zipball/ea17eb1fb2c8df6db919cc578451a8013c6a0ae5",
-                "reference": "ea17eb1fb2c8df6db919cc578451a8013c6a0ae5",
+                "url": "https://api.github.com/repos/php-fig/http-server-middleware/zipball/2296f45510945530b9dceb8bcedb5cb84d40c5f5",
+                "reference": "2296f45510945530b9dceb8bcedb5cb84d40c5f5",
                 "shasum": ""
             },
             "require": {
@@ -612,7 +650,7 @@
                 "request",
                 "response"
             ],
-            "time": "2018-01-22T17:08:31+00:00"
+            "time": "2018-10-30T17:12:04+00:00"
         },
         {
             "name": "psr/log",
@@ -1086,7 +1124,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-json": "*"
     },
     "platform-dev": []
 }

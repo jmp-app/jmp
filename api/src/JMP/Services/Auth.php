@@ -53,10 +53,7 @@ class Auth
         $secret = $this->appConfig['jwt']['secret'];
         $token = JWT::encode($payload, $secret, "HS256");
 
-        $stmt = $this->db->prepare("UPDATE user SET token=:token WHERE username=:username");
-        $stmt->bindParam(':token', $token);
-        $stmt->bindParam(':username', $user['username']);
-        $stmt->execute();
+        $this->saveToken($user);
 
         return $token;
     }
@@ -116,6 +113,17 @@ class Auth
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param array $user
+     */
+    private function saveToken(array $user)
+    {
+        $stmt = $this->db->prepare("UPDATE user SET token=:token WHERE username=:username");
+        $stmt->bindParam(':token', $token);
+        $stmt->bindParam(':username', $user['username']);
+        $stmt->execute();
     }
 
 }
