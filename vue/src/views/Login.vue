@@ -19,7 +19,7 @@
             <div class="form-group row">
                 <label class="col-sm-3 col-form-label" for="password">{{ $t("user.password") }}</label>
                 <div class="col-sm-9">
-                    <input class="form-control" :class="{ 'is-invalid': submitted && !password }" id="password"
+                    <input class="form-control" :class="{ 'is-invalid': submitted && (!password || password.length < 6)}" id="password"
                            type="password" v-model="password"
                            v-bind:placeholder="$t('user.password')"/>
                     <div v-show="submitted && !password" class="invalid-feedback">{{ $t("login.passwordRequired") }}</div>

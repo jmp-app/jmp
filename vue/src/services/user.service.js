@@ -39,7 +39,7 @@ function handleResponse(response) {
             }
 
             // const error = (data && data.message) || response.statusText;
-            const error = 'Username or password is incorrect' || response.statusText;
+            const error = data['errors'] || response.statusText;
             return Promise.reject(error);
         }
 
