@@ -11,10 +11,6 @@ use Slim\Http\Response;
 class EventsController
 {
     /**
-     * @var \PDO
-     */
-    protected $db;
-    /**
      * @var Auth
      */
     private $auth;
@@ -29,7 +25,6 @@ class EventsController
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->db = $container->get('database');
         $this->auth = $container->get('auth');
         $this->eventService = $container->get('eventService');
     }

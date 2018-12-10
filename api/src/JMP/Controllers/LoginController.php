@@ -35,7 +35,7 @@ class LoginController
 
         if ($request->getAttribute('has_errors')) {
             $errors = $request->getAttribute('errors');
-            return $response->withJson(['errors' => $errors]);
+            return $response->withJson(['errors' => $errors], 400);
         }
 
 
@@ -43,7 +43,7 @@ class LoginController
 
         $optional = $this->auth->attempt($body['username'], $body['password']);
 
-        if ($optional->getData()) {
+        if ($optional->isSuccess()) {
             $data = [
                 'token' => $this->auth->generateToken($body),
                 'user' => $optional->getData()
