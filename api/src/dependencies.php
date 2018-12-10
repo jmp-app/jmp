@@ -51,6 +51,10 @@ $container['eventTypeService'] = function (\Psr\Container\ContainerInterface $co
     return new \JMP\Services\EventTypeService($container);
 };
 
+$container['userService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\UserService($container);
+};
+
 // monolog
 $container['logger'] = function (\Psr\Container\ContainerInterface $container) {
     $settings = $container->get('settings')['logger'];
