@@ -26,15 +26,15 @@
         name: 'Users',
         data: function () {
             return {
-                search: '',
-                users: []
+                search: ''
             };
         },
         computed: {
             filterUsers: function() {
                 const self = this;
+                const users = this.$store.state.users.all.items;
                 // filter users by username, last name and first name
-                return this.users.filter(function(user) {
+                return users.filter(function(user) {
                     return self.searchString(user.username) ||
                         self.searchString(user.lastname) ||
                         self.searchString(user.firstname);
@@ -44,13 +44,10 @@
         methods: {
             searchString: function(string) {
                 return string.toLowerCase().includes(this.search.toLowerCase());
-            },
-            getInitialData: function () {
-                // TODO: Get data from /api/v1/users
             }
         },
-        beforeMount() {
-            this.getInitialData();
+        created() {
+            this.$store.dispatch('users/getAll');
         }
     };
 </script>
