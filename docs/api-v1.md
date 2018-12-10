@@ -158,8 +158,8 @@ Parameters:
 | Field     | Description                 | Required |
 | --------- | --------------------------- | -------- |
 | username  | The user's username         | ✔️        |
-| lastname  | The user's last name        | ✔️        |
-| firstname | The user's first name       | ✔️        |
+| lastname  | The user's last name        | ❌        |
+| firstname | The user's first name       | ❌️        |
 | email     | The user's email            | ❌        |
 | password  | The user's initial password | ✔️        |
 

@@ -111,15 +111,15 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `jmp`.`user` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(101) NOT NULL,
-  `lastname` VARCHAR(50) NOT NULL,
-  `firstname` VARCHAR(50) NOT NULL,
-  `email` VARCHAR(255) NOT NULL,
-  `token` TEXT,
-  `password` VARCHAR(255) NOT NULL,
-  `password_change` TINYINT NULL,
-  PRIMARY KEY (`id`))
+                                          `id`              INT(11) NOT NULL AUTO_INCREMENT,
+                                          `username`        VARCHAR(101) NOT NULL,
+                                          `lastname`        VARCHAR(50),
+                                          `firstname`       VARCHAR(50),
+                                          `email`           VARCHAR(255),
+                                          `token`           TEXT,
+                                          `password`        VARCHAR(255) NOT NULL,
+                                          `password_change` TINYINT NULL,
+                                          PRIMARY KEY (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 160
 DEFAULT CHARACTER SET = utf8;
