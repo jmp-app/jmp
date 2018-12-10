@@ -45,7 +45,7 @@ class EventsController
     public function listEvents(Request $request, Response $response): Response
     {
         if ($this->auth->requestUser($request)->isFailure()) {
-            return $response->withStatus(401);
+            return $response->withStatus(403);
         }
 
         // check validation errors
