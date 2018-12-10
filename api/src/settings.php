@@ -50,6 +50,13 @@ return [
                 'eventTypeId' => v::optional(v::numeric()),
                 'limit' => v::optional(v::numeric()),
                 'offset' => v::optional(v::numeric()),
+            ],
+            'createUser' => [
+                'username' => v::notEmpty()->noWhitespace()->length(1, 101),
+                'lastname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
+                'firstnaem' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
+                'password' => v::notEmpty()->length(1, 256),
+                'email' => v::optional(v::notEmpty()->length(1, 256))
             ]
         ],
 
@@ -57,6 +64,12 @@ return [
         'jwt' => [
             'secret' => getenv('JWT_SECRET'),
             'secure' => getenv('JWT_SECURE') === 'true' ? true : false,
+        ],
+
+        // Auth settings
+        'auth' => [
+            'adminGroupName' => 'Admin',
+            'subjectIdentifier' => 'username'
         ],
 
         // Monolog settings

@@ -11,7 +11,8 @@ use Slim\Http\Request;
 class Auth
 {
 
-    const SUBJECT_IDENTIFIER = 'username';
+    private $subjectIdentifier;
+    private $adminGroupName;
 
     /**
      * @var \PDO
@@ -28,9 +29,12 @@ class Auth
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->appConfig = $container->get('settings');
         $this->db = $container->get('database');
         $this->logger = $container->get('logger');
+        $this->appConfig = $container->get('settings');
+
+        $this->subjectIdentifier = $this->appConfig['auth']['subjectIdentifier'];
+        $this->adminGroupName = $this->appConfig['auth']['adminGroupName'];
     }
 
     /**
@@ -48,12 +52,13 @@ class Auth
             "exp" => $future->getTimeStamp(),
             "jti" => base64_encode(random_bytes(16)),
             'iss' => $this->appConfig['app']['url'],
-            "sub" => $user[self::SUBJECT_IDENTIFIER],
+            "sub" => $user[$this->subjectIdentifier],
         ];
 
         $secret = $this->appConfig['jwt']['secret'];
         $token = JWT::encode($payload, $secret, "HS256");
 
+        // TODO(dominik): remove token from database. It isn't required...
         $this->saveToken($user);
 
         return $token;
@@ -119,10 +124,44 @@ class Auth
         }
     }
 
+    public function requestAdmin(Request $request)
+    {
+        if ($token = $request->getAttribute('token')) {
+            $sql = <<<SQL
+SELECT user.id, username, lastname, firstname, email, token, password_change
+FROM user
+       left join membership m on user.id = m.user_id
+       left join `group` g on m.group_id = g.id
+WHERE username = :username
+  AND g.name = :adminGroupName
+SQL;
+
+            $stmt = $this->db->prepare($sql);
+
+            $stmt->bindParam(':username', $token['sub']);
+            $stmt->bindParam(':adminGroupName', $this->adminGroupName);
+
+            $stmt->execute();
+
+            if ($stmt->rowCount() === 0) {
+                return Optional::failure();
+            }
+
+            $data = $stmt->fetch();
+
+            return Optional::success($data);
+        } else {
+            return Optional::failure();
+        }
+
+    }
+
+
     /**
      * @param array $user
      */
-    private function saveToken(array $user)
+    private
+    function saveToken(array $user)
     {
         $stmt = $this->db->prepare("UPDATE user SET token=:token WHERE username=:username");
         $stmt->bindParam(':token', $token);
