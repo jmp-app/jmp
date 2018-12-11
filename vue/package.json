@@ -5,8 +5,8 @@
   "homepage": "https://github.com/Simai00/jmp#readme",
   "bugs": "https://github.com/Simai00/jmp/issues",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/Simai00/jmp.git"
+    "type": "git",
+    "url": "https://github.com/Simai00/jmp.git"
   },
   "contributors": [
     "Kay Mattern",

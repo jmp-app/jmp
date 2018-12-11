@@ -1,12 +1,12 @@
-import Vue from 'vue';
 import axios from 'axios';
-import VueAxios from 'vue-axios';
 import { userService } from '../services';
+import * as config from '../../jmp.config.js';
 
-Vue.use(VueAxios, axios);
-axios.defaults.baseURL = `http://localhost/api/v1`;
+export const http = axios.create({
+    baseURL: `http://${config.api}/api/v1`
+});
 
-axios.interceptors.response.use(undefined, function(error) {
+http.interceptors.response.use(undefined, function(error) {
     if (error.status === 401) {
         // auto logout if 401 response returned from api
         userService.logout();

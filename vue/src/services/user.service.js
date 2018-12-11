@@ -26,7 +26,7 @@ function login(username, password) {
             // store user details and jwt token in local storage to keep user logged in
             localStorage.setItem('user', user);
             // add token to authorization header as default
-            Vue.$http.defaults.headers.common['Authorization'] = user.token;
+            Vue.$http.defaults.headers.common['Authorization'] = 'Bearer ' + user.token;
         }
 
         return user;
@@ -36,4 +36,5 @@ function login(username, password) {
 function logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('user');
+    Vue.$http.defaults.headers.common['Authorization'] = '';
 }

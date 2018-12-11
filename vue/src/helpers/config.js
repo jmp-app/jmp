@@ -8,5 +8,3 @@ export const config = function() {
         }
     });
 };
-
-Vue.use(config);
