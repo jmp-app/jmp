@@ -101,9 +101,13 @@ class Auth
     {
         if ($token = $request->getAttribute('token')) {
 
-            $stmt = $this->db->prepare(
-                "SELECT id, username, lastname, firstname, email, token, password_change FROM user WHERE username=:username"
-            );
+            $sql = <<<SQL
+SELECT id, username, lastname, firstname, email, token, password_change AS passwordChange
+FROM user
+WHERE username=:username
+SQL;
+
+            $stmt = $this->db->prepare($sql);
 
             $stmt->bindParam(':username', $token['sub']);
 
@@ -125,7 +129,7 @@ class Auth
     {
         if ($token = $request->getAttribute('token')) {
             $sql = <<<SQL
-SELECT user.id, username, lastname, firstname, email, token, password_change
+SELECT user.id, username, lastname, firstname, email, token, password_change AS passwordChange
 FROM user
        LEFT JOIN membership m on user.id = m.user_id
        LEFT JOIN `group` g on m.group_id = g.id
