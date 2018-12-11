@@ -130,8 +130,8 @@ class Auth
             $sql = <<<SQL
 SELECT user.id, username, lastname, firstname, email, token, password_change
 FROM user
-       left join membership m on user.id = m.user_id
-       left join `group` g on m.group_id = g.id
+       LEFT JOIN membership m on user.id = m.user_id
+       LEFT JOIN `group` g on m.group_id = g.id
 WHERE username = :username
   AND g.name = :adminGroupName
 SQL;
