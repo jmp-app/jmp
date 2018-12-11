@@ -6,6 +6,36 @@ namespace JMP\Models;
 
 class User
 {
+    /**
+     * @var int
+     */
+    public $id;
+    /**
+     * @var string
+     */
+
+    public $username;
+    /**
+     * @var string
+     */
+
+    public $lastname;
+    /**
+     * @var string
+     */
+    public $firstname;
+    /**
+     * @var string
+     */
+    public $password;
+    /**
+     * @var string
+     */
+    public $email;
+    /**
+     * @var int
+     */
+    public $passwordChange;
 
     /**
      * User constructor.
