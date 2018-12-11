@@ -4,6 +4,7 @@ namespace JMP\Services;
 
 use DateTime;
 use Firebase\JWT\JWT;
+use JMP\Models\User;
 use JMP\Utils\Optional;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
@@ -11,7 +12,8 @@ use Slim\Http\Request;
 class Auth
 {
 
-    const SUBJECT_IDENTIFIER = 'username';
+    private $subjectIdentifier;
+    private $adminGroupName;
 
     /**
      * @var \PDO
@@ -28,9 +30,12 @@ class Auth
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->appConfig = $container->get('settings');
         $this->db = $container->get('database');
         $this->logger = $container->get('logger');
+        $this->appConfig = $container->get('settings');
+
+        $this->subjectIdentifier = $this->appConfig['auth']['subjectIdentifier'];
+        $this->adminGroupName = $this->appConfig['auth']['adminGroupName'];
     }
 
     /**
@@ -48,13 +53,11 @@ class Auth
             "exp" => $future->getTimeStamp(),
             "jti" => base64_encode(random_bytes(16)),
             'iss' => $this->appConfig['app']['url'],
-            "sub" => $user[self::SUBJECT_IDENTIFIER],
+            "sub" => $user[$this->subjectIdentifier],
         ];
 
         $secret = $this->appConfig['jwt']['secret'];
         $token = JWT::encode($payload, $secret, "HS256");
-
-        $this->saveToken($user);
 
         return $token;
     }
@@ -67,8 +70,14 @@ class Auth
      */
     public function attempt($username, $password)
     {
+        $sql = <<<SQL
+SELECT username, lastname, firstname, email, password, password_change AS passwordChange
+FROM user
+WHERE username = :username 
+SQL;
+
         // search user in db
-        $stmt = $this->db->prepare("SELECT * FROM user WHERE username=:username");
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':username', $username);
 
         $stmt->execute();
@@ -80,11 +89,10 @@ class Auth
 
         $data = $stmt->fetch();
 
-        // 
+        // verify password
         if (password_verify($password, $data['password'])) {
             unset($data['password']);
-            unset($data['token']);
-            return Optional::success($data);
+            return Optional::success(new User($data));
         }
 
         return Optional::failure();
@@ -99,9 +107,13 @@ class Auth
     {
         if ($token = $request->getAttribute('token')) {
 
-            $stmt = $this->db->prepare(
-                "SELECT id, username, lastname, firstname, email, token, password_change FROM user WHERE username=:username"
-            );
+            $sql = <<<SQL
+SELECT id, username, lastname, firstname, email, token, password_change AS passwordChange
+FROM user
+WHERE username=:username
+SQL;
+
+            $stmt = $this->db->prepare($sql);
 
             $stmt->bindParam(':username', $token['sub']);
 
@@ -119,15 +131,43 @@ class Auth
         }
     }
 
+
     /**
-     * @param array $user
+     * Returns the user if the jwt token is valid and authenticated and the user is an admin
+     * @param Request $request
+     * @return Optional
      */
-    private function saveToken(array $user)
+    public function requestAdmin(Request $request)
     {
-        $stmt = $this->db->prepare("UPDATE user SET token=:token WHERE username=:username");
-        $stmt->bindParam(':token', $token);
-        $stmt->bindParam(':username', $user['username']);
-        $stmt->execute();
+        if ($token = $request->getAttribute('token')) {
+
+            $sql = <<<SQL
+SELECT user.id, username, lastname, firstname, email, token, password_change AS passwordChange
+FROM user
+       LEFT JOIN membership m on user.id = m.user_id
+       LEFT JOIN `group` g on m.group_id = g.id
+WHERE username = :username
+  AND g.name = :adminGroupName
+SQL;
+
+            $stmt = $this->db->prepare($sql);
+
+            $stmt->bindParam(':username', $token['sub']);
+            $stmt->bindParam(':adminGroupName', $this->adminGroupName);
+
+            $stmt->execute();
+
+            if ($stmt->rowCount() === 0) {
+                return Optional::failure();
+            }
+
+            $data = $stmt->fetch();
+
+            return Optional::success($data);
+        } else {
+            return Optional::failure();
+        }
+
     }
 
 }

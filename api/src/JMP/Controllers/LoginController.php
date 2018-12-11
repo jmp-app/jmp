@@ -3,6 +3,7 @@
 namespace JMP\Controllers;
 
 use Interop\Container\ContainerInterface;
+use JMP\Utils\Converter;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -12,7 +13,6 @@ class LoginController
      * @var \JMP\Services\Auth
      */
     protected $auth;
-
 
     /**
      * LoginController constructor.
@@ -24,7 +24,8 @@ class LoginController
     }
 
     /**
-     * Response contains an user with a token if the login was successful
+     * Response contains an user with a token if the login was successful.
+     * Else the response contains an error with an appropriate error code.
      * @param $request Request
      * @param $response Response
      * @return Response
@@ -33,24 +34,27 @@ class LoginController
     public function login(Request $request, Response $response): Response
     {
 
+        // check for validation errors
         if ($request->getAttribute('has_errors')) {
             $errors = $request->getAttribute('errors');
-            return $response->withJson(['errors' => $errors]);
+            return $response->withJson(['errors' => $errors], 400);
         }
-
 
         $body = $request->getParsedBody();
 
+        // authenticate the user
         $optional = $this->auth->attempt($body['username'], $body['password']);
 
-        if ($optional->getData()) {
+        // user is authenticated
+        if ($optional->isSuccess()) {
             $data = [
                 'token' => $this->auth->generateToken($body),
-                'user' => $optional->getData()
+                'user' => Converter::convert($optional->getData())
             ];
             return $response->withJson($data);
         } else {
-            return $response->withJson(['errors' => ['Username or password is incorrect' => ['is invalid']]], 401);
+            // user isn't authenticated
+            return $response->withJson(['errors' => ['Username or password is incorrect' => ['is invalid']]], 403);
         }
     }
 
