@@ -11,7 +11,7 @@ $app->group('/v1', function () {
     $jwtMiddleware = $this->getContainer()->get('jwt');
 
     $this->post('/login', LoginController::class . ':login')->add(
-        new Validation($this->getContainer()['settings']['validation']['login'])// TODO (dominik): translation for password validation
+        new Validation($this->getContainer()['settings']['validation']['login'])// TODO (dominik): translation for password validation / use it global
     );
 
     $this->get('/events', EventsController::class . ':listEvents')->add(
