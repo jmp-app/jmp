@@ -1,7 +1,9 @@
 import {authHeader} from '../helpers';
 
 export const eventService = {
-    getAll
+    getAll,
+    getInitialOverview,
+    getNextEvents
 };
 
 function getAll() {
@@ -10,7 +12,37 @@ function getAll() {
         headers: authHeader()
     };
 
-    return fetch('https://0145d5b8-ca05-4ec5-a442-bbdb0c585ef4.mock.pstmn.io/events', requestOptions)
+    return fetch('api/v1/events', requestOptions)
+        .then(response => {
+            return response.json();
+        })
+        .catch(error => {
+            return Promise.reject(error);
+        });
+}
+
+function getInitialOverview() {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch('api/v1/events?limit=5', requestOptions)
+        .then(response => {
+            return response.json();
+        })
+        .catch(error => {
+            return Promise.reject(error);
+        });
+}
+
+function getNextEvents(offset) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch('api/v1/events?limit=5&offset=' + offset, requestOptions)
         .then(response => {
             return response.json();
         })

@@ -1,16 +1,18 @@
 <template>
-    <div :style="{ backgroundColor: event.eventType.color, color: getColor() }" class="card mb-3">
-        <div class="card-header">
-            <h5>{{event.title}}</h5>
+    <router-link :to="{ name: 'EventDetails', params:{ id: event.id, title: event.title } }" class="eventCard">
+        <div :style="{ backgroundColor: event.eventType.color, color: getColor() }" class="card mb-3">
+            <div class="card-header">
+                <h5>{{event.title}} {{event.id}}</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    {{getDateTime()}} <br>
+                    {{event.place}} <br>
+                    {{event.description}}
+                </p>
+            </div>
         </div>
-        <div class="card-body">
-            <p class="card-text">
-                {{getDateTime()}} <br>
-                {{event.place}} <br>
-                {{event.description}}
-            </p>
-        </div>
-    </div>
+    </router-link>
 </template>
 
 <script>
@@ -44,5 +46,7 @@
 </script>
 
 <style scoped>
-
+.eventCard {
+    text-decoration: none;
+}
 </style>

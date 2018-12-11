@@ -1,7 +1,6 @@
 <template>
-    <div>
-        <!--<div :key="event.id" v-for="event in events">-->
-        <div :key="event.id" v-for="event in events">
+    <div id="eventCards">
+        <div :key="event.id" v-for="event in events['items']">
             <EventCard :event="event"/>
         </div>
     </div>
@@ -9,55 +8,69 @@
 
 <script>
     import EventCard from '@/components/EventCard';
-    // import axios from 'axios';
 
     export default {
         name: 'Overview',
         components: {EventCard},
-        // data: function () {
-        //     return {
-        //         events: []
-        //     };
-        // },
         computed: {
-            events () {
+            events() {
                 return this.$store.state.events.all;
             }
         },
+        data() {
+            return {
+                windowHeight: window.innerHeight
+            };
+        },
+        methods: {
+            getOffset: function () {
+                return document.getElementById('eventCards').childElementCount;
+            },
+            loadDataUntilScreenIsFull: function () {
+                let lastEventCard = document.getElementById('eventCards').lastChild;
+                let rect = lastEventCard.getBoundingClientRect();
+                if (rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)) {
+                    let offset = this.getOffset();
+                    this.$store.dispatch('events/getNextEvents', { offset });
+                }
+            },
+            initWindowHeightListener: function () {
+                window.addEventListener('resize', () => {
+                    this.windowHeight = window.innerHeight;
+                });
+            },
+            initScrollListener: function () {
+                window.addEventListener('scroll', () => {
+                    let bottomOfWindow =
+                        document.documentElement.scrollTop +
+                        window.innerHeight === document.documentElement.offsetHeight;
+
+                    if (bottomOfWindow) {
+                        let offset = this.getOffset();
+                        this.$store.dispatch('events/getNextEvents', {offset});
+                    }
+                });
+            }
+        },
         created() {
-            this.$store.dispatch('events/getAll');
+            this.$store.dispatch('events/getInitialOverview');
+            this.$store.subscribe(mutation => {
+                if (mutation.type === 'events/getInitialOverviewSuccess') {
+                    this.$nextTick(() => this.loadDataUntilScreenIsFull());
+                }
+            });
+        },
+        mounted() {
+            this.initWindowHeightListener();
+            this.initScrollListener();
+        },
+        watch: {
+            windowHeight: function () {
+                this.loadDataUntilScreenIsFull();
+            }
         }
-        // methods: {
-        //     getInitialData: function () {
-        //         for (var i = 0; i < 5; i++) {
-        //             axios.get(`https://randomuser.me/api/`)
-        //                 .then(response => {
-        //                     this.events.push(response.data.results[0]);
-        //                 });
-        //         }
-        //     },
-        //     scroll() {
-        //         window.onscroll = () => {
-        //             let bottomOfWindow =
-        //                 document.documentElement.scrollTop +
-        //                 window.innerHeight === document.documentElement.offsetHeight;
-        //
-        //             if (bottomOfWindow) {
-        //                 axios.get(`https://randomuser.me/api/`)
-        //                     .then(response => {
-        //                         this.events.push(response.data.results[0]);
-        //                     });
-        //             }
-        //         };
-        //     }
-        // },
-        // beforeMount() {
-        //     this.getInitialData();
-        // },
-        // mounted() {
-        //     this.scroll();
-        // }
-    };
+    }
+    ;
 </script>
 
 <style scoped>
