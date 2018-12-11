@@ -19,5 +19,6 @@ class User
         $this->firstname = $args['firstname'];
         $this->password = $args['password'];
         $this->email = $args['email'];
+        $this->passwordChange = (int)$args['passwordChange'];
     }
 }
