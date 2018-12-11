@@ -12,6 +12,10 @@ class LoginController
      * @var \JMP\Services\Auth
      */
     protected $auth;
+    /**
+     * @var callable
+     */
+    private $nullFilter;
 
 
     /**
@@ -21,6 +25,7 @@ class LoginController
     public function __construct(ContainerInterface $container)
     {
         $this->auth = $container->get('auth');
+        $this->nullFilter = $container->get('nullFilter');
     }
 
     /**
@@ -46,7 +51,7 @@ class LoginController
         if ($optional->isSuccess()) {
             $data = [
                 'token' => $this->auth->generateToken($body),
-                'user' => $optional->getData()
+                'user' => array_filter($optional->getData(), $this->nullFilter)
             ];
             return $response->withJson($data);
         } else {
