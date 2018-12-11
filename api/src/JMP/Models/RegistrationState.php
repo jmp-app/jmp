@@ -3,7 +3,7 @@
 namespace JMP\Models;
 
 
-class RegistrationState
+class RegistrationState implements ArrayConvertable
 {
     /**
      * @var int
@@ -31,5 +31,11 @@ class RegistrationState
         $this->reasonRequired = $args['reasonRequired'] === "0" ? false : true;
     }
 
+    public function toArray(): array
+    {
+        return array_filter((array)$this, function ($value) {
+            return $value !== null;
+        });
+    }
 
 }

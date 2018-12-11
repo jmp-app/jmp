@@ -8,6 +8,7 @@ use Interop\Container\ContainerInterface;
 use JMP\Models\User;
 use JMP\Services\Auth;
 use JMP\Services\UserService;
+use JMP\Utils\Converter;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -22,10 +23,6 @@ class UsersController
      * @var UserService
      */
     private $userService;
-    /**
-     * @var callable
-     */
-    private $nullFilter;
 
     /**
      * EventController constructor.
@@ -35,9 +32,14 @@ class UsersController
     {
         $this->auth = $container->get('auth');
         $this->userService = $container->get('userService');
-        $this->nullFilter = $container->get('nullFilter');
     }
 
+    /**
+     * Returns the user or an error
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function createUser(Request $request, Response $response): Response
     {
         if ($this->auth->requestAdmin($request)->isFailure()) {
@@ -56,7 +58,7 @@ class UsersController
 
             $user = $this->userService->createUser(new User($user));
 
-            return $response->withJson(array_filter((array)$user, $this->nullFilter));
+            return $response->withJson(Converter::convert($user));
         } else {
             return $response->withJson([
                 'errors' => [

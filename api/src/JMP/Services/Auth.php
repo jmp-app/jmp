@@ -4,6 +4,7 @@ namespace JMP\Services;
 
 use DateTime;
 use Firebase\JWT\JWT;
+use JMP\Models\User;
 use JMP\Utils\Optional;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
@@ -69,8 +70,14 @@ class Auth
      */
     public function attempt($username, $password)
     {
+        $sql = <<<SQL
+SELECT username, lastname, firstname, email, password, password_change AS passwordChange
+FROM user
+WHERE username = :username 
+SQL;
+
         // search user in db
-        $stmt = $this->db->prepare("SELECT * FROM user WHERE username=:username");
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':username', $username);
 
         $stmt->execute();
@@ -82,11 +89,10 @@ class Auth
 
         $data = $stmt->fetch();
 
-        // 
+        // verify password
         if (password_verify($password, $data['password'])) {
             unset($data['password']);
-            unset($data['token']);
-            return Optional::success($data);
+            return Optional::success(new User($data));
         }
 
         return Optional::failure();
@@ -125,9 +131,16 @@ SQL;
         }
     }
 
+
+    /**
+     * Returns the user if the jwt token is valid and authenticated and the user is an admin
+     * @param Request $request
+     * @return Optional
+     */
     public function requestAdmin(Request $request)
     {
         if ($token = $request->getAttribute('token')) {
+
             $sql = <<<SQL
 SELECT user.id, username, lastname, firstname, email, token, password_change AS passwordChange
 FROM user

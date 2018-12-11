@@ -23,6 +23,8 @@ class UserService
     }
 
     /**
+     * Creates a new user and returns the created one by @uses UserService::getUserByUsername()
+     * The given user is saved as is. E.g password hashing must be done in advance
      * @param User $user
      * @return User
      */
@@ -51,6 +53,7 @@ SQL;
     }
 
     /**
+     * Checks wheter a user with the given username alredy exists, as it have to be unique
      * @param string $username
      * @return bool
      */
@@ -73,6 +76,9 @@ SQL;
     }
 
     /**
+     * Returns the user with the given username.
+     * The password isn't returned.
+     * Null fields are returned
      * @param $username
      * @return User
      */

@@ -4,7 +4,7 @@
 namespace JMP\Models;
 
 
-class User
+class User implements ArrayConvertable
 {
     /**
      * @var int
@@ -50,5 +50,12 @@ class User
         $this->password = $args['password'];
         $this->email = $args['email'];
         $this->passwordChange = (int)$args['passwordChange'];
+    }
+
+    public function toArray(): array
+    {
+        return array_filter((array)$this, function ($value) {
+            return $value !== null;
+        });
     }
 }

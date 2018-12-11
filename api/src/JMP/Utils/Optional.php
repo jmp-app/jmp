@@ -8,7 +8,7 @@ class Optional
 {
 
     /**
-     * @var array
+     * @var mixed
      */
     private $data;
 
@@ -28,20 +28,20 @@ class Optional
     }
 
     /**
-     * @param array $data
+     * @param mixed $data
      * @return Optional
      */
-    public static function success(array $data): Optional
+    public static function success($data): Optional
     {
         $optional = new Optional(true);
         return $optional->setData($data);
     }
 
     /**
-     * @param array $data
+     * @param mixed $data
      * @return Optional
      */
-    private function setData(array $data): Optional
+    private function setData($data): Optional
     {
         $this->data = $data;
         return $this;
@@ -56,9 +56,9 @@ class Optional
     }
 
     /**
-     * @return array
+     * @return mixed
      */
-    public function getData(): array
+    public function getData()
     {
         return $this->data;
     }

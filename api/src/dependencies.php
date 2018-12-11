@@ -55,12 +55,6 @@ $container['userService'] = function (\Psr\Container\ContainerInterface $contain
     return new \JMP\Services\UserService($container);
 };
 
-$container['nullFilter'] = function () {
-    return function ($value) {
-        return $value !== null;
-    };
-};
-
 // monolog
 $container['logger'] = function (\Psr\Container\ContainerInterface $container) {
     $settings = $container->get('settings')['logger'];
