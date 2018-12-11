@@ -116,7 +116,6 @@ CREATE TABLE IF NOT EXISTS `jmp`.`user` (
                                           `lastname`        VARCHAR(50),
                                           `firstname`       VARCHAR(50),
                                           `email`           VARCHAR(255),
-                                          `token`           TEXT,
                                           `password`        VARCHAR(255) NOT NULL,
                                           `password_change` TINYINT      NULL,
                                           PRIMARY KEY (`id`))

@@ -58,9 +58,6 @@ class Auth
         $secret = $this->appConfig['jwt']['secret'];
         $token = JWT::encode($payload, $secret, "HS256");
 
-        // TODO(dominik): remove token from database. It isn't required...
-        $this->saveToken($user);
-
         return $token;
     }
 
@@ -154,19 +151,6 @@ SQL;
             return Optional::failure();
         }
 
-    }
-
-
-    /**
-     * @param array $user
-     */
-    private
-    function saveToken(array $user)
-    {
-        $stmt = $this->db->prepare("UPDATE user SET token=:token WHERE username=:username");
-        $stmt->bindParam(':token', $token);
-        $stmt->bindParam(':username', $user['username']);
-        $stmt->execute();
     }
 
 }
