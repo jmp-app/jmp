@@ -46,10 +46,10 @@ return [
                 'password' => v::notEmpty()->length(6, 255),
             ],
             'listEvents' => [
-                'groupId' => v::optional(v::numeric()),
-                'eventTypeId' => v::optional(v::numeric()),
-                'limit' => v::optional(v::numeric()),
-                'offset' => v::optional(v::numeric()),
+                'group' => v::optional(v::noWhitespace()->numeric()->min(0)),
+                'eventType' => v::optional(v::noWhitespace()->numeric()->min(0)),
+                'limit' => v::optional(v::noWhitespace()->numeric()->min(0)),
+                'offset' => v::optional(v::noWhitespace()->numeric()->min(0)),
             ],
             'createUser' => [
                 'username' => v::notEmpty()->noWhitespace()->length(1, 101),
