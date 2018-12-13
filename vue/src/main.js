@@ -10,7 +10,8 @@ Vue.config.productionTip = false;
 
 Vue.use(VueAxios, http);
 
-new Vue({ // eslint-disable-line no-new
+// eslint-disable-next-line
+new Vue({
     el: '#app',
     router,
     store,

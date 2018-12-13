@@ -10,7 +10,7 @@ $container = $app->getContainer();
 $container['database'] = function ($container) {
     $config = $container->get('settings')['database'];
 
-    $dsn = "{$config['engine']}:host={$config['host']};dbname={$config['database']};charset={$config['charset']}";;
+    $dsn = "{$config['engine']}:host={$config['host']};port={$config['port']};dbname={$config['database']};charset={$config['charset']}";
 
     return new PDO($dsn, $config['username'], $config['password'], $config['options']);
 };
@@ -33,6 +33,26 @@ $container['jwt'] = function (\Psr\Container\ContainerInterface $container) {
 
 $container['auth'] = function (\Psr\Container\ContainerInterface $container) {
     return new \JMP\Services\Auth($container);
+};
+
+$container['eventService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\EventService($container);
+};
+
+$container['groupService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\GroupService($container);
+};
+
+$container['registrationStateService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\RegistrationStateService($container);
+};
+
+$container['eventTypeService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\EventTypeService($container);
+};
+
+$container['userService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\UserService($container);
 };
 
 // monolog

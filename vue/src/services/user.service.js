@@ -32,7 +32,7 @@ function login(username, password) {
         // login successful if there's a jwt token in the response
         if (user.token) {
             // store user details and jwt token in local storage to keep user logged in
-            localStorage.setItem('user', user);
+            localStorage.setItem('user', JSON.stringify(user));
             // add token to authorization header as default
             Vue.axios.defaults.headers.common['Authorization'] = 'Bearer ' + user.token;
         }

@@ -14,7 +14,8 @@
         "monolog/monolog": "^1.23",
         "odan/slim-session": "^1.0",
         "tuupola/slim-jwt-auth": "^3.1",
-        "vlucas/phpdotenv": "^2.5"
+        "vlucas/phpdotenv": "^2.5",
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {

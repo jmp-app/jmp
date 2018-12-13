@@ -10,6 +10,8 @@
     "user.create": "Create User",
     "user.delete": "Delete User",
     "login": "Login",
+    "login.passwordRequired": "Password is required",
+    "login.usernameRequired": "Username is required"
     "cancel": "Cancel",
     "create": "Create",
     "edit": "Edit",
