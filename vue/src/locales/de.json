@@ -1,7 +1,19 @@
 {
-  "user.username": "Benutzername",
-  "user.password": "Passwort",
-  "login": "Anmelden",
-  "login.passwordRequired": "Passwort ist Pflichtfeld",
-  "login.usernameRequired": "Benutzername ist Pflichtfeld"
+    "user": "Benutzer",
+    "user.username": "Benutzername",
+    "user.password": "Passwort",
+    "user.firstName": "Vorname",
+    "user.lastName": "Nachname",
+    "user.email": "E-Mail",
+    "user.passwordChange": "Password ändern",
+    "user.edit": "Benutzer bearbeiten",
+    "user.create": "Benutzer erstellen",
+    "user.delete": "Benutzer löschen",
+    "login": "Anmelden",
+    "login.passwordRequired": "Passwort ist Pflichtfeld",
+    "login.usernameRequired": "Benutzername ist Pflichtfeld"
+    "cancel": "Abbrechen",
+    "create": "Erstellen",
+    "edit": "Bearbeiten",
+    "search": "Suche"
 }

@@ -1,48 +1,64 @@
+import Vue from 'vue';
+
 export const userService = {
     login,
-    logout
+    logout,
+    getAll,
+    getUser,
+    updateUser,
+    createUser,
+    deleteUser
 };
 
+function getAll() {
+    return Vue.axios.get('/users').then(response => {
+        return response.data;
+    });
+}
+
+function getUser(id) {
+    return Vue.axios.get(`/users/${id}`).then(response => {
+        return response.data;
+    });
+}
+
 function login(username, password) {
-    const requestOptions = {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({username, password})
-    };
+    return Vue.axios.post('/login', {
+        username,
+        password
+    }).then(response => {
+        const user = response.data;
 
-    return fetch(`api/v1/login`, requestOptions)
-        .then(handleResponse)
-        .then(user => {
-            // login successful if there's a jwt token in the response
-            if (user.token) {
-                // store user details and jwt token in local storage to keep user logged in
-                localStorage.setItem('user', JSON.stringify(user));
-            }
+        // login successful if there's a jwt token in the response
+        if (user.token) {
+            // store user details and jwt token in local storage to keep user logged in
+            localStorage.setItem('user', JSON.stringify(user));
+            // add token to authorization header as default
+            Vue.axios.defaults.headers.common['Authorization'] = 'Bearer ' + user.token;
+        }
 
-            return user;
-        });
+        return user;
+    });
 }
 
 function logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('user');
+    Vue.axios.defaults.headers.common['Authorization'] = '';
 }
 
-function handleResponse(response) {
-    return response.text().then(text => {
-        const data = text && JSON.parse(text);
-        if (!response.ok) {
-            if (response.status === 401) {
-                // auto logout if 401 response returned from api
-                logout();
-                // location.reload(true);
-            }
-
-            // const error = (data && data.message) || response.statusText;
-            const error = 'Username or password is incorrect' || response.statusText;
-            return Promise.reject(error);
-        }
-
-        return data;
+function createUser(user) {
+    return Vue.axios.post('/users', user).then(response => {
+        return response.data;
     });
+}
+
+function updateUser(user) {
+    Vue.axios.put(`/users/${user.id}`, user).then(response => {
+        return response.data;
+    });
+}
+
+function deleteUser(id) {
+    Vue.axios.delete(`/users/${id}`);
 }

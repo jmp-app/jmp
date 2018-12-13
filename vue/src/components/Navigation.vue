@@ -7,11 +7,20 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarToggler">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <router-link class="nav-item nav-link" to="/" v-bind:class="{active: $route.name === 'home'}">Home
+                <router-link tag="li" class="nav-item" to="/" v-bind:class="{active: $route.name === 'home'}">
+                    <a class="nav-link">Home</a>
                 </router-link>
-                <router-link class="nav-item nav-link" to="/about" v-bind:class="{active: $route.name === 'about'}">
-                    About
+                <router-link tag="li" class="nav-item" to="/about" v-bind:class="{active: $route.name === 'about'}">
+                    <a class="nav-link">About</a>
                 </router-link>
+                <li class="nav-item dropdown" v-if="showAdmin()">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Admin
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <router-link class="dropdown-item" to="/users" v-bind:class="{active: $route.name === 'users'}">Users</router-link>
+                    </div>
+                </li>
             </ul>
             <div class="my-2 my-lg-0">
                 <LocalChanger class="nav-item dropdown"/>
@@ -29,6 +38,10 @@
         methods: {
             show() {
                 return this.$route.name !== 'login';
+            },
+            showAdmin() {
+                const user = localStorage.getItem('user');
+                return !!(user && user.isAdmin);
             }
         }
     };

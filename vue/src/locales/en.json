@@ -1,7 +1,19 @@
 {
-  "user.username": "Username",
-  "user.password": "Password",
-  "login": "Login",
-  "login.passwordRequired": "Password is required",
-  "login.usernameRequired": "Username is required"
+    "user": "User | Users",
+    "user.username": "Username",
+    "user.password": "Password",
+    "user.firstName": "First Name",
+    "user.lastName": "Last Name",
+    "user.email": "Email",
+    "user.passwordChange": "Change Password",
+    "user.edit": "Edit User",
+    "user.create": "Create User",
+    "user.delete": "Delete User",
+    "login": "Login",
+    "login.passwordRequired": "Password is required",
+    "login.usernameRequired": "Username is required"
+    "cancel": "Cancel",
+    "create": "Create",
+    "edit": "Edit",
+    "search": "Search"
 }
