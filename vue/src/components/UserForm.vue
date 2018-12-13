@@ -3,23 +3,23 @@
         <div class="row my-3">
             <div class="col">
                 <label for="username">{{ $t('user.username') }}</label>
-                <input type="text" name="username" id="username" class="form-control" v-model="user.username">
+                <input type="text" name="username" id="username" class="form-control" v-model="user.username" required>
             </div>
         </div>
         <div class="row my-3">
             <div class="col-6">
                 <label for="firstname">{{ $t('user.firstName') }}</label>
-                <input type="text" name="firstname" id="firstname" class="form-control" v-model="user.firstname">
+                <input type="text" name="firstname" id="firstname" class="form-control" v-model="user.firstname" required>
             </div>
             <div class="col-6">
                 <label for="lastname">{{ $t('user.lastName') }}</label>
-                <input type="text" name="lastname" id="lastname" class="form-control" v-model="user.lastname">
+                <input type="text" name="lastname" id="lastname" class="form-control" v-model="user.lastname" required>
             </div>
         </div>
         <div class="row my-3">
             <div class="col">
                 <label for="email">{{ $t('user.email') }}</label>
-                <input type="email" name="email" id="email" class="form-control" v-model="user.email">
+                <input type="email" name="email" id="email" class="form-control" v-model="user.email" required>
             </div>
         </div>
         <div class="row my-3">
@@ -43,7 +43,10 @@
     export default {
         name: 'UserForm',
         props: {
-            user: {}
+            user: {
+                // type: Object,
+                // required: true
+            }
         }
     };
 </script>

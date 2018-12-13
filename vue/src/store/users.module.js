@@ -10,10 +10,8 @@ export const users = {
             commit('getAllRequest');
 
             userService.getAll()
-                .then(
-                    users => commit('getAllSuccess', users),
-                    error => commit('getAllFailure', error)
-                );
+                .then(users => commit('getAllSuccess', users))
+                .catch(error => commit('getAllFailure', error));
         }
     },
     mutations: {
@@ -25,6 +23,14 @@ export const users = {
         },
         getAllFailure(state, error) {
             state.all = {error};
+        }
+    },
+    getters: {
+        getUsersFiltered: (state) => (filter) => {
+            if (!state.all.items) {
+                return {};
+            }
+            return state.all.items.filter(filter);
         }
     }
 };

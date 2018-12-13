@@ -12,33 +12,29 @@
         <input type="search" class="search my-3 form-control form-control-lg" :placeholder="$t('search')" v-model.trim="search">
 
         <div class="list-group mb-5">
-            <router-link :to="{ name: 'user', params: { id: user.id, user: user } }" :key="user.id" v-for="user in filterUsers"
-                         class="list-group-item list-group-item-action">
-                {{ user.username }}<span class="font-weight-light"> {{ user.firstname }} {{ user.lastname }} </span>
-                <span class="badge badge-danger" v-if="user.isAdmin">Admin</span>
-            </router-link>
+            <UserListItem :user="user" :key="user.id" v-for="user in users" />
         </div>
     </div>
 </template>
 
 <script>
+    import UserListItem from '@/components/UserListItem';
     export default {
         name: 'Users',
+        components: {UserListItem},
         data: function () {
             return {
                 search: ''
             };
         },
         computed: {
-            filterUsers: function() {
-                const self = this;
-                const users = this.$store.state.users.all.items;
-                // filter users by username, last name and first name
-                return users.filter(function(user) {
-                    return self.searchString(user.username) ||
-                        self.searchString(user.lastname) ||
-                        self.searchString(user.firstname);
-                });
+            users: function() {
+                const filter = user => {
+                    return this.searchString(user.username) ||
+                        this.searchString(user.lastname) ||
+                        this.searchString(user.firstname);
+                };
+                return this.$store.getters['users/getUsersFiltered'](filter);
             }
         },
         methods: {
@@ -46,7 +42,7 @@
                 return string.toLowerCase().includes(this.search.toLowerCase());
             }
         },
-        created() {
+        mounted() {
             this.$store.dispatch('users/getAll');
         }
     };

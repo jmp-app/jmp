@@ -1,12 +1,13 @@
 <template>
-    <div>
+    <form @submit.prevent="submit">
         <h1 class="mt-3">{{ $t('user.create') }}</h1>
-        <UserForm :user="user"></UserForm>
+        <UserForm v-if="data.user" :user="data.user"></UserForm>
+        <div v-if="data.error">Error: {{ data.error }}</div>
         <div class="d-flex justify-content-end">
             <router-link :to="{ name: 'users' }" tag="button" class="btn btn-lg btn-outline-danger mr-2">{{ $t('cancel') }}</router-link>
-            <button type="button" class="btn btn-lg btn-success">{{ $t('create') }}</button>
+            <button type="submit" class="btn btn-lg btn-primary" :disabled="!data.user">{{ $t('create') }}</button>
         </div>
-    </div>
+    </form>
 </template>
 
 <script>
@@ -15,17 +16,19 @@
     export default {
         name: 'UserCreate',
         components: {UserForm},
-        data: function () {
-            return {
-                user: {
-                    username: '',
-                    lastname: '',
-                    firstname: '',
-                    email: '',
-                    isAdmin: false,
-                    changePassword: false
-                }
-            };
+        computed: {
+            data() {
+                return this.$store.state.user.data;
+            }
+        },
+        methods: {
+            submit: function() {
+                this.$store.dispatch('user/create', this.data.user);
+            }
+        },
+        mounted() {
+            console.log('test2');
+            this.$store.dispatch('user/reset');
         }
     };
 </script>

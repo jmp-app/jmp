@@ -1,12 +1,15 @@
 <template>
-    <div>
+    <form @submit.prevent="submit">
         <h1 class="mt-3">{{ $t('user.edit') }}</h1>
-        <UserForm :user="user"></UserForm>
+        <div v-if="data.loading" class="my-4 text-center h3">Loading...</div>
+        <div v-if="data.error">Error: {{ user.error }}</div>
+        <UserForm v-if="data.user" :user="data.user"></UserForm>
         <div class="d-flex justify-content-end">
-            <router-link :to="{ name: 'users' }" tag="button" class="btn btn-lg btn-outline-danger mr-2">{{ $t('cancel') }}</router-link>
-            <button type="button" class="btn btn-lg btn-success">{{ $t('edit') }}</button>
+            <router-link :to="{ name: 'users' }" tag="button" class="btn btn-lg btn-outline-danger mx-1">{{ $t('cancel') }}</router-link>
+            <button type="button" class="btn btn-lg btn-danger mx-1" :disabled="!data.user" @click="deleteUser">{{ $t('user.delete') }}</button>
+            <button type="submit" class="btn btn-lg btn-primary mx-1" :disabled="!data.user">{{ $t('edit') }}</button>
         </div>
-    </div>
+    </form>
 </template>
 
 <script>
@@ -15,23 +18,23 @@
     export default {
         name: 'UserEdit',
         components: {UserForm},
-        data: function () {
-            return {
-                user: {}
-            };
-        },
-        methods: {
-            getInitialData: function () {
-                if (this.$route.params.user) {
-                    this.user = this.$route.params.user;
-                } else {
-                    // const id = this.$route.id;
-                    // TODO: Get user from /api/v1/users/{id}
-                }
+        computed: {
+            data() {
+                return this.$store.state.user.data;
             }
         },
-        beforeMount() {
-            this.getInitialData();
+        methods: {
+            submit: function() {
+                this.$store.dispatch('user/update', this.data.user);
+            },
+            deleteUser: function() {
+                this.$store.dispatch('user/deleteUser', this.data.user);
+                this.$router.push({ name: 'users' });
+            }
+        },
+        mounted() {
+            const id = this.$route.params.id;
+            this.$store.dispatch('user/get', {id});
         }
     };
 </script>

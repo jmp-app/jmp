@@ -8,6 +8,7 @@
     "user.passwordChange": "Change Password",
     "user.edit": "Edit User",
     "user.create": "Create User",
+    "user.delete": "Delete User",
     "login": "Login",
     "cancel": "Cancel",
     "create": "Create",

@@ -3,19 +3,27 @@ import Vue from 'vue';
 export const userService = {
     login,
     logout,
-    getAll
+    getAll,
+    getUser,
+    updateUser,
+    createUser,
+    deleteUser
 };
 
 function getAll() {
-    return Vue.axios.get('/users')
-        .then(response => {
-            // TODO: Check for no permission (403)
-            return response.data;
-        });
+    return Vue.axios.get('/users').then(response => {
+        return response.data;
+    });
+}
+
+function getUser(id) {
+    return Vue.axios.get(`/users/${id}`).then(response => {
+        return response.data;
+    });
 }
 
 function login(username, password) {
-    return Vue.$http.post('/login', {
+    return Vue.axios.post('/login', {
         username,
         password
     }).then(response => {
@@ -26,7 +34,7 @@ function login(username, password) {
             // store user details and jwt token in local storage to keep user logged in
             localStorage.setItem('user', user);
             // add token to authorization header as default
-            Vue.$http.defaults.headers.common['Authorization'] = 'Bearer ' + user.token;
+            Vue.axios.defaults.headers.common['Authorization'] = 'Bearer ' + user.token;
         }
 
         return user;
@@ -36,5 +44,21 @@ function login(username, password) {
 function logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('user');
-    Vue.$http.defaults.headers.common['Authorization'] = '';
+    Vue.axios.defaults.headers.common['Authorization'] = '';
+}
+
+function createUser(user) {
+    return Vue.axios.post('/users', user).then(response => {
+        return response.data;
+    });
+}
+
+function updateUser(user) {
+    Vue.axios.put(`/users/${user.id}`, user).then(response => {
+        return response.data;
+    });
+}
+
+function deleteUser(id) {
+    Vue.axios.delete(`/users/${id}`);
 }
