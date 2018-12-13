@@ -104,7 +104,11 @@ Further details to the errors are provided as JSON Objects:
 
 ## Authentication
 
-> __TODO__: Describe how to authenticate
+To authenticate use the following header:
+
+`Authorization: Bearer THESECRETJWTTOKEN`
+
+The token is first received by [logging in](#Authentication). All routes except the login route require authorization. Additionally some routes can only be accessed by **administrators**. A user is admin when he is a member of the `Admin` group.
 
 ## Endpoints
 
@@ -147,6 +151,8 @@ Returns: the user's token and the user data
 }
 ```
 
+Access rights: no authentication required
+
 **Note:** token is a jwt token used for authorization. See more: https://jwt.io/
 
 ### Create User
@@ -177,6 +183,8 @@ Example request data:
 }
 ```
 
+Access rights: authentication required, user has to be an admin
+
 Returns: the [User](#User)
 
 ### List Users
@@ -191,7 +199,7 @@ Parameters:
 | ----- | ------------------------- | -------- |
 | group | Get all users by group id | ❌        |
 
-___TODO___: Example
+Access rights: authentication required, user has to be an admin
 
 Returns: List of queried users
 
@@ -203,6 +211,8 @@ GET /v1/user
 
 Parameters: none
 
+Access rights: authentication required
+
 Returns: the [User](#User)
 
 ### Get User
@@ -212,6 +222,8 @@ GET /v1/users/{id}
 ```
 
 Parameters: none
+
+Access rights: authentication required, user has to be an admin
 
 Returns: the [User](#User)
 
@@ -241,6 +253,8 @@ Example request data:
 }
 ```
 
+Access rights: authentication required, user has to be an admin
+
 Returns: the [User](#User)
 
 ### Delete User 
@@ -250,6 +264,8 @@ DELETE /v1/users/{id}
 ```
 
 Parameters: none
+
+Access rights: authentication required, user has to be an admin
 
 ### Create Event
 
@@ -284,6 +300,8 @@ Example request data:
 }
 ```
 
+Access rights: authentication required, user has to be an admin
+
 Returns: the [Event](#Event)
 
 ### List Events
@@ -301,9 +319,13 @@ Parameters:
 | limit     | Limit the amount of events retrieved | ❌        |
 | offset    | Skip the fist _x_ events             | ❌        |
 
+Example request:
+
 ```http
 GET /v1/events?limit=5&offset=10&eventType=1
 ```
+Access rights: authentication required
+
 Returns: List of queried events, sorted __descending__ by their __start date__.
 
 ### Get Event
@@ -313,6 +335,8 @@ GET /v1/events/{id}
 ```
 
 Parameters: none
+
+Access rights: authentication required
 
 Returns: the [Event](#Event)
 
@@ -344,6 +368,8 @@ Example request data:
 }
 ```
 
+Access rights: authentication required, user has to be an admin
+
 Returns: the [Event](#Event)
 
 ### Delete Event 
@@ -353,6 +379,8 @@ DELETE /v1/events/{id}
 ```
 
 Parameters: none
+
+Access rights: authentication required, user has to be an admin
 
 ### Create Event Type
 
@@ -376,6 +404,8 @@ Example request data:
 }
 ```
 
+Access rights: authentication required, user has to be an admin
+
 Returns: the [Event Type](#event_type)
 
 ### List Event Types
@@ -385,6 +415,8 @@ GET /v1/event-types/
 ```
 
 Parameters: none
+
+Access rights: authentication required
 
 Returns: List of all event types
 
@@ -396,6 +428,8 @@ GET /v1/event-types/{id}
 
 Parameters: none
 
+Access rights: authentication required
+
 Returns: the [Event Type](#event_type)
 
 ### Delete Event Type
@@ -405,6 +439,8 @@ DELETE /v1/event-types/{id}
 ```
 
 Parameters: none
+
+Access rights: authentication required, user has to be an admin
 
 ### Create Group
 
@@ -426,6 +462,8 @@ Example request data:
 }
 ```
 
+Access rights: authentication required, user has to be an admin
+
 Returns: the [Group](#Group)
 
 ### List Groups
@@ -436,6 +474,8 @@ GET /v1/groups/
 
 Parameters: none
 
+Access rights: authentication required
+
 Returns: List of all groups
 
 ### Get Group
@@ -445,6 +485,8 @@ GET /v1/groups/{id}
 ```
 
 Parameters: none
+
+Access rights: authentication required
 
 Returns: the [Group](#Group)
 
@@ -468,6 +510,8 @@ Example request data:
 }
 ```
 
+Access rights: authentication required, user has to be an admin
+
 Returns: the [Group](#Group)
 
 ### Delete Group 
@@ -477,6 +521,8 @@ DELETE /v1/groups/{id}
 ```
 
 Parameters: none
+
+Access rights: authentication required, user has to be an admin
 
 ### Join Group
 
@@ -497,6 +543,8 @@ Example request data:
     "users": [1, 42]
 }
 ```
+
+Access rights: authentication required, user has to be an admin
 
 Returns: the [Group](#Group)
 
@@ -519,6 +567,8 @@ Example request data:
     "users": [1]
 }
 ```
+
+Access rights: authentication required, user has to be an admin
 
 Returns: the [Group](#Group)
 
@@ -544,6 +594,8 @@ Example request data:
 }
 ```
 
+Access rights: authentication required, user has to be an admin
+
 Returns: the [Registration State](#Registration State)
 
 ### List Registration States
@@ -553,6 +605,8 @@ GET /v1/registration-state/
 ```
 
 Parameters: none
+
+Access rights: authentication required
 
 Returns: List of all event types
 
@@ -564,6 +618,8 @@ GET /v1/registration-state/{id}
 
 Parameters: none
 
+Access rights: authentication required
+
 Returns: the [Registration State](#registration_state)
 
 ### Delete Registration State
@@ -573,5 +629,7 @@ DELETE /v1/registration-state/{id}
 ```
 
 Parameters: none
+
+Access rights: authentication required, user has to be an admin
 
 ___TODO:___ Registration, Presence and User Meta
