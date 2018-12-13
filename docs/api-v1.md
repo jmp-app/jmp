@@ -10,7 +10,8 @@
     "username": "jake",
     "lastname": "Smith",
     "firstname": "Jacob",
-    "email": "jake@example.com"
+    "email": "jake@example.com",
+    "isAdmin": true
 }
 ```
 ### Group
@@ -53,7 +54,7 @@
 
 ```
 
-**Note:** The [Event](#Event) includes an [Event Type](#event_type), an [Registration State](#registration_state) and a list of [Groups](#Group)
+**Note:** The [Event](#Event) includes an [Event Type](#event_type), a [Registration State](#registration_state) and a list of [Groups](#Group)
 
 
 ### Event Type
@@ -140,6 +141,7 @@ Returns: the user's token and the user data
     	"lastname": "Smith",
     	"firstname": "Jacob",
     	"email": "jake@example.com",
+        "isAdmin": true,
         "passwordChange": false
     }
 }
