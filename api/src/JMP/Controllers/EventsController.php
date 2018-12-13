@@ -45,10 +45,8 @@ class EventsController
 
         // check validation errors
         if ($request->getAttribute('has_errors')) {
-            $errors = $request->getAttribute('errors');
-            return $response->withJson(['errors' => $errors])->withStatus(400);
+            return $response;
         }
-
         // if limit and offset are not set do not use pagination
         if (empty($request->getQueryParam('limit')) && empty($request->getQueryParam('offset'))) {
             $arguments = $this->fetchArgs($request->getQueryParams());

@@ -10,16 +10,23 @@ $app->group('/v1', function () {
 
     $jwtMiddleware = $this->getContainer()->get('jwt');
 
-    $this->post('/login', LoginController::class . ':login')->add(
-        new Validation($this->getContainer()['settings']['validation']['login'])// TODO (dominik): translation for password validation / use it global
-    );
+    $this->post('/login', LoginController::class . ':login')
+        ->add(
+            new \JMP\Middleware\ValidationChecker()
+        )->add(
+            new Validation($this->getContainer()['settings']['validation']['login'])// TODO (dominik): translation for password validation / use it global
+        );
 
-    $this->get('/events', EventsController::class . ':listEvents')->add(
-        new Validation($this->getContainer()['settings']['validation']['listEvents'])
-    )->add($jwtMiddleware);
+    $this->get('/events', EventsController::class . ':listEvents')
+        ->add(new \JMP\Middleware\ValidationChecker())
+        ->add(
+            new Validation($this->getContainer()['settings']['validation']['listEvents'])
+        )->add($jwtMiddleware);
 
-    $this->post('/users', UsersController::class . ':createUser')->add(
-        new Validation($this->getContainer()['settings']['validation']['createUser'])
-    )->add($jwtMiddleware);
+    $this->post('/users', UsersController::class . ':createUser')
+        ->add(new \JMP\Middleware\ValidationChecker())
+        ->add(
+            new Validation($this->getContainer()['settings']['validation']['createUser'])
+        )->add($jwtMiddleware);
 
 });

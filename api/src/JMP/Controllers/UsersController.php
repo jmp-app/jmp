@@ -54,10 +54,8 @@ class UsersController
             }
         }
 
-        // TODO (dominik): Make a middleware which checks for errors and creates the error response
         if ($request->getAttribute('has_errors')) {
-            $errors = $request->getAttribute('errors');
-            return $response->withJson(['errors' => $errors], 400);
+            return $response;
         }
 
         $user = $request->getParsedBody();
