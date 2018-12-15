@@ -10,6 +10,13 @@ $container['validation'] = function (\Psr\Container\ContainerInterface $containe
             'username' => v::notEmpty()->noWhitespace()->length(1, 101),
             'password' => v::notEmpty()->length(6, 255),
         ],
+        'loginTranslation' => function ($message) {
+            $messages = [
+                '{{name}} must have a length between {{minValue}} and {{maxValue}}' => 'Must have a length between {{minValue}} and {{maxValue}}',
+                '{{name}} must not be empty' => 'Must not be empty'
+            ];
+            return $messages[$message];
+        },
         'listEvents' => [
             'group' => v::optional(v::noWhitespace()->numeric()->min(0)),
             'eventType' => v::optional(v::noWhitespace()->numeric()->min(0)),

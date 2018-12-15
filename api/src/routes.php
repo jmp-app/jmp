@@ -14,7 +14,10 @@ $app->group('/v1', function () {
         ->add(
             new \JMP\Middleware\ValidationChecker()
         )->add(
-            new Validation($this->getContainer()['validation']['login'])// TODO (dominik): translation for password validation / use it global
+            new Validation(
+                $this->getContainer()['validation']['login'],
+                $this->getContainer()['validation']['loginTranslation']
+            )
         );
 
     $this->get('/events', EventsController::class . ':listEvents')
