@@ -14,19 +14,19 @@ $app->group('/v1', function () {
         ->add(
             new \JMP\Middleware\ValidationChecker()
         )->add(
-            new Validation($this->getContainer()['settings']['validation']['login'])// TODO (dominik): translation for password validation / use it global
+            new Validation($this->getContainer()['validation']['login'])// TODO (dominik): translation for password validation / use it global
         );
 
     $this->get('/events', EventsController::class . ':listEvents')
         ->add(new \JMP\Middleware\ValidationChecker())
         ->add(
-            new Validation($this->getContainer()['settings']['validation']['listEvents'])
+            new Validation($this->getContainer()['validation']['listEvents'])
         )->add($jwtMiddleware);
 
     $this->post('/users', UsersController::class . ':createUser')
         ->add(new \JMP\Middleware\ValidationChecker())
         ->add(
-            new Validation($this->getContainer()['settings']['validation']['createUser'])
+            new Validation($this->getContainer()['validation']['createUser'])
         )->add($jwtMiddleware);
 
 });
