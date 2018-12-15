@@ -7,6 +7,7 @@ session_regenerate_id();
 
 // Set settings and instantiate the app
 $settings = require __DIR__ . '/../src/settings.php';
+$settings['validation'] = require __DIR__ . '/../src/validation.php';
 $app = new \Slim\App($settings);
 
 // Set up dependencies
