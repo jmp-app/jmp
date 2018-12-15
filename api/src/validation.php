@@ -8,7 +8,7 @@ $container['validation'] = function (\Psr\Container\ContainerInterface $containe
     return [
         'login' => [
             'username' => v::notEmpty()->noWhitespace()->length(1, 101),
-            'password' => v::notEmpty()->length(6, 255),
+            'password' => v::notEmpty()->length(8, 255),
         ],
         'loginTranslation' => function ($message) {
             $messages = [
