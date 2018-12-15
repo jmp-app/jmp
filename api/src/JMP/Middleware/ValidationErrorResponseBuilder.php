@@ -7,7 +7,7 @@ namespace JMP\Middleware;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class ValidationChecker
+class ValidationErrorResponseBuilder
 {
     /**
      * @param Request $request

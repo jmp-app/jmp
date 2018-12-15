@@ -12,7 +12,7 @@ $app->group('/v1', function () {
 
     $this->post('/login', LoginController::class . ':login')
         ->add(
-            new \JMP\Middleware\ValidationChecker()
+            new \JMP\Middleware\ValidationErrorResponseBuilder()
         )->add(
             new Validation(
                 $this->getContainer()['validation']['login'],
@@ -21,13 +21,13 @@ $app->group('/v1', function () {
         );
 
     $this->get('/events', EventsController::class . ':listEvents')
-        ->add(new \JMP\Middleware\ValidationChecker())
+        ->add(new \JMP\Middleware\ValidationErrorResponseBuilder())
         ->add(
             new Validation($this->getContainer()['validation']['listEvents'])
         )->add($jwtMiddleware);
 
     $this->post('/users', UsersController::class . ':createUser')
-        ->add(new \JMP\Middleware\ValidationChecker())
+        ->add(new \JMP\Middleware\ValidationErrorResponseBuilder())
         ->add(
             new Validation($this->getContainer()['validation']['createUser'])
         )->add($jwtMiddleware);
