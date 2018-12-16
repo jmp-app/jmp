@@ -36,6 +36,7 @@ export const events = {
     },
     mutations: {
         getAllRequest(state) {
+            state.all = null;
             state.all = {loading: true};
         },
         getAllSuccess(state, events) {
