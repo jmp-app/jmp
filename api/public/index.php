@@ -12,6 +12,10 @@ $app = new \Slim\App($settings);
 // Set up dependencies
 require __DIR__ . '/../src/dependencies.php';
 
+// Add validation
+require __DIR__ . '/../src/validation.php';
+
+
 // Register routes
 require __DIR__ . '/../src/routes.php';
 

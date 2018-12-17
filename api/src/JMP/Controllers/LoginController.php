@@ -36,8 +36,7 @@ class LoginController
 
         // check for validation errors
         if ($request->getAttribute('has_errors')) {
-            $errors = $request->getAttribute('errors');
-            return $response->withJson(['errors' => $errors], 400);
+            return $response;
         }
 
         $body = $request->getParsedBody();
@@ -54,7 +53,7 @@ class LoginController
             return $response->withJson($data);
         } else {
             // user isn't authenticated
-            return $response->withJson(['errors' => ['Username or password is incorrect' => ['is invalid']]], 403);
+            return $response->withJson(['errors' => ['authentication' => ['Username or password is incorrect']]], 403);
         }
     }
 

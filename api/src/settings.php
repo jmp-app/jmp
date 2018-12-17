@@ -1,7 +1,5 @@
 <?php
 
-use Respect\Validation\Validator as v;
-
 // Define root path
 defined('DS') ?: define('DS', DIRECTORY_SEPARATOR);
 defined('ROOT') ?: define('ROOT', dirname(__DIR__) . DS);
@@ -36,27 +34,6 @@ return [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES => true,
-            ]
-        ],
-
-        // Input validations
-        'validation' => [
-            'login' => [
-                'username' => v::notEmpty()->noWhitespace()->length(1, 101),
-                'password' => v::notEmpty()->length(6, 255),
-            ],
-            'listEvents' => [
-                'groupId' => v::optional(v::numeric()),
-                'eventTypeId' => v::optional(v::numeric()),
-                'limit' => v::optional(v::numeric()),
-                'offset' => v::optional(v::numeric()),
-            ],
-            'createUser' => [
-                'username' => v::notEmpty()->noWhitespace()->length(1, 101),
-                'lastname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
-                'firstname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
-                'password' => v::notEmpty()->length(1, 256),
-                'email' => v::optional(v::notEmpty()->length(1, 256)::email())
             ]
         ],
 
