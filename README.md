@@ -14,21 +14,25 @@ Everything related to the frontend is located in [vue](vue). The frontend uses *
 
 > Install Dependencies
 
+In the vue folder:
 ```bash
-npm install --prefix ./vue
+npm install
 ```
 
 #### Backend
 
 Everything related to the backend is located in [api](api). The backend uses the **[Slim Framework](https://www.slimframework.com/)**.
+
 > Install Dependencies
+
+In the projectfolder:
 ```bash
 composer install -d api
 ```
 
 ### Docker
 
-Use the following command to start the environment for the first time:
+Use the following command to start the environment for the first time (this may take a moment):
 ```bash
 docker-compose up -d --build
 ```

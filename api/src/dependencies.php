@@ -1,11 +1,11 @@
 <?php
 
 
-use Odan\Slim\Session\Adapter\PhpSessionAdapter;
-use Odan\Slim\Session\Session;
 use Tuupola\Middleware\JwtAuthentication;
 
 $container = $app->getContainer();
+
+// Database
 
 $container['database'] = function ($container) {
     $config = $container->get('settings')['database'];
@@ -15,14 +15,7 @@ $container['database'] = function ($container) {
     return new PDO($dsn, $config['username'], $config['password'], $config['options']);
 };
 
-$container['session'] = function (\Psr\Container\ContainerInterface $container) {
-    $settings = $container->get('settings')['session'];
-    $adapter = new PhpSessionAdapter();
-    $session = new Session($adapter);
-    $session->setOptions($settings);
-
-    return $session;
-};
+// Middlewares
 
 $container['jwt'] = function (\Psr\Container\ContainerInterface $container) {
 
@@ -30,6 +23,8 @@ $container['jwt'] = function (\Psr\Container\ContainerInterface $container) {
 
     return new JwtAuthentication($jwt_settings);
 };
+
+// Services
 
 $container['auth'] = function (\Psr\Container\ContainerInterface $container) {
     return new \JMP\Services\Auth($container);
@@ -51,7 +46,12 @@ $container['eventTypeService'] = function (\Psr\Container\ContainerInterface $co
     return new \JMP\Services\EventTypeService($container);
 };
 
-// monolog
+$container['userService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\UserService($container);
+};
+
+// Logger
+// TODO (dominik): Make logger working with docker / logger required?
 $container['logger'] = function (\Psr\Container\ContainerInterface $container) {
     $settings = $container->get('settings')['logger'];
     $logger = new Monolog\Logger($settings['name']);

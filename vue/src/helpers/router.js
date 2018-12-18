@@ -14,34 +14,38 @@ export const router = new Router({
             component: EventOverview
         },
         {
-            path: '/sample-home',
-            name: 'home',
-            component: function () {
-                return import('../views/Home.vue');
-            }
-        },
-        {
-            path: '/sample-about',
-            name: 'about',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: function () {
-                return import(/* webpackChunkName: "about" */ '../views/About.vue');
-            }
-        },
-        {
             path: '/login',
             name: 'login',
             component: function () {
                 return import('../views/Login.vue');
+            }
+        },
+        {
+            path: '/users',
+            name: 'users',
+            component: function () {
+                return import('../views/user/Users.vue');
+            }
+        },
+        {
+            path: '/users/create',
+            name: 'createUser',
+            component: function () {
+                return import('../views/user/UserCreate.vue');
+            }
+        },
+        {
+            path: '/users/:id',
+            name: 'user',
+            component: function () {
+                return import('../views/user/UserEdit.vue');
             }
         }
     ]
 });
 
 router.beforeEach((to, from, next) => {
-// redirect to login page if not logged in and trying to access a restricted page
+    // redirect to login page if not logged in and trying to access a restricted page
     const publicPages = ['/login'];
     const authRequired = !publicPages.includes(to.path);
     const loggedIn = localStorage.getItem('user');

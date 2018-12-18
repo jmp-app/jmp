@@ -3,7 +3,7 @@
 namespace JMP\Models;
 
 
-class Event
+class Event implements ArrayConvertable
 {
     /**
      * @var int
@@ -62,5 +62,17 @@ class Event
         $this->to = $args['to'];
         $this->place = $args['place'];
         $this->description = $args['description'];
+    }
+
+    /**
+     * Returns an array representing the current object.
+     * This method makes it possible to do some conversion or filtering before casting the object to an array
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return array_filter((array)$this, function ($value) {
+            return $value !== null;
+        });
     }
 }

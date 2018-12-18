@@ -1,7 +1,5 @@
 <?php
 
-use Respect\Validation\Validator as v;
-
 // Define root path
 defined('DS') ?: define('DS', DIRECTORY_SEPARATOR);
 defined('ROOT') ?: define('ROOT', dirname(__DIR__) . DS);
@@ -39,24 +37,16 @@ return [
             ]
         ],
 
-        // Input validations
-        'validation' => [
-            'login' => [
-                'username' => v::notEmpty()->noWhitespace()->length(1, 101),
-                'password' => v::notEmpty()->length(6, 255),
-            ],
-            'listEvents' => [
-                'groupId' => v::optional(v::numeric()),
-                'eventTypeId' => v::optional(v::numeric()),
-                'limit' => v::optional(v::numeric()),
-                'offset' => v::optional(v::numeric()),
-            ]
-        ],
-
         // JWT settings
         'jwt' => [
             'secret' => getenv('JWT_SECRET'),
             'secure' => getenv('JWT_SECURE') === 'true' ? true : false,
+        ],
+
+        // Auth settings
+        'auth' => [
+            'adminGroupName' => 'Admin',
+            'subjectIdentifier' => 'username'
         ],
 
         // Monolog settings
