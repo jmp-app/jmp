@@ -11,6 +11,7 @@ http.interceptors.request.use(function(request) {
     if (token) {
         request.headers['Authorization'] = `Bearer ${token}`;
     }
+    return request;
 });
 
 http.interceptors.response.use(undefined, function(error) {
