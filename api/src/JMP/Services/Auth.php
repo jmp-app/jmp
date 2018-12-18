@@ -70,31 +70,22 @@ class Auth
      */
     public function attempt($username, $password)
     {
-        $sql = <<<SQL
-SELECT username, lastname, firstname, email, password, password_change AS passwordChange
-FROM user
-WHERE username = :username 
-SQL;
-
-        // search user in db
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':username', $username);
-
-        $stmt->execute();
-
-        // check if results are present
-        if ($stmt->rowCount() === 0) {
-            return Optional::failure();
+        $optional = $this->getUser($username);
+        if ($optional->isFailure()) {
+            // No User found
+            return $optional;
         }
 
-        $data = $stmt->fetch();
+        $data = $optional->getData();
 
         // verify password
         if (password_verify($password, $data['password'])) {
+            // valid password
             unset($data['password']);
             return Optional::success(new User($data));
         }
 
+        // invalid password
         return Optional::failure();
     }
 
@@ -106,26 +97,15 @@ SQL;
     public function requestUser(Request $request)
     {
         if ($token = $request->getAttribute('token')) {
-
-            $sql = <<<SQL
-SELECT id, username, lastname, firstname, email, token, password_change AS passwordChange
-FROM user
-WHERE username=:username
-SQL;
-
-            $stmt = $this->db->prepare($sql);
-
-            $stmt->bindParam(':username', $token['sub']);
-
-            $stmt->execute();
-
-            if ($stmt->rowCount() === 0) {
-                return Optional::failure();
+            $optional = $this->getUser($token['sub']);
+            if ($optional->isFailure()) {
+                return $optional;
+            } else {
+                $user = $optional->getData();
+                unset($user['password']);
+                unset($user['passwordChange']);
+                return Optional::success($user);
             }
-
-            $data = $stmt->fetch();
-
-            return Optional::success($data);
         } else {
             return Optional::failure();
         }
@@ -139,35 +119,58 @@ SQL;
      */
     public function requestAdmin(Request $request)
     {
-        if ($token = $request->getAttribute('token')) {
+        $optional = $this->requestUser($request);
 
-            $sql = <<<SQL
-SELECT user.id, username, lastname, firstname, email, token, password_change AS passwordChange
+        if ($optional->isFailure()) {
+            // No token supplied or invalid username
+            return $optional;
+        }
+
+        if ($optional->getData()['isAdmin'] === "1") {
+            // User has admin permissions
+            return $optional;
+        }
+
+        // User hasn't admin permissions
+        return Optional::failure();
+    }
+
+    /**
+     * Selects the user by username
+     * Note: the password is also selected and must be removed!
+     * @param string $username
+     * @return Optional
+     */
+    private function getUser(string $username): Optional
+    {
+        $sql = <<<SQL
+SELECT user.id, username, lastname, firstname, email, password, password_change AS passwordChange,
+#        Check if the user is an admin, 1-> admin, 0-> no admin
+       NOT ISNULL((SELECT username
+                   FROM user
+                          LEFT JOIN membership m ON user.id = m.user_id
+                          LEFT JOIN `group` g ON m.group_id = g.id
+                   WHERE username = :username
+                     AND g.name = :adminGroupName
+       )) AS isAdmin
 FROM user
-       LEFT JOIN membership m on user.id = m.user_id
-       LEFT JOIN `group` g on m.group_id = g.id
 WHERE username = :username
-  AND g.name = :adminGroupName
 SQL;
 
-            $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->prepare($sql);
 
-            $stmt->bindParam(':username', $token['sub']);
-            $stmt->bindParam(':adminGroupName', $this->adminGroupName);
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':adminGroupName', $this->adminGroupName);
 
-            $stmt->execute();
+        $stmt->execute();
 
-            if ($stmt->rowCount() === 0) {
-                return Optional::failure();
-            }
-
-            $data = $stmt->fetch();
-
-            return Optional::success($data);
-        } else {
+        if ($stmt->rowCount() === 0) {
             return Optional::failure();
         }
 
+        $data = $stmt->fetch();
+
+        return Optional::success($data);
     }
 
 }
