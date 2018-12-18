@@ -5,6 +5,7 @@ import {alert} from './alert.module';
 import {authentication} from './authentication.module';
 import {users} from './users.module';
 import {user} from './user.module';
+import {events} from './events.module';
 
 Vue.use(Vuex);
 
@@ -13,6 +14,7 @@ export const store = new Vuex.Store({
         alert,
         authentication,
         user,
-        users
+        users,
+        events
     }
 });
