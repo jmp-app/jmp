@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="{ name: 'EventDetails', params:{ id: event.id, title: event.title } }" class="eventCard">
+    <router-link :to="{ name: 'eventDetail', params:{ id: event.id, title: event.title } }" class="eventCard">
         <div :style="{ backgroundColor: event.eventType.color, color: getColor() }" class="card mb-3">
             <div class="card-header">
                 <h5>{{event.title}}</h5>
