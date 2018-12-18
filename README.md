@@ -14,8 +14,9 @@ Everything related to the frontend is located in [vue](vue). The frontend uses *
 
 > Install Dependencies
 
+In the vue folder:
 ```bash
-npm install --prefix ./vue
+npm install
 ```
 
 #### Backend
