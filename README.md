@@ -22,7 +22,10 @@ npm install
 #### Backend
 
 Everything related to the backend is located in [api](api). The backend uses the **[Slim Framework](https://www.slimframework.com/)**.
+
 > Install Dependencies
+
+In the projectfolder:
 ```bash
 composer install -d api
 ```
