@@ -43,7 +43,6 @@ function login(username, password) {
 function logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('user');
-    Vue.axios.defaults.headers.common['Authorization'] = '';
 }
 
 function createUser(user) {
