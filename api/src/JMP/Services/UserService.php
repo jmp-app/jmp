@@ -13,6 +13,10 @@ class UserService
      * @var \PDO
      */
     protected $db;
+    /**
+     * @var string
+     */
+    protected $adminGroupName;
 
     /**
      * EventService constructor.
@@ -20,6 +24,7 @@ class UserService
     public function __construct(ContainerInterface $container)
     {
         $this->db = $container->get('database');
+        $this->adminGroupName = $container->get('settings')['auth']['adminGroupName'];
     }
 
     /**
@@ -85,7 +90,15 @@ SQL;
     private function getUserByUsername(string $username): User
     {
         $sql = <<<SQL
-SELECT username, lastname, firstname, email, password_change AS passwordChange
+SELECT user.id, username, lastname, firstname, email,
+#        Check if the user is an admin, 1-> admin, 0-> no admin
+       NOT ISNULL((SELECT username
+                   FROM user
+                          LEFT JOIN membership m ON user.id = m.user_id
+                          LEFT JOIN `group` g ON m.group_id = g.id
+                   WHERE username = :username
+                     AND g.name = :adminGroupName
+       )) AS isAdmin
 FROM user
 WHERE username = :username
 SQL;
@@ -94,6 +107,7 @@ SQL;
         $stmt = $this->db->prepare($sql);
 
         $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':adminGroupName', $this->adminGroupName);
 
         $stmt->execute();
 
