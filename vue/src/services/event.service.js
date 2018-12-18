@@ -1,4 +1,4 @@
-import {authHeader} from '../helpers';
+import Vue from 'vue';
 
 export const eventService = {
     getAll,
@@ -7,46 +7,20 @@ export const eventService = {
 };
 
 function getAll() {
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
-
-    return fetch('api/v1/events', requestOptions)
+    return Vue.axios.get('/events')
         .then(response => {
-            return response.json();
-        })
-        .catch(error => {
-            return Promise.reject(error);
+            return response.data.json();
         });
 }
 
 function getInitialOverview() {
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
-
-    return fetch('api/v1/events?limit=5', requestOptions)
-        .then(response => {
-            return response.json();
-        })
-        .catch(error => {
-            return Promise.reject(error);
-        });
+    return Vue.axios.get('/events?limit=5').then(response => {
+        return response.data;
+    });
 }
 
 function getNextEvents(offset) {
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
-
-    return fetch('api/v1/events?limit=5&offset=' + offset, requestOptions)
-        .then(response => {
-            return response.json();
-        })
-        .catch(error => {
-            return Promise.reject(error);
-        });
+    return Vue.axios.get(`/events?limit=5&offset=${offset}`).then(response => {
+        return response.data;
+    });
 }

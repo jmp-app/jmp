@@ -35,10 +35,12 @@
              */
             loadDataUntilScreenIsFull: function () {
                 let lastEventCard = document.getElementById('eventCards').lastChild;
-                let rect = lastEventCard.getBoundingClientRect();
-                if (rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)) {
-                    let offset = this.getOffset();
-                    this.$store.dispatch('events/getNextEvents', { offset });
+                if (lastEventCard) {
+                    let rect = lastEventCard.getBoundingClientRect();
+                    if (rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)) {
+                        let offset = this.getOffset();
+                        this.$store.dispatch('events/getNextEvents', {offset});
+                    }
                 }
             },
             /**
@@ -56,6 +58,9 @@
             initScrollListener: function () {
                 window.addEventListener('scroll', this.handleScroll);
             },
+            /**
+             * Handle scroll events
+             */
             handleScroll: function () {
                 let bottomOfWindow =
                     document.documentElement.scrollTop +
@@ -66,6 +71,10 @@
                     this.$store.dispatch('events/getNextEvents', {offset});
                 }
             },
+            /**
+             * Handle mutations
+             * @param mutation
+             */
             handleMutation: function (mutation) {
                 if (mutation.type === 'events/getInitialOverviewSuccess') {
                     this.$nextTick(() => this.loadDataUntilScreenIsFull());
