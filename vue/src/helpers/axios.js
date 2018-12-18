@@ -6,6 +6,13 @@ export const http = axios.create({
     baseURL: `http://${config.api}/v1`
 });
 
+http.interceptors.request.use(function(request) {
+    const token = JSON.parse(localStorage.getItem('token'));
+    if (token) {
+        request.headers['Authorization'] = `Bearer ${token}`;
+    }
+});
+
 http.interceptors.response.use(undefined, function(error) {
     if (error.status === 401) {
         // auto logout if 401 response returned from api
