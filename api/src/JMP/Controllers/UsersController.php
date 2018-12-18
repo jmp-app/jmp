@@ -42,15 +42,14 @@ class UsersController
      */
     public function createUser(Request $request, Response $response): Response
     {
-        // TODO (dominik): Make a middleware which checks the permissions and creates the error response
         // Check user for admin permissions
         if ($this->auth->requestAdmin($request)->isFailure()) {
-            // No token supplied
             if ($request->getAttribute('token')) {
-                return $response->withStatus(401);
-            } else {
                 // Token supplied, but no admin permissons
                 return $response->withStatus(403);
+            } else {
+                // No token supplied
+                return $response->withStatus(401);
             }
         }
 
