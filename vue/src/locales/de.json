@@ -11,7 +11,7 @@
     "user.delete": "Benutzer löschen",
     "login": "Anmelden",
     "login.passwordRequired": "Passwort ist Pflichtfeld",
-    "login.usernameRequired": "Benutzername ist Pflichtfeld"
+    "login.usernameRequired": "Benutzername ist Pflichtfeld",
     "cancel": "Abbrechen",
     "create": "Erstellen",
     "edit": "Bearbeiten",
