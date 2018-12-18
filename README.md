@@ -32,7 +32,7 @@ composer install -d api
 
 ### Docker
 
-Use the following command to start the environment for the first time:
+Use the following command to start the environment for the first time (this may take a moment):
 ```bash
 docker-compose up -d --build
 ```
