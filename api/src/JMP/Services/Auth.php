@@ -103,6 +103,7 @@ class Auth
             } else {
                 $user = $optional->getData();
                 unset($user['password']);
+                unset($user['passwordChange']);
                 return Optional::success($user);
             }
         } else {
@@ -143,7 +144,7 @@ class Auth
     private function getUser(string $username): Optional
     {
         $sql = <<<SQL
-SELECT user.id, username, lastname, firstname, email, token, password, password_change AS passwordChange,
+SELECT user.id, username, lastname, firstname, email, password, password_change AS passwordChange,
 #        Check if the user is an admin, 1-> admin, 0-> no admin
        NOT ISNULL((SELECT username
                    FROM user
