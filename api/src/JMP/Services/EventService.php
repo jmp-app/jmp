@@ -123,7 +123,7 @@ SQL;
     /**
      * Get event by id
      * @param int $eventId
-     * @return Event[]
+     * @return Event
      */
     public function getEventById(int $eventId)
     {
@@ -146,7 +146,7 @@ SQL;
 
         $stmt->bindValue(':eventId', $eventId, PDO::PARAM_INT);
 
-        return $this->fetchAllEvents($stmt);
+        return reset($this->fetchAllEvents($stmt));
 
     }
 
