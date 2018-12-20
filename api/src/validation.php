@@ -4,7 +4,7 @@ use Respect\Validation\Validator as v;
 
 $container = $app->getContainer();
 
-$container['validation'] = function (\Psr\Container\ContainerInterface $container) {
+$container['validation'] = function () {
     return [
         'login' => [
             'username' => v::notEmpty()->noWhitespace()->length(1, 101),
@@ -13,7 +13,8 @@ $container['validation'] = function (\Psr\Container\ContainerInterface $containe
         'loginTranslation' => function ($message) {
             $messages = [
                 '{{name}} must have a length between {{minValue}} and {{maxValue}}' => 'Must have a length between {{minValue}} and {{maxValue}}',
-                '{{name}} must not be empty' => 'Must not be empty'
+                '{{name}} must not be empty' => 'Must not be empty',
+                '{{name}} must not contain whitespace' => 'Must not contain whitespace'
             ];
             return $messages[$message];
         },
@@ -22,6 +23,9 @@ $container['validation'] = function (\Psr\Container\ContainerInterface $containe
             'eventType' => v::optional(v::noWhitespace()->numeric()->min(0)),
             'limit' => v::optional(v::noWhitespace()->numeric()->min(0)),
             'offset' => v::optional(v::noWhitespace()->numeric()->min(0)),
+        ],
+        'getEventById' => [
+            'id' => v::notEmpty()->noWhitespace()->numeric()
         ],
         'createUser' => [
             'username' => v::notEmpty()->noWhitespace()->length(1, 101),

@@ -42,21 +42,6 @@ class UsersController
      */
     public function createUser(Request $request, Response $response): Response
     {
-        // Check user for admin permissions
-        if ($this->auth->requestAdmin($request)->isFailure()) {
-            if ($request->getAttribute('token')) {
-                // Token supplied, but no admin permissons
-                return $response->withStatus(403);
-            } else {
-                // No token supplied
-                return $response->withStatus(401);
-            }
-        }
-
-        if ($request->getAttribute('has_errors')) {
-            return $response;
-        }
-
         $user = $request->getParsedBody();
 
         // check if the username is already used by an other user

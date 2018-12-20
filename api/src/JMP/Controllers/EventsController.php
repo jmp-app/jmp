@@ -39,14 +39,6 @@ class EventsController
      */
     public function listEvents(Request $request, Response $response): Response
     {
-        if ($this->auth->requestUser($request)->isFailure()) {
-            return $response->withStatus(401);
-        }
-
-        // check validation errors
-        if ($request->getAttribute('has_errors')) {
-            return $response;
-        }
         // if limit and offset are not set do not use pagination
         if (empty($request->getQueryParam('limit')) && empty($request->getQueryParam('offset'))) {
             $arguments = $this->fetchArgs($request->getQueryParams());
@@ -68,6 +60,19 @@ class EventsController
         }
 
 
+    }
+
+    /**
+     * Retrieves event from the database queried by the id in args.
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function getEventById(Request $request, Response $response, array $args): Response
+    {
+        $event = Converter::convert($this->eventService->getEventById($args['id']));
+        return $response->withJson($event);
     }
 
     /**
