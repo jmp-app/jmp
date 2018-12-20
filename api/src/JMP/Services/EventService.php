@@ -121,6 +121,36 @@ SQL;
     }
 
     /**
+     * Get event by id
+     * @param int $eventId
+     * @return Event[]
+     */
+    public function getEventById(int $eventId)
+    {
+        $sql = <<< SQL
+                SELECT event.id,
+                       event.title,
+                       event.description,
+                       `from`,
+                       `to`,
+                       place,
+                       event_type_id AS eventTypeId,
+                       default_registration_state_id AS defaultRegistrationState
+                FROM event
+                RIGHT JOIN event_has_group ehg ON event.id = ehg.event_id
+                RIGHT JOIN event_type ON event.event_type_id = event_type.id
+                WHERE event.id = :eventId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindValue(':eventId', $eventId, PDO::PARAM_INT);
+
+        return $this->fetchAllEvents($stmt);
+
+    }
+
+    /**
      * Executes the statement and parses its result to return a list of events.
      * @param \PDOStatement $stmt
      * @return Event[]
