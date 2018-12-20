@@ -1,8 +1,11 @@
 <template>
-    <div id="eventCards">
-        <div :key="event.id" v-for="event in events['items']">
-            <EventCard :event="event"/>
+    <div>
+        <div id="eventCards">
+            <div :key="event.id" v-for="event in events">
+                <EventCard :event="event"/>
+            </div>
         </div>
+        <div v-if="loading">Loading...</div>
     </div>
 </template>
 
@@ -14,7 +17,10 @@
         components: {EventCard},
         computed: {
             events() {
-                return this.$store.state.events.all;
+                return this.$store.state.events.overview.events;
+            },
+            loading() {
+                return this.$store.state.events.overview.loading;
             }
         },
         data() {

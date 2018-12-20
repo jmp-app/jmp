@@ -3,7 +3,9 @@ import {eventService} from '../services';
 export const events = {
     namespaced: true,
     state: {
-        all: {}
+        all: {},
+        overview: {},
+        detail: {}
     },
     actions: {
         getAll({commit}) {
@@ -25,48 +27,72 @@ export const events = {
                 );
         },
         getNextEvents({commit}, {offset}) {
-            commit('getNextEventsRequest', {offset});
+            commit('getNextEventsRequest');
 
             eventService.getNextEvents(offset)
                 .then(
                     events => commit('getNextEventsSuccess', events),
                     error => commit('getNextEventsFailure', error)
                 );
+        },
+        getEventById({commit}, {eventId}) {
+            commit('getEventByIdRequest');
+
+            eventService.getEventById(eventId)
+                .then(
+                    event => commit('getEventByIdSuccess', event),
+                    error => commit('getEventByIdFailure', error)
+                );
         }
     },
     mutations: {
         getAllRequest(state) {
-            state.all = null;
             state.all = {loading: true};
         },
         getAllSuccess(state, events) {
             state.all = {items: events};
+            state.all.loading = false;
         },
         getAllFailure(state, error) {
             state.all = {error};
+            state.all.loading = false;
         },
         getInitialOverviewRequest(state) {
-            state.all = {loading: true};
+            state.overview = {loading: true};
         },
         getInitialOverviewSuccess(state, events) {
-            state.all = {items: events};
+            state.overview = {events};
+            state.overview.loading = false;
         },
         getInitialOverviewFailure(state, error) {
-            state.all = {error};
+            state.overview = {error};
+            state.overview.loading = false;
         },
         getNextEventsRequest(state) {
-            state.all.loading = true;
+            state.overview.loading = true;
         },
         getNextEventsSuccess(state, events) {
-            if (state.all.items) {
-                state.all.items.push(...events);
+            if (state.overview.events) {
+                state.overview.events.push(...events);
             } else {
-                console.log('new Array');
-                state.all = {items: events};
+                state.overview = {events};
             }
+            state.overview.loading = false;
         },
         getNextEventsFailure(state, error) {
-            state.all.error = error;
+            state.overview.error = error;
+            state.overview.loading = false;
+        },
+        getEventByIdRequest(state) {
+            state.detail = {loading: true};
+        },
+        getEventByIdSuccess(state, event) {
+            state.detail = {event};
+            state.detail.loading = false;
+        },
+        getEventByIdFailure(state, error) {
+            state.detail = {error};
+            state.detail.loading = false;
         }
     }
 };
