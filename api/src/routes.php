@@ -14,27 +14,23 @@ $app->group('/v1', function () {
     $jwtMiddleware = $container->get('jwt');
 
     $this->post('/login', LoginController::class . ':login')
-        ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::OPEN))
         ->add(new ValidationErrorResponseBuilder())
-        ->add(
-            new Validation(
-                $this->getContainer()['validation']['login'],
-                $this->getContainer()['validation']['loginTranslation']
-            )
-        );
+        ->add(new Validation(
+            $this->getContainer()['validation']['login'],
+            $this->getContainer()['validation']['loginTranslation']
+        ))
+        ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::OPEN));
 
     $this->get('/events', EventsController::class . ':listEvents')
-        ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
         ->add(new ValidationErrorResponseBuilder())
-        ->add(
-            new Validation($this->getContainer()['validation']['listEvents'])
-        )->add($jwtMiddleware);
+        ->add(new Validation($this->getContainer()['validation']['listEvents']))
+        ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
+        ->add($jwtMiddleware);
 
     $this->post('/users', UsersController::class . ':createUser')
-        ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::ADMIN))
         ->add(new ValidationErrorResponseBuilder())
-        ->add(
-            new Validation($this->getContainer()['validation']['createUser'])
-        )->add($jwtMiddleware);
+        ->add(new Validation($this->getContainer()['validation']['createUser']))
+        ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
 
 });
