@@ -24,6 +24,9 @@ $container['validation'] = function () {
             'limit' => v::optional(v::noWhitespace()->numeric()->min(0)),
             'offset' => v::optional(v::noWhitespace()->numeric()->min(0)),
         ],
+        'getEventById' => [
+            'id' => v::notEmpty()->noWhitespace()->numeric()
+        ],
         'createUser' => [
             'username' => v::notEmpty()->noWhitespace()->length(1, 101),
             'lastname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),

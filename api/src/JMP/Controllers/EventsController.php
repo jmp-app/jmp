@@ -63,6 +63,19 @@ class EventsController
     }
 
     /**
+     * Retrieves event from the database queried by the id in args.
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function getEventById(Request $request, Response $response, array $args): Response
+    {
+        $event = Converter::convert($this->eventService->getEventById($args['id']));
+        return $response->withJson($event);
+    }
+
+    /**
      * @param array $params
      * @return array
      */
