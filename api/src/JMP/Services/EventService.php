@@ -145,8 +145,9 @@ SQL;
         $stmt = $this->db->prepare($sql);
 
         $stmt->bindValue(':eventId', $eventId, PDO::PARAM_INT);
+        $stmt->execute();
 
-        return reset($this->fetchAllEvents($stmt));
+        return $this->fetchEvent($stmt->fetch());
 
     }
 
@@ -162,14 +163,24 @@ SQL;
         $events = $stmt->fetchAll();
 
         foreach ($events as $key => $val) {
-            $event = new Event($val);
-            $event->eventType = $this->eventTypeService->getEventTypeByEvent($val['eventTypeId']);
-            $event->defaultRegistrationState = $this->registrationStateService->getRegistrationTypeById($val['defaultRegistrationState']);
-            $event->groups = $this->groupService->getGroupsByEventId($val['id']);
-            $events[$key] = $event;
+            $events[$key] = $this->fetchEvent($val);
         }
 
         return $events;
+    }
+
+    /**
+     * Parse array to return a event
+     * @param array $val
+     * @return Event
+     */
+    private function fetchEvent(array $val): Event
+    {
+        $event = new Event($val);
+        $event->eventType = $this->eventTypeService->getEventTypeByEvent($val['eventTypeId']);
+        $event->defaultRegistrationState = $this->registrationStateService->getRegistrationTypeById($val['defaultRegistrationState']);
+        $event->groups = $this->groupService->getGroupsByEventId($val['id']);
+        return $event;
     }
 
 }
