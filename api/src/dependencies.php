@@ -1,6 +1,9 @@
 <?php
 
-
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Monolog\Processor\IntrospectionProcessor;
+use Monolog\Processor\WebProcessor;
 use Tuupola\Middleware\JwtAuthentication;
 
 $container = $app->getContainer();
@@ -51,12 +54,18 @@ $container['userService'] = function (\Psr\Container\ContainerInterface $contain
 };
 
 // Logger
-// TODO (dominik): Make logger working with docker / logger required?
 $container['logger'] = function (\Psr\Container\ContainerInterface $container) {
     $settings = $container->get('settings')['logger'];
-    $logger = new Monolog\Logger($settings['name']);
-    $logger->pushProcessor(new Monolog\Processor\UidProcessor());
-    $logger->pushHandler(new Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
+    $logger = new Logger($settings['name']);
+
+    $logger->pushProcessor(new WebProcessor());
+    $logger->pushProcessor(new IntrospectionProcessor());
+
+    $logger->pushHandler(new StreamHandler($settings['path'], $settings['level']));
+
+    if ($settings['stdout']) {
+        $logger->pushHandler(new StreamHandler('php://stdout', $settings['level']));
+    }
 
     return $logger;
 };
