@@ -33,12 +33,6 @@ class LoginController
      */
     public function login(Request $request, Response $response): Response
     {
-
-        // check for validation errors
-        if ($request->getAttribute('has_errors')) {
-            return $response;
-        }
-
         $body = $request->getParsedBody();
 
         // authenticate the user

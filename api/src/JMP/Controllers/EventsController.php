@@ -39,14 +39,6 @@ class EventsController
      */
     public function listEvents(Request $request, Response $response): Response
     {
-        if ($this->auth->requestUser($request)->isFailure()) {
-            return $response->withStatus(401);
-        }
-
-        // check validation errors
-        if ($request->getAttribute('has_errors')) {
-            return $response;
-        }
         // if limit and offset are not set do not use pagination
         if (empty($request->getQueryParam('limit')) && empty($request->getQueryParam('offset'))) {
             $arguments = $this->fetchArgs($request->getQueryParams());
