@@ -1,6 +1,6 @@
 # ![JMP](logo.png)
 
-## Gettings Started
+## Getting Started
 
 ### Pre-requisites
 
