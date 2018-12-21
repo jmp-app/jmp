@@ -1,4 +1,4 @@
-# ![JMP](logo.png)
+# ![JMP](../logo.png)
 
 ## Getting Started
 
@@ -21,51 +21,21 @@ npm install
 npm run build
 ```
 
-Edit .env variables
-**Database settings:**  
+Create file `api/.env` and set all variables declared in [.env.example](../api/.env.example)  
+If you don't create the file, it will be created with the default values. This is not recommended in production.   
+> Read more about all variables at [dotenv](dotenv.md)
 
-| Name | Desc | Default Value | Options | Note |
-|------|------|---------------|---------|------|
-| `DB_ENGINE` | PDO Engine | `mysql` | |The app depends on mariadb/mysql|  
-| `DB_HOST` | Host of the database | `db` | ip-address, hostname, docker-container |When using docker on the same host as the app, you have to use the docker-container-name as host|
-| `DB_PORT` | Port | `3306` ||As in [docker-compose.yml](../docker-compose.yml)|
-| `DB_DATABASE` | Schema/database | `jmp` | |As in [docker-compose.yml](../docker-compose.yml)|
-| `DB_USERNAME` | Username | `jmp_user` | |As in [docker-compose.yml](../docker-compose.yml)|
-| `DB_PASSWORD` | Password | `pass4dev` | |As in [docker-compose.yml](../docker-compose.yml)|
-
-**App Settings:**
-
-| Name | Desc | Default Value | Options | Note |
-|------|------|---------------|---------|------|
-| `APP_NAME` | Application Name | `JMP` | |Same as set in [composer.json](../api/composer.json) at the autoload section |
-| `APP_ENV` | Environment | `local` |  |Defines the environment|
-| `APP_DEBUG` | Debugging | `true` | true, false |Display error details as explained in [Slim Default Settings](https://www.slimframework.com/docs/v3/objects/application.html#slim-default-settings) Not recommended for production environments|
-| `APP_URL` | URL of the application | `http://localhost` | |Issuer of the jwt|
-| `APP_LOG_LEVEL` | Logging level | `debug` | [Monolog Log Levels (case insensitive)](https://github.com/Seldaek/monolog/blob/master/doc/01-usage.md#log-levels) ||
-| `APP_LOG_STDOUT` | Logging to stdout | `true` | true, false |If set to true, you can use `docker logs app`|
-| `APP_LOG_FILE` | Log file | `./log/app.log` | |File must be located in `api/` or a subdirectory, else php won't have the necessary permissions |
-
-**JWT Settings:**
-
-| Name | Desc | Default Value | Options | Note |
-|------|------|---------------|---------|------|
-| `JWT_SECRET` | JWT Signature  | `supersecretkeyyoushouldnotcommittogithub` | |Read more at [stackoverflow](https://stackoverflow.com/a/31313582/7130107). You can use openssl to generate a secret. [HS256/HMAC](https://en.wikipedia.org/wiki/HMAC) is used for signing the jwt|
-| `JWT_SECURE` | https only | `false` | true, false |[read more](https://github.com/tuupola/slim-jwt-auth#security)|
-
-
-Run docker 
-```bash
-
-```
-
-### Docker
-You can use docker-compose to start PHP, MariaDB and Nginx:
-
+Build and start the docker containers
 ```bash
 docker-compose up -d
 ```
 
-The frontend will be served under `localhost/` and the backend under `localhost/api/`.
+Install all the dependencies using the composer of the app container
+````bash
+docker exec -it app composer install
+````
+
+You can now access the frontend at [http://localhost](http://localhost) and the api at [http://localhost/api](http://localhost/api)
 
 ## Authors
 
@@ -75,7 +45,7 @@ The frontend will be served under `localhost/` and the backend under `localhost/
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
 
 
 
@@ -83,7 +53,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 #### Frontend
 
-Everything related to the frontend is located in [vue](vue). The frontend is built with **[Vue.js](https://vuejs.org/)**.
+Everything related to the frontend is located in [vue](../vue). The frontend is built with **[Vue.js](https://vuejs.org/)**.
 #### Backend
 
-Everything related to the backend is located in [api](api). The backend uses the **[Slim Framework](https://www.slimframework.com/)**.
+Everything related to the backend is located in [api](../api). The backend uses the **[Slim Framework](https://www.slimframework.com/)**.
