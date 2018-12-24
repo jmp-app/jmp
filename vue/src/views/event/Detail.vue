@@ -1,14 +1,19 @@
 <template>
     <div>
-        <h1 v-if="event">{{event.title}}</h1>
+        <div v-if="event">
+            <EventDetail :event="event"></EventDetail>
+        </div>
         <p v-if="loading">Loading...</p>
         <p v-if="!event && !loading">Not Found</p>
     </div>
 </template>
 
 <script>
+    import EventDetail from '@/components/EventDetail';
+
     export default {
         name: 'Detail',
+        components: {EventDetail},
         computed: {
             event() {
                 return this.$store.state.events.detail.event;

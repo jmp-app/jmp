@@ -15,5 +15,10 @@
     "cancel": "Abbrechen",
     "create": "Erstellen",
     "edit": "Bearbeiten",
-    "search": "Suche"
+    "search": "Suche",
+    "eventType.title": "Art:",
+    "event.description": "Beschreibung:",
+    "event.fromTo": "Von - Bis:",
+    "event.place": "Ort:",
+    "event.groups": "Gruppen:"
 }

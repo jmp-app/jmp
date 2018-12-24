@@ -15,5 +15,10 @@
     "cancel": "Cancel",
     "create": "Create",
     "edit": "Edit",
-    "search": "Search"
+    "search": "Search",
+    "eventType.title": "Event type:",
+    "event.description": "Description:",
+    "event.fromTo": "From - To:",
+    "event.place": "Place:",
+    "event.groups": "Groups:"
 }
