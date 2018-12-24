@@ -77,6 +77,23 @@
 }
 ```
 
+### Registration
+
+```json
+{
+    "eventId": 29,
+    "userId": 160,
+    "reason": "Sick",
+    "registrationState": {
+        "id": 1,
+        "name": "Deregistered",
+        "reasonRequired": true
+    }
+}
+```
+
+**Note** [Registration](#Registration) includes a [Registration State](#registration_state)
+
 ## Error Handling
 
 ### HTTP Status Codes
@@ -635,13 +652,13 @@ Access rights: authentication required, user has to be an admin
 ### Get Registration State from Event
 
 ```http
-GET /v1/registration-state/{eventId}/{userId}
+GET /v1/registration/{eventId}/{userId}
 ```
 
 Parameters: none
 
 Access rights: authentication required
 
-Returns: the [Registration State](#registration_state)
+Returns: the [Registration](#registration)
 
 ___TODO:___ Registration, Presence and User Meta
