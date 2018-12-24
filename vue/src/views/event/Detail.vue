@@ -5,7 +5,7 @@
         <div v-if="event">
             <EventDetail :event="event"></EventDetail>
             <hr class="mt-4 mb-4"/>
-            <RegistrationForm></RegistrationForm>
+            <RegistrationForm :eventId="event.id"></RegistrationForm>
             <BottomNavigation></BottomNavigation>
         </div>
     </div>

@@ -17,12 +17,21 @@
 <script>
     export default {
         name: 'RegistrationForm',
+        props: {
+            eventId: Number
+        },
         computed: {
+            registration() {
+                return this.$store.state.registration;
+            },
             registrationStates() {
                 return this.$store.state.registrationStates.all.registrationStates;
             }
         },
-        beforeMount() {
+        created() {
+            let eventId = this.eventId;
+            let userId = this.$store.state.authentication.user.id;
+            this.$store.dispatch('registration/getRegistrationByEventIdAndUserId', {eventId, userId});
             this.$store.dispatch('registrationStates/getAll');
         }
     };
