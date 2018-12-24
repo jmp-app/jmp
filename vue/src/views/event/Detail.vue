@@ -5,15 +5,17 @@
         </div>
         <p v-if="loading">Loading...</p>
         <p v-if="!event && !loading">Not Found</p>
+        <BottomNavigation></BottomNavigation>
     </div>
 </template>
 
 <script>
     import EventDetail from '@/components/EventDetail';
+    import BottomNavigation from '@/components/BottomNavigation';
 
     export default {
         name: 'Detail',
-        components: {EventDetail},
+        components: {BottomNavigation, EventDetail},
         computed: {
             event() {
                 return this.$store.state.events.detail.event;
