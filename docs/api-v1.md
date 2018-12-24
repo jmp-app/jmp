@@ -632,4 +632,16 @@ Parameters: none
 
 Access rights: authentication required, user has to be an admin
 
+### Get Registration State from Event
+
+```http
+GET /v1/registration-state/{eventId}/{userId}
+```
+
+Parameters: none
+
+Access rights: authentication required
+
+Returns: the [Registration State](#registration_state)
+
 ___TODO:___ Registration, Presence and User Meta
