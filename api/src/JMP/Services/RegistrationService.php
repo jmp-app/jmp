@@ -44,7 +44,10 @@ SQL;
         $stmt->bindParam(':userId', $userId);
         $stmt->execute();
         $val = $stmt->fetch();
-        $registration = new Registration($val); //TODO (simon): Catch if $val no data is found
+        if (!$val) {
+            return null;
+        }
+        $registration = new Registration($val);
         $registration->registrationState = $this->registrationStateService->getRegistrationTypeById($val['regStateId']);
         return $registration;
     }

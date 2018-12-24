@@ -32,9 +32,13 @@ class RegistrationController
 
     public function getRegistrationByEventIdAndUserId(Request $request, Response $response, array $args): Response
     {
-        $registration = Converter::convert(
-            $this->registrationService->getRegistrationByUserIdAndEventId($args['userId'], $args['eventId'])
-        );
-        return $response->withJson($registration);
+        $registration = $this->registrationService->getRegistrationByUserIdAndEventId($args['userId'], $args['eventId']);
+        if ($registration) {
+            $registration = Converter::convert(
+                $registration
+            );
+            return $response->withJson($registration);
+        }
+        return $response->withStatus(404);
     }
 }
