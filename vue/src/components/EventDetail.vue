@@ -8,10 +8,6 @@
                 <td>{{event.eventType.title}}</td>
             </tr>
             <tr>
-                <th>{{ $t("event.description") }}</th>
-                <td>{{event.description}}</td>
-            </tr>
-            <tr>
                 <th>{{ $t("event.fromTo") }}</th>
                 <td>{{getDateTime()}}</td>
             </tr>
@@ -26,6 +22,10 @@
                             {{group.name}}
                         </span>
                 </td>
+            </tr>
+            <tr>
+                <th>{{ $t("event.description") }}</th>
+                <td>{{event.description}}</td>
             </tr>
             </tbody>
         </table>

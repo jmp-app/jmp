@@ -1,8 +1,8 @@
 <template>
     <nav class="navbar fixed-bottom navbar-light bg-light">
         <form class="form-inline">
-            <button class="btn btn-primary nav-item mr-2">Übersicht</button>
-            <button class="btn btn-primary nav-item mr-2">Kontrollieren</button>
+            <button class="btn btn-primary nav-item mr-2" type="button">Übersicht</button>
+            <button class="btn btn-primary nav-item mr-2" type="button">Kontrollieren</button>
         </form>
     </nav>
 </template>
