@@ -7,6 +7,6 @@ export const registrationStateService = {
 function getAll() {
     return Vue.axios.get('/registration-state')
         .then(response => {
-            return response.data.json();
+            return response.data;
         });
 }

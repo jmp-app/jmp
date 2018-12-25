@@ -2,8 +2,8 @@
     <form>
         <div class="form-group">
             <label for="regState">Registration-State</label>
-            <select :key="regState.id" class="form-control" id="regState" v-for="regState in registrationStates">
-                <option>{{regState.title}}</option>
+            <select class="form-control" id="regState">
+                <option :key="regState.id" v-for="regState in registrationStates">{{regState.name}}</option>
             </select>
         </div>
         <div class="form-group">

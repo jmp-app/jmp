@@ -3,7 +3,7 @@ import {registrationStateService} from '../services';
 export const registrationStates = {
     namespaced: true,
     state: {
-        all: []
+        all: {}
     },
     actions: {
         getAll({commit}) {
