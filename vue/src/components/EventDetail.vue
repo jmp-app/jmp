@@ -27,6 +27,10 @@
                 <th>{{ $t("event.description") }}</th>
                 <td>{{event.description}}</td>
             </tr>
+            <tr>
+                <th>Registration</th>
+                <td>{{registration.registrationState.name}}</td>
+            </tr>
             </tbody>
         </table>
     </div>
@@ -39,6 +43,11 @@
         name: 'EventDetail',
         props: {
             event: {}
+        },
+        computed: {
+            registration() {
+                return this.$store.state.registration.detail.registration;
+            }
         },
         methods: {
             getDateTime: function () {

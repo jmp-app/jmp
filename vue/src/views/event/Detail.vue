@@ -5,7 +5,7 @@
         <div v-if="event">
             <EventDetail :event="event"></EventDetail>
             <hr class="mt-4 mb-4"/>
-            <RegistrationForm :eventId="event.id"></RegistrationForm>
+            <RegistrationForm></RegistrationForm>
             <BottomNavigation></BottomNavigation>
         </div>
     </div>
@@ -25,11 +25,17 @@
             },
             loading() {
                 return this.$store.state.events.detail.loading;
+            },
+            registration() {
+                return this.$store.state.registration.detail.registration;
             }
         },
         beforeCreate() {
             let eventId = this.$route.params.id;
             this.$store.dispatch('events/getEventById', {eventId});
+
+            let userId = this.$store.state.authentication.user.id;
+            this.$store.dispatch('registration/getRegistrationByEventIdAndUserId', {eventId, userId});
         }
     };
 </script>

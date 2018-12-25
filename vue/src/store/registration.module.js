@@ -3,7 +3,7 @@ import {registrationService} from '../services';
 export const registration = {
     namespaced: true,
     state: {
-        all: []
+        detail: {}
     },
     actions: {
         getRegistrationByEventIdAndUserId({commit}, {eventId, userId}) {
@@ -11,22 +11,22 @@ export const registration = {
 
             registrationService.getRegistrationByEventIdAndUserId(eventId, userId)
                 .then(
-                    registrationState => commit('getRegistrationByEventIdAndUserIdSuccess', registrationState),
+                    registration => commit('getRegistrationByEventIdAndUserIdSuccess', registration),
                     error => commit('getRegistrationByEventIdAndUserIdFailure', error)
                 );
         }
     },
     mutations: {
         getRegistrationByEventIdAndUserIdRequest(state) {
-            state = {loading: true};
+            state.detail = {loading: true};
         },
-        getRegistrationByEventIdAndUserIdSuccess(state, registrationState) {
-            state = {registrationStates: registrationState};
-            state.loading = false;
+        getRegistrationByEventIdAndUserIdSuccess(state, registration) {
+            state.detail = {registration};
+            state.detail.loading = false;
         },
         getRegistrationByEventIdAndUserIdFailure(state, error) {
-            state = {error};
-            state.loading = false;
+            state.detail = {error};
+            state.detail.loading = false;
         }
     }
 };

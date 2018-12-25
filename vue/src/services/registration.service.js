@@ -7,6 +7,6 @@ export const registrationService = {
 function getRegistrationByEventIdAndUserId(eventId, userId) {
     return Vue.axios.get(`/registration/${eventId}/${userId}`)
         .then(response => {
-            return response.data.json();
+            return response.data;
         });
 }

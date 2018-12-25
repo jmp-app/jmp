@@ -21,17 +21,14 @@
             eventId: Number
         },
         computed: {
-            registration() {
-                return this.$store.state.registration;
-            },
             registrationStates() {
                 return this.$store.state.registrationStates.all.registrationStates;
+            },
+            registration() {
+                return this.$store.state.registration.detail.registration;
             }
         },
         created() {
-            let eventId = this.eventId;
-            let userId = this.$store.state.authentication.user.id;
-            this.$store.dispatch('registration/getRegistrationByEventIdAndUserId', {eventId, userId});
             this.$store.dispatch('registrationStates/getAll');
         }
     };
