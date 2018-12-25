@@ -3,6 +3,7 @@
 use DavidePastore\Slim\Validation\Validation;
 use JMP\Controllers\EventsController;
 use JMP\Controllers\LoginController;
+use JMP\Controllers\RegistrationController;
 use JMP\Controllers\UsersController;
 use JMP\Middleware\AuthenticationMiddleware;
 use JMP\Middleware\ValidationErrorResponseBuilder;
@@ -30,6 +31,12 @@ $app->group('/v1', function () {
     $this->get('/events/{id}', EventsController::class . ':getEventById')
         ->add(new ValidationErrorResponseBuilder())
         ->add(new Validation($this->getContainer()['validation']['getEventById']))
+        ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
+        ->add($jwtMiddleware);
+
+    $this->get('/registration/{eventId}/{userId}', RegistrationController::class . ':getRegistrationByEventIdAndUserId')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($this->getContainer()['validation']['getRegistrationByEventIdAndUserId']))
         ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
         ->add($jwtMiddleware);
 

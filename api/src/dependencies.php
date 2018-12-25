@@ -45,6 +45,10 @@ $container['registrationStateService'] = function (\Psr\Container\ContainerInter
     return new \JMP\Services\RegistrationStateService($container);
 };
 
+$container['registrationService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\RegistrationService($container);
+};
+
 $container['eventTypeService'] = function (\Psr\Container\ContainerInterface $container) {
     return new \JMP\Services\EventTypeService($container);
 };

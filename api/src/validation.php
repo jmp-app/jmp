@@ -27,6 +27,10 @@ $container['validation'] = function () {
         'getEventById' => [
             'id' => v::notEmpty()->noWhitespace()->numeric()
         ],
+        'getRegistrationByEventIdAndUserId' => [
+            'eventId' => v::notEmpty()->noWhitespace()->numeric(),
+            'userId' => v::notEmpty()->noWhitespace()->numeric()
+        ],
         'createUser' => [
             'username' => v::notEmpty()->noWhitespace()->length(1, 101),
             'lastname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
