@@ -13,10 +13,6 @@ class UserService
      * @var \PDO
      */
     protected $db;
-    /**
-     * @var string
-     */
-    protected $adminGroupName;
 
     /**
      * EventService constructor.
@@ -24,7 +20,6 @@ class UserService
     public function __construct(ContainerInterface $container)
     {
         $this->db = $container->get('database');
-        $this->adminGroupName = $container->get('settings')['auth']['adminGroupName'];
     }
 
     /**
@@ -37,8 +32,8 @@ class UserService
     {
         $sql = <<<SQL
 INSERT INTO user
-(username, lastname, firstname, email, password, password_change) 
-VALUES (:username, :lastname, :firstname, :email, :password, :password_change)
+(username, lastname, firstname, email, password, password_change, is_admin) 
+VALUES (:username, :lastname, :firstname, :email, :password, :password_change, :is_admin)
 SQL;
 
         $stmt = $this->db->prepare($sql);
@@ -49,6 +44,7 @@ SQL;
         $stmt->bindValue(':email', $user->email, \PDO::PARAM_STR);
         $stmt->bindParam(':password', $user->password);
         $stmt->bindValue(':password_change', 1, \PDO::PARAM_INT);
+        $stmt->bindValue(':is_admin', $user->isAdmin, \PDO::PARAM_INT);
 
 
         $stmt->execute();
@@ -90,15 +86,7 @@ SQL;
     private function getUserByUsername(string $username): User
     {
         $sql = <<<SQL
-SELECT user.id, username, lastname, firstname, email,
-#        Check if the user is an admin, 1-> admin, 0-> no admin
-       NOT ISNULL((SELECT username
-                   FROM user
-                          LEFT JOIN membership m ON user.id = m.user_id
-                          LEFT JOIN `group` g ON m.group_id = g.id
-                   WHERE username = :username
-                     AND g.name = :adminGroupName
-       )) AS isAdmin
+SELECT user.id, username, lastname, firstname, email, is_admin AS isAdmin
 FROM user
 WHERE username = :username
 SQL;
@@ -107,7 +95,6 @@ SQL;
         $stmt = $this->db->prepare($sql);
 
         $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':adminGroupName', $this->adminGroupName);
 
         $stmt->execute();
 
