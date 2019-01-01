@@ -62,7 +62,6 @@ return [
 
         // Auth settings
         'auth' => [
-            'adminGroupName' => 'Admin',
             'subjectIdentifier' => 'username'
         ],
 

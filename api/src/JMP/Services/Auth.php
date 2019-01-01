@@ -13,7 +13,6 @@ class Auth
 {
 
     private $subjectIdentifier;
-    private $adminGroupName;
 
     /**
      * @var \PDO
@@ -35,7 +34,6 @@ class Auth
         $this->appConfig = $container->get('settings');
 
         $this->subjectIdentifier = $this->appConfig['auth']['subjectIdentifier'];
-        $this->adminGroupName = $this->appConfig['auth']['adminGroupName'];
     }
 
     /**
@@ -144,15 +142,7 @@ class Auth
     private function getUser(string $username): Optional
     {
         $sql = <<<SQL
-SELECT user.id, username, lastname, firstname, email, password, password_change AS passwordChange,
-#        Check if the user is an admin, 1-> admin, 0-> no admin
-       NOT ISNULL((SELECT username
-                   FROM user
-                          LEFT JOIN membership m ON user.id = m.user_id
-                          LEFT JOIN `group` g ON m.group_id = g.id
-                   WHERE username = :username
-                     AND g.name = :adminGroupName
-       )) AS isAdmin
+SELECT user.id, username, lastname, firstname, email, password, password_change AS passwordChange, is_admin AS isAdmin
 FROM user
 WHERE username = :username
 SQL;
@@ -160,7 +150,6 @@ SQL;
         $stmt = $this->db->prepare($sql);
 
         $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':adminGroupName', $this->adminGroupName);
 
         $stmt->execute();
 

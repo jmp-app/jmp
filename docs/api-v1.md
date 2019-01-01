@@ -108,7 +108,7 @@ To authenticate use the following header:
 
 `Authorization: Bearer THESECRETJWTTOKEN`
 
-The token is first received by [logging in](#Authentication). All routes except the login route require authorization. Additionally some routes can only be accessed by **administrators**. A user is admin when he is a member of the `Admin` group.
+The token is first received by [logging in](#Authentication). All routes except the login route require authorization. Additionally some routes can only be accessed by **administrators**. 
 
 ## Endpoints
 
@@ -163,13 +163,14 @@ POST /v1/users
 
 Parameters:
 
-| Field     | Description                 | Required |
-| --------- | --------------------------- | -------- |
-| username  | The user's username         | ✔️        |
-| lastname  | The user's last name        | ❌        |
-| firstname | The user's first name       | ❌️        |
-| email     | The user's email            | ❌        |
-| password  | The user's initial password | ✔️        |
+| Field     | Description                                                  | Required |
+| --------- | ------------------------------------------------------------ | -------- |
+| username  | The user's username                                          | ✔️        |
+| lastname  | The user's last name                                         | ❌        |
+| firstname | The user's first name                                        | ❌️        |
+| email     | The user's email                                             | ❌        |
+| password  | The user's initial password                                  | ✔️        |
+| isAdmin   | Whether the user is an administrator or not. Defaults to no admin | ❌        |
 
 Example request data:
 
@@ -179,7 +180,8 @@ Example request data:
     "lastname": "Smith",
     "firstname": "Jacob",
     "email": "jake@example.com",
-    "password": "secure"
+    "password": "secure",
+    "isAdmin": true
 }
 ```
 
@@ -235,13 +237,14 @@ PUT /v1/users/{id}
 
 Parameters:
 
-| Field     | Description        | Required |
-| --------- | ------------------ | -------- |
-| username  | The new username   | ❌        |
-| lastname  | The new last name  | ❌        |
-| firstname | The new first name | ❌        |
-| email     | The new email      | ❌        |
-| password  | The new password   | ❌        |
+| Field     | Description         | Required |
+| --------- | ------------------- | -------- |
+| username  | The new username    | ❌        |
+| lastname  | The new last name   | ❌        |
+| firstname | The new first name  | ❌        |
+| email     | The new email       | ❌        |
+| password  | The new password    | ❌        |
+| isAdmin   | The new admin state | ❌        |
 
 Example request data:
 
