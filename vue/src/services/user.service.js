@@ -43,7 +43,7 @@ function login(username, password) {
 function logout() {
     // remove user and token from local storage to log user out
     localStorage.removeItem('user');
-    localStorage.remvoeItem('token');
+    localStorage.removeItem('token');
 }
 
 function createUser(user) {
