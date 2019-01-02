@@ -6,7 +6,7 @@
 |------|------|---------------|---------|------|
 | `DB_ENGINE` | PDO Engine           | `mysql` | |The app depends on mariadb/mysql|  
 | `DB_HOST`   | Host of the database | `db`    | ip-address, hostname, docker-container |When using docker on the same host as the app, you have to use the docker-container-name as host|
-| `DB_PORT`   | Port                 | `3306`  ||As in [docker-compose.yml](../docker-compose.yml)|
+| `DB_PORT`   | Port                 | `3306`  | |As in [docker-compose.yml](../docker-compose.yml)|
 | `DB_DATABASE` | Schema/database | `jmp` | |As in [docker-compose.yml](../docker-compose.yml)|
 | `DB_USERNAME` | Username | `jmp_user` | |As in [docker-compose.yml](../docker-compose.yml)|
 | `DB_PASSWORD` | Password | `pass4dev` | |As in [docker-compose.yml](../docker-compose.yml)|
