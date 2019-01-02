@@ -37,6 +37,9 @@ $container['validation'] = function () {
             'firstname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
             'password' => v::notEmpty()->length(1, 256),
             'email' => v::optional(v::notEmpty()->length(1, 256)::email())
+        ],
+        'getUser' => [
+            'id' => v::notEmpty()->noWhitespace()->numeric(),
         ]
     ];
 };

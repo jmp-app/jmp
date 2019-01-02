@@ -46,4 +46,10 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::ADMIN))
         ->add($jwtMiddleware);
 
+    $this->get('/users/{id}', UsersController::class . ':getUser')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($container['validation']['getUser']))
+        ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
+
 });
