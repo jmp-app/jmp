@@ -35,7 +35,7 @@ Read more at the ![api specification](api-v1.md#authentication).
 ### Settings
 To adjust the settings, look here:
  * In ![settings.php](../api/src/settings.php)
- * ![.env](../api/.env) and ![.env docs](dotenv.md)
+ * ![.env](../api/.env.example) and ![.env docs](dotenv.md)
 
 ## Implementation
 The submitted token is decoded by the ![jwt-middleware](https://github.com/tuupola/slim-jwt-auth).  
@@ -79,7 +79,7 @@ The model is just a raw data object with the functionality to convert properly t
 The service method handles all the business logic and communicates with the database.
 
 Now we have to implement a Service to get a user from the database selected by the userid. A ![UserService](../api/src/JMP/Services/UserService.php) already exists, so we only have to add a `getUserByUserId` method. 
-Otherwise we must have to [create a new ervice class](#create-a-new-service-class).
+Otherwise, we must have to [create a new service class](#create-a-new-service-class).
 
 The service method will select the user with the given id. See ![UserService.php](../api/src/JMP/Services/UserService.php) at the method `getUserByUserId`.
 The method returns an Optional containing the User object on succeed, otherwise nothing.
@@ -92,12 +92,12 @@ Make sure the constructor has a ContainerInterface parameter and all required de
 
 After you must add the service class to the slim container in the ![dependencies.php](../api/src/dependencies.php) file.
 
-Check out already existing serivces as examples. ![Services](../api/src/JMP/Services) 
+Check out already existing services as examples. ![Services](../api/src/JMP/Services) 
 
 ### Create a new model
 If the required model not already exists, you have to create a new one.
 * The model should have all columns(no foreign fields) as public attributes.
-* The model must have a cunstructor with one array as parameter. All attributes are set by the values of the array.
+* The model must have a constructor with one array as parameter. All attributes are set by the values of the array.
 * The model must implement the ![ArrayConvertable Interface](../api/src/JMP/Models/ArrayConvertable.php)
 
 Check out already existing model as examples. ![Models](../api/src/JMP/Models) 
