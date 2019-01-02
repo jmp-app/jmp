@@ -28,6 +28,51 @@ src # Source directory. Not public
 └── validation.php # Register validation rules here
 ```
 
+
+## Authentication
+
+### Usage
+We use [JWT](https://jwt.io/) for authentication. The token must be submitted in the Authorization header using the Bearer schema.  
+Example:  
+```http_request
+Authorization: Bearer <token>
+```
+Read more at the [api specification](api-v1.md#authentication).
+### Settings
+To adjust the settings, look here:
+ * In [settings.php](../api/src/settings.php)
+ * [.env](../api/.env) and [.env docs](dotenv.md)
+
+## Implementation
+The submitted token is decoded by the [jwt-middleware](https://github.com/tuupola/slim-jwt-auth).  
+The custom [authentication middleware](../api/src/JMP/Middleware/AuthenticationMiddleware.php) checks the permissions of the enquirer using the `sub` entry of the decoded token.
+If the enquirer has got the right permissions for the route, he can pass, otherwise a 401 will be returned if he hasn't submitted any or an invalid token or a 403 if he just hasn't got the required permissions.
+
+### Login
+To receive a new token, the user have to call the [login route](api-v1.md#login).  
+If the username and the password are valid, a new token is generated with the following service class [Auth.php](../api/src/JMP/Services/Auth.php).
+
+## Validation
+Every user input has to be validated before it is processed.
+
+## Implementation
+
+## Deployment
+
+## Model
+
+## Array Conversion
+
+## Code Style
+
+### Optional
+
+### Type Hints
+
+### SQL
+
+
+
 # Developing new route
 
 ## Service & Model
