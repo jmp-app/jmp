@@ -54,7 +54,7 @@
 
 ```
 
-**Note:** The [Event](#Event) includes an [Event Type](#event_type), a [Registration State](#registration_state) and a list of [Groups](#Group)
+**Note:** The [Event](#Event) includes an [Event Type](#event-type), a [Registration State](#registration-state) and a list of [Groups](#Group)
 
 
 ### Event Type
@@ -112,7 +112,7 @@ The token is first received by [logging in](#Authentication). All routes except 
 
 ## Endpoints
 
-### Authentication
+### Login
 
 ``````http
 POST /v1/login
@@ -406,7 +406,7 @@ Example request data:
 
 Access rights: authentication required, user has to be an admin
 
-Returns: the [Event Type](#event_type)
+Returns: the [Event Type](#event-type)
 
 ### List Event Types
 
@@ -430,7 +430,7 @@ Parameters: none
 
 Access rights: authentication required
 
-Returns: the [Event Type](#event_type)
+Returns: the [Event Type](#event-type)
 
 ### Delete Event Type
 
@@ -620,7 +620,7 @@ Parameters: none
 
 Access rights: authentication required
 
-Returns: the [Registration State](#registration_state)
+Returns: the [Registration State](#registration-state)
 
 ### Delete Registration State
 
