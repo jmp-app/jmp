@@ -47,6 +47,27 @@ SQL;
     }
 
     /**
+     * @param int $id
+     * @param string $newName
+     * @return Group
+     */
+    public function updateGroup(int $id, string $newName): Group
+    {
+        $sql = <<< SQL
+            UPDATE `group`
+            SET name = :newName
+            WHERE id = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':newName', $newName);
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $this->getGroupByName($newName);
+    }
+
+    /**
      * @param $name
      * @return Group
      */

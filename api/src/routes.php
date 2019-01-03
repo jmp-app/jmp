@@ -70,4 +70,10 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
         ->add($jwtMiddleware);
 
+    $this->put('/groups/{id:[0-9]+}', GroupsController::class . ':updateGroup')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($container['validation']['updateGroup']))
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
+
 });
