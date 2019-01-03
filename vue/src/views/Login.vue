@@ -11,9 +11,16 @@
             <div class="form-group row">
                 <label class="col-sm-3 col-form-label" for="username">{{ $t("user.username") }}</label>
                 <div class="col-sm-9">
-                    <input class="form-control" :class="{ 'is-invalid': submitted && !username }" id="username"
-                           type="text" v-bind:placeholder="$t('user.username')" v-model="username"/>
-                    <div class="invalid-feedback" v-show="submitted && !username">{{ $t("login.usernameRequired") }}
+                    <input
+                            :class="{ 'is-invalid': submitted && !username }"
+                            class="form-control"
+                            id="username"
+                            type="text"
+                            v-bind:placeholder="$t('user.username')"
+                            v-model="username"
+                    />
+                    <div class="invalid-feedback" v-show="submitted && !username">
+                        {{ $t("login.usernameRequired") }}
                     </div>
                 </div>
             </div>
@@ -31,7 +38,7 @@
                     <div class="invalid-feedback" v-show="submitted && !password">
                         {{ $t("login.passwordRequired") }}
                     </div>
-                    <div class="invalid-feedback" v-show="submitted && password.length < 6">
+                    <div class="invalid-feedback" v-show="submitted && password && password.length < 6">
                         {{ $t("login.passwordToShort") }}
                     </div>
 
