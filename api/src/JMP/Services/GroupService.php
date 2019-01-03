@@ -47,6 +47,35 @@ SQL;
     }
 
     /**
+     * @param $id
+     */
+    public function deleteGroup($id): void
+    {
+        $this->deleteMemberships($id);
+
+        $sql = <<< SQL
+            DELETE FROM `group`
+            WHERE id = :id;
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    private function deleteMemberships(int $groupId): void
+    {
+        $sql = <<< SQL
+            DELETE FROM `membership`
+            WHERE group_id = :groupId;
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':groupId', $groupId, \PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    /**
      * @param int $id
      * @param string $newName
      * @return Group

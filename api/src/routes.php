@@ -76,4 +76,8 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
         ->add($jwtMiddleware);
 
+    $this->delete('/groups/{id:[0-9]+}', GroupsController::class . ':deleteGroup')
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
+
 });

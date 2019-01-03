@@ -58,6 +58,22 @@ class GroupsController
     }
 
     /**
+     * Deletes a group
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     * @return Response
+     */
+    public function deleteGroup(Request $request, Response $response, $args): Response
+    {
+        $id = $args['id'];
+        $this->groupService->deleteGroup($id);
+        return $response->withJson([
+            'success' => 'Deleted group with id "' . $id . '"'
+        ]);
+    }
+
+    /**
      * Retrieve group by its id
      * @param Request $request
      * @param Response $response
