@@ -8,7 +8,7 @@
 
 <script>
     export default {
-        name: 'local-changer',
+        name: 'LocalChanger',
         data() {
             return {langs: ['de', 'en']};
         }
