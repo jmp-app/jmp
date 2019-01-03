@@ -5,6 +5,7 @@ namespace JMP\Services;
 
 
 use JMP\Models\User;
+use PDO;
 use Psr\Container\ContainerInterface;
 
 class UserService
@@ -113,4 +114,32 @@ SQL;
 
         return new User($stmt->fetch());
     }
+
+    /**
+     * @param int|null $groupId
+     * @return User[]
+     */
+    public function getUsers(?int $groupId): array
+    {
+        $sql = <<< SQL
+            SELECT DISTINCT user.id, username, lastname, firstname, email, is_admin
+            FROM user
+                LEFT JOIN membership m on user.id = m.user_id
+            WHERE (:groupId IS NULL OR m.group_id = :groupId)
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':groupId', $groupId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $users = $stmt->fetchAll();
+
+        foreach ($users as $key => $val) {
+            $users[$key] = new User($val);
+        }
+
+        return $users;
+    }
+
 }
