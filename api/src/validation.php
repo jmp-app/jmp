@@ -44,5 +44,8 @@ $container['validation'] = function () {
         'createGroup' => [
             'name' => v::notEmpty()->noWhitespace()->length(1, 45)
         ],
+        'getGroupById' => [
+            'id' => v::notEmpty()->noWhitespace()->numeric()
+        ],
     ];
 };

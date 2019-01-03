@@ -14,12 +14,18 @@ class GroupService
     protected $db;
 
     /**
+     * @var UserService
+     */
+    protected $userService;
+
+    /**
      * EventService constructor.
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->db = $container->get('database');
+        $this->userService = $container->get('userService');
     }
 
     /**
@@ -77,6 +83,35 @@ SQL;
         $stmt->execute();
 
         return $stmt->rowCount() < 1;
+    }
+
+    /**
+     * @param int $id
+     * @return Optional
+     */
+    public function getGroupById(int $id): Optional
+    {
+        $sql = <<< SQL
+            SELECT id, name
+            FROM `group`
+            WHERE id = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id',  $id);
+        $stmt->execute();
+
+        $data = $stmt->fetch();
+
+        if ($data === false) {
+            return Optional::failure();
+        }
+
+        $group = new Group($data);
+        $group->users = $this->userService->getUsers($id);
+
+        return Optional::success($group);
+
     }
 
     /**

@@ -59,4 +59,20 @@ class GroupsController
         return $response->withJson(Converter::convert($group));
     }
 
+    public function getGroupById(Request $request, Response $response, $args): Response
+    {
+        $id = $args['id'];
+        $group = $this->groupService->getGroupById($id);
+
+        if ($group->isFailure()) {
+            return $response->withJson([
+                'errors' => [
+                    'id' => 'The specified id "' . $id . '"does not exist'
+                ]
+            ], 404);
+        }
+
+        return $response->withJson(Converter::convert($group->getData()));
+    }
+
 }

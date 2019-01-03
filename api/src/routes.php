@@ -64,4 +64,10 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
         ->add($jwtMiddleware);
 
+    $this->get('/groups/{id:[0-9]+}', GroupsController::class . ':getGroupById')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($container['validation']['getGroupById']))
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
+        ->add($jwtMiddleware);
+
 });
