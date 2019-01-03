@@ -6,7 +6,7 @@
             <EventDetail :event="event"></EventDetail>
             <hr class="mt-4 mb-4"/>
             <RegistrationForm v-if="registration"></RegistrationForm>
-            <BottomNavigation></BottomNavigation>
+            <BottomNavigation v-if="isAdmin"></BottomNavigation>
         </div>
     </div>
 </template>
@@ -19,6 +19,12 @@
     export default {
         name: 'Detail',
         components: {RegistrationForm, BottomNavigation, EventDetail},
+        data: function () {
+            return {
+                user: {},
+                isAdmin: false
+            };
+        },
         computed: {
             event() {
                 return this.$store.state.events.detail.event;
@@ -30,11 +36,13 @@
                 return this.$store.state.registration.detail.registration;
             }
         },
-        beforeCreate() {
+        created() {
+            this.user = JSON.parse(window.localStorage.getItem('user'));
+            this.isAdmin = this.user.isAdmin;
             let eventId = this.$route.params.id;
-            this.$store.dispatch('events/getEventById', {eventId});
+            let userId = this.user.id;
 
-            let userId = JSON.parse(window.localStorage.getItem('user')).id;
+            this.$store.dispatch('events/getEventById', {eventId});
 
             this.$store.dispatch('registration/getRegistrationByEventIdAndUserId', {eventId, userId});
         }
