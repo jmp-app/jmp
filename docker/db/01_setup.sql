@@ -118,6 +118,7 @@ CREATE TABLE IF NOT EXISTS `jmp`.`user` (
   `email` VARCHAR(255),
   `password` VARCHAR(255) NOT NULL,
   `password_change` TINYINT DEFAULT 0 NOT NULL,
+  `is_admin` TINYINT DEFAULT 0 NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 160

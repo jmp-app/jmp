@@ -3,8 +3,8 @@ use `jmp`;
 insert into `group` (`name`)
 values ('Admin');
 
-insert into `user` (`username`, `lastname`, `firstname`, `email`, `password`, `password_change`)
-values ('admin', 'User', 'Admin', '', '$2y$10$qB2i3M1TVfNauW6H36Xp9eNIGnVSJQKzYh0ypsaL2Q9INzYYVlREC', false);
+insert into `user` (`username`, `lastname`, `firstname`, `email`, `password`, `password_change`, `is_admin`)
+values ('admin', 'User', 'Admin', '', '$2y$10$qB2i3M1TVfNauW6H36Xp9eNIGnVSJQKzYh0ypsaL2Q9INzYYVlREC', false, true);
 
 insert into `membership` (`group_id`, `user_id`)
 values ((select `id` from `group` where `name` = 'Admin'), (select `id` from `user` where `username` = 'admin'));
