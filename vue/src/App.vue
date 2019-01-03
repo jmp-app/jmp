@@ -28,6 +28,9 @@
         },
         components: {
             Navigation
+        },
+        created() {
+            this.$i18n.locale = window.localStorage.getItem('locale');
         }
     };
 </script>
