@@ -40,6 +40,9 @@ $container['validation'] = function () {
         ],
         'listUsers' => [
             'username' => v::optional(v::notEmpty()->noWhitespace()->numeric()),
-        ]
+        ],
+        'createGroup' => [
+            'name' => v::notEmpty()->noWhitespace()->length(1, 45)
+        ],
     ];
 };

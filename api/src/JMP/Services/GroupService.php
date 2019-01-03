@@ -23,10 +23,67 @@ class GroupService
     }
 
     /**
+     * @param string $name
+     * @return Group
+     */
+    public function createGroup(string $name): Group
+    {
+        $sql = <<< SQL
+            INSERT INTO `group` (name)
+            VALUES (:name)
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':name', $name);
+        $stmt->execute();
+
+        return $this->getGroupByName($name);
+    }
+
+    /**
+     * @param $name
+     * @return Group
+     */
+    public function getGroupByName(string $name): Group
+    {
+        $sql = <<< SQL
+        SELECT id, name
+        FROM `group`
+        WHERE name = :name
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':name', $name);
+        $stmt->execute();
+
+        return new Group($stmt->fetch());
+    }
+
+    /**
+     * Checks whether a group with the given name already exists, as it must be unique
+     * @param string $groupName
+     * @return bool
+     */
+    public function isGroupNameUnique(string $groupName): bool
+    {
+        $sql = <<<SQL
+            SELECT name
+            FROM `group`
+            WHERE name = :name
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':name', $groupName);
+        $stmt->execute();
+
+        return $stmt->rowCount() < 1;
+    }
+
+    /**
      * @param int $eventId
      * @return Group[]
      */
-    public function getGroupsByEventId(int $eventId)
+    public function getGroupsByEventId(int $eventId): array
     {
         $sql = <<< SQL
             SELECT id, name
@@ -46,7 +103,8 @@ SQL;
     /**
      * @return Group[] containing all groups
      */
-    public function getAllGroups() {
+    public function getAllGroups(): array
+    {
         $sql = <<< SQL
             SELECT id, name
             FROM `group`

@@ -59,7 +59,7 @@ SQL;
     }
 
     /**
-     * Checks wheter a user with the given username alredy exists, as it have to be unique
+     * Checks whether a user with the given username already exists, as it must be unique
      * @param string $username
      * @return bool
      */

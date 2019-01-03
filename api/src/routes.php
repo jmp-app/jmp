@@ -54,6 +54,12 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
         ->add($jwtMiddleware);
 
+    $this->post('/groups', GroupsController::class . ':createGroup')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($container['validation']['createGroup']))
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
+
     $this->get('/groups', GroupsController::class . ':listGroups')
         ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
         ->add($jwtMiddleware);
