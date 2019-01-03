@@ -16,9 +16,14 @@
     "create": "Create",
     "edit": "Edit",
     "search": "Search",
+    "submit": "Submit",
     "eventType.title": "Event type:",
     "event.description": "Description:",
     "event.fromTo": "From - To:",
     "event.place": "Place:",
-    "event.groups": "Groups:"
+    "event.groups": "Groups:",
+    "registration.reason": "Reason",
+    "registration.reasonRequired": "Reason is required",
+    "registration.reasonPlaceholder": "Enter reason",
+    "registration.state": "Registration state"
 }

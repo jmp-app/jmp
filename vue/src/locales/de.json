@@ -10,15 +10,20 @@
     "user.create": "Benutzer erstellen",
     "user.delete": "Benutzer löschen",
     "login": "Anmelden",
-    "login.passwordRequired": "Passwort ist Pflichtfeld",
-    "login.usernameRequired": "Benutzername ist Pflichtfeld",
+    "login.passwordRequired": "Passwort ist ein Pflichtfeld",
+    "login.usernameRequired": "Benutzername ist ein Pflichtfeld",
     "cancel": "Abbrechen",
     "create": "Erstellen",
     "edit": "Bearbeiten",
     "search": "Suche",
+    "submit": "Senden",
     "eventType.title": "Art:",
     "event.description": "Beschreibung:",
     "event.fromTo": "Von - Bis:",
     "event.place": "Ort:",
-    "event.groups": "Gruppen:"
+    "event.groups": "Gruppen:",
+    "registration.reason": "Grund",
+    "registration.reasonRequired": "Grund ist ein Pflichtfeld",
+    "registration.reasonPlaceholder": "Grund eingeben",
+    "registration.state": "Status"
 }

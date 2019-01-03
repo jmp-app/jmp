@@ -1,7 +1,7 @@
 <template>
-    <form>
+    <form @submit.prevent="handleSubmit">
         <div class="form-group">
-            <label for="regState">Registration-State</label>
+            <label for="regState">{{ $t("registration.state") }}</label>
             <select @change="handleChange()" class="form-control" id="regState" v-model="selected">
                 <option :key="regState.id" v-bind:value="regState" v-for="regState in registrationStates">
                     {{regState.name}}
@@ -9,10 +9,12 @@
             </select>
         </div>
         <div class="form-group" v-if="selected.reasonRequired">
-            <label for="reason">Reason</label>
-            <input class="form-control" id="reason" placeholder="Enter reason" type="text" v-model="reason">
+            <label for="reason">{{ $t("registration.reason") }}</label>
+            <input :class="{ 'is-invalid': submitted && !reason }" class="form-control" id="reason" type="text"
+                   v-bind:placeholder="$t('registration.reasonPlaceholder')" v-model="reason">
+            <div class="invalid-feedback" v-show="submitted && !reason">{{ $t("registration.reasonRequired") }}</div>
         </div>
-        <button @click="handleSubmit()" class="btn btn-danger" type="button" v-show="showButton">Submit</button>
+        <button class="btn btn-danger" v-show="hasChanges">{{ $t("submit") }}</button>
     </form>
 </template>
 
@@ -23,7 +25,8 @@
             return {
                 selected: this.$store.state.registration.detail.registration.registrationState,
                 reason: this.$store.state.registration.detail.registration.reason,
-                showButton: false
+                hasChanges: false,
+                submitted: false
             };
         },
         computed: {
@@ -36,14 +39,29 @@
         },
         methods: {
             handleChange: function () {
-                console.log('Changed');
-                this.showButton = true;
+                this.submitted = false;
+                if (this.selected.id !== this.registration.registrationState.id) {
+                    this.hasChanges = true;
+                    this.reason = '';
+                } else {
+                    this.hasChanges = false;
+                    this.reason = this.registration.reason;
+                }
             },
             handleSubmit: function () {
-                console.log(`Submit: ${this.selected.name}`);
+                this.submitted = true;
                 if (this.selected.reasonRequired) {
-                    console.log(this.reason);
+                    if (this.reason) {
+                        console.log(`Submit: ${this.selected.name} - ${this.reason}`);
+                    }
+                } else {
+                    console.log(`Submit: ${this.selected.name}`);
                 }
+            }
+        },
+        watch: {
+            reason: function () {
+                this.hasChanges = this.reason !== this.registration.reason;
             }
         },
         beforeMount() {
