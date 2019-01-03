@@ -1,7 +1,7 @@
 <template>
     <div>
         <p v-if="loading">Loading...</p>
-        <p v-if="!event && !loading">Not Found</p>
+        <p v-if="!event && !loading">{{ $t("noDataFound") }}</p>
         <div v-if="event">
             <EventDetail :event="event"></EventDetail>
             <hr class="mt-4 mb-4"/>

@@ -17,6 +17,7 @@
     "edit": "Bearbeiten",
     "search": "Suche",
     "submit": "Senden",
+    "noDataFound": "Keine Daten gefunden",
     "eventType.title": "Art:",
     "event.description": "Beschreibung:",
     "event.fromTo": "Von - Bis:",
