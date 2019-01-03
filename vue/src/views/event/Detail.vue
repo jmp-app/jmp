@@ -34,7 +34,8 @@
             let eventId = this.$route.params.id;
             this.$store.dispatch('events/getEventById', {eventId});
 
-            let userId = this.$store.state.authentication.user.id;
+            let userId = JSON.parse(window.localStorage.getItem('user')).id;
+
             this.$store.dispatch('registration/getRegistrationByEventIdAndUserId', {eventId, userId});
         }
     };
