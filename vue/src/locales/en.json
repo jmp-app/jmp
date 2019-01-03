@@ -11,6 +11,7 @@
     "user.delete": "Delete User",
     "login": "Login",
     "login.passwordRequired": "Password is required",
+    "login.passwordToShort": "Password is to short",
     "login.usernameRequired": "Username is required",
     "cancel": "Cancel",
     "create": "Create",
