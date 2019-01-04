@@ -640,7 +640,7 @@ Parameters: none
 
 Access rights: authentication required
 
-Returns: the [Registration State](#registration_state)
+Returns: the [Registration State](#registration-state)
 
 ### Delete Registration State
 
@@ -677,7 +677,7 @@ Parameters:
 | eventId   | The event's id                                               | ✔️     |
 | userId    | The user's id                                                | ✔        |
 | reason    | The reason for the registration                              | ❌        |
-| registrationState | Registration state [Registration State](#registration_state)| ✔ |
+| registrationState | Registration state [Registration State](#registration-state)| ✔ |
 
 Example request data:
 
