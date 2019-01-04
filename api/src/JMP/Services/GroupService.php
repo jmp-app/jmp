@@ -97,10 +97,11 @@ SQL;
     }
 
     /**
-     * @param $name
+     * Get a group by its unique name
+     * @param $name <strong>You have to make sure that a group with that name exists</strong>
      * @return Group
      */
-    public function getGroupByName(string $name): Group
+    private function getGroupByName(string $name): Group
     {
         $sql = <<< SQL
         SELECT id, name
@@ -111,6 +112,10 @@ SQL;
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':name', $name);
         $stmt->execute();
+
+        if ($stmt->rowCount() < 1) {
+            throw new \RuntimeException("No group exists with that name.");
+        }
 
         return new Group($stmt->fetch());
     }
