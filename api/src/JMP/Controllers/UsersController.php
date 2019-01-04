@@ -34,6 +34,13 @@ class UsersController
         $this->userService = $container->get('userService');
     }
 
+    public function listUsers(Request $request, Response $response): Response
+    {
+        $group =$request->getQueryParam('group');
+        $users =$this->userService->getUsers(empty($group) ? null : $group);
+        return $response->withJson(Converter::convertArray($users));
+    }
+
     /**
      * Returns the user or an error
      * @param Request $request
@@ -42,21 +49,6 @@ class UsersController
      */
     public function createUser(Request $request, Response $response): Response
     {
-        // Check user for admin permissions
-        if ($this->auth->requestAdmin($request)->isFailure()) {
-            if ($request->getAttribute('token')) {
-                // Token supplied, but no admin permissons
-                return $response->withStatus(403);
-            } else {
-                // No token supplied
-                return $response->withStatus(401);
-            }
-        }
-
-        if ($request->getAttribute('has_errors')) {
-            return $response;
-        }
-
         $user = $request->getParsedBody();
 
         // check if the username is already used by an other user
@@ -96,6 +88,5 @@ class UsersController
 
         return $response->withJson(Converter::convert($user));
     }
-
 
 }

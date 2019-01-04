@@ -10,8 +10,25 @@ if (file_exists(ROOT . '.env')) {
     $dotenv->load();
 }
 
+/**Returns the log level int depending on the log level name
+ * Default is @see \Monolog\Logger::ERROR
+ * @param string $logLevel
+ * @return int
+ */
+function getLogLevel(string $logLevel): int
+{
+    foreach (\Monolog\Logger::getLevels() as $key => $level) {
+        if (strcasecmp($logLevel, $level) === 0) {
+            return $key;
+        }
+    }
+    return \Monolog\Logger::ERROR;
+}
+
 return [
     'settings' => [
+
+        'displayErrorDetails' => getenv('APP_DEBUG') === 'true' ? true : false, // set to false in production
 
         // App settings
         'app' => [
@@ -45,15 +62,15 @@ return [
 
         // Auth settings
         'auth' => [
-            'adminGroupName' => 'Admin',
             'subjectIdentifier' => 'username'
         ],
 
         // Monolog settings
         'logger' => [
             'name' => getenv('APP_NAME'),
-            'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
-            'level' => \Monolog\Logger::DEBUG,
+            'path' => __DIR__ . '/../' . getenv('APP_LOG_FILE'),
+            'stdout' => getenv('APP_LOG_STDOUT') === "true",
+            'level' => getLogLevel(getenv('APP_LOG_LEVEL')),
         ],
     ]
 ];

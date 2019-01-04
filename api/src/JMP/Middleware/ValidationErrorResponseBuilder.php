@@ -17,18 +17,14 @@ class ValidationErrorResponseBuilder
      */
     public function __invoke(Request $request, Response $response, callable $next): Response
     {
-        /**
-         * @var Response
-         */
-        $response = $next($request, $response);
-
         if ($request->getAttribute('has_errors')) {
             $errors = $request->getAttribute('errors');
-            return $response->withJson([
-                'errors' => $errors
-            ], 400);
+            return $response->withJson(
+                [
+                    'errors' => $errors
+                ], 400);
         } else {
-            return $response;
+            return $next($request, $response);
         }
 
     }

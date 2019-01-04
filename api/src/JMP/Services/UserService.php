@@ -5,6 +5,7 @@ namespace JMP\Services;
 
 
 use JMP\Models\User;
+use PDO;
 use Psr\Container\ContainerInterface;
 
 class UserService
@@ -13,10 +14,6 @@ class UserService
      * @var \PDO
      */
     protected $db;
-    /**
-     * @var string
-     */
-    protected $adminGroupName;
 
     /**
      * EventService constructor.
@@ -24,7 +21,6 @@ class UserService
     public function __construct(ContainerInterface $container)
     {
         $this->db = $container->get('database');
-        $this->adminGroupName = $container->get('settings')['auth']['adminGroupName'];
     }
 
     /**
@@ -37,8 +33,8 @@ class UserService
     {
         $sql = <<<SQL
 INSERT INTO user
-(username, lastname, firstname, email, password, password_change) 
-VALUES (:username, :lastname, :firstname, :email, :password, :password_change)
+(username, lastname, firstname, email, password, password_change, is_admin) 
+VALUES (:username, :lastname, :firstname, :email, :password, :password_change, :is_admin)
 SQL;
 
         $stmt = $this->db->prepare($sql);
@@ -49,6 +45,7 @@ SQL;
         $stmt->bindValue(':email', $user->email, \PDO::PARAM_STR);
         $stmt->bindParam(':password', $user->password);
         $stmt->bindValue(':password_change', 1, \PDO::PARAM_INT);
+        $stmt->bindValue(':is_admin', $user->isAdmin, \PDO::PARAM_INT);
 
 
         $stmt->execute();
@@ -58,7 +55,7 @@ SQL;
     }
 
     /**
-     * Checks wheter a user with the given username alredy exists, as it have to be unique
+     * Checks whether a user with the given username already exists, as it must be unique
      * @param string $username
      * @return bool
      */
@@ -90,15 +87,7 @@ SQL;
     private function getUserByUsername(string $username): User
     {
         $sql = <<<SQL
-SELECT user.id, username, lastname, firstname, email,
-#        Check if the user is an admin, 1-> admin, 0-> no admin
-       NOT ISNULL((SELECT username
-                   FROM user
-                          LEFT JOIN membership m ON user.id = m.user_id
-                          LEFT JOIN `group` g ON m.group_id = g.id
-                   WHERE username = :username
-                     AND g.name = :adminGroupName
-       )) AS isAdmin
+SELECT user.id, username, lastname, firstname, email, is_admin AS isAdmin
 FROM user
 WHERE username = :username
 SQL;
@@ -107,10 +96,37 @@ SQL;
         $stmt = $this->db->prepare($sql);
 
         $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':adminGroupName', $this->adminGroupName);
 
         $stmt->execute();
 
         return new User($stmt->fetch());
     }
+
+    /**
+     * @param int|null $groupId
+     * @return User[]
+     */
+    public function getUsers(?int $groupId): array
+    {
+        $sql = <<< SQL
+            SELECT DISTINCT user.id, username, lastname, firstname, email, is_admin
+            FROM user
+                LEFT JOIN membership m on user.id = m.user_id
+            WHERE (:groupId IS NULL OR m.group_id = :groupId)
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':groupId', $groupId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $users = $stmt->fetchAll();
+
+        foreach ($users as $key => $val) {
+            $users[$key] = new User($val);
+        }
+
+        return $users;
+    }
+
 }

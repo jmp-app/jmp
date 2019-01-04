@@ -16,6 +16,11 @@ class Group implements ArrayConvertable
     public $name;
 
     /**
+     * @var User[]
+     */
+    public $users;
+
+    /**
      * Group constructor.
      * @param array $args
      */

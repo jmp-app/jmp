@@ -41,8 +41,9 @@ function login(username, password) {
 }
 
 function logout() {
-    // remove user from local storage to log user out
+    // remove user and token from local storage to log user out
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
 }
 
 function createUser(user) {

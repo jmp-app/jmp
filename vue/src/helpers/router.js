@@ -14,6 +14,13 @@ export const router = new Router({
             component: EventOverview
         },
         {
+            path: '/event/:id',
+            name: 'eventDetail',
+            component: function () {
+                return import('@/views/event/Detail.vue');
+            }
+        },
+        {
             path: '/login',
             name: 'login',
             component: function () {

@@ -121,6 +121,37 @@ SQL;
     }
 
     /**
+     * Get event by id
+     * @param int $eventId
+     * @return Event
+     */
+    public function getEventById(int $eventId)
+    {
+        $sql = <<< SQL
+                SELECT event.id,
+                       event.title,
+                       event.description,
+                       `from`,
+                       `to`,
+                       place,
+                       event_type_id AS eventTypeId,
+                       default_registration_state_id AS defaultRegistrationState
+                FROM event
+                RIGHT JOIN event_has_group ehg ON event.id = ehg.event_id
+                RIGHT JOIN event_type ON event.event_type_id = event_type.id
+                WHERE event.id = :eventId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindValue(':eventId', $eventId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $this->fetchEvent($stmt->fetch());
+
+    }
+
+    /**
      * Executes the statement and parses its result to return a list of events.
      * @param \PDOStatement $stmt
      * @return Event[]
@@ -132,14 +163,24 @@ SQL;
         $events = $stmt->fetchAll();
 
         foreach ($events as $key => $val) {
-            $event = new Event($val);
-            $event->eventType = $this->eventTypeService->getEventTypeByEvent($val['eventTypeId']);
-            $event->defaultRegistrationState = $this->registrationStateService->getRegistrationTypeById($val['defaultRegistrationState']);
-            $event->groups = $this->groupService->getGroupsByEventId($val['id']);
-            $events[$key] = $event;
+            $events[$key] = $this->fetchEvent($val);
         }
 
         return $events;
+    }
+
+    /**
+     * Parse array to return a event
+     * @param array $val
+     * @return Event
+     */
+    private function fetchEvent(array $val): Event
+    {
+        $event = new Event($val);
+        $event->eventType = $this->eventTypeService->getEventTypeByEvent($val['eventTypeId']);
+        $event->defaultRegistrationState = $this->registrationStateService->getRegistrationTypeById($val['defaultRegistrationState']);
+        $event->groups = $this->groupService->getGroupsByEventId($val['id']);
+        return $event;
     }
 
 }

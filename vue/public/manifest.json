@@ -1,6 +1,6 @@
 {
-  "name": "jmp",
-  "short_name": "jmp",
+  "name": "JMP",
+  "short_name": "JMP",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
@@ -14,7 +14,7 @@
     }
   ],
   "start_url": "./index.html",
-  "display": "standalone",
+  "theme_color": "#000000",
   "background_color": "#000000",
-  "theme_color": "#4DBA87"
+  "display": "standalone"
 }
