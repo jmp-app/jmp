@@ -19,6 +19,11 @@ class GroupService
     protected $userService;
 
     /**
+     * @var MembershipService
+     */
+    protected $membershipService;
+
+    /**
      * EventService constructor.
      * @param ContainerInterface $container
      */
@@ -26,6 +31,7 @@ class GroupService
     {
         $this->db = $container->get('database');
         $this->userService = $container->get('userService');
+        $this->membershipService = $container->get('membershipService');
     }
 
     /**
@@ -51,7 +57,7 @@ SQL;
      */
     public function deleteGroup(int $id): void
     {
-        $this->deleteMemberships($id);
+        $this->membershipService->deleteMemberships($id);
 
         $sql = <<< SQL
             DELETE FROM `group`
@@ -60,18 +66,6 @@ SQL;
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
-        $stmt->execute();
-    }
-
-    private function deleteMemberships(int $groupId): void
-    {
-        $sql = <<< SQL
-            DELETE FROM `membership`
-            WHERE group_id = :groupId;
-SQL;
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':groupId', $groupId, \PDO::PARAM_INT);
         $stmt->execute();
     }
 
@@ -98,7 +92,7 @@ SQL;
 
     /**
      * Get a group by its unique name
-     * @param $name <strong>You have to make sure that a group with that name exists</strong>
+     * @param $name string <strong>You have to make sure that a group with that name exists</strong>
      * @return Group
      */
     private function getGroupByName(string $name): Group
