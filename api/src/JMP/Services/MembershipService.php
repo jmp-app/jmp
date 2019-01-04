@@ -54,6 +54,32 @@ SQL;
             VALUES (:groupId, :userId)
 SQL;
 
+        $this->executeForEachUser($sql, $groupId, $users);
+    }
+
+    /**
+     * Creates a membership for each user with the group
+     * @param int $groupId
+     * @param array $users
+     */
+    public function removeUsersFromGroup(int $groupId, array $users): void
+    {
+        $sql = <<< SQL
+            DELETE FROM membership 
+            WHERE group_id = :groupId AND user_id = :userId
+SQL;
+
+        $this->executeForEachUser($sql, $groupId, $users);
+    }
+
+    /**
+     * Executes sql against each user. The groupId and userId are bound to the prepared statement.
+     * @param string $sql
+     * @param int $groupId
+     * @param array $users
+     */
+    private function executeForEachUser(string $sql, int $groupId, array $users): void
+    {
         try {
             $this->db->beginTransaction();
 
@@ -65,8 +91,7 @@ SQL;
 
                 $success = $stmt->execute();
                 if (!$success) {
-                    throw new \Exception('Failed to insert into membership with groupId: ' . $groupId .
-                        ' and userId: ' . $userId . '. ' . $sql);
+                    throw new \Exception();
                 }
             }
 
@@ -74,7 +99,6 @@ SQL;
         } catch (\Exception $e) {
             $this->db->rollBack();
         }
-
     }
 
 }

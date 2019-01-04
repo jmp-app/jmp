@@ -155,7 +155,31 @@ class GroupsController
 
         // Retrieve the updated group and return it
         $group = $this->groupService->getGroupById($id);
-        var_dump($id);
+        return $response->withJson(Converter::convert($group->getData()));
+    }
+
+    /**
+     * Leave user from a (existing) group
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     * @return Response
+     */
+    public function leaveGroup(Request $request, Response $response, $args): Response
+    {
+        $id = $args['id'];
+        $users = $request->getParsedBodyParam('users');
+
+        // Check if group exists
+        if (!$this->groupService->groupExists($id)) {
+            return $this->groupIdNotAvailable($response, $id);
+        }
+
+        // Remove users from the group
+        $this->membershipService->removeUsersFromGroup($id, $users);
+
+        // Retrieve the updated group and return it
+        $group = $this->groupService->getGroupById($id);
         return $response->withJson(Converter::convert($group->getData()));
     }
 
