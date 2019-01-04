@@ -16,7 +16,7 @@
 
 ## Prerequisites
 
-Make sure you have ![docker](https://www.docker.com/) and ![npm](https://www.npmjs.com/) installed on your machine.
+Make sure you have [docker](https://www.docker.com/) and [npm](https://www.npmjs.com/) installed on your machine.
 
 ## Installation
 
@@ -32,11 +32,11 @@ cd vue
 npm install
 npm run build
 ```
-> To run vue at development, read this ![doc](vue/README.md)
+> To run vue at development, read this [doc](vue/README.md)
 
-Create file `api/.env` and set all variables declared in ![.env.example](api/.env.example)  
+Create file `api/.env` and set all variables declared in [.env.example](api/.env.example)  
 If you don't create the file by yourself, one will be created with the default values. **This is not recommended in production!**   
-> Read more about all variables at ![dotenv](docs/dotenv.md)
+> Read more about all variables at [dotenv](docs/dotenv.md)
 
 Build and start the docker containers
 ```bash
@@ -48,25 +48,25 @@ Install all the dependencies using the composer of the app container
 docker exec -it app composer install
 ````
 
-You can now access the frontend at ![http://localhost](http://localhost) and the api at ![http://localhost/api](http://localhost/api)
+You can now access the frontend at [http://localhost](http://localhost) and the api at [http://localhost/api](http://localhost/api)
 
 ## Development
 
 ### Frontend
 
-Everything related to the frontend is located in ![vue](vue). The frontend is built with **![Vue.js](https://vuejs.org/)**.
+Everything related to the frontend is located in [vue](vue). The frontend is built with **[Vue.js](https://vuejs.org/)**.
 ### Backend
 
-Everything related to the backend is located in ![api](api). The backend uses the **![Slim Framework](https://www.slimframework.com/)**.
+Everything related to the backend is located in [api](api). The backend uses the **[Slim Framework](https://www.slimframework.com/)**.
 
-**Check the ![documentation](docs/README.md) for further information.**
+**Check the [documentation](docs/README.md) for further information.**
 
 # Authors
 
-- Simon Friedli - ![@Simai00](https://github.com/Simai00)
-- Dominik Strässle - ![@dominikstraessle](https://github.com/dominikstraessle)
-- Kay Mattern - ![@mtte](https://github.com/mtte)
+- Simon Friedli - [@Simai00](https://github.com/Simai00)
+- Dominik Strässle - [@dominikstraessle](https://github.com/dominikstraessle)
+- Kay Mattern - [@mtte](https://github.com/mtte)
 
 # License
 
-This project is licensed under the MIT License - see the ![LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
