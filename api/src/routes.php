@@ -86,4 +86,10 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
         ->add($jwtMiddleware);
 
+    $this->post('/groups/{id:[0-9]+}/join', GroupsController::class . ':joinGroup')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($container['validation']['joinGroup']))
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
+
 });

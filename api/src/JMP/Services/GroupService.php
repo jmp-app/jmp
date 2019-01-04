@@ -135,6 +135,26 @@ SQL;
     }
 
     /**
+     * Checks whether a group with the given id already exists
+     * @param int $groupId
+     * @return bool
+     */
+    public function groupExists(int $groupId): bool
+    {
+        $sql = <<<SQL
+            SELECT id
+            FROM `group`
+            WHERE id = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $groupId, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
      * @param int $id
      * @return Optional
      */

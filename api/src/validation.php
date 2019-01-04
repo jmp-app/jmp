@@ -51,5 +51,8 @@ $container['validation'] = function () {
         'updateGroup' => [
             'name' => v::optional(v::notEmpty()->length(1, 45))
         ],
+        'joinGroup' => [
+            'users' => v::arrayType()->length(1, null)->each(v::numeric())
+        ]
     ];
 };

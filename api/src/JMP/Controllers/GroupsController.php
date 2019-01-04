@@ -3,10 +3,9 @@
 namespace JMP\Controllers;
 
 use Interop\Container\ContainerInterface;
-use JMP\Models\Group;
 use JMP\Services\GroupService;
+use JMP\Services\MembershipService;
 use JMP\Utils\Converter;
-use JMP\Utils\Optional;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -19,12 +18,18 @@ class GroupsController
     private $groupService;
 
     /**
+     * @var MembershipService
+     */
+    private $membershipService;
+
+    /**
      * EventController constructor.
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->groupService = $container->get('groupService');
+        $this->membershipService = $container->get('membershipService');
     }
 
     /**
@@ -129,6 +134,33 @@ class GroupsController
     }
 
     /**
+     * Join users to a (existing) group
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     * @return Response
+     */
+    public function joinGroup(Request $request, Response $response, $args): Response
+    {
+        $id = $args['id'];
+        $users = $request->getParsedBodyParam('users');
+
+        // Check if group exists
+        if (!$this->groupService->groupExists($id)) {
+            return $this->groupIdNotAvailable($response, $id);
+        }
+
+        // Add users to the group
+        $this->membershipService->addUsersToGroup($id, $users);
+
+        // Retrieve the updated group and return it
+        $group = $this->groupService->getGroupById($id);
+        var_dump($id);
+        return $response->withJson(Converter::convert($group->getData()));
+    }
+
+    /**
+     * Responds with an error that the group id could not be found
      * @param Response $response
      * @param int $id
      * @return Response
@@ -143,6 +175,7 @@ class GroupsController
     }
 
     /**
+     * Responds with an error that the group name is already taken
      * @param Response $response
      * @param string $name
      * @return Response
