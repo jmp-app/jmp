@@ -42,7 +42,7 @@ $container['validation'] = function () {
             'eventId' => v::notEmpty()->noWhitespace()->numeric(),
             'userId' => v::notEmpty()->noWhitespace()->numeric(),
             'reason' => v::optional(v::notEmpty()->noWhitespace()->length(1, 80)),
-            'registrationStateId' => v::notEmpty()->noWhitespace()->numeric()
+            'registrationState' => v::notEmpty()->noWhitespace()->numeric()
         ]
     ];
 };

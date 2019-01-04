@@ -47,7 +47,16 @@ class RegistrationController
         $parsedBody = $request->getParsedBody();
 
         $registration = new Registration($parsedBody);
-        $registration->registrationState = new RegistrationState($parsedBody['registrationState']);
+        $registration->registrationState = new RegistrationState([
+            'id' => $parsedBody['registrationState']
+        ]);
+
+        $optional = $this->registrationService->getRegistrationByUserIdAndEventId($registration->userId, $registration->eventId);
+
+        if ($optional->isSuccess()) {
+            //Registration already exists
+            return $response->withJson(Converter::convert($optional->getData()));
+        }
 
         $optional = $this->registrationService->createRegistration($registration);
 
