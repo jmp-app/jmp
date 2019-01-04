@@ -20,8 +20,8 @@ export const authentication = {
                         router.push('/');
                     },
                     error => {
-                        commit('loginFailure', error);
-                        dispatch('alert/error', error, {root: true});
+                        commit('loginFailure', error.response.data.errors.authentication.toString());
+                        dispatch('alert/error', error.response.data.errors.authentication.toString(), {root: true});
                     }
                 );
         },

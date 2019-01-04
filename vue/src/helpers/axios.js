@@ -23,5 +23,5 @@ http.interceptors.response.use(undefined, function (error) {
         const errorData = (error.response.data && error.response.data.errors) || error;
         return Promise.reject(errorData);
     }
-    return error;
+    return Promise.reject(error);
 });
