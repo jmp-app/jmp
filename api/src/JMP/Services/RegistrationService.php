@@ -46,8 +46,8 @@ WHERE event_id = :eventId AND user_id = :userId
 SQL;
 
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':eventId', $eventId);
-        $stmt->bindParam(':userId', $userId);
+        $stmt->bindParam(':eventId', $eventId, \PDO::PARAM_INT);
+        $stmt->bindParam(':userId', $userId, \PDO::PARAM_INT);
         $stmt->execute();
         $val = $stmt->fetch();
         if ($val === false) {
@@ -94,14 +94,35 @@ SQL;
 
         $stmt = $this->db->prepare($sql);
 
-        $stmt->bindParam(':eventId', $registration->eventId);
-        $stmt->bindParam(':userId', $registration->userId);
+        $stmt->bindParam(':eventId', $registration->eventId, \PDO::PARAM_INT);
+        $stmt->bindParam(':userId', $registration->userId, \PDO::PARAM_INT);
         $stmt->bindParam(':reason', $registration->reason);
-        $stmt->bindParam(':registrationStateId', $registration->registrationState->id);
+        $stmt->bindParam(':registrationStateId', $registration->registrationState->id, \PDO::PARAM_INT);
 
         $stmt->execute();
 
         return $this->getRegistrationByUserIdAndEventId($registration->userId, $registration->eventId);
 
+    }
+
+    public function updateRegistration(Registration $registration): Optional
+    {
+        $sql = <<< SQL
+UPDATE registration
+  SET reason = :reason, registration_state_id = :registrationStateId
+    WHERE
+      event_id = :eventId AND user_id = :userId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':reason', $registration->reason);
+        $stmt->bindParam(':registrationStateId', $registration->registrationState->id, \PDO::PARAM_INT);
+        $stmt->bindParam(':eventId', $registration->eventId, \PDO::PARAM_INT);
+        $stmt->bindParam(':userId', $registration->userId, \PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $this->getRegistrationByUserIdAndEventId($registration->userId, $registration->eventId);
     }
 }

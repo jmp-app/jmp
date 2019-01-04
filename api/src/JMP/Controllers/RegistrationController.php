@@ -6,6 +6,7 @@ use JMP\Models\Registration;
 use JMP\Models\RegistrationState;
 use JMP\Services\Auth;
 use JMP\Services\RegistrationService;
+use JMP\Services\RegistrationStateService;
 use JMP\Utils\Converter;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
@@ -21,6 +22,10 @@ class RegistrationController
      * @var RegistrationService
      */
     private $registrationService;
+    /**
+     * @var RegistrationStateService
+     */
+    private $registrationStateService;
 
     /**
      * RegistrationController constructor.
@@ -30,6 +35,7 @@ class RegistrationController
     {
         $this->auth = $container->get('auth');
         $this->registrationService = $container->get('registrationService');
+        $this->registrationStateService = $container->get('registrationStateService');
     }
 
     public function getRegistrationByEventIdAndUserId(Request $request, Response $response, array $args): Response
@@ -62,11 +68,72 @@ class RegistrationController
 
         if ($optional->isFailure()) {
             return $response->withJson([
-                "errors" => "Invalid parameters"
+                "errors" => [
+                    "Invalid parameters"
+                ]
             ], 400);
         } else {
             return $response->withJson(Converter::convert($optional->getData()));
         }
+
+    }
+
+    public function updateRegistration(Request $request, Response $response, $args): Response
+    {
+        $eventId = $args['eventId'];
+        $userId = $args['userId'];
+        $newRegistrationState = $request->getParsedBodyParam('registrationState');
+        $newReason = $request->getParsedBodyParam('reason');
+
+        $registration = $this->registrationService->getRegistrationByUserIdAndEventId($userId, $eventId);
+
+        if ($registration->isFailure()) {
+            return $response->withStatus(404);
+        }
+
+        $newRegistrationState = $this->registrationStateService->getRegistrationTypeById($newRegistrationState);
+        if ($newRegistrationState->isFailure()) {
+            return $response->withJson([
+                "errors" => [
+                    "Invalid RegistrationState"
+                ]
+            ], 400);
+        }
+
+        $newRegistrationState = $newRegistrationState->getData();
+
+        if ($newRegistrationState->reasonRequired) {
+            if (empty($newReason)) {
+                return $response->withJson([
+                    "errors" => [
+                        "Reason is required"
+                    ]
+                ], 400);
+            }
+        }
+
+        $updatedRegistration = new Registration([
+            "eventId" => $eventId,
+            "userId" => $userId,
+            "reason" => $newReason
+
+        ]);
+        $updatedRegistration->registrationState = new RegistrationState([
+            "id" => $newRegistrationState->id
+        ]);
+
+        $optional = $this->registrationService->updateRegistration($updatedRegistration);
+
+        if ($optional->isFailure()) {
+            return $response->withJson([
+                "errors" => [
+                    "Invalid parameters"
+                ]
+            ], 400);
+        } else {
+            return $response->withJson(Converter::convert($optional->getData()));
+        }
+
 
     }
 }
