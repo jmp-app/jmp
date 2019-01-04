@@ -71,34 +71,6 @@ In php it's possible to let a method return `mixed` types (e.g. `User|bool`) or 
 
 When a method doesn't get the expected value, in other words, the execution fails, then we return an `Optional` instead of a `null` or `false` value.
 
-### Array Conversion
-The response object of the slim framework offers a method called `withJson`. This method converts an assoc array to json.
-Because the php cast funcionality doesn't comply our requirements to cast model objects to associative arrays, we use the following Util and interface:
-
-**[ArrayConvertable](../api/src/JMP/Models/ArrayConvertable.php):**
-Every model has to implement this class, so that it can be properly converted to an associative array.
-For example implementations see the existing models: [Models](../api/src/JMP/Models).
-```php
-public function toArray(): array
-{
-    return array_filter((array)$this, function ($value) {
-        return $value !== null;
-    });
-}
-```
-The implementation has to **remove all null variables**.
-
-**[Converter](../api/src/JMP/Utils/Converter.php):**
-This util is used to convert a model object or  a list of model objects properly to an associative array.
-Use it in the controller as shown in this examples:
-```php
-return $response->withJson(Converter::convert($data));
-```
-or
-```php
-return $response->withJson(Converter::convertArray($list));
-```
-
 #### Usage
 **On success:**
 ```php
@@ -131,6 +103,33 @@ if ($optional->isFailure()) {
 }
 ```
 
+### Array Conversion
+The response object of the slim framework offers a method called `withJson`. This method converts an assoc array to json.
+Because the php cast funcionality doesn't comply our requirements to cast model objects to associative arrays, we use the following Util and interface:
+
+**[ArrayConvertable](../api/src/JMP/Models/ArrayConvertable.php):**
+Every model has to implement this class, so that it can be properly converted to an associative array.
+For example implementations see the existing models: [Models](../api/src/JMP/Models).
+```php
+public function toArray(): array
+{
+    return array_filter((array)$this, function ($value) {
+        return $value !== null;
+    });
+}
+```
+The implementation has to **remove all null variables**.
+
+**[Converter](../api/src/JMP/Utils/Converter.php):**
+This util is used to convert a model object or  a list of model objects properly to an associative array.
+Use it in the controller as shown in this examples:
+```php
+return $response->withJson(Converter::convert($data));
+```
+or
+```php
+return $response->withJson(Converter::convertArray($list));
+```
 
 ### Type declarations & phpdoc
 Everywhere it is possible we use object oriented php. So every method signature have to use the [php type declarations](https://secure.php.net/manual/en/functions.arguments.php#functions.arguments.type-declaration).
