@@ -23,7 +23,8 @@
         },
         methods: {
             submit: function() {
-                this.$store.dispatch('user/create', this.data.user);
+                const user = this.data.user;
+                this.$store.dispatch('user/create', {user});
             }
         },
         mounted() {

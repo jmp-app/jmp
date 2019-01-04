@@ -49,7 +49,6 @@ export const user = {
                 .catch(error => commit('userRequestFailure', error));
         },
         reset({commit}) {
-            console.log('reset commit');
             commit('reset');
         }
     },
