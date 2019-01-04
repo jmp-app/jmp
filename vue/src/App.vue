@@ -5,8 +5,8 @@
         </header>
         <div class="container">
             <router-view/>
+            <div :class="`alert ${alert.type}`" v-if="alert.message">{{alert.message}}</div>
         </div>
-        <div :class="`alert ${alert.type}`" v-if="alert.message">{{alert.message}}</div>
     </div>
 </template>
 
@@ -28,6 +28,9 @@
         },
         components: {
             Navigation
+        },
+        created() {
+            this.$i18n.locale = window.localStorage.getItem('locale');
         }
     };
 </script>

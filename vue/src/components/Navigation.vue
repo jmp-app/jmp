@@ -27,7 +27,7 @@
 </template>
 
 <script>
-    import LocalChanger from '@/components/local-changer';
+    import LocalChanger from '@/components/LocalChanger';
 
     export default {
         name: 'Navigation',
