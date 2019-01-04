@@ -3,7 +3,8 @@ import Vue from 'vue';
 export const eventService = {
     getAll,
     getInitialOverview,
-    getNextEvents
+    getNextEvents,
+    getEventById
 };
 
 function getAll() {
@@ -21,6 +22,12 @@ function getInitialOverview() {
 
 function getNextEvents(offset) {
     return Vue.axios.get(`/events?limit=5&offset=${offset}`).then(response => {
+        return response.data;
+    });
+}
+
+function getEventById(eventId) {
+    return Vue.axios.get(`/events/${eventId}`).then(response => {
         return response.data;
     });
 }
