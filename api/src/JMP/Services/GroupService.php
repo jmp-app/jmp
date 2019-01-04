@@ -49,7 +49,7 @@ SQL;
     /**
      * @param $id
      */
-    public function deleteGroup($id): void
+    public function deleteGroup(int $id): void
     {
         $this->deleteMemberships($id);
 
