@@ -67,43 +67,43 @@ Every user input has to be validated before it is processed.
 
 
 # Developing new route
-This guide will take you through the most important steps to develop a new route. The example is done with the [GET /v1/users/{id}](api-v1.md#get-user) route.
+This guide will take you through the most important steps to develop a new route.
+Make sure you've read [Code Style](#code-style) before reading the following guide.
+
+## Api specification
+First of all the new route has to be documented in the [api-specification](api-v1.md).
 
 ## Service & Model
-First create the required models and services.
-The route returns a json containing a user object, so a User model is required.
-[Create a new model](#create-a-new-model) if the required doesn't exist yet.
-See [User.php](../api/src/JMP/Models/User.php)
-
+Routes mostly return json containing an object of a model. So you have to [create a new model](#create-a-new-model) if the required doesn't exist yet.
 The model is just a raw data object with the functionality to convert properly to an array.
-The service method handles all the business logic and communicates with the database.
 
-Now we have to implement a Service to get a user from the database selected by the userid. A [UserService](../api/src/JMP/Services/UserService.php) already exists, so we only have to add a `getUserByUserId` method. 
-Otherwise we must have to [create a new ervice class](#create-a-new-service-class).
-
-The service method will select the user with the given id. See [UserService.php](../api/src/JMP/Services/UserService.php) at the method `getUserByUserId`.
-The method returns an Optional containing the User object on succeed, otherwise nothing.
-
-Make sure you use meaningful method names.
+Then you need a service to communicate with the database and to handle the business logic. [Create a new service class](#create-a-new-service-class) if no appropriate exists, otherwise add a the required method/s to the existing service class.
 
 ### Create a new service class
 If no useful service class already exists, you have to create a new one.
-Make sure the constructor has a ContainerInterface parameter and all required dependencies are added as attributes in the constructor.
 
-After you must add the service class to the slim container in the [dependencies.php](../api/src/dependencies.php) file.
+The service must
+* have a `ContainerInterface` parameter
+* hold all dependencies as private attributes
+* have all dependencies set inside the constructor
+* be added to the slim container inside [dependencies.php](../api/src/dependencies.php)
 
 Check out already existing serivces as examples. [Services](../api/src/JMP/Services) 
 
 ### Create a new model
 If the required model not already exists, you have to create a new one.
-* The model should have all columns(no foreign fields) as public attributes.
-* The model must have a cunstructor with one array as parameter. All attributes are set by the values of the array.
-* The model must implement the [ArrayConvertable Interface](../api/src/JMP/Models/ArrayConvertable.php)
+
+The model must
+* have all columns (as in the database) as public attributes
+* have a cunstructor with one array as parameter
+* set all attributes (except the ones which are foreign keys in the database) by the values of the array inside the constructor
+* implement the [ArrayConvertable Interface](../api/src/JMP/Models/ArrayConvertable.php)
 
 Check out already existing model as examples. [Models](../api/src/JMP/Models) 
 
-
 ## Controller
+For each route a specific controller method exists. A controller class itself holds methods handling similar subjects.
+So if no appropriate controller already exists, a new controller has to be **TODO: continue here**
 Next the controller or the specific method can be created.
 
 The [UsersController.php](../api/src/JMP/Controllers/UsersController.php) already exists, so only the required `getUser` method has to be added.
@@ -128,3 +128,12 @@ It's very important, that the middlewares are added in the right order and with 
 3. [AuthenticationMiddleware](../api/src/JMP/Middleware/AuthenticationMiddleware.php)
     1. Set the right [PermissionLevel](../api/src/JMP/Utils/PermissionLevel.php) as noted in the [api specification](api-v1.md#get-user) of your route
 4. JWT Middleware
+
+**Example:**
+```php
+$this->get('/users/{id:[0-9]+}', UsersController::class . ':getUser')
+    ->add(new ValidationErrorResponseBuilder())
+    ->add(new Validation($container['validation']['getUser']))
+    ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::ADMIN))
+    ->add($jwtMiddleware);
+```
