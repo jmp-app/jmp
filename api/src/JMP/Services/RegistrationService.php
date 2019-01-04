@@ -3,6 +3,7 @@
 namespace JMP\Services;
 
 use JMP\Models\Registration;
+use JMP\Utils\Optional;
 use Psr\Container\ContainerInterface;
 
 class RegistrationService
@@ -34,7 +35,7 @@ class RegistrationService
     /**
      * @param int $userId
      * @param int $eventId
-     * @return Registration
+     * @return Optional
      */
     public function getRegistrationByUserIdAndEventId(int $userId, int $eventId)
     {
@@ -49,24 +50,58 @@ SQL;
         $stmt->bindParam(':userId', $userId);
         $stmt->execute();
         $val = $stmt->fetch();
-        if (!$val) {
+        if ($val === false) {
             return $this->getRegistrationByDefaultRegistrationStateInEvent($userId, $eventId);
         }
         $registration = new Registration($val);
-        $registration->registrationState = $this->registrationStateService->getRegistrationTypeById($val['regStateId']);
-        return $registration;
+        $optional = $this->registrationStateService->getRegistrationTypeById($val['regStateId']);
+        if ($optional->isSuccess()) {
+            $registration->registrationState = $optional->getData();
+        }
+        return Optional::success($registration);
     }
 
     /**
      * @param int $userId
      * @param int $eventId
-     * @return Registration
+     * @return Optional
      */
     private function getRegistrationByDefaultRegistrationStateInEvent(int $userId, int $eventId)
     {
-        $event = $this->eventService->getEventById($eventId);
-        $registration = new Registration([$userId, $eventId, '']);
-        $registration->registrationState = $event->defaultRegistrationState;
-        return $registration;
+        $optional = $this->eventService->getEventById($eventId);
+
+        if ($optional->isFailure()) {
+            return Optional::failure();
+        } else {
+            $registration = new Registration([$userId, $eventId, '']);
+            $registration->registrationState = $optional->getData()->defaultRegistrationState;
+            return Optional::success($registration);
+        }
+    }
+
+    /**
+     * Insert new Registration into DB
+     * @param Registration $registration
+     * @return Optional
+     */
+    public function createRegistration(Registration $registration): Optional
+    {
+        $sql = <<< SQL
+INSERT INTO registration
+  (event_id, user_id, reason, registration_state_id)
+  VALUES (:eventId, :userId, :reason, :registrationStateId)
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':eventId', $registration->eventId);
+        $stmt->bindParam(':userId', $registration->userId);
+        $stmt->bindParam(':reason', $registration->reason);
+        $stmt->bindParam(':registrationStateId', $registration->registrationState->id);
+
+        $stmt->execute();
+
+        return $this->getRegistrationByUserIdAndEventId($registration->userId, $registration->eventId);
+
     }
 }

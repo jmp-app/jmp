@@ -4,6 +4,7 @@ namespace JMP\Services;
 
 
 use JMP\Models\RegistrationState;
+use JMP\Utils\Optional;
 use Psr\Container\ContainerInterface;
 
 class RegistrationStateService
@@ -45,7 +46,7 @@ SQL;
 
     /**
      * @param int $registrationStateId
-     * @return RegistrationState
+     * @return Optional
      */
     public function getRegistrationTypeById(int $registrationStateId)
     {
@@ -58,6 +59,11 @@ SQL;
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':registrationStateId', $registrationStateId);
         $stmt->execute();
-        return new RegistrationState($stmt->fetch());
+        $registrationState = $stmt->fetch();
+        if ($registrationState === false) {
+            return Optional::failure();
+        } else {
+            return Optional::success(new RegistrationState($registrationState));
+        }
     }
 }
