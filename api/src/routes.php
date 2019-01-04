@@ -36,7 +36,7 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
         ->add($jwtMiddleware);
 
-    $this->get('/registration/{eventId}/{userId}', RegistrationController::class . ':getRegistrationByEventIdAndUserId')
+    $this->get('/registration/{eventId:[0-9]+}/{userId:[0-9]+}', RegistrationController::class . ':getRegistrationByEventIdAndUserId')
         ->add(new ValidationErrorResponseBuilder())
         ->add(new Validation($container['validation']['getRegistrationByEventIdAndUserId']))
         ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
