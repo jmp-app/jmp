@@ -55,18 +55,116 @@ Every user input has to be validated before it is processed.
 
 ## Model
 
-## Array Conversion
+
 
 ## Code Style
 
-### Optional
+It's important, that everyone complies with the following rules.
 
-### Type Hints
+**Improvments:**
+If you recognize code, which doesn't comply with this rules, just correct them. 
+
+### Optional
+In this application we use the [`Optional`](../api/src/JMP/Utils/Optional.php) very often.
+
+In php it's possible to let a method return `mixed` types (e.g. `User|bool`) or nullable objects, but we decided to not use this possibilities.
+
+When a method doesn't get the expected value, in other words, the execution fails, then we return an `Optional` instead of a `null` or `false` value.
+
+### Array Conversion
+The response object of the slim framework offers a method called `withJson`. This method converts an assoc array to json.
+Because the php cast funcionality doesn't comply our requirements to cast model objects to associative arrays, we use the following Util and interface:
+
+**[ArrayConvertable](../api/src/JMP/Models/ArrayConvertable.php):**
+Every model has to implement this class, so that it can be properly converted to an associative array.
+For example implementations see the existing models: [Models](../api/src/JMP/Models).
+```php
+public function toArray(): array
+{
+    return array_filter((array)$this, function ($value) {
+        return $value !== null;
+    });
+}
+```
+The implementation has to **remove all null variables**.
+
+**[Converter](../api/src/JMP/Utils/Converter.php):**
+This util is used to convert a model object or  a list of model objects properly to an associative array.
+Use it in the controller as shown in this examples:
+```php
+return $response->withJson(Converter::convert($data));
+```
+or
+```php
+return $response->withJson(Converter::convertArray($list));
+```
+
+#### Usage
+**On success:**
+```php
+return Optional::success('the data to return, could be of any type');
+```
+**On failure:**
+```php
+return Optional::failure();
+```
+
+**Handle the returned Optional:**
+```php
+$optional = methodWhichMayFail();
+if ($optional->isSuccess()) {
+    // success
+    $data = $optional->getData();
+} else {
+//failure
+}
+```
+**Vic versa:**
+TODO:hier
+```php
+$optional = methodWhichMayFail();
+if ($optional->isFailure()) {
+    // failure
+} else {
+    // success
+    $data = $optional->getData();
+}
+```
+
+
+### Type declarations & phpdoc
+Everywhere it is possible we use object oriented php. So every method signature have to use the [php type declarations](https://secure.php.net/manual/en/functions.arguments.php#functions.arguments.type-declaration).
+If you try to call a method and pass arguments of another type as declared, then php will throw an [TypeError](https://secure.php.net/manual/en/class.typeerror.php).
+
+Also every method has to be documented with phpdoc. A short summary or description of the method and a documented signature is sufficient.
+
+**Example (from [UserService.php](../api/src/JMP/Services/UserService.php):**
+```php
+/**
+ * Select a user by its id
+ * @param int $userId
+ * @return Optional containing a User on succeed
+ */
+public function getUserByUserId(int $userId): Optional
+```
 
 ### SQL
+The services handle the business logic as well as the whole database communication. At the moment there isn't a separated Persistence Layer with e.g. Data Access Objects (DAOs).
+
+That the services doesn't become a mess, all SQL have to be coded with the following rules:
+* Use the heredoc syntax:
+```php
+$sql = <<<SQL
+# SQL
+SQL;
+```
+* Write every sql-keyword upper-case
+* Use the `AS` keyword to change column names from the sql underscore style to the camel case style. E.g. `SELECT user_id as userId ...`
+* Use the following for optional parameters: `WHERE (:optionalId IS NULL OR id = :optionalId)`. Examples in [EventService.php](../api/src/JMP/Services/EventService.php)
+* A specific service don't query tables to which the service doesn't belong unless it's a join
 
 
-# Developing new route
+# Developing a new route
 This guide will take you through the most important steps to develop a new route.
 Make sure you've read [Code Style](#code-style) before reading the following guide.
 
@@ -83,7 +181,7 @@ Then you need a service to communicate with the database and to handle the busin
 If no useful service class already exists, you have to create a new one.
 
 The service must
-* have a `ContainerInterface` parameter
+* have a `ContainerInterface` constructor parameter
 * hold all dependencies as private attributes
 * have all dependencies set inside the constructor
 * be added to the slim container inside [dependencies.php](../api/src/dependencies.php)
@@ -103,30 +201,32 @@ Check out already existing model as examples. [Models](../api/src/JMP/Models)
 
 ## Controller
 For each route a specific controller method exists. A controller class itself holds methods handling similar subjects.
-So if no appropriate controller already exists, a new controller has to be **TODO: continue here**
-Next the controller or the specific method can be created.
+So if no appropriate controller already exists, a [new controller has to be created](#create-a-new-controller-class).
 
-The [UsersController.php](../api/src/JMP/Controllers/UsersController.php) already exists, so only the required `getUser` method has to be added.
-If no appropriate controller exists, [create a new controller class](#create-a-new-controller-class)
-The controller method will be called, when the validation and authentication passes.
-The task of the controller method is to call the user service and to build the response dependent on the return value of the service.
-
-If the user is found, a [User](api-v1.md#user) is returned, otherwise if no user is found, a 404 with an optional [Error message](api-v1.md#error-handling) is returned.
+A controller is called by the associated method in the [route.php](../api/src/routes.php) script.
+The controller is only called after the validation and the authentication passed successful.
+A controller has to call the required service and has to build the response dependent on the return value of the service.
+More information about response and the error responses can be found in the [api specification](api-v1.md).
 
 ### Create a new controller class
-The controller must have a constructor with the ContainerInterface parameter and all required dependencies has to be added as attributes in the constructor.
+If no appropriate controller exists, you have to create a new one.
+
+The controller must
+* have a `ContainerInterface` constructor parameter
+* hold all dependencies as private attributes
+* have all dependencies set inside the constructor
 
 Check out already existing controllers as examples. [Controllers](../api/src/JMP/Controllers) 
 
 ## Route
 Now the new route has to be registered in [route.php](../api/src/routes.php).
-It's very important, that the middlewares are added in the right order and with the right configuration.
+It's very important, that the middlewares are added in the **right order** and with the **right configuration**.
 
 1. [ValidationErrorResponseBuilder](../api/src/JMP/Middleware/ValidationErrorResponseBuilder.php)
 2. Validation Middleware
     1. Use the right validation settings. Add them to [validation.php](../api/src/validation.php)
 3. [AuthenticationMiddleware](../api/src/JMP/Middleware/AuthenticationMiddleware.php)
-    1. Set the right [PermissionLevel](../api/src/JMP/Utils/PermissionLevel.php) as noted in the [api specification](api-v1.md#get-user) of your route
+    1. Set the right [PermissionLevel](../api/src/JMP/Utils/PermissionLevel.php) as noted in the [api specification](api-v1.md) of your route
 4. JWT Middleware
 
 **Example:**
