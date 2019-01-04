@@ -50,14 +50,19 @@ SQL;
         $stmt->execute();
         $val = $stmt->fetch();
         if (!$val) {
-            return $this->getRegistrationByEventId($userId, $eventId);
+            return $this->getRegistrationByDefaultRegistrationStateInEvent($userId, $eventId);
         }
         $registration = new Registration($val);
         $registration->registrationState = $this->registrationStateService->getRegistrationTypeById($val['regStateId']);
         return $registration;
     }
 
-    private function getRegistrationByEventId(int $userId, int $eventId)
+    /**
+     * @param int $userId
+     * @param int $eventId
+     * @return Registration
+     */
+    private function getRegistrationByDefaultRegistrationStateInEvent(int $userId, int $eventId)
     {
         $event = $this->eventService->getEventById($eventId);
         $registration = new Registration([$userId, $eventId, '']);
