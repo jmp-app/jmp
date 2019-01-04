@@ -34,6 +34,13 @@ class UsersController
         $this->userService = $container->get('userService');
     }
 
+    public function listUsers(Request $request, Response $response): Response
+    {
+        $group =$request->getQueryParam('group');
+        $users =$this->userService->getUsers(empty($group) ? null : $group);
+        return $response->withJson(Converter::convertArray($users));
+    }
+
     /**
      * Returns the user or an error
      * @param Request $request
@@ -81,6 +88,5 @@ class UsersController
 
         return $response->withJson(Converter::convert($user));
     }
-
 
 }

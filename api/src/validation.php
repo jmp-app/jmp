@@ -38,6 +38,18 @@ $container['validation'] = function () {
             'password' => v::notEmpty()->length(1, 256),
             'email' => v::optional(v::notEmpty()->length(1, 256)::email()),
             'isAdmin' => v::optional(v::boolType())
-        ]
+        ],
+        'listUsers' => [
+            'username' => v::optional(v::notEmpty()->noWhitespace()->numeric()),
+        ],
+        'createGroup' => [
+            'name' => v::notEmpty()->length(1, 45)
+        ],
+        'getGroupById' => [
+            'id' => v::notEmpty()->noWhitespace()->numeric()
+        ],
+        'updateGroup' => [
+            'name' => v::optional(v::notEmpty()->length(1, 45))
+        ],
     ];
 };
