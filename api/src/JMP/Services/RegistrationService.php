@@ -15,6 +15,10 @@ class RegistrationService
      * @var RegistrationStateService
      */
     protected $registrationStateService;
+    /**
+     * @var EventService
+     */
+    protected $eventService;
 
     /**
      * RegistrationService constructor.
@@ -24,6 +28,7 @@ class RegistrationService
     {
         $this->db = $container->get('database');
         $this->registrationStateService = $container->get('registrationStateService');
+        $this->eventService = $container->get('eventService');
     }
 
     /**
@@ -45,10 +50,18 @@ SQL;
         $stmt->execute();
         $val = $stmt->fetch();
         if (!$val) {
-            return null;
+            return $this->getRegistrationByEventId($userId, $eventId);
         }
         $registration = new Registration($val);
         $registration->registrationState = $this->registrationStateService->getRegistrationTypeById($val['regStateId']);
+        return $registration;
+    }
+
+    private function getRegistrationByEventId(int $userId, int $eventId)
+    {
+        $event = $this->eventService->getEventById($eventId);
+        $registration = new Registration([$userId, $eventId, '']);
+        $registration->registrationState = $event->defaultRegistrationState;
         return $registration;
     }
 }
