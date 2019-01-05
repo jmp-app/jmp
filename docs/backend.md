@@ -55,7 +55,7 @@ Make sure everything is running as explained in [README.md](../README.md).
 ## Authentication
 
 ### Usage
-We use [JWT](https://jwt.io/) for authentication. The token must be submitted in the Authorization header using the Bearer schema.  
+We use [JWT](https://jwt.io/) for authentication. The token must be submitted in the Authorization header using the Bearer schema.
 Example:  
 
 ```http_request
@@ -69,24 +69,16 @@ To adjust the settings, look here:
  * [.env](../api/.env) and [.env docs](dotenv.md)
 
 ### Implementation
-The submitted token is decoded by the [jwt-middleware](https://github.com/tuupola/slim-jwt-auth).  
-The custom [authentication middleware](../api/src/JMP/Middleware/AuthenticationMiddleware.php) checks the permissions of the enquirer using the `sub` entry of the decoded token.
-If the enquirer has got the right permissions for the route, he can pass.
-If no token is supplied or if the supplied token is invalid, a 401 is returned.
-In case the enquirer just hasn't got the required permissions, a 403 is returned.
+The submitted token is decoded by the [jwt-middleware](https://github.com/tuupola/slim-jwt-auth). The custom [authentication middleware](../api/src/JMP/Middleware/AuthenticationMiddleware.php) checks the permissions of the enquirer using the `sub` entry of the decoded token. If the enquirer has got the right permissions for the route, he can pass. If no token is supplied or if the supplied token is invalid, a 401 is returned. In case the enquirer just hasn't got the required permissions, a 403 is returned.
 ### Login
-To receive a new token, the user have to call the [login route](api-v1.md#login).  
-If the username and the password are valid, a new token is generated with the following service class [Auth.php](../api/src/JMP/Services/Auth.php).
-The password is hashed using [`password_hash`](https://secure.php.net/manual/en/function.password-hash.php) with the `PASSWORD_DEFAULT` option before it is stored in the database.
-To verify a password at a login, [`password_verify`](https://secure.php.net/manual/en/function.password-verify.php) is used.
+To receive a new token, the user have to call the [login route](api-v1.md#login). If the username and the password are valid, a new token is generated with the following service class [Auth.php](../api/src/JMP/Services/Auth.php). The password is hashed using [`password_hash`](https://secure.php.net/manual/en/function.password-hash.php) with the `PASSWORD_DEFAULT` option before it is stored in the database. To verify a password at a login, [`password_verify`](https://secure.php.net/manual/en/function.password-verify.php) is used.
 ### Registration
 Only administrators can register new users. To register a new user, the [register route](api-v1.md) has to be called.
 
 ## Validation
 Every user input has to be validated before it is processed.
 
-All validations are stored in [validation.php](../api/src/validation.php) and use the [RespectValidation](https://github.com/Respect/Validation) validation engine.
-The stored validations have to be submitted to the [validation middleware](https://github.com/DavidePastore/Slim-Validation) of the corresponding route in [routes.php](../api/src/routes.php).
+All validations are stored in [validation.php](../api/src/validation.php) and use the [RespectValidation](https://github.com/Respect/Validation) validation engine. The stored validations have to be submitted to the [validation middleware](https://github.com/DavidePastore/Slim-Validation) of the corresponding route in [routes.php](../api/src/routes.php).
 
 **Example:**
 ```php
@@ -179,8 +171,7 @@ return $response->withJson(Converter::convertArray($list));
 ```
 
 ## Type declarations & phpdoc
-Everywhere it is possible we use object oriented php. So every method signature have to use the [php type declarations](https://secure.php.net/manual/en/functions.arguments.php#functions.arguments.type-declaration).
-If you try to call a method and pass arguments of another type as declared, then php will throw an [TypeError](https://secure.php.net/manual/en/class.typeerror.php).
+Everywhere it is possible we use object oriented php. So every method signature have to use the [php type declarations](https://secure.php.net/manual/en/functions.arguments.php#functions.arguments.type-declaration). If you try to call a method and pass arguments of another type as declared, then php will throw an [TypeError](https://secure.php.net/manual/en/class.typeerror.php).
 
 Also, every method has to be documented with phpdoc. A short summary or description of the method and a documented signature is sufficient.
 
@@ -218,8 +209,7 @@ Make sure you've read [Code Style](#code-style) before reading the following gui
 First of all the new route has to be documented in the [api-specification](api-v1.md).
 
 ## Service & Model
-Routes return JSON mostly containing one or a list of model objects. So you have to [create a new model](#create-a-new-model) if the required doesn't exist yet.
-The model is just a raw data object with the functionality to convert properly to an array.
+Routes return JSON mostly containing one or a list of model objects. So you have to [create a new model](#create-a-new-model) if the required doesn't exist yet. The model is just a raw data object with the functionality to convert properly to an array.
 
 Then you need a service to communicate with the database and to handle the business logic.
 [Create a new service class](#create-a-new-service-class) if no appropriate exists, otherwise add the required method/s to the existing service class.
@@ -247,13 +237,9 @@ The model must
 Check out already existing model as examples. [Models](../api/src/JMP/Models) 
 
 ## Controller
-For each route a specific controller method exists. A controller class itself holds methods handling similar subjects.
-So if no appropriate controller already exists, a [new controller has to be created](#create-a-new-controller-class).
+For each route a specific controller method exists. A controller class itself holds methods handling similar subjects. So if no appropriate controller already exists, a [new controller has to be created](#create-a-new-controller-class).
 
-A controller is called by the associated method in the [route.php](../api/src/routes.php) script.
-The controller is only called after the validation and the authentication passed successful.
-A controller has to call the required service and has to build the response dependent on the return value of the service.
-More information about responses and the error responses can be found in the [api specification](api-v1.md).
+A controller is called by the associated method in the [route.php](../api/src/routes.php) script. The controller is only called after the validation and the authentication passed successful. A controller has to call the required service and has to build the response dependent on the return value of the service. More information about responses and the error responses can be found in the [api specification](api-v1.md).
 
 ### Create a new controller class
 If no appropriate controller exists, you have to create a new one.
