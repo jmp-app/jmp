@@ -1,16 +1,17 @@
 # ![JMP](logo.png)
 
 # Table of Contents:
-1. [Getting Started](#getting-started)
-    1. [Prerequisites](#prerequisites)
-    2. [Installation](#installation)
-    3. [Development](#development)
-        1. [Frontend](#frontend)
-        2. [Backend](#backend)
-2. [Authors](#authors)
-3. [License](#license)
-    
-    
+- [JMP](#jmplogopng)
+- [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+  * [Development](#development)
+    + [Frontend](#frontend)
+    + [Backend](#backend)
+- [Authors](#authors)
+- [License](#license)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
 # Getting Started
 

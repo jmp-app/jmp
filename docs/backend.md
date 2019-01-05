@@ -2,6 +2,37 @@
 
 Make sure everything is running as explained in [README.md](../README.md).
 
+# Table of Contents:
+- [Getting Started](#getting-started)
+- [Code Overview](#code-overview)
+  * [Directory Structure](#directory-structure)
+  * [Slim specific classes](#slim-specific-classes)
+  * [Authentication](#authentication)
+    + [Usage](#usage)
+    + [Settings](#settings)
+    + [Implementation](#implementation)
+    + [Login](#login)
+    + [Registration](#registration)
+  * [Validation](#validation)
+    + [Translations](#translations)
+- [Code Style](#code-style)
+  * [Optional](#optional)
+    + [Usage](#examples)
+  * [Array Conversion](#array-conversion)
+  * [Type declarations & phpdoc](#type-declarations--phpdoc)
+  * [SQL](#sql)
+- [Developing a new route](#developing-a-new-route)
+  * [Api specification](#api-specification)
+  * [Service & Model](#service--model)
+    + [Create a new service class](#create-a-new-service-class)
+    + [Create a new model](#create-a-new-model)
+  * [Controller](#controller)
+    + [Create a new controller class](#create-a-new-controller-class)
+  * [Route](#route)
+
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 # Code Overview
 ## Directory Structure
 * [`src/`](../api/src) Source directory. Not public
@@ -64,7 +95,7 @@ The stored validations have to be submitted to the [validation middleware](https
 See more at [Routes](#route).
 
 ### Translations
-In case the automatic generated error messages doesn't fit your requirements or hold sensible data like a password, you can add translation as described in [Translate errors](https://github.com/DavidePastore/Slim-Validation#translate-errors).
+In case the automatic generated error messages doesn't fit your requirements or hold sensible data like a password, you can add translations as described in [Translate errors](https://github.com/DavidePastore/Slim-Validation#translate-errors).
 
 Add the translations to [validation.php](../api/src/validation.php) and to the middleware as second parameter.
 **Example:**
@@ -74,21 +105,21 @@ Add the translations to [validation.php](../api/src/validation.php) and to the m
     $this->getContainer()['validation']['loginTranslation']
 ))
 ```
-## Code Style
+# Code Style
 
 It's important, that everyone complies with the following rules.
 
 **Improvements:**
 If you recognize code, which doesn't comply with these rules, just correct them. 
 
-### Optional
+## Optional
 In this application we use the [`Optional`](../api/src/JMP/Utils/Optional.php) very often.
 
 In php it's possible to let a method return `mixed` types (e.g. `User|bool`) or null able objects, but we decided to not use these possibilities.
 
 When a method doesn't get the expected value, in other words, the execution fails, then we return an `Optional` instead of a `null` or `false` value.
 
-#### Usage
+### Examples
 **On success:**
 ```php
 return Optional::success('the data to return, could be of any type');
@@ -119,7 +150,7 @@ if ($optional->isFailure()) {
 }
 ```
 
-### Array Conversion
+## Array Conversion
 The response object of the slim framework offers a method called `withJson`. This method converts an assoc array to JSON.
 Because the php cast functionality doesn't comply our requirements to cast model objects to associative arrays, we use the following util and interface:
 
@@ -147,7 +178,7 @@ or
 return $response->withJson(Converter::convertArray($list));
 ```
 
-### Type declarations & phpdoc
+## Type declarations & phpdoc
 Everywhere it is possible we use object oriented php. So every method signature have to use the [php type declarations](https://secure.php.net/manual/en/functions.arguments.php#functions.arguments.type-declaration).
 If you try to call a method and pass arguments of another type as declared, then php will throw an [TypeError](https://secure.php.net/manual/en/class.typeerror.php).
 
@@ -163,7 +194,7 @@ Also, every method has to be documented with phpdoc. A short summary or descript
 public function getUserByUserId(int $userId): Optional
 ```
 
-### SQL
+## SQL
 The services handle the business logic as well as the whole database communication. At the moment there isn't a separated Persistence Layer with e.g. Data Access Objects (DAOs).
 
 That the services doesn't become a mess, all SQL have to be coded with the following rules:
