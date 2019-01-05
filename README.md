@@ -53,6 +53,8 @@ You can now access the frontend at [http://localhost](http://localhost) and the 
 
 ## Development
 
+**Check the [documentation](docs/README.md) for further information.**
+
 ### Frontend
 
 Everything related to the frontend is located in [vue](vue). The frontend is built with **[Vue.js](https://vuejs.org/)**.
@@ -60,7 +62,6 @@ Everything related to the frontend is located in [vue](vue). The frontend is bui
 
 Everything related to the backend is located in [api](api). The backend uses the **[Slim Framework](https://www.slimframework.com/)**.
 
-**Check the [documentation](docs/README.md) for further information.**
 
 # Authors
 
