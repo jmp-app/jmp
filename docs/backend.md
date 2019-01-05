@@ -41,7 +41,7 @@ Make sure everything is running as explained in [README.md](../README.md).
         * [`Middleware/`](../api/src/JMP/Middleware) Custom [Middlewares](https://www.slimframework.com/docs/v3/concepts/middleware.html)
         * [``Models/``](../api/src/JMP/Models) Raw data objects with the functionality to convert to an array
         * [``Services/``](../api/src/JMP/Services) Business logic and database communication
-        * [``Utils/``](../api/src/JMP/Utils) Useful classes
+        * [``Utils/``](../api/src/JMP/Utils) Utility classes
 
 ## Slim specific classes
 * Private
@@ -55,7 +55,7 @@ Make sure everything is running as explained in [README.md](../README.md).
 ## Authentication
 
 ### Usage
-We use [JWT](https://jwt.io/) for authentication. The token must be submitted in the Authorization header using the Bearer schema.
+We use [JWT](https://jwt.io/) for authentication. The token must be submitted in the authorization header using the bearer schema.
 Example:  
 
 ```http_request
@@ -87,7 +87,7 @@ All validations are stored in [validation.php](../api/src/validation.php) and us
 See more at [Routes](#route).
 
 ### Translations
-In case the automatic generated error messages doesn't fit your requirements or hold sensible data like a password, you can add translations as described in [Translate errors](https://github.com/DavidePastore/Slim-Validation#translate-errors).
+In case the automatic generated error messages don't fit your requirements or hold sensible data like a password, you can add translations as described in [Translate errors](https://github.com/DavidePastore/Slim-Validation#translate-errors).
 
 Add the translations to [validation.php](../api/src/validation.php) and to the middleware as second parameter.
 **Example:**
@@ -131,7 +131,7 @@ if ($optional->isSuccess()) {
 //failure
 }
 ```
-**Vic versa:**
+**Vice versa:**
 ```php
 $optional = methodWhichMayFail();
 if ($optional->isFailure()) {
@@ -143,8 +143,8 @@ if ($optional->isFailure()) {
 ```
 
 ## Array Conversion
-The response object of the slim framework offers a method called `withJson`. This method converts an assoc array to JSON.
-Because the php cast functionality doesn't comply our requirements to cast model objects to associative arrays, we use the following util and interface:
+The response object of the slim framework offers a method called `withJson`. This method converts an associative array to JSON.
+Because the php cast functionality doesn't comply with our requirements to cast model objects to associative arrays, we use the following util and interface:
 
 **[ArrayConvertable](../api/src/JMP/Models/ArrayConvertable.php):**
 Every model has to implement this class, so that it can be properly converted to an associative array.
@@ -171,7 +171,7 @@ return $response->withJson(Converter::convertArray($list));
 ```
 
 ## Type declarations & phpdoc
-Everywhere it is possible we use object oriented php. So every method signature have to use the [php type declarations](https://secure.php.net/manual/en/functions.arguments.php#functions.arguments.type-declaration). If you try to call a method and pass arguments of another type as declared, then php will throw an [TypeError](https://secure.php.net/manual/en/class.typeerror.php).
+Everywhere it is possible we use object oriented php. So every method signature has to use the [php type declarations](https://secure.php.net/manual/en/functions.arguments.php#functions.arguments.type-declaration). If you try to call a method and pass arguments of another type as declared, then php will throw a [TypeError](https://secure.php.net/manual/en/class.typeerror.php).
 
 Also, every method has to be documented with phpdoc. A short summary or description of the method and a documented signature is sufficient.
 
@@ -180,7 +180,7 @@ Also, every method has to be documented with phpdoc. A short summary or descript
 /**
  * Select a user by its id
  * @param int $userId
- * @return Optional containing a User on succeed
+ * @return Optional containing a User if successfull
  */
 public function getUserByUserId(int $userId): Optional
 ```
@@ -188,7 +188,7 @@ public function getUserByUserId(int $userId): Optional
 ## SQL
 The services handle the business logic as well as the whole database communication. At the moment there isn't a separated Persistence Layer with e.g. Data Access Objects (DAOs).
 
-That the services doesn't become a mess, all SQL have to be coded with the following rules:
+That the services don't become a mess, all SQL statements have to be coded with the following rules:
 * Use the heredoc syntax:
 ```php
 $sql = <<<SQL
@@ -198,7 +198,7 @@ SQL;
 * Write every sql keyword upper-case
 * Use the **`AS`** keyword to change column names from the sql underscore style to the camel case style. E.g. `SELECT user_id as userId ...`
 * Use the following for optional parameters: `WHERE (:optionalId IS NULL OR id = :optionalId)`. Examples in [EventService.php](../api/src/JMP/Services/EventService.php)
-* A specific service don't query tables to which the service doesn't belong unless it's a join
+* A specific service doesn't query tables to which the service doesn't belong unless it's a join
 
 
 # Developing a new route
@@ -212,7 +212,7 @@ First of all the new route has to be documented in the [api-specification](api-v
 Routes return JSON mostly containing one or a list of model objects. So you have to [create a new model](#create-a-new-model) if the required doesn't exist yet. The model is just a raw data object with the functionality to convert properly to an array.
 
 Then you need a service to communicate with the database and to handle the business logic.
-[Create a new service class](#create-a-new-service-class) if no appropriate exists, otherwise add the required method/s to the existing service class.
+[Create a new service class](#create-a-new-service-class) if no appropriate exists yet, otherwise add the required method/s to the existing service class.
 
 ### Create a new service class
 If no useful service class already exists, you have to create a new one.
@@ -226,7 +226,7 @@ The service must
 Check out already existing services as examples. [Services](../api/src/JMP/Services) 
 
 ### Create a new model
-If the required model not already exists, you have to create a new one.
+If the required model doesn't already exist, you have to create a new one.
 
 The model must
 * have all columns (as in the database) as public attributes
