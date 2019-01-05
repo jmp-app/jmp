@@ -37,7 +37,7 @@ To adjust the settings, look here:
  * In [settings.php](../api/src/settings.php)
  * [.env](../api/.env) and [.env docs](dotenv.md)
 
-## Implementation
+### Implementation
 The submitted token is decoded by the [jwt-middleware](https://github.com/tuupola/slim-jwt-auth).  
 The custom [authentication middleware](../api/src/JMP/Middleware/AuthenticationMiddleware.php) checks the permissions of the enquirer using the `sub` entry of the decoded token.
 If the enquirer has got the right permissions for the route, he can pass.
@@ -46,18 +46,34 @@ In case the enquirer just hasn't got the required permissions, a 403 is returned
 ### Login
 To receive a new token, the user have to call the [login route](api-v1.md#login).  
 If the username and the password are valid, a new token is generated with the following service class [Auth.php](../api/src/JMP/Services/Auth.php).
+The password is hashed using [`password_hash`](https://secure.php.net/manual/en/function.password-hash.php) with the `PASSWORD_DEFAULT` option before it is stored in the database.
+To verify a password at a login, [`password_verify`](https://secure.php.net/manual/en/function.password-verify.php) is used.
+### Registration
+Only administrators can register new users. To register a new user, the [register route](api-v1.md) has to be called.
 
 ## Validation
 Every user input has to be validated before it is processed.
 
-## Implementation
+All validations are stored in [validation.php](../api/src/validation.php) and use the [RespectValidation](https://github.com/Respect/Validation) validation engine.
+The stored validations have to be submitted to the [validation middleware](https://github.com/DavidePastore/Slim-Validation) of the corresponding route in [routes.php](../api/src/routes.php).
 
-## Deployment
+**Example:**
+```php
+->add(new Validation($container['validation']['getUser']))
+```
+See more at [Routes](#route).
 
-## Model
+### Translations
+In case the automatic generated error messages doesn't fit your requirements or hold sensible data like a password, you can add translation as described in [Translate errors](https://github.com/DavidePastore/Slim-Validation#translate-errors).
 
-
-
+Add the translations to [validation.php](../api/src/validation.php) and to the middleware as second parameter.
+**Example:**
+```php
+->add(new Validation(
+    $this->getContainer()['validation']['login'],
+    $this->getContainer()['validation']['loginTranslation']
+))
+```
 ## Code Style
 
 It's important, that everyone complies with the following rules.
