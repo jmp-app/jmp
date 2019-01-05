@@ -43,13 +43,12 @@ SQL;
 
         $stmt->execute();
 
-        if ($stmt->rowCount() !== 1) {
-//            No results for the given id
+        $user = $stmt->fetch();
+        if ($user === false) {
             return Optional::failure();
         } else {
-            return Optional::success(new User($stmt->fetch()));
+            return Optional::success(new User($user));
         }
-
     }
 
     /**
