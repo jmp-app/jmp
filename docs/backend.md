@@ -42,7 +42,7 @@ The submitted token is decoded by the [jwt-middleware](https://github.com/tuupol
 The custom [authentication middleware](../api/src/JMP/Middleware/AuthenticationMiddleware.php) checks the permissions of the enquirer using the `sub` entry of the decoded token.
 If the enquirer has got the right permissions for the route, he can pass.
 If no token is supplied or if the supplied token is invalid, a 401 is returned.
-If the enquirer just hasn't got the required permissions, a 403 is returned.
+In case the enquirer just hasn't got the required permissions, a 403 is returned.
 ### Login
 To receive a new token, the user have to call the [login route](api-v1.md#login).  
 If the username and the password are valid, a new token is generated with the following service class [Auth.php](../api/src/JMP/Services/Auth.php).
@@ -62,13 +62,13 @@ Every user input has to be validated before it is processed.
 
 It's important, that everyone complies with the following rules.
 
-**Improvments:**
-If you recognize code, which doesn't comply with this rules, just correct them. 
+**Improvements:**
+If you recognize code, which doesn't comply with these rules, just correct them. 
 
 ### Optional
 In this application we use the [`Optional`](../api/src/JMP/Utils/Optional.php) very often.
 
-In php it's possible to let a method return `mixed` types (e.g. `User|bool`) or nullable objects, but we decided to not use this possibilities.
+In php it's possible to let a method return `mixed` types (e.g. `User|bool`) or null able objects, but we decided to not use these possibilities.
 
 When a method doesn't get the expected value, in other words, the execution fails, then we return an `Optional` instead of a `null` or `false` value.
 
@@ -104,8 +104,8 @@ if ($optional->isFailure()) {
 ```
 
 ### Array Conversion
-The response object of the slim framework offers a method called `withJson`. This method converts an assoc array to json.
-Because the php cast funcionality doesn't comply our requirements to cast model objects to associative arrays, we use the following util and interface:
+The response object of the slim framework offers a method called `withJson`. This method converts an assoc array to JSON.
+Because the php cast functionality doesn't comply our requirements to cast model objects to associative arrays, we use the following util and interface:
 
 **[ArrayConvertable](../api/src/JMP/Models/ArrayConvertable.php):**
 Every model has to implement this class, so that it can be properly converted to an associative array.
@@ -135,7 +135,7 @@ return $response->withJson(Converter::convertArray($list));
 Everywhere it is possible we use object oriented php. So every method signature have to use the [php type declarations](https://secure.php.net/manual/en/functions.arguments.php#functions.arguments.type-declaration).
 If you try to call a method and pass arguments of another type as declared, then php will throw an [TypeError](https://secure.php.net/manual/en/class.typeerror.php).
 
-Also every method has to be documented with phpdoc. A short summary or description of the method and a documented signature is sufficient.
+Also, every method has to be documented with phpdoc. A short summary or description of the method and a documented signature is sufficient.
 
 **Example (from [UserService.php](../api/src/JMP/Services/UserService.php)):**
 ```php
@@ -157,7 +157,7 @@ $sql = <<<SQL
 # SQL
 SQL;
 ```
-* Write every sql-keyword upper-case
+* Write every sql keyword upper-case
 * Use the **`AS`** keyword to change column names from the sql underscore style to the camel case style. E.g. `SELECT user_id as userId ...`
 * Use the following for optional parameters: `WHERE (:optionalId IS NULL OR id = :optionalId)`. Examples in [EventService.php](../api/src/JMP/Services/EventService.php)
 * A specific service don't query tables to which the service doesn't belong unless it's a join
@@ -171,10 +171,11 @@ Make sure you've read [Code Style](#code-style) before reading the following gui
 First of all the new route has to be documented in the [api-specification](api-v1.md).
 
 ## Service & Model
-Routes mostly return json containing an object of a model. So you have to [create a new model](#create-a-new-model) if the required doesn't exist yet.
+Routes return JSON mostly containing one or a list of model objects. So you have to [create a new model](#create-a-new-model) if the required doesn't exist yet.
 The model is just a raw data object with the functionality to convert properly to an array.
 
-Then you need a service to communicate with the database and to handle the business logic. [Create a new service class](#create-a-new-service-class) if no appropriate exists, otherwise add a the required method/s to the existing service class.
+Then you need a service to communicate with the database and to handle the business logic.
+[Create a new service class](#create-a-new-service-class) if no appropriate exists, otherwise add the required method/s to the existing service class.
 
 ### Create a new service class
 If no useful service class already exists, you have to create a new one.
@@ -185,14 +186,14 @@ The service must
 * have all dependencies set inside the constructor
 * be added to the slim container inside [dependencies.php](../api/src/dependencies.php)
 
-Check out already existing serivces as examples. [Services](../api/src/JMP/Services) 
+Check out already existing services as examples. [Services](../api/src/JMP/Services) 
 
 ### Create a new model
 If the required model not already exists, you have to create a new one.
 
 The model must
 * have all columns (as in the database) as public attributes
-* have a cunstructor with one array as parameter
+* have a constructor with one array as parameter
 * set all attributes (except the ones which are foreign keys in the database) by the values of the array inside the constructor
 * implement the [ArrayConvertable Interface](../api/src/JMP/Models/ArrayConvertable.php)
 
