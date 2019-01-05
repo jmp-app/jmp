@@ -6,10 +6,10 @@ Make sure everything is running as explained in [README.md](../README.md).
 ## Directory Structure
 * [`src/`](../api/src) Source directory. Not public
     * [`JMP/`](../api/src/JMP) Application directory
-        * [`Controllers/`](../api/src/JMP/Controllers) Controllers to handle requests as registered in routes.php
-        * [`Middleware/`](../api/src/JMP/Middleware) Custom Middlewares
+        * [`Controllers/`](../api/src/JMP/Controllers) Controllers to handle requests and build the responses
+        * [`Middleware/`](../api/src/JMP/Middleware) Custom [Middlewares](https://www.slimframework.com/docs/v3/concepts/middleware.html)
         * [``Models/``](../api/src/JMP/Models) Raw data objects with the functionality to convert to an array
-        * [``Services/``](../api/src/JMP/Services) Business logic
+        * [``Services/``](../api/src/JMP/Services) Business logic and database communication
         * [``Utils/``](../api/src/JMP/Utils) Useful classes
 
 ## Slim specific classes
@@ -40,8 +40,9 @@ To adjust the settings, look here:
 ## Implementation
 The submitted token is decoded by the [jwt-middleware](https://github.com/tuupola/slim-jwt-auth).  
 The custom [authentication middleware](../api/src/JMP/Middleware/AuthenticationMiddleware.php) checks the permissions of the enquirer using the `sub` entry of the decoded token.
-If the enquirer has got the right permissions for the route, he can pass, otherwise a 401 will be returned if he hasn't submitted any or an invalid token or a 403 if he just hasn't got the required permissions.
-
+If the enquirer has got the right permissions for the route, he can pass.
+If no token is supplied or if the supplied token is invalid, a 401 is returned.
+If the enquirer just hasn't got the required permissions, a 403 is returned.
 ### Login
 To receive a new token, the user have to call the [login route](api-v1.md#login).  
 If the username and the password are valid, a new token is generated with the following service class [Auth.php](../api/src/JMP/Services/Auth.php).
@@ -92,7 +93,6 @@ if ($optional->isSuccess()) {
 }
 ```
 **Vic versa:**
-TODO:hier
 ```php
 $optional = methodWhichMayFail();
 if ($optional->isFailure()) {
@@ -105,7 +105,7 @@ if ($optional->isFailure()) {
 
 ### Array Conversion
 The response object of the slim framework offers a method called `withJson`. This method converts an assoc array to json.
-Because the php cast funcionality doesn't comply our requirements to cast model objects to associative arrays, we use the following Util and interface:
+Because the php cast funcionality doesn't comply our requirements to cast model objects to associative arrays, we use the following util and interface:
 
 **[ArrayConvertable](../api/src/JMP/Models/ArrayConvertable.php):**
 Every model has to implement this class, so that it can be properly converted to an associative array.
@@ -124,7 +124,7 @@ The implementation has to **remove all null variables**.
 This util is used to convert a model object or  a list of model objects properly to an associative array.
 Use it in the controller as shown in this examples:
 ```php
-return $response->withJson(Converter::convert($data));
+return $response->withJson(Converter::convert($modelObject));
 ```
 or
 ```php
@@ -137,7 +137,7 @@ If you try to call a method and pass arguments of another type as declared, then
 
 Also every method has to be documented with phpdoc. A short summary or description of the method and a documented signature is sufficient.
 
-**Example (from [UserService.php](../api/src/JMP/Services/UserService.php):**
+**Example (from [UserService.php](../api/src/JMP/Services/UserService.php)):**
 ```php
 /**
  * Select a user by its id
@@ -158,7 +158,7 @@ $sql = <<<SQL
 SQL;
 ```
 * Write every sql-keyword upper-case
-* Use the `AS` keyword to change column names from the sql underscore style to the camel case style. E.g. `SELECT user_id as userId ...`
+* Use the **`AS`** keyword to change column names from the sql underscore style to the camel case style. E.g. `SELECT user_id as userId ...`
 * Use the following for optional parameters: `WHERE (:optionalId IS NULL OR id = :optionalId)`. Examples in [EventService.php](../api/src/JMP/Services/EventService.php)
 * A specific service don't query tables to which the service doesn't belong unless it's a join
 
@@ -205,7 +205,7 @@ So if no appropriate controller already exists, a [new controller has to be crea
 A controller is called by the associated method in the [route.php](../api/src/routes.php) script.
 The controller is only called after the validation and the authentication passed successful.
 A controller has to call the required service and has to build the response dependent on the return value of the service.
-More information about response and the error responses can be found in the [api specification](api-v1.md).
+More information about responses and the error responses can be found in the [api specification](api-v1.md).
 
 ### Create a new controller class
 If no appropriate controller exists, you have to create a new one.
