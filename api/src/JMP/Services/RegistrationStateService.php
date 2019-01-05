@@ -23,6 +23,27 @@ class RegistrationStateService
     }
 
     /**
+     * @return array RegistrationStates
+     */
+    public function getAllRegStates()
+    {
+        $sql = <<< SQL
+SELECT id, name, reason_required as reasonRequired
+FROM registration_state
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $registrationStates = $stmt->fetchAll();
+
+        foreach ($registrationStates as $key => $val) {
+            $registrationStates[$key] = new RegistrationState($val);
+        }
+
+        return $registrationStates;
+    }
+
+    /**
      * @param int $registrationStateId
      * @return RegistrationState
      */

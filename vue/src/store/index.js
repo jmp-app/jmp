@@ -5,7 +5,9 @@ import {alert} from './alert.module';
 import {authentication} from './authentication.module';
 import {users} from './users.module';
 import {user} from './user.module';
-import {events} from './events.module';
+import {events} from './event.module';
+import {registrationStates} from './registrationState.module';
+import {registration} from './registration.module';
 
 Vue.use(Vuex);
 
@@ -15,6 +17,8 @@ export const store = new Vuex.Store({
         authentication,
         user,
         users,
-        events
+        events,
+        registrationStates,
+        registration
     }
 });

@@ -5,7 +5,7 @@ volumes:
     driver: local
 
 services:
-  
+
   # PHP
   app:
     build:
@@ -44,12 +44,11 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: jmp
-      MYSQL_ROOT_PASSWORD: jmp_docker_local
-      MYSQL_USER: jmp_user
-      MYSQL_PASSWORD: pass4dev
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
+    env_file:
+      - api/db.env
+      - db.env
     volumes:
       - dbdata:/var/lib/mysql/
       - ./docker/db/:/docker-entrypoint-initdb.d/

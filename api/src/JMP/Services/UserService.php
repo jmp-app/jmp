@@ -83,7 +83,7 @@ SQL;
     }
 
     /**
-     * Checks wheter a user with the given username alredy exists, as it have to be unique
+     * Checks whether a user with the given username already exists, as it must be unique
      * @param string $username
      * @return bool
      */
@@ -129,4 +129,32 @@ SQL;
 
         return new User($stmt->fetch());
     }
+
+    /**
+     * @param int|null $groupId
+     * @return User[]
+     */
+    public function getUsers(?int $groupId): array
+    {
+        $sql = <<< SQL
+            SELECT DISTINCT user.id, username, lastname, firstname, email, is_admin
+            FROM user
+                LEFT JOIN membership m on user.id = m.user_id
+            WHERE (:groupId IS NULL OR m.group_id = :groupId)
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':groupId', $groupId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $users = $stmt->fetchAll();
+
+        foreach ($users as $key => $val) {
+            $users[$key] = new User($val);
+        }
+
+        return $users;
+    }
+
 }

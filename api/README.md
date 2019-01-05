@@ -30,4 +30,4 @@ The API Specification can be found in [API Spec Version 1](../docs/api-v1.md)
 
 Information about the database schema can be found here: [database](../docs/database.md)
 
-When using Docker, the database container is initialized according to the schema when the container is created. The [setup script](../docker/db/01_setup.sql) is used. Additionally some basic data is created too with the [init data script](../docker/db/02_initData.sql).
+When using Docker, the database container is initialized according to the schema when the container is created. The [setup script](../docker/db/01_setup.sql) is used. Additionally some basic data is created too with the [init data script](../docker/db/03_initData.sql).
