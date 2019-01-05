@@ -34,6 +34,32 @@ class UsersController
         $this->userService = $container->get('userService');
     }
 
+    /**
+     * Get current logged in user
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function getCurrentUser(Request $request, Response $response): Response
+    {
+        $user = $this->auth->requestUser($request);
+
+        if ($user->isFailure()) {
+            // There has to be always a logged in user that accesses this
+            return $response->withStatus(500);
+        }
+
+        $user = new User($user->getData());
+
+        return $response->withJson(Converter::convert($user));
+    }
+
+    /**
+     * Returns all users
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function listUsers(Request $request, Response $response): Response
     {
         $group =$request->getQueryParam('group');

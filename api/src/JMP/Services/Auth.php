@@ -66,7 +66,7 @@ class Auth
      * @param $password string
      * @return Optional
      */
-    public function attempt($username, $password)
+    public function attempt($username, $password): Optional
     {
         $optional = $this->getUser($username);
         if ($optional->isFailure()) {
@@ -92,7 +92,7 @@ class Auth
      * @param Request $request
      * @return Optional
      */
-    public function requestUser(Request $request)
+    public function requestUser(Request $request): Optional
     {
         if ($token = $request->getAttribute('token')) {
             $optional = $this->getUser($token['sub']);
@@ -115,7 +115,7 @@ class Auth
      * @param Request $request
      * @return Optional
      */
-    public function requestAdmin(Request $request)
+    public function requestAdmin(Request $request): Optional
     {
         $optional = $this->requestUser($request);
 
