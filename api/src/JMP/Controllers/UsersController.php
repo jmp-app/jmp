@@ -68,6 +68,55 @@ class UsersController
     }
 
     /**
+     * Update data of a user
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function updateUser(Request $request, Response $response, array $args): Response
+    {
+        $id = $args['id'];
+        $updates = $request->getParsedBody();
+
+        if (!$this->userService->userExists($id)) {
+            return $response->withJson([
+                'errors' => [
+                    'id' => 'The specified id "' . $id . '"does not exist'
+                ]
+            ], 404);
+        }
+
+        $updatedUser = $this->userService->updateUser($id, $updates);
+
+        if ($updatedUser->isFailure()) {
+            return $response->withStatus(500);
+        }
+
+        return $response->withJson(Converter::convert($updatedUser->getData()));
+    }
+
+    /**
+     * Returns the user with the given id or a 404
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function getUser(Request $request, Response $response, array $args): Response
+    {
+        $userId = $args['id'];
+
+        $optional = $this->userService->getUserByUserId($userId);
+
+        if ($optional->isSuccess()) {
+            return $response->withJson(Converter::convert($optional->getData()));
+        } else {
+            return $response->withStatus(404);
+        }
+    }
+
+    /**
      * Returns the user or an error
      * @param Request $request
      * @param Response $response
