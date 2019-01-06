@@ -73,7 +73,7 @@ The submitted token is decoded by the [jwt-middleware](https://github.com/tuupol
 ### Login
 To receive a new token, the user have to call the [login route](api-v1.md#login). If the username and the password are valid, a new token is generated with the following service class [Auth.php](../api/src/JMP/Services/Auth.php). The password is hashed using [`password_hash`](https://secure.php.net/manual/en/function.password-hash.php) with the `PASSWORD_DEFAULT` option before it is stored in the database. To verify a password at a login, [`password_verify`](https://secure.php.net/manual/en/function.password-verify.php) is used.
 ### Registration
-Only administrators can register new users. To register a new user, the [register route](api-v1.md) has to be called.
+Only administrators can register new users. To register a new user, the [register route](api-v1.md#create-user) has to be called.
 
 ## Validation
 Every user input has to be validated before it is processed.
