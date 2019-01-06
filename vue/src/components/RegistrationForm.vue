@@ -57,7 +57,6 @@
                 let userId = JSON.parse(window.localStorage.getItem('user')).id;
                 let registrationStateId = this.selected.id;
                 let reason = this.reason.trim();
-                console.log(reason.replace(/\s/g, '').length > 0);
                 if (this.selected.reasonRequired) {
                     if (this.reason.replace(/\s/g, '').length > 0) {
                         this.$store.dispatch('registration/updateRegistration', {
