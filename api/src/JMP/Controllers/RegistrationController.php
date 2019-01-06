@@ -76,7 +76,7 @@ class RegistrationController
             return $this->getBadRequestResponse($response, "Invalid parameters");
         }
 
-        if (!isset($registration->registrationState->id)) {
+        if (!isset($parsedBody['registrationState'])) {
             $registration->registrationState->id = $event->getData()->defaultRegistrationState->id;
         }
 
