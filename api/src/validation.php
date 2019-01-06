@@ -51,6 +51,9 @@ $container['validation'] = function () {
         'updateGroup' => [
             'name' => v::optional(v::notEmpty()->length(1, 45))
         ],
+        'userIdsArray' => [
+            'users' => v::arrayType()->length(1, null)->each(v::numeric())
+        ],
         'createRegistration' => [
             'eventId' => v::notEmpty()->noWhitespace()->numeric(),
             'userId' => v::notEmpty()->noWhitespace()->numeric(),

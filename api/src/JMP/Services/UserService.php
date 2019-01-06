@@ -5,6 +5,7 @@ namespace JMP\Services;
 
 
 use JMP\Models\User;
+use JMP\Utils\Optional;
 use PDO;
 use Psr\Container\ContainerInterface;
 
@@ -21,6 +22,33 @@ class UserService
     public function __construct(ContainerInterface $container)
     {
         $this->db = $container->get('database');
+    }
+
+    /**
+     * Select a user by its id
+     * @param int $userId
+     * @return Optional containing a User on succeed
+     */
+    public function getUserByUserId(int $userId): Optional
+    {
+        $sql = <<<SQL
+SELECT user.id, username, lastname, firstname, email, is_admin AS isAdmin
+FROM user
+WHERE id = :userId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $user = $stmt->fetch();
+        if ($user === false) {
+            return Optional::failure();
+        } else {
+            return Optional::success(new User($user));
+        }
     }
 
     /**

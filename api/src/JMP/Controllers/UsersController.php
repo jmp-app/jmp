@@ -6,7 +6,6 @@ namespace JMP\Controllers;
 
 use Interop\Container\ContainerInterface;
 use JMP\Models\User;
-use JMP\Services\Auth;
 use JMP\Services\UserService;
 use JMP\Utils\Converter;
 use Slim\Http\Request;
@@ -15,10 +14,6 @@ use Slim\Http\Response;
 class UsersController
 {
 
-    /**
-     * @var Auth
-     */
-    private $auth;
     /**
      * @var UserService
      */
@@ -30,7 +25,6 @@ class UsersController
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->auth = $container->get('auth');
         $this->userService = $container->get('userService');
     }
 
@@ -39,6 +33,25 @@ class UsersController
         $group = $request->getQueryParam('group');
         $users = $this->userService->getUsers(empty($group) ? null : $group);
         return $response->withJson(Converter::convertArray($users));
+    }
+
+    /**
+     * Returns the user with the given id or a 404
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function getUser(Request $request, Response $response, array $args): Response
+    {
+        $userId = $args['id'];
+
+        $optional = $this->userService->getUserByUserId($userId);
+
+        if ($optional->isSuccess()) {
+            return $response->withJson(Converter::convert($optional->getData()));
+        } else {
+            return $response->withStatus(404);
+        }
     }
 
     /**

@@ -72,6 +72,10 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
         ->add($jwtMiddleware);
 
+    $this->get('/users/{id:[0-9]+}', UsersController::class . ':getUser')
+        ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
+  
     $this->post('/groups', GroupsController::class . ':createGroup')
         ->add(new ValidationErrorResponseBuilder())
         ->add(new Validation($container['validation']['createGroup']))
@@ -95,6 +99,18 @@ $app->group('/v1', function () {
         ->add($jwtMiddleware);
 
     $this->delete('/groups/{id:[0-9]+}', GroupsController::class . ':deleteGroup')
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
+
+    $this->post('/groups/{id:[0-9]+}/join', GroupsController::class . ':joinGroup')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($container['validation']['userIdsArray']))
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
+
+    $this->delete('/groups/{id:[0-9]+}/leave', GroupsController::class . ':leaveGroup')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($container['validation']['userIdsArray']))
         ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
         ->add($jwtMiddleware);
 

@@ -41,6 +41,10 @@ $container['groupService'] = function (\Psr\Container\ContainerInterface $contai
     return new \JMP\Services\GroupService($container);
 };
 
+$container['membershipService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\MembershipService($container);
+};
+
 $container['registrationStateService'] = function (\Psr\Container\ContainerInterface $container) {
     return new \JMP\Services\RegistrationStateService($container);
 };
