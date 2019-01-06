@@ -167,7 +167,7 @@ SQL;
 SQL;
 
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id',  $id);
+        $stmt->bindParam(':id', $id);
         $stmt->execute();
 
         $data = $stmt->fetch();

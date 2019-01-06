@@ -53,6 +53,18 @@ $container['validation'] = function () {
         ],
         'userIdsArray' => [
             'users' => v::arrayType()->length(1, null)->each(v::numeric())
+        ],
+        'createRegistration' => [
+            'eventId' => v::notEmpty()->noWhitespace()->numeric(),
+            'userId' => v::notEmpty()->noWhitespace()->numeric(),
+            'reason' => v::optional(v::notEmpty()->length(1, 80)),
+            'registrationState' => v::optional(v::notEmpty()->noWhitespace()->numeric())
+        ],
+        'updateRegistration' => [
+            'eventId' => v::notEmpty()->noWhitespace()->numeric(),
+            'userId' => v::notEmpty()->noWhitespace()->numeric(),
+            'reason' => v::optional(v::notEmpty()->length(1, 80)),
+            'registrationState' => v::notEmpty()->noWhitespace()->numeric()
         ]
     ];
 };

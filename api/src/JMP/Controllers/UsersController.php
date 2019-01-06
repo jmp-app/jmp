@@ -30,8 +30,8 @@ class UsersController
 
     public function listUsers(Request $request, Response $response): Response
     {
-        $group =$request->getQueryParam('group');
-        $users =$this->userService->getUsers(empty($group) ? null : $group);
+        $group = $request->getQueryParam('group');
+        $users = $this->userService->getUsers(empty($group) ? null : $group);
         return $response->withJson(Converter::convertArray($users));
     }
 

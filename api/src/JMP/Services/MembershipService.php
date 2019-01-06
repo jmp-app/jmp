@@ -60,21 +60,6 @@ SQL;
     }
 
     /**
-     * Creates a membership for each user with the group
-     * @param int $groupId
-     * @param array $users
-     */
-    public function removeUsersFromGroup(int $groupId, array $users): bool
-    {
-        $sql = <<< SQL
-            DELETE FROM membership 
-            WHERE group_id = :groupId AND user_id = :userId
-SQL;
-
-        return $this->executeForEachUser($sql, $groupId, $users);
-    }
-
-    /**
      * Executes sql against each user. The groupId and userId are bound to the prepared statement.
      * @param string $sql
      * @param int $groupId
@@ -108,6 +93,21 @@ SQL;
         }
 
         return true;
+    }
+
+    /**
+     * Creates a membership for each user with the group
+     * @param int $groupId
+     * @param array $users
+     */
+    public function removeUsersFromGroup(int $groupId, array $users): bool
+    {
+        $sql = <<< SQL
+            DELETE FROM membership 
+            WHERE group_id = :groupId AND user_id = :userId
+SQL;
+
+        return $this->executeForEachUser($sql, $groupId, $users);
     }
 
 }

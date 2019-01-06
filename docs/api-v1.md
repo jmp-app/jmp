@@ -706,4 +706,64 @@ Access rights: authentication required
 
 Returns: the [Registration](#registration)
 
+### Create Registration
+
+```http
+POST /v1/registration
+```
+
+Parameters:
+
+| Field     | Description                                                  | Required |
+| --------- | ------------------------------------------------------------ | -------- |
+| eventId   | The event's id                                               | ✔️     |
+| userId    | The user's id                                                | ✔        |
+| reason    | The reason for the registration                              | ❌        |
+| registrationState | [Registration State](#registration-state)'s id       | ❌       |
+
+Example request data:
+
+```json
+{
+    "eventId": 1,
+    "userId": 24,
+    "reason": "Ill",
+    "registrationState": {
+      "id": 1,
+      "name": "Declined",
+      "requiresReason": true
+    }
+}
+```
+
+Access rights: authentication required
+
+Returns: the [Registration](#registration)
+
+### Update Registration 
+
+```http
+PUT /v1/registration/{eventId}/{userId}
+```
+
+Parameters:
+
+| Field     | Description                                                  | Required |
+| --------- | ------------------------------------------------------------ | -------- |
+| reason    | The reason for the registration                              | ❌        |
+| registrationState | [Registration State](#registration-state)'s id       | ✔ |
+
+Example request data:
+
+```json
+{
+    "reason": "Sick",
+    "registrationState": 1
+}
+```
+
+Access rights: authentication required
+
+Returns: the [Registration](#registration)
+
 ___TODO:___ Registration, Presence and User Meta

@@ -42,6 +42,18 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
         ->add($jwtMiddleware);
 
+    $this->post('/registration', RegistrationController::class . ':createRegistration')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($this->getContainer()['validation']['createRegistration']))
+        ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
+        ->add($jwtMiddleware);
+
+    $this->put('/registration/{eventId}/{userId}', RegistrationController::class . ':updateRegistration')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($this->getContainer()['validation']['updateRegistration']))
+        ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
+        ->add($jwtMiddleware);
+
     $this->get('/registration-state', \JMP\Controllers\RegistrationStateController::class . ':getAllRegStates')
         ->add(new ValidationErrorResponseBuilder())
         ->add(new Validation($this->getContainer()['validation']['getAllRegStates']))

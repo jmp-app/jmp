@@ -71,8 +71,13 @@ class EventsController
      */
     public function getEventById(Request $request, Response $response, array $args): Response
     {
-        $event = Converter::convert($this->eventService->getEventById($args['id']));
-        return $response->withJson($event);
+        $optional = $this->eventService->getEventById($args['id']);
+        if ($optional->isFailure()) {
+            return $response->withStatus(404);
+        } else {
+            $event = Converter::convert($optional->getData());
+            return $response->withJson($event);
+        }
     }
 
     /**
