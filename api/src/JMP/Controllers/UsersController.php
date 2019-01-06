@@ -97,6 +97,32 @@ class UsersController
     }
 
     /**
+     * Delete a user
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function deleteUser(Request $request, Response $response, array $args): Response
+    {
+        $id = $args['id'];
+
+        if (!$this->userService->userExists($id)) {
+            return $response->withJson([
+                'errors' => [
+                    'id' => 'The specified id "' . $id . '"does not exist'
+                ]
+            ], 404);
+        }
+
+        $this->userService->deleteUser($id);
+
+        return $response->withJson([
+            'success' => 'Deleted user with id "' . $id . '"'
+        ]);
+    }
+
+    /**
      * Returns the user with the given id or a 404
      * @param Request $request
      * @param Response $response

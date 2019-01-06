@@ -67,7 +67,11 @@ $app->group('/v1', function () {
     $this->put('/users/{id:[0-9]+}', UsersController::class . ':updateUser')
         ->add(new ValidationErrorResponseBuilder())
         ->add(new Validation($container['validation']['updateUser']))
-        ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
+
+    $this->delete('/users/{id:[0-9]+}', UsersController::class . ':deleteUser')
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
         ->add($jwtMiddleware);
 
     $this->get('/users/{id:[0-9]+}', UsersController::class . ':getUser')

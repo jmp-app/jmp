@@ -48,7 +48,7 @@ $container['validation'] = function () {
             'isAdmin' => v::optional(v::boolType())
         ],
         'listUsers' => [
-            'username' => v::optional(v::notEmpty()->noWhitespace()->numeric()),
+            'group' => v::optional(v::notEmpty()->noWhitespace()->numeric()),
         ],
         'createGroup' => [
             'name' => v::notEmpty()->length(1, 45)

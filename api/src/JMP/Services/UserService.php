@@ -17,12 +17,18 @@ class UserService
     protected $db;
 
     /**
+     * @var RegistrationService
+     */
+    private $registrationService;
+
+    /**
      * EventService constructor.
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->db = $container->get('database');
+        $this->registrationService = $container->get('registrationService');
     }
 
     /**
@@ -278,6 +284,27 @@ SQL;
         }
 
         return $currentUser;
+    }
+
+    /**
+     * Delete User
+     * @param int $id
+     */
+    public function deleteUser(int $id) {
+        // Foreign Keys
+        // TODO: Delete memberships
+        // TODO: Delete presence once presence is implemented
+        $this->registrationService->deleteRegistrationsOfUser($id);
+
+        // User
+        $sql = <<< SQL
+            DELETE FROM user
+            WHERE id = :id;
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->execute();
     }
 
 }
