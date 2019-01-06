@@ -57,7 +57,7 @@ $container['validation'] = function () {
         'createRegistration' => [
             'eventId' => v::notEmpty()->noWhitespace()->numeric(),
             'userId' => v::notEmpty()->noWhitespace()->numeric(),
-            'reason' => v::optional(v::notEmpty()->noWhitespace()->length(1, 80)),
+            'reason' => v::optional(v::notEmpty()->length(1, 80)),
             'registrationState' => v::optional(v::notEmpty()->noWhitespace()->numeric())
         ],
         'updateRegistration' => [
