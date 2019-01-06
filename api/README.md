@@ -2,6 +2,18 @@
 
 The backend uses PHP with the [Slim Framework](https://www.slimframework.com/).
 
+**Read more in the [documentation](../docs/README.md).**
+
+# Table of Contents:
+- [Backend](#backend)
+  * [Composer](#composer)
+  * [Environment Variables](#environment-variables)
+  * [API](#api)
+  * [Database](#database)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
+
 ## Composer
 
 Composer is used for auto-loading classes and managing dependencies. Run `composer install` to install all dependencies.

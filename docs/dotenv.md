@@ -1,5 +1,3 @@
-
-
 **Database settings [api/db.env](../api/db.env):**  
 
 | Name | Desc | Default Value | Options | Note |

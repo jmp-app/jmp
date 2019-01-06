@@ -1,4 +1,46 @@
 # API Spec Version 1
+# Table of Contens:
+- [API Spec Version 1](#api-spec-version-1)
+- [JSON Objects](#json-objects)
+  * [User](#user)
+  * [Group](#group)
+  * [Event](#event)
+  * [Event Type](#event-type)
+  * [Registration State](#registration-state)
+- [Error Handling](#error-handling)
+  * [HTTP Status Codes](#http-status-codes)
+  * [JSON Error Objects](#json-error-objects)
+- [Authentication](#authentication)
+- [Endpoints](#endpoints)
+  * [Login](#login)
+  * [Create User](#create-user)
+  * [List Users](#list-users)
+  * [Get Current User](#get-current-user)
+  * [Get User](#get-user)
+  * [Update User](#update-user)
+  * [Delete User](#delete-user)
+  * [Create Event](#create-event)
+  * [List Events](#list-events)
+  * [Get Event](#get-event)
+  * [Update Event](#update-event)
+  * [Delete Event](#delete-event)
+  * [Create Event Type](#create-event-type)
+  * [List Event Types](#list-event-types)
+  * [Get Event Type](#get-event-type)
+  * [Delete Event Type](#delete-event-type)
+  * [Create Group](#create-group)
+  * [List Groups](#list-groups)
+  * [Get Group](#get-group)
+  * [Update Group](#update-group)
+  * [Delete Group](#delete-group)
+  * [Join Group](#join-group)
+  * [Leave Group](#leave-group)
+  * [Create Registration State](#create-registration-state)
+  * [List Registration States](#list-registration-states)
+  * [Get Registration State](#get-registration-state)
+  * [Delete Registration State](#delete-registration-state)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
 ## JSON Objects
 
@@ -54,7 +96,7 @@
 
 ```
 
-**Note:** The [Event](#Event) includes an [Event Type](#event_type), a [Registration State](#registration_state) and a list of [Groups](#Group)
+**Note:** The [Event](#Event) includes an [Event Type](#event-type), a [Registration State](#registration-state) and a list of [Groups](#Group)
 
 
 ### Event Type
@@ -129,7 +171,7 @@ The token is first received by [logging in](#Authentication). All routes except 
 
 ## Endpoints
 
-### Authentication
+### Login
 
 ``````http
 POST /v1/login
@@ -426,7 +468,7 @@ Example request data:
 
 Access rights: authentication required, user has to be an admin
 
-Returns: the [Event Type](#event_type)
+Returns: the [Event Type](#event-type)
 
 ### List Event Types
 
@@ -450,7 +492,7 @@ Parameters: none
 
 Access rights: authentication required
 
-Returns: the [Event Type](#event_type)
+Returns: the [Event Type](#event-type)
 
 ### Delete Event Type
 
@@ -640,7 +682,7 @@ Parameters: none
 
 Access rights: authentication required
 
-Returns: the [Registration State](#registration_state)
+Returns: the [Registration State](#registration-state)
 
 ### Delete Registration State
 
