@@ -6,7 +6,6 @@ namespace JMP\Controllers;
 
 use Interop\Container\ContainerInterface;
 use JMP\Models\User;
-use JMP\Services\Auth;
 use JMP\Services\UserService;
 use JMP\Utils\Converter;
 use Slim\Http\Request;
@@ -15,10 +14,6 @@ use Slim\Http\Response;
 class UsersController
 {
 
-    /**
-     * @var Auth
-     */
-    private $auth;
     /**
      * @var UserService
      */
@@ -30,7 +25,6 @@ class UsersController
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->auth = $container->get('auth');
         $this->userService = $container->get('userService');
     }
 
