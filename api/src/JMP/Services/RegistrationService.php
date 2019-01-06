@@ -51,14 +51,16 @@ SQL;
         $stmt->execute();
         $val = $stmt->fetch();
         if ($val === false) {
-            return $this->getRegistrationByDefaultRegistrationStateInEvent($userId, $eventId);
+            return Optional::failure();
         }
         $registration = new Registration($val);
         $optional = $this->registrationStateService->getRegistrationTypeById($val['regStateId']);
         if ($optional->isSuccess()) {
             $registration->registrationState = $optional->getData();
+            return Optional::success($registration);
+        } else {
+            Optional::failure();
         }
-        return Optional::success($registration);
     }
 
     /**

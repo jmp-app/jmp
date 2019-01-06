@@ -5,6 +5,7 @@ namespace JMP\Controllers;
 use JMP\Models\Registration;
 use JMP\Models\RegistrationState;
 use JMP\Services\Auth;
+use JMP\Services\EventService;
 use JMP\Services\RegistrationService;
 use JMP\Services\RegistrationStateService;
 use JMP\Utils\Converter;
@@ -26,6 +27,10 @@ class RegistrationController
      * @var RegistrationStateService
      */
     private $registrationStateService;
+    /**
+     * @var EventService
+     */
+    private $eventService;
 
     /**
      * RegistrationController constructor.
@@ -36,6 +41,7 @@ class RegistrationController
         $this->auth = $container->get('auth');
         $this->registrationService = $container->get('registrationService');
         $this->registrationStateService = $container->get('registrationStateService');
+        $this->eventService = $container->get('eventService');
     }
 
     public function getRegistrationByEventIdAndUserId(Request $request, Response $response, array $args): Response
@@ -64,14 +70,20 @@ class RegistrationController
             return $response->withJson(Converter::convert($optional->getData()));
         }
 
+        $event = $this->eventService->getEventById($registration->eventId);
+
+        if ($event->isFailure()) {
+            return $this->getBadRequestResponse($response, "Invalid parameters");
+        }
+
+        if (!isset($registration->registrationState->id)) {
+            $registration->registrationState->id = $event->getData()->defaultRegistrationState->id;
+        }
+
         $optional = $this->registrationService->createRegistration($registration);
 
         if ($optional->isFailure()) {
-            return $response->withJson([
-                "errors" => [
-                    "Invalid parameters"
-                ]
-            ], 400);
+            return $this->getBadRequestResponse($response, "Invalid parameters");
         } else {
             return $response->withJson(Converter::convert($optional->getData()));
         }
@@ -93,22 +105,14 @@ class RegistrationController
 
         $newRegistrationState = $this->registrationStateService->getRegistrationTypeById($newRegistrationState);
         if ($newRegistrationState->isFailure()) {
-            return $response->withJson([
-                "errors" => [
-                    "Invalid RegistrationState"
-                ]
-            ], 400);
+            return $this->getBadRequestResponse($response, "Invalid RegistrationState");
         }
 
         $newRegistrationState = $newRegistrationState->getData();
 
         if ($newRegistrationState->reasonRequired) {
             if (empty($newReason)) {
-                return $response->withJson([
-                    "errors" => [
-                        "Reason is required"
-                    ]
-                ], 400);
+                return $this->getBadRequestResponse($response, "Reason is required");
             }
         }
 
@@ -125,15 +129,25 @@ class RegistrationController
         $optional = $this->registrationService->updateRegistration($updatedRegistration);
 
         if ($optional->isFailure()) {
-            return $response->withJson([
-                "errors" => [
-                    "Invalid parameters"
-                ]
-            ], 400);
+            return $this->getBadRequestResponse($response, "Invalid parameters");
         } else {
             return $response->withJson(Converter::convert($optional->getData()));
         }
 
 
+    }
+
+    /**
+     * @param Response $response
+     * @param $message
+     * @return Response
+     */
+    public function getBadRequestResponse(Response $response, $message): Response
+    {
+        return $response->withJson([
+            "errors" => [
+                $message
+            ]
+        ], 400);
     }
 }
