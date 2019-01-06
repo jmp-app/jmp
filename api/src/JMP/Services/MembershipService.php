@@ -2,6 +2,7 @@
 
 namespace JMP\Services;
 
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
 class MembershipService
@@ -13,9 +14,9 @@ class MembershipService
     protected $db;
 
     /**
-     * @var UserService
+     * @var Logger
      */
-    protected $userService;
+    private $logger;
 
     /**
      * EventService constructor.
@@ -24,6 +25,7 @@ class MembershipService
     public function __construct(ContainerInterface $container)
     {
         $this->db = $container->get('database');
+        $this->db = $container->get('logger');
     }
 
     /**
@@ -47,14 +49,14 @@ SQL;
      * @param int $groupId
      * @param array $users
      */
-    public function addUsersToGroup(int $groupId, array $users): void
+    public function addUsersToGroup(int $groupId, array $users): bool
     {
         $sql = <<< SQL
             INSERT INTO membership (group_id, user_id) 
             VALUES (:groupId, :userId)
 SQL;
 
-        $this->executeForEachUser($sql, $groupId, $users);
+        return $this->executeForEachUser($sql, $groupId, $users);
     }
 
     /**
@@ -62,14 +64,14 @@ SQL;
      * @param int $groupId
      * @param array $users
      */
-    public function removeUsersFromGroup(int $groupId, array $users): void
+    public function removeUsersFromGroup(int $groupId, array $users): bool
     {
         $sql = <<< SQL
             DELETE FROM membership 
             WHERE group_id = :groupId AND user_id = :userId
 SQL;
 
-        $this->executeForEachUser($sql, $groupId, $users);
+        return $this->executeForEachUser($sql, $groupId, $users);
     }
 
     /**
@@ -77,8 +79,10 @@ SQL;
      * @param string $sql
      * @param int $groupId
      * @param array $users
+     * @return bool If all executions were successfull
+     * @throws \Exception
      */
-    private function executeForEachUser(string $sql, int $groupId, array $users): void
+    private function executeForEachUser(string $sql, int $groupId, array $users): bool
     {
         try {
             $this->db->beginTransaction();
@@ -91,14 +95,19 @@ SQL;
 
                 $success = $stmt->execute();
                 if (!$success) {
-                    throw new \Exception();
+                    throw new \Exception('Failed to insert into membership with groupId: ' . $groupId .
+                        ' and userId: ' . $userId . '. ' . $sql);
                 }
             }
 
             $this->db->commit();
         } catch (\Exception $e) {
             $this->db->rollBack();
+            $this->logger->error($e->getMessage());
+            return false;
         }
+
+        return true;
     }
 
 }

@@ -151,7 +151,10 @@ class GroupsController
         }
 
         // Add users to the group
-        $this->membershipService->addUsersToGroup($id, $users);
+        if (!$this->membershipService->addUsersToGroup($id, $users)) {
+            // operation failed
+            return $response->withStatus(500);
+        }
 
         // Retrieve the updated group and return it
         $group = $this->groupService->getGroupById($id);
@@ -176,7 +179,10 @@ class GroupsController
         }
 
         // Remove users from the group
-        $this->membershipService->removeUsersFromGroup($id, $users);
+        if (!$this->membershipService->removeUsersFromGroup($id, $users)) {
+            // operation failed
+            return $response->withStatus(500);
+        }
 
         // Retrieve the updated group and return it
         $group = $this->groupService->getGroupById($id);
