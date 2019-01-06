@@ -719,7 +719,7 @@ Parameters:
 | eventId   | The event's id                                               | ✔️     |
 | userId    | The user's id                                                | ✔        |
 | reason    | The reason for the registration                              | ❌        |
-| registrationState | [Registration State](#registration-state)'s id       | ✔ |
+| registrationState | [Registration State](#registration-state)'s id       | ❌       |
 
 Example request data:
 
