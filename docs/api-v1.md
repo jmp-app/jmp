@@ -613,7 +613,7 @@ Returns: the [Group](#Group)
 ### Leave Group
 
 ```http
-DELETE /v1/groups/{id}/join
+DELETE /v1/groups/{id}/leave
 ```
 
 Parameters:
