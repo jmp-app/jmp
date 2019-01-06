@@ -698,4 +698,30 @@ Access rights: authentication required
 
 Returns: the [Registration](#registration)
 
+### Update Registration 
+
+```http
+PUT /v1/registration/{eventId}/{userId}
+```
+
+Parameters:
+
+| Field     | Description                                                  | Required |
+| --------- | ------------------------------------------------------------ | -------- |
+| reason    | The reason for the registration                              | ❌        |
+| registrationState | [Registration State](#registration-state)'s id       | ✔ |
+
+Example request data:
+
+```json
+{
+    "reason": "Sick",
+    "registrationState": 1
+}
+```
+
+Access rights: authentication required
+
+Returns: the [Registration](#registration)
+
 ___TODO:___ Registration, Presence and User Meta
