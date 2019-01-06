@@ -35,10 +35,16 @@ npm run build
 ```
 > To run vue at development, read this [doc](vue/README.md)
 
-Create file `api/.env` and set all variables declared in [.env.example](api/.env.example) 
-If you don't create the file by yourself, one will be created with the default values. **This is not recommended in production!**   
+Create the following `.env` files:
+* [`db.env`](db.env)
+* [`api/db.env`](api/db.env)
+    * Auto generated with default values at `composer install`
+* [`api/.env`](api/.env)
+    * Auto generated with default values at `composer install`
 
 > Read more about all variables at [dotenv](docs/dotenv.md)
+
+> For every dotenv file, a dotenv.example file with the default values exists
 
 Build and start the docker containers
 ```bash
