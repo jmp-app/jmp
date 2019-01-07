@@ -44,7 +44,7 @@ class Auth
     public function generateToken(array $user): string
     {
         $now = new DateTime();
-        $future = new DateTime("now +2 hours");
+        $future = new DateTime("now +" . $this->appConfig['jwt']['expiration'] . " minutes");
 
         $payload = [
             "iat" => $now->getTimeStamp(),
