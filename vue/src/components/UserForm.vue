@@ -19,13 +19,13 @@
         <div class="row my-3">
             <div class="col">
                 <label for="email">{{ $t('user.email') }}</label>
-                <input type="email" name="email" id="email" class="form-control" v-model="user.email" required>
+                <input class="form-control" id="email" name="email" type="email" v-model="user.email">
             </div>
         </div>
         <div class="row my-3">
             <div class="col">
                 <label for="password">Passwort</label>
-                <input type="password" name="password" id="password" class="form-control" v-model="user.password" required>
+                <input class="form-control" id="password" name="text" type="password" v-model="user.password">
             </div>
         </div>
         <div class="row my-3">

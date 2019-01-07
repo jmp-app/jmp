@@ -53,11 +53,11 @@ function createUser(user) {
 }
 
 function updateUser(user) {
-    Vue.axios.put(`/users/${user.id}`, user).then(response => {
+    return Vue.axios.put(`/users/${user.id}`, user).then(response => {
         return response.data;
     });
 }
 
 function deleteUser(id) {
-    Vue.axios.delete(`/users/${id}`);
+    return Vue.axios.delete(`/users/${id}`);
 }

@@ -27,12 +27,12 @@ export const user = {
                 .then(user => commit('getUserSuccess', user))
                 .catch(error => commit('userRequestFailure', error));
         },
-        update({commit}, {user}) {
+        update({dispatch, commit}, {user}) {
             commit('userRequest');
 
             userService.updateUser(user)
                 .then(user => commit('updateUserSuccess', user))
-                .catch(error => commit('userRequestFailure', error));
+                .catch(error => dispatch('alert/error', error.response.data.errors, {root: true}));
         },
         deleteUser({commit}, {user}) {
             commit('userRequest');
@@ -49,7 +49,7 @@ export const user = {
             } else {
                 user.isAdmin = 0;
             }
-            if (user.changePassword) {
+            if (user.passwordChange) {
                 user.passwordChange = 1;
             } else {
                 user.passwordChange = 0;
@@ -79,9 +79,13 @@ export const user = {
             state.data = {user};
         },
         updateUserSuccess(state, user) {
+            // eslint-disable-next-line
+            user.passwordChange = user.passwordChange == 1;
             state.data = {user};
         },
         createUserSuccess(state, user) {
+            // eslint-disable-next-line
+            user.passwordChange = user.passwordChange == 1;
             state.data = {user};
         },
         reset(state) {

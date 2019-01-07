@@ -38,6 +38,7 @@ class UserService
 
         /** @var User $user */
         $user = $optional->getData();
+        unset($user->password);
 
         return Optional::success($user);
     }
