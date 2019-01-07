@@ -196,9 +196,16 @@ $sql = <<<SQL
 SQL;
 ```
 * Write every sql keyword upper-case
-* Use the **`AS`** keyword to change column names from the sql underscore style to the camel case style. E.g. `SELECT user_id as userId ...`
-* Use the following for optional parameters: `WHERE (:optionalId IS NULL OR id = :optionalId)`. Examples in [EventService.php](../api/src/JMP/Services/EventService.php)
+* Use the **`AS`** keyword to change column names from the sql underscore style to the camel case style. E.g. 
+```SQL
+SELECT user_id AS userId ...
+```
+* Use the following for optional parameters (Examples in [EventService.php](../api/src/JMP/Services/EventService.php)): 
+```SQL
+... WHERE (:optionalId IS NULL OR id = :optionalId)
+```
 * A specific service doesn't query tables to which the service doesn't belong unless it's a join
+* Always use **[prepared statements](https://secure.php.net/manual/de/pdo.prepared-statements.php)**
 
 
 # Developing a new route

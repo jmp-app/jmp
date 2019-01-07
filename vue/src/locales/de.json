@@ -32,5 +32,11 @@
     "group.edit": "Gruppe bearbeiten",
     "group.name": "Gruppenname",
     "group.delete": "Gruppe löschen",
-    "group.create": "Gruppe erstellen"
+    "group.create": "Gruppe erstellen",
+    "password.change": "Passwort Wechseln",
+    "password.changeYourPw": "Wechsle dein Passwort",
+    "password.current": "Aktuelles Passwort",
+    "password.new": "Neues Passwort",
+    "password.repeat": "Passwort wiederholen",
+    "nav.overview": "Übersicht"
 }

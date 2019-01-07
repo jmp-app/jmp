@@ -28,6 +28,13 @@ export const router = new Router({
             }
         },
         {
+            path: '/change-password',
+            name: 'changePassword',
+            component: function () {
+                return import('../views/ChangePassword.vue');
+            }
+        },
+        {
             path: '/users',
             name: 'users',
             component: function () {
