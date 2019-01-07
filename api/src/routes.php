@@ -63,6 +63,13 @@ $app->group('/v1', function () {
     $this->get('/user', UsersController::class . ':getCurrentUser')
         ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
         ->add($jwtMiddleware);
+  
+      $this->put('/user/change-password', UsersController::class . ':changePassword')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation(
+            $container['validation']['changePassword'],
+            $container['validation']['loginTranslation']))
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
 
     $this->post('/users', UsersController::class . ':createUser')
         ->add(new ValidationErrorResponseBuilder())

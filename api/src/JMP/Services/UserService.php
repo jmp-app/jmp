@@ -208,6 +208,29 @@ SQL;
     }
 
     /**
+     * Change the password of a user, fails if the current password is incorrect
+     * @param int $userId
+     * @param string $newPassword
+     * @return bool
+     */
+    public function changePassword(int $userId, string $newPassword): bool
+    {
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        $sql = <<< SQL
+            UPDATE user
+            SET password = :newPassword
+            WHERE id = :userId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':newPassword', $hashedPassword, PDO::PARAM_STR);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    /**
      * Updates a user's properties with the given $updates
      * @param int $id The id must exist
      * @param array $updates
