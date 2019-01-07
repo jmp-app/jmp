@@ -37,8 +37,8 @@
             </div>
             <div class="col-6">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="change-password" v-model="user.changePassword">
-                    <label class="form-check-label" for="change-password">{{ $t('user.passwordChange') }}</label>
+                    <input class="form-check-input" id="changepassword" type="checkbox" v-model="user.changePassword">
+                    <label class="form-check-label" for="changepassword">{{ $t('user.passwordChange') }}</label>
                 </div>
             </div>
         </div>

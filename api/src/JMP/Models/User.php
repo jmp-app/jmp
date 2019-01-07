@@ -55,10 +55,6 @@ class User implements ArrayConvertable
         $this->email = $args['email'];
         $this->passwordChange = $args['passwordChange'];
         $this->isAdmin = $args['isAdmin'];
-
-        if ($args['passwordChange'] == null) {
-            $this->passwordChange = null;
-        }
     }
 
     public function toArray(): array
