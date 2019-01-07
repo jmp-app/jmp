@@ -8,10 +8,12 @@
             <router-link :to="{ name: 'groups' }" class="btn btn-lg btn-outline-danger mx-1" tag="button">{{
                 $t('cancel') }}
             </router-link>
-            <button :disabled="!data.group" @click="deleteGroup" class="btn btn-lg btn-danger mx-1" type="button">{{
+            <button :disabled="!data.group" @click="this.delete" class="btn btn-lg btn-danger mx-1" type="button">{{
                 $t('group.delete') }}
             </button>
-            <button :disabled="!data.group" class="btn btn-lg btn-primary mx-1" type="submit">{{ $t('edit') }}</button>
+            <button :disabled="!data.group" class="btn btn-lg btn-primary mx-1" type="submit">{{
+                $t('edit') }}
+            </button>
         </div>
         <input :placeholder="$t('search')" class="search my-3 form-control form-control-lg" type="search"
                v-model.trim="search">
@@ -36,7 +38,7 @@
         },
         // TODO: gruppe bearbeiten geht nicht, benutzer hinzufügen entfernen... und gruppe erstellen
         computed: {
-            data() {
+            data: function () {
                 return this.$store.state.group.data;
             },
             users: function () {
@@ -45,15 +47,15 @@
                         this.searchString(user.lastname) ||
                         this.searchString(user.firstname);
                 };
-                return this.$store.getters['users/getUsersFiltered'](filter);
+                return this.$store.getters['group/getUsersFiltered'](filter);
             }
         },
         methods: {
             submit: function () {
                 this.$store.dispatch('group/update', this.data.group);
             },
-            deleteGroup: function () {
-                this.$store.dispatch('group/deleteGroup', this.data.group);
+            delete: function () {
+                this.$store.dispatch('group/delete', this.data.group);
                 this.$router.push({name: 'groups'});
             },
             searchString: function (string) {
@@ -63,7 +65,6 @@
         mounted() {
             const id = this.$route.params.id;
             this.$store.dispatch('group/get', {id});
-            this.$store.dispatch('users/getAllOfGroup', {id});
         }
     };
 </script>

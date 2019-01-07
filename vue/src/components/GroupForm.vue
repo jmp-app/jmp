@@ -14,8 +14,8 @@
         name: 'GroupForm',
         props: {
             group: {
-                // type: Object,
-                // required: true
+                type: Object,
+                required: true
             }
         }
     };
