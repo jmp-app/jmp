@@ -51,5 +51,9 @@ $container['validation'] = function () {
         'updateGroup' => [
             'name' => v::optional(v::notEmpty()->length(1, 45))
         ],
+        'changePassword' => [
+            'password' => v::notEmpty()->length(8, 256),
+            'newPassword' => v::notEmpty()->length(8, 256)
+        ],
     ];
 };

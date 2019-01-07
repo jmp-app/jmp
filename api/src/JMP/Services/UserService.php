@@ -5,6 +5,7 @@ namespace JMP\Services;
 
 
 use JMP\Models\User;
+use JMP\Utils\Optional;
 use PDO;
 use Psr\Container\ContainerInterface;
 
@@ -127,6 +128,29 @@ SQL;
         }
 
         return $users;
+    }
+
+    /**
+     * Change the password of a user, fails if the current password is incorrect
+     * @param int $userId
+     * @param string $newPassword
+     * @return bool
+     */
+    public function changePassword(int $userId, string $newPassword): bool
+    {
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        $sql = <<< SQL
+            UPDATE user
+            SET password = :newPassword
+            WHERE id = :userId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':newPassword', $hashedPassword, PDO::PARAM_STR);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+
+        return $stmt->execute();
     }
 
 }
