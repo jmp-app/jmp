@@ -6,7 +6,6 @@ namespace JMP\Controllers;
 
 use Interop\Container\ContainerInterface;
 use JMP\Models\User;
-use JMP\Services\Auth;
 use JMP\Services\UserService;
 use JMP\Utils\Converter;
 use Slim\Http\Request;
@@ -15,10 +14,6 @@ use Slim\Http\Response;
 class UsersController
 {
 
-    /**
-     * @var Auth
-     */
-    private $auth;
     /**
      * @var UserService
      */
@@ -30,15 +25,115 @@ class UsersController
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->auth = $container->get('auth');
         $this->userService = $container->get('userService');
     }
 
+    /**
+     * Get current logged in user
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function getCurrentUser(Request $request, Response $response): Response
+    {
+        $user = $this->auth->requestUser($request);
+
+        if ($user->isFailure()) {
+            // There has to be always a logged in user that accesses this
+            return $response->withStatus(500);
+        }
+
+        $user = new User($user->getData());
+
+        return $response->withJson(Converter::convert($user));
+    }
+
+    /**
+     * Returns all users
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function listUsers(Request $request, Response $response): Response
     {
-        $group =$request->getQueryParam('group');
-        $users =$this->userService->getUsers(empty($group) ? null : $group);
+        $group = $request->getQueryParam('group');
+        $users = $this->userService->getUsers(empty($group) ? null : $group);
         return $response->withJson(Converter::convertArray($users));
+    }
+
+    /**
+     * Update data of a user
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function updateUser(Request $request, Response $response, array $args): Response
+    {
+        $id = $args['id'];
+        $updates = $request->getParsedBody();
+
+        if (!$this->userService->userExists($id)) {
+            return $response->withJson([
+                'errors' => [
+                    'id' => 'The specified id "' . $id . '"does not exist'
+                ]
+            ], 404);
+        }
+
+        $updatedUser = $this->userService->updateUser($id, $updates);
+
+        if ($updatedUser->isFailure()) {
+            return $response->withStatus(500);
+        }
+
+        return $response->withJson(Converter::convert($updatedUser->getData()));
+    }
+
+    /**
+     * Delete a user
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function deleteUser(Request $request, Response $response, array $args): Response
+    {
+        $id = $args['id'];
+
+        if (!$this->userService->userExists($id)) {
+            return $response->withJson([
+                'errors' => [
+                    'id' => 'The specified id "' . $id . '"does not exist'
+                ]
+            ], 404);
+        }
+
+        $this->userService->deleteUser($id);
+
+        return $response->withJson([
+            'success' => 'Deleted user with id "' . $id . '"'
+        ]);
+    }
+
+    /**
+     * Returns the user with the given id or a 404
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function getUser(Request $request, Response $response, array $args): Response
+    {
+        $userId = $args['id'];
+
+        $optional = $this->userService->getUserByUserId($userId);
+
+        if ($optional->isSuccess()) {
+            return $response->withJson(Converter::convert($optional->getData()));
+        } else {
+            return $response->withStatus(404);
+        }
     }
 
     /**

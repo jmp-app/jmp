@@ -2,4 +2,5 @@
 composer.phar
 /vendor/
 .env
+db.env
 /log/

@@ -28,7 +28,7 @@
                 <label class="col-sm-3 col-form-label" for="password">{{ $t("user.password") }}</label>
                 <div class="col-sm-9">
                     <input
-                            :class="{ 'is-invalid': submitted && (!password || password.length < 6)}"
+                            :class="{ 'is-invalid': submitted && (!password || password.length < 8)}"
                             class="form-control"
                             id="password"
                             type="password"
@@ -38,7 +38,7 @@
                     <div class="invalid-feedback" v-show="submitted && !password">
                         {{ $t("login.passwordRequired") }}
                     </div>
-                    <div class="invalid-feedback" v-show="submitted && password && password.length < 6">
+                    <div class="invalid-feedback" v-show="submitted && password && password.length < 8">
                         {{ $t("login.passwordToShort") }}
                     </div>
 
@@ -79,7 +79,7 @@
                 this.submitted = true;
                 const {username, password} = this;
                 const {dispatch} = this.$store;
-                if (username && password && password.length >= 6) {
+                if (username && password && password.length >= 8) {
                     dispatch('authentication/login', {username, password});
                 }
             }

@@ -35,12 +35,20 @@ $container['validation'] = function () {
             'username' => v::notEmpty()->noWhitespace()->length(1, 101),
             'lastname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
             'firstname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
-            'password' => v::notEmpty()->length(1, 256),
+            'password' => v::notEmpty()->length(8, 256),
+            'email' => v::optional(v::notEmpty()->length(1, 256)::email()),
+            'isAdmin' => v::optional(v::boolType())
+        ],
+        'updateUser' => [
+            'username' => v::optional(v::notEmpty()->noWhitespace()->length(1, 101)),
+            'lastname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
+            'firstname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
+            'password' => v::optional(v::notEmpty()->length(8, 256)),
             'email' => v::optional(v::notEmpty()->length(1, 256)::email()),
             'isAdmin' => v::optional(v::boolType())
         ],
         'listUsers' => [
-            'username' => v::optional(v::notEmpty()->noWhitespace()->numeric()),
+            'group' => v::optional(v::notEmpty()->noWhitespace()->numeric()),
         ],
         'createGroup' => [
             'name' => v::notEmpty()->length(1, 45)
@@ -55,5 +63,20 @@ $container['validation'] = function () {
             'password' => v::notEmpty()->length(8, 256),
             'newPassword' => v::notEmpty()->length(8, 256)
         ],
+        'userIdsArray' => [
+            'users' => v::arrayType()->length(1, null)->each(v::numeric())
+        ],
+        'createRegistration' => [
+            'eventId' => v::notEmpty()->noWhitespace()->numeric(),
+            'userId' => v::notEmpty()->noWhitespace()->numeric(),
+            'reason' => v::optional(v::notEmpty()->length(1, 80)),
+            'registrationState' => v::optional(v::notEmpty()->noWhitespace()->numeric())
+        ],
+        'updateRegistration' => [
+            'eventId' => v::notEmpty()->noWhitespace()->numeric(),
+            'userId' => v::notEmpty()->noWhitespace()->numeric(),
+            'reason' => v::optional(v::notEmpty()->length(1, 80)),
+            'registrationState' => v::notEmpty()->noWhitespace()->numeric()
+        ]
     ];
 };

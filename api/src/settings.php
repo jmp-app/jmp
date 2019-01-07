@@ -10,6 +10,13 @@ if (file_exists(ROOT . '.env')) {
     $dotenv->load();
 }
 
+// Load db.env file
+$db_dotenv_file = 'db.env';
+if (file_exists(ROOT . $db_dotenv_file)) {
+    $db_dotenv = new Dotenv\Dotenv(ROOT, $db_dotenv_file);
+    $db_dotenv->load();
+}
+
 /**Returns the log level int depending on the log level name
  * Default is @see \Monolog\Logger::ERROR
  * @param string $logLevel
