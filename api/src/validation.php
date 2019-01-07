@@ -35,16 +35,16 @@ $container['validation'] = function () {
             'username' => v::notEmpty()->noWhitespace()->length(1, 101),
             'lastname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
             'firstname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
-            'password' => v::notEmpty()->length(8, 256),
-            'email' => v::optional(v::notEmpty()->length(1, 256)::email()),
+            'password' => v::notEmpty()->length(8, 255),
+            'email' => v::optional(v::notEmpty()->length(1, 255)::email()),
             'isAdmin' => v::optional(v::boolType())
         ],
         'updateUser' => [
             'username' => v::optional(v::notEmpty()->noWhitespace()->length(1, 101)),
             'lastname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
             'firstname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
-            'password' => v::optional(v::notEmpty()->length(8, 256)),
-            'email' => v::optional(v::notEmpty()->length(1, 256)::email()),
+            'password' => v::optional(v::notEmpty()->length(8, 255)),
+            'email' => v::optional(v::notEmpty()->length(1, 255)::email()),
             'isAdmin' => v::optional(v::boolType())
         ],
         'listUsers' => [

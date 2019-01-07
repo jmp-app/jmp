@@ -24,6 +24,7 @@ class AuthenticationMiddleware
     /**
      * AuthenticationMiddleware constructor.
      * @param ContainerInterface $container
+     * @param int $permissionLevel
      */
     public function __construct(ContainerInterface $container, int $permissionLevel)
     {
@@ -85,7 +86,7 @@ class AuthenticationMiddleware
 // Check user for admin permissions
         if ($this->auth->requestAdmin($request)->isFailure()) {
             if ($request->getAttribute('token')) {
-                // Token supplied, but no admin permissons
+                // Token supplied, but no admin permissions
                 return $response->withStatus(403);
             } else {
                 // No token supplied

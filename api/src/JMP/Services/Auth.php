@@ -6,6 +6,7 @@ use DateTime;
 use Firebase\JWT\JWT;
 use JMP\Models\User;
 use JMP\Utils\Optional;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
 
@@ -22,6 +23,10 @@ class Auth
      * @var array
      */
     private $appConfig;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     /**
      * Auth constructor.

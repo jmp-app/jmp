@@ -3,9 +3,7 @@
 namespace JMP\Services;
 
 use JMP\Models\User;
-use JMP\Utils\Converter;
 use JMP\Utils\Optional;
-use Monolog\Logger;
 use PDO;
 use Psr\Container\ContainerInterface;
 
@@ -32,19 +30,17 @@ class UserService
      */
     public function getUserByUserId(int $userId): Optional
     {
-        $user = $this->getFullUserByUserId($userId);
+        $optional = $this->getFullUserByUserId($userId);
 
-        if ($user->isFailure()) {
-            return $user;
+        if ($optional->isFailure()) {
+            return Optional::failure();
         }
 
         /** @var User $user */
-        $user = $user->getData();
-        $user->passwordChange = null;
-        $user->password = null;
+        $user = $optional->getData();
+        unset($user->passwordChange);
 
         return Optional::success($user);
-
     }
 
     /**
@@ -232,11 +228,13 @@ SQL;
      */
     public function updateUser(int $id, array $updates): Optional
     {
-        $user = $this->getFullUserByUserId($id);
-        if ($user->isFailure()) {
+        $optional = $this->getFullUserByUserId($id);
+        if ($optional->isFailure()) {
             return Optional::failure();
         }
-        $user = $user->getData();
+
+        /** @var User $user */
+        $user = $optional->getData();
 
         $sql = <<< SQL
             UPDATE user
@@ -259,7 +257,7 @@ SQL;
 
         $stmt->execute();
 
-        return Optional::success($updatedUser);
+        return $this->getUserByUserId($id);
     }
 
     /**
