@@ -74,6 +74,8 @@ export const user = {
             state.data = {error};
         },
         getUserSuccess(state, user) {
+            // eslint-disable-next-line
+            user.passwordChange = user.passwordChange == 1;
             state.data = {user};
         },
         updateUserSuccess(state, user) {
