@@ -24,7 +24,7 @@
         </div>
         <div class="row my-3">
             <div class="col">
-                <label for="password">Passwort</label>
+                <label for="password">{{ $t('user.password') }}</label>
                 <input class="form-control" id="password" name="text" type="password" v-model="user.password">
             </div>
         </div>
