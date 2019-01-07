@@ -58,8 +58,13 @@ class GroupsController
             return $this->groupNameNotAvailable($response, $name);
         }
 
-        $group = $this->groupService->createGroup($name);
-        return $response->withJson(Converter::convert($group));
+        $optional = $this->groupService->createGroup($name);
+
+        if ($optional->isSuccess()) {
+            return $response->withJson(Converter::convert($optional->getData()));
+        } else {
+            return $response->withStatus(404);
+        }
     }
 
     /**
@@ -128,9 +133,13 @@ class GroupsController
             return $this->groupNameNotAvailable($response, $newName);
         }
 
-        $group = $this->groupService->updateGroup($id, $newName);
-        return $response->withJson(Converter::convert($group));
+        $optional = $this->groupService->updateGroup($id, $newName);
 
+        if ($optional->isSuccess()) {
+            return $response->withJson(Converter::convert($optional->getData()));
+        } else {
+            return $response->withStatus(404);
+        }
     }
 
     /**
