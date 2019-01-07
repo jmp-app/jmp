@@ -17,7 +17,12 @@ export const authentication = {
                 .then(
                     user => {
                         commit('loginSuccess', user);
-                        router.push('/');
+                        if (user.user.passwordChange) {
+                            // if password change is true then redirect user to change password
+                            router.push('/change-password');
+                        } else {
+                            router.push('/');
+                        }
                     },
                     error => {
                         commit('loginFailure', error.response.data.errors.authentication.toString());

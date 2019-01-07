@@ -13,8 +13,9 @@ use JMP\Utils\PermissionLevel;
 // API Routes - version 1
 $app->group('/v1', function () {
 
+    /** @var \Psr\Container\ContainerInterface $container */
     $container = $this->getContainer();
-    $jwtMiddleware = $container->get('jwt');
+    $jwtMiddleware = $container['jwt'];
 
     $this->post('/login', LoginController::class . ':login')
         ->add(new ValidationErrorResponseBuilder())
@@ -60,6 +61,18 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
         ->add($jwtMiddleware);
 
+    $this->get('/user', UsersController::class . ':getCurrentUser')
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
+        ->add($jwtMiddleware);
+
+    $this->put('/user/change-password', UsersController::class . ':changePassword')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation(
+            $container['validation']['changePassword'],
+            $container['validation']['loginTranslation']))
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
+        ->add($jwtMiddleware);
+
     $this->post('/users', UsersController::class . ':createUser')
         ->add(new ValidationErrorResponseBuilder())
         ->add(new Validation($container['validation']['createUser']))
@@ -72,10 +85,20 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
         ->add($jwtMiddleware);
 
+    $this->put('/users/{id:[0-9]+}', UsersController::class . ':updateUser')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($container['validation']['updateUser']))
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
+
+    $this->delete('/users/{id:[0-9]+}', UsersController::class . ':deleteUser')
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
+
     $this->get('/users/{id:[0-9]+}', UsersController::class . ':getUser')
         ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::ADMIN))
         ->add($jwtMiddleware);
-  
+
     $this->post('/groups', GroupsController::class . ':createGroup')
         ->add(new ValidationErrorResponseBuilder())
         ->add(new Validation($container['validation']['createGroup']))

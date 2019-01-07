@@ -33,4 +33,11 @@
     "group.name": "Group Name",
     "group.delete": "Delete Group",
     "group.create": "Create Group"
+    "registration.state": "Registration state",
+    "password.change": "Change Password",
+    "password.changeYourPw": "Change Your Password",
+    "password.current": "Current Password",
+    "password.new": "New Password",
+    "password.repeat": "Repeat Password",
+    "nav.overview": "Overview"
 }

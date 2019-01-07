@@ -6,11 +6,14 @@ use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Processor\WebProcessor;
 use Tuupola\Middleware\JwtAuthentication;
 
+/**
+ * @var \Psr\Container\ContainerInterface
+ */
 $container = $app->getContainer();
 
 // Database
 
-$container['database'] = function ($container) {
+$container['database'] = function (\Psr\Container\ContainerInterface $container) {
     $config = $container->get('settings')['database'];
 
     $dsn = "{$config['engine']}:host={$config['host']};port={$config['port']};dbname={$config['database']};charset={$config['charset']}";
