@@ -1,11 +1,11 @@
 <?php
 
-
 namespace JMP\Services;
 
-
 use JMP\Models\User;
+use JMP\Utils\Converter;
 use JMP\Utils\Optional;
+use Monolog\Logger;
 use PDO;
 use Psr\Container\ContainerInterface;
 
@@ -17,11 +17,68 @@ class UserService
     protected $db;
 
     /**
+     * @var RegistrationService
+     */
+    private $registrationService;
+
+    /**
      * EventService constructor.
+     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->db = $container->get('database');
+        $this->registrationService = $container->get('registrationService');
+    }
+
+    /**
+     * Select a user by its id
+     * @param int $userId
+     * @return Optional containing a User on succeed
+     */
+    public function getUserByUserId(int $userId): Optional
+    {
+        $user = $this->getFullUserByUserId($userId);
+
+        if ($user->isFailure()) {
+            return $user;
+        }
+
+        /** @var User $user */
+        $user = $user->getData();
+        $user->passwordChange = null;
+        $user->password = null;
+
+        return Optional::success($user);
+
+    }
+
+    /**
+     * Select all data of a user by its id
+     * @param int $userId
+     * @return Optional
+     */
+    private function getFullUserByUserId(int $userId): Optional
+    {
+        $sql = <<<SQL
+SELECT user.id, username, lastname, firstname, email, is_admin AS isAdmin, password_change AS passwordChange, password
+FROM user
+WHERE id = :userId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $user = $stmt->fetch();
+
+        if ($user === false) {
+            return Optional::failure();
+        } else {
+            return Optional::success(new User($user));
+        }
     }
 
     /**
@@ -106,6 +163,26 @@ SQL;
     }
 
     /**
+     * Checks whether a user with the specified id exists
+     * @param int $id
+     * @return bool
+     */
+    public function userExists(int $id): bool
+    {
+        $sql = <<< SQL
+            SELECT id
+            FROM user
+            where id = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
      * Returns the user with the given username.
      * The password isn't returned.
      * Null fields are returned
@@ -157,4 +234,104 @@ SQL;
         return $users;
     }
 
+    /**
+     * Updates a user's properties with the given $updates
+     * @param int $id The id must exist
+     * @param array $updates
+     * @return Optional
+     */
+    public function updateUser(int $id, array $updates): Optional
+    {
+        $user = $this->getFullUserByUserId($id);
+        if ($user->isFailure()) {
+            return Optional::failure();
+        }
+        $user = $user->getData();
+
+        $sql = <<< SQL
+            UPDATE user
+            SET username = :username, firstname = :firstname, lastname = :lastname, email = :email, password = :password,
+                is_admin = :isAdmin, password_change = :passwordChange
+            WHERE id = :id;
+SQL;
+
+        $updatedUser = $this->getUpdatedUser($updates, $user);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':username', $updatedUser->username);
+        $stmt->bindValue(':firstname', $updatedUser->firstname);
+        $stmt->bindValue(':lastname', $updatedUser->lastname);
+        $stmt->bindValue(':email', $updatedUser->email);
+        $stmt->bindValue(':password', $updatedUser->password);
+        $stmt->bindValue(':isAdmin', $updatedUser->isAdmin, PDO::PARAM_BOOL);
+        $stmt->bindValue(':passwordChange', $updatedUser->passwordChange, PDO::PARAM_BOOL);
+
+        $stmt->execute();
+
+        return Optional::success($updatedUser);
+    }
+
+    /**
+     * Update user with the given updates (key / value pairs)
+     * @param array $userUpdates
+     * @param User $currentUser
+     * @return User
+     */
+    private function getUpdatedUser(array $userUpdates, User $currentUser): User
+    {
+        $username = $userUpdates['username'];
+        $lastname = $userUpdates['lastname'];
+        $firstname = $userUpdates['firstname'];
+        $email = $userUpdates['email'];
+        $password = $userUpdates['password'];
+        $passwordChange = $userUpdates['passwordChange'];
+        $isAdmin = $userUpdates['isAdmin'];
+
+        if (!is_null($username)) {
+            $currentUser->username = $username;
+        }
+        if (!is_null($lastname)) {
+            $currentUser->lastname = $lastname;
+        }
+        if (!is_null($firstname)) {
+            $currentUser->firstname = $firstname;
+        }
+        if (!is_null($email)) {
+            $currentUser->email = $email;
+        }
+        if (!is_null($password)) {
+            $currentUser->password = password_hash($userUpdates['password'], PASSWORD_DEFAULT);
+        }
+        if (!is_null($passwordChange)) {
+            $currentUser->passwordChange = $passwordChange;
+        }
+        if (!is_null($isAdmin)) {
+            $currentUser->isAdmin = $isAdmin;
+        }
+
+        return $currentUser;
+    }
+
+    /**
+     * Delete User
+     * @param int $id
+     */
+    public function deleteUser(int $id) {
+        // Foreign Keys
+        // TODO: Delete memberships
+        // TODO: Delete presence once presence is implemented
+        $this->registrationService->deleteRegistrationsOfUser($id);
+
+        // User
+        $sql = <<< SQL
+            DELETE FROM user
+            WHERE id = :id;
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->execute();
+    }
+  
 }

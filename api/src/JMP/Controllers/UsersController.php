@@ -28,6 +28,32 @@ class UsersController
         $this->userService = $container->get('userService');
     }
 
+    /**
+     * Get current logged in user
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function getCurrentUser(Request $request, Response $response): Response
+    {
+        $user = $this->auth->requestUser($request);
+
+        if ($user->isFailure()) {
+            // There has to be always a logged in user that accesses this
+            return $response->withStatus(500);
+        }
+
+        $user = new User($user->getData());
+
+        return $response->withJson(Converter::convert($user));
+    }
+
+    /**
+     * Returns all users
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function listUsers(Request $request, Response $response): Response
     {
         $group = $request->getQueryParam('group');
@@ -36,9 +62,65 @@ class UsersController
     }
 
     /**
+     * Update data of a user
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function updateUser(Request $request, Response $response, array $args): Response
+    {
+        $id = $args['id'];
+        $updates = $request->getParsedBody();
+
+        if (!$this->userService->userExists($id)) {
+            return $response->withJson([
+                'errors' => [
+                    'id' => 'The specified id "' . $id . '"does not exist'
+                ]
+            ], 404);
+        }
+
+        $updatedUser = $this->userService->updateUser($id, $updates);
+
+        if ($updatedUser->isFailure()) {
+            return $response->withStatus(500);
+        }
+
+        return $response->withJson(Converter::convert($updatedUser->getData()));
+    }
+
+    /**
+     * Delete a user
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function deleteUser(Request $request, Response $response, array $args): Response
+    {
+        $id = $args['id'];
+
+        if (!$this->userService->userExists($id)) {
+            return $response->withJson([
+                'errors' => [
+                    'id' => 'The specified id "' . $id . '"does not exist'
+                ]
+            ], 404);
+        }
+
+        $this->userService->deleteUser($id);
+
+        return $response->withJson([
+            'success' => 'Deleted user with id "' . $id . '"'
+        ]);
+    }
+
+    /**
      * Returns the user with the given id or a 404
      * @param Request $request
      * @param Response $response
+     * @param array $args
      * @return Response
      */
     public function getUser(Request $request, Response $response, array $args): Response

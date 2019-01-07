@@ -60,6 +60,10 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
         ->add($jwtMiddleware);
 
+    $this->get('/user', UsersController::class . ':getCurrentUser')
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
+        ->add($jwtMiddleware);
+
     $this->post('/users', UsersController::class . ':createUser')
         ->add(new ValidationErrorResponseBuilder())
         ->add(new Validation($container['validation']['createUser']))
@@ -72,10 +76,20 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
         ->add($jwtMiddleware);
 
+    $this->put('/users/{id:[0-9]+}', UsersController::class . ':updateUser')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($container['validation']['updateUser']))
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
+
+    $this->delete('/users/{id:[0-9]+}', UsersController::class . ':deleteUser')
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
+
     $this->get('/users/{id:[0-9]+}', UsersController::class . ':getUser')
         ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::ADMIN))
         ->add($jwtMiddleware);
-  
+
     $this->post('/groups', GroupsController::class . ':createGroup')
         ->add(new ValidationErrorResponseBuilder())
         ->add(new Validation($container['validation']['createGroup']))

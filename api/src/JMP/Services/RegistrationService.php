@@ -37,7 +37,7 @@ class RegistrationService
      * @param int $eventId
      * @return Optional
      */
-    public function getRegistrationByUserIdAndEventId(int $userId, int $eventId)
+    public function getRegistrationByUserIdAndEventId(int $userId, int $eventId): Registration
     {
         $sql = <<< SQL
 SELECT event_id as eventId, user_id as userId, reason, registration_state_id as regStateId
@@ -127,4 +127,22 @@ SQL;
 
         return $this->getRegistrationByUserIdAndEventId($registration->userId, $registration->eventId);
     }
+
+    /**
+     * Delete all registrations of a user
+     * @param int $userId
+     * @return Registration|null
+     */
+    public function deleteRegistrationsOfUser(int $userId): void
+    {
+        $sql = <<< SQL
+            DELETE FROM registration
+            WHERE user_id = :userId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':userId', $userId);
+        $stmt->execute();
+    }
+
 }
