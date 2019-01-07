@@ -287,6 +287,23 @@ Parameters: none
 
 Access rights: authentication required, user has to be an admin
 
+### Change Password
+
+```http
+PUT /v1/user/change-password
+```
+
+Parameters:
+
+| Field       | Description                 | Required |
+| ----------- | --------------------------- | -------- |
+| password    | The user's current password | ✔️        |
+| newPassword | The new password to set     | ✔️        |
+
+Access rights: authentication required
+
+Returns: Success or errors
+
 ### Create Event
 
 ```http
