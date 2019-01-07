@@ -1,5 +1,5 @@
 {
-    "user": "Benutzer",
+    "user": "Benutzer | Benutzer",
     "user.username": "Benutzername",
     "user.password": "Passwort",
     "user.firstName": "Vorname",
@@ -27,5 +27,10 @@
     "registration.reason": "Grund",
     "registration.reasonRequired": "Grund ist ein Pflichtfeld",
     "registration.reasonPlaceholder": "Grund eingeben",
-    "registration.state": "Status"
+    "registration.state": "Status",
+    "group": "Gruppe | Gruppen",
+    "group.edit": "Gruppe bearbeiten",
+    "group.name": "Gruppenname",
+    "group.delete": "Gruppe löschen",
+    "group.create": "Gruppe erstellen"
 }

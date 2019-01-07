@@ -27,5 +27,10 @@
     "registration.reason": "Reason",
     "registration.reasonRequired": "Reason is required",
     "registration.reasonPlaceholder": "Enter reason",
-    "registration.state": "Registration state"
+    "registration.state": "Registration state",
+    "group": "Group | Groups",
+    "group.edit": "Edit Group",
+    "group.name": "Group Name",
+    "group.delete": "Delete Group",
+    "group.create": "Create Group"
 }
