@@ -9,10 +9,18 @@
 
 <script>
     export default {
-        name: 'BottomNavigation'
+        name: 'BottomNavigation',
+        mounted() {
+            document.body.classList.add('bottomNavbar');
+        },
+        beforeDestroy() {
+            document.body.classList.remove('bottomNavbar');
+        }
     };
 </script>
 
-<style scoped>
-
+<style>
+    .bottomNavbar {
+        padding-bottom: 54px;
+    }
 </style>
