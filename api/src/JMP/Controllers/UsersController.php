@@ -190,4 +190,49 @@ class UsersController
         return $response->withJson(Converter::convert($user));
     }
 
+
+    /**
+     * Change tha password of a user
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function changePassword(Request $request, Response $response)
+    {
+        $user = $this->auth->requestUser($request);
+
+        if ($user->isFailure()) {
+            // There has to be always a logged in user that accesses this
+            return $response->withStatus(500);
+        }
+
+        $user = new User($user->getData());
+
+        $password = $request->getParsedBodyParam('password');
+        $newPassword = $request->getParsedBodyParam('newPassword');
+
+        $passwordCheck = $this->auth->attempt($user->username, $password);
+        if ($passwordCheck->isFailure()) {
+            return $response->withJson([
+                'errors' => [
+                    'password' => 'The password is not correct'
+                ]
+            ], 400);
+        }
+
+        if (!$this->userService->changePassword($user->id, $newPassword)) {
+            return $response->withStatus(500);
+        }
+
+        // password change was true but user changed the password > set back to false
+        if ($user->passwordChange) {
+            // TODO: Update user and set password change to false
+        }
+
+        return $response->withJson([
+            'success' => true
+        ]);
+
+    }
+
 }
