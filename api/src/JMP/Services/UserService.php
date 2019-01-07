@@ -82,33 +82,6 @@ SQL;
     }
 
     /**
-     * Select a user by its id
-     * @param int $userId
-     * @return Optional containing a User on succeed
-     */
-    public function getUserByUserId(int $userId): Optional
-    {
-        $sql = <<<SQL
-SELECT user.id, username, lastname, firstname, email, is_admin AS isAdmin
-FROM user
-WHERE id = :userId
-SQL;
-
-        $stmt = $this->db->prepare($sql);
-
-        $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
-
-        $stmt->execute();
-
-        $user = $stmt->fetch();
-        if ($user === false) {
-            return Optional::failure();
-        } else {
-            return Optional::success(new User($user));
-        }
-    }
-
-    /**
      * Creates a new user and returns the created one by @uses UserService::getUserByUsername()
      * The given user is saved as is. E.g password hashing must be done in advance
      * @param User $user
