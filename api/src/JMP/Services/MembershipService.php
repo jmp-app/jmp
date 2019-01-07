@@ -25,7 +25,7 @@ class MembershipService
     public function __construct(ContainerInterface $container)
     {
         $this->db = $container->get('database');
-        $this->db = $container->get('logger');
+        $this->logger = $container->get('logger');
     }
 
     /**
@@ -48,6 +48,7 @@ SQL;
      * Creates a membership for each user with the group
      * @param int $groupId
      * @param array $users
+     * @return bool
      */
     public function addUsersToGroup(int $groupId, array $users): bool
     {
@@ -99,6 +100,8 @@ SQL;
      * Creates a membership for each user with the group
      * @param int $groupId
      * @param array $users
+     * @return bool
+     * @throws \Exception
      */
     public function removeUsersFromGroup(int $groupId, array $users): bool
     {

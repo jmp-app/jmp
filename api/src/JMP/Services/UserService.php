@@ -17,18 +17,12 @@ class UserService
     protected $db;
 
     /**
-     * @var RegistrationService
-     */
-    private $registrationService;
-
-    /**
      * EventService constructor.
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->db = $container->get('database');
-        $this->registrationService = $container->get('registrationService');
     }
 
     /**
@@ -314,11 +308,6 @@ SQL;
      * @param int $id
      */
     public function deleteUser(int $id) {
-        // Foreign Keys
-        // TODO: Delete memberships
-        // TODO: Delete presence once presence is implemented
-        $this->registrationService->deleteRegistrationsOfUser($id);
-
         // User
         $sql = <<< SQL
             DELETE FROM user
