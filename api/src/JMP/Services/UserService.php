@@ -3,9 +3,7 @@
 namespace JMP\Services;
 
 use JMP\Models\User;
-use JMP\Utils\Converter;
 use JMP\Utils\Optional;
-use Monolog\Logger;
 use PDO;
 use Psr\Container\ContainerInterface;
 
@@ -38,19 +36,17 @@ class UserService
      */
     public function getUserByUserId(int $userId): Optional
     {
-        $user = $this->getFullUserByUserId($userId);
+        $optional = $this->getFullUserByUserId($userId);
 
-        if ($user->isFailure()) {
-            return $user;
+        if ($optional->isFailure()) {
+            return Optional::failure();
         }
 
         /** @var User $user */
-        $user = $user->getData();
-        $user->passwordChange = null;
-        $user->password = null;
+        $user = $optional->getData();
+        unset($user->passwordChange);
 
         return Optional::success($user);
-
     }
 
     /**
@@ -61,7 +57,7 @@ class UserService
     private function getFullUserByUserId(int $userId): Optional
     {
         $sql = <<<SQL
-SELECT user.id, username, lastname, firstname, email, is_admin AS isAdmin, password_change AS passwordChange, password
+SELECT user.id, username, lastname, firstname, email, is_admin AS isAdmin, password_change AS passwordChange
 FROM user
 WHERE id = :userId
 SQL;
@@ -215,11 +211,13 @@ SQL;
      */
     public function updateUser(int $id, array $updates): Optional
     {
-        $user = $this->getFullUserByUserId($id);
-        if ($user->isFailure()) {
+        $optional = $this->getFullUserByUserId($id);
+        if ($optional->isFailure()) {
             return Optional::failure();
         }
-        $user = $user->getData();
+
+        /** @var User $user */
+        $user = $optional->getData();
 
         $sql = <<< SQL
             UPDATE user
@@ -228,7 +226,7 @@ SQL;
             WHERE id = :id;
 SQL;
 
-        $updatedUser = $this->getUpdatedUser($updates, $user);
+        $updatedUser = $this->createUpdatedUser($updates, $user);
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
@@ -242,7 +240,7 @@ SQL;
 
         $stmt->execute();
 
-        return Optional::success($updatedUser);
+        return $this->getUserByUserId($id);
     }
 
     /**
@@ -251,7 +249,7 @@ SQL;
      * @param User $currentUser
      * @return User
      */
-    private function getUpdatedUser(array $userUpdates, User $currentUser): User
+    private function createUpdatedUser(array $userUpdates, User $currentUser): User
     {
         $username = $userUpdates['username'];
         $lastname = $userUpdates['lastname'];
@@ -290,7 +288,8 @@ SQL;
      * Delete User
      * @param int $id
      */
-    public function deleteUser(int $id) {
+    public function deleteUser(int $id)
+    {
         // Foreign Keys
         // TODO: Delete memberships
         // TODO: Delete presence once presence is implemented
@@ -306,5 +305,5 @@ SQL;
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
         $stmt->execute();
     }
-  
+
 }

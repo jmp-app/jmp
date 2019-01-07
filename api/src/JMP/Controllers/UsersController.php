@@ -6,6 +6,7 @@ namespace JMP\Controllers;
 
 use Interop\Container\ContainerInterface;
 use JMP\Models\User;
+use JMP\Services\Auth;
 use JMP\Services\UserService;
 use JMP\Utils\Converter;
 use Slim\Http\Request;
@@ -18,6 +19,10 @@ class UsersController
      * @var UserService
      */
     private $userService;
+    /**
+     * @var Auth
+     */
+    protected $auth;
 
     /**
      * EventController constructor.
@@ -26,6 +31,7 @@ class UsersController
     public function __construct(ContainerInterface $container)
     {
         $this->userService = $container->get('userService');
+        $this->auth = $container->get('auth');
     }
 
     /**
@@ -36,14 +42,14 @@ class UsersController
      */
     public function getCurrentUser(Request $request, Response $response): Response
     {
-        $user = $this->auth->requestUser($request);
+        $optional = $this->auth->requestUser($request);
 
-        if ($user->isFailure()) {
+        if ($optional->isFailure()) {
             // There has to be always a logged in user that accesses this
             return $response->withStatus(500);
         }
 
-        $user = new User($user->getData());
+        $user = new User($optional->getData());
 
         return $response->withJson(Converter::convert($user));
     }
@@ -73,7 +79,7 @@ class UsersController
         $id = $args['id'];
         $updates = $request->getParsedBody();
 
-        if (!$this->userService->userExists($id)) {
+        if ($this->userService->userExists($id) === false) {
             return $response->withJson([
                 'errors' => [
                     'id' => 'The specified id "' . $id . '"does not exist'
@@ -81,13 +87,13 @@ class UsersController
             ], 404);
         }
 
-        $updatedUser = $this->userService->updateUser($id, $updates);
+        $optional = $this->userService->updateUser($id, $updates);
 
-        if ($updatedUser->isFailure()) {
+        if ($optional->isFailure()) {
             return $response->withStatus(500);
         }
 
-        return $response->withJson(Converter::convert($updatedUser->getData()));
+        return $response->withJson(Converter::convert($optional->getData()));
     }
 
     /**
@@ -101,7 +107,7 @@ class UsersController
     {
         $id = $args['id'];
 
-        if (!$this->userService->userExists($id)) {
+        if ($this->userService->userExists($id) === false) {
             return $response->withJson([
                 'errors' => [
                     'id' => 'The specified id "' . $id . '"does not exist'

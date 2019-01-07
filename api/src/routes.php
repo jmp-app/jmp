@@ -13,8 +13,9 @@ use JMP\Utils\PermissionLevel;
 // API Routes - version 1
 $app->group('/v1', function () {
 
+    /** @var \Psr\Container\ContainerInterface $container */
     $container = $this->getContainer();
-    $jwtMiddleware = $container->get('jwt');
+    $jwtMiddleware = $container['jwt'];
 
     $this->post('/login', LoginController::class . ':login')
         ->add(new ValidationErrorResponseBuilder())
