@@ -93,7 +93,12 @@ class UsersController
             return $response->withStatus(500);
         }
 
-        return $response->withJson(Converter::convert($optional->getData()));
+
+        /** @var User $user */
+        $user = $optional->getData();
+        $user->passwordChange = null;
+        $user->password = null;
+        return $response->withJson(Converter::convert($user));
     }
 
     /**
@@ -224,9 +229,11 @@ class UsersController
             return $response->withStatus(500);
         }
 
-        // password change was true but user changed the password > set back to false
+        // password change was true but user changed the password -> set back to false
         if ($user->passwordChange) {
-            // TODO: Update user and set password change to false
+            $this->userService->updateUser($user->id, [
+                'passwordChange' => false
+            ]);
         }
 
         return $response->withJson([

@@ -257,7 +257,7 @@ SQL;
 
         $stmt->execute();
 
-        return $this->getUserByUserId($id);
+        return $this->getFullUserByUserId($id);
     }
 
     /**

@@ -106,7 +106,6 @@ class Auth
             } else {
                 $user = $optional->getData();
                 unset($user['password']);
-                unset($user['passwordChange']);
                 return Optional::success($user);
             }
         } else {
