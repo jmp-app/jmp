@@ -52,10 +52,12 @@
         },
         methods: {
             submit: function () {
-                this.$store.dispatch('group/update', this.data.group);
+                let group = this.data.group;
+                this.$store.dispatch('group/update', {group});
             },
             delete: function () {
-                this.$store.dispatch('group/delete', this.data.group);
+                let group = this.data.group;
+                this.$store.dispatch('group/delete', {group});
                 this.$router.push({name: 'groups'});
             },
             searchString: function (string) {

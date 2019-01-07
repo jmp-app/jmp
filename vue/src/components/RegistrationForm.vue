@@ -10,9 +10,12 @@
         </div>
         <div class="form-group" v-if="selected.reasonRequired">
             <label for="reason">{{ $t("registration.reason") }}</label>
-            <input :class="{ 'is-invalid': submitted && !reason }" class="form-control" id="reason" type="text"
+            <input :class="{ 'is-invalid': submitted && !reason.replace(/\s/g, '').length > 0 }" class="form-control"
+                   id="reason" type="text"
                    v-bind:placeholder="$t('registration.reasonPlaceholder')" v-model="reason">
-            <div class="invalid-feedback" v-show="submitted && !reason">{{ $t("registration.reasonRequired") }}</div>
+            <div class="invalid-feedback" v-show="submitted && !reason.replace(/\s/g, '').length > 0">{{
+                $t('registration.reasonRequired') }}
+            </div>
         </div>
         <button class="btn btn-danger" v-show="hasChanges">{{ $t("submit") }}</button>
     </form>
@@ -50,12 +53,26 @@
             },
             handleSubmit: function () {
                 this.submitted = true;
+                let eventId = this.$store.state.events.detail.event.id;
+                let userId = JSON.parse(window.localStorage.getItem('user')).id;
+                let registrationStateId = this.selected.id;
+                let reason = this.reason.trim();
                 if (this.selected.reasonRequired) {
-                    if (this.reason) {
-                        console.log(`Submit: ${this.selected.name} - ${this.reason}`);
+                    if (this.reason.replace(/\s/g, '').length > 0) {
+                        this.$store.dispatch('registration/updateRegistration', {
+                            eventId,
+                            userId,
+                            registrationStateId,
+                            reason
+                        });
                     }
                 } else {
-                    console.log(`Submit: ${this.selected.name}`);
+                    this.$store.dispatch('registration/updateRegistration', {
+                        eventId,
+                        userId,
+                        registrationStateId,
+                        reason
+                    });
                 }
             }
         },

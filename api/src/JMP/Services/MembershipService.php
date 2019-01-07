@@ -2,6 +2,7 @@
 
 namespace JMP\Services;
 
+use JMP\Utils\Optional;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
@@ -25,7 +26,7 @@ class MembershipService
     public function __construct(ContainerInterface $container)
     {
         $this->db = $container->get('database');
-        $this->db = $container->get('logger');
+        $this->logger = $container->get('logger');
     }
 
     /**
@@ -48,8 +49,10 @@ SQL;
      * Creates a membership for each user with the group
      * @param int $groupId
      * @param array $users
+     * @return Optional
+     * @throws \Exception
      */
-    public function addUsersToGroup(int $groupId, array $users): bool
+    public function addUsersToGroup(int $groupId, array $users): Optional
     {
         $sql = <<< SQL
             INSERT INTO membership (group_id, user_id) 
@@ -64,10 +67,10 @@ SQL;
      * @param string $sql
      * @param int $groupId
      * @param array $users
-     * @return bool If all executions were successfull
+     * @return Optional
      * @throws \Exception
      */
-    private function executeForEachUser(string $sql, int $groupId, array $users): bool
+    private function executeForEachUser(string $sql, int $groupId, array $users): Optional
     {
         try {
             $this->db->beginTransaction();
@@ -79,7 +82,7 @@ SQL;
                 $stmt->bindValue(':userId', $userId, \PDO::PARAM_INT);
 
                 $success = $stmt->execute();
-                if (!$success) {
+                if ($success === false) {
                     throw new \Exception('Failed to insert into membership with groupId: ' . $groupId .
                         ' and userId: ' . $userId . '. ' . $sql);
                 }
@@ -89,18 +92,20 @@ SQL;
         } catch (\Exception $e) {
             $this->db->rollBack();
             $this->logger->error($e->getMessage());
-            return false;
+            return Optional::failure();
         }
 
-        return true;
+        return Optional::success(true);
     }
 
     /**
      * Creates a membership for each user with the group
      * @param int $groupId
      * @param array $users
+     * @return Optional
+     * @throws \Exception
      */
-    public function removeUsersFromGroup(int $groupId, array $users): bool
+    public function removeUsersFromGroup(int $groupId, array $users): Optional
     {
         $sql = <<< SQL
             DELETE FROM membership 

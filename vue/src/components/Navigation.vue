@@ -8,7 +8,14 @@
         <div class="collapse navbar-collapse" id="navbarToggler">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <router-link tag="li" class="nav-item" to="/" v-bind:class="{active: $route.name === 'eventOverview'}">
-                    <a class="nav-link">Overview</a>
+                    <a class="nav-link">{{ $t('nav.overview') }}</a>
+                </router-link>
+                <router-link class="nav-item" tag="li" to="/change-password"
+                             v-bind:class="{active: $route.name === 'changePassword'}">
+                    <a class="nav-link">{{ $t('password.change') }}</a>
+                </router-link>
+                <router-link class="nav-item" tag="li" to="/login">
+                    <a class="nav-link">Logout</a>
                 </router-link>
                 <li class="nav-item dropdown" v-if="showAdmin()">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

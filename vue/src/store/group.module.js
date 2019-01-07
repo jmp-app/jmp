@@ -4,7 +4,7 @@ import Vue from 'vue';
 const initialState = {
     group: {
         name: '',
-        users: {}
+        users: []
     }
 };
 
@@ -70,7 +70,9 @@ export const group = {
     },
     getters: {
         getUsersFiltered: (state) => (filter) => {
-            if (!state.data.group.users) {
+            if (!state.data.group) {
+                return {};
+            } else if (!state.data.group) {
                 return {};
             } else {
                 return state.data.group.users.filter(filter);
