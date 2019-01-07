@@ -18,10 +18,9 @@
                         <router-link class="dropdown-item" to="/users" v-bind:class="{active: $route.name === 'users'}">
                             {{ $tc('user', 2) }}
                         </router-link>
-                    </div>
-                    <div aria-labelledby="navbarDropdown" class="dropdown-menu">
                         <router-link class="dropdown-item" to="/groups"
-                                     v-bind:class="{active: $route.name === 'groups'}">{{ $tc('group', 2) }}
+                                     v-bind:class="{active: $route.name === 'groups'}">
+                            {{ $tc('group', 2) }}
                         </router-link>
                     </div>
                 </li>
