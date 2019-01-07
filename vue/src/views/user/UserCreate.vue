@@ -28,7 +28,6 @@
             }
         },
         mounted() {
-            console.log('test2');
             this.$store.dispatch('user/reset');
         }
     };

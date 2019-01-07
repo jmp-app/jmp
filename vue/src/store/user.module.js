@@ -49,7 +49,6 @@ export const user = {
             } else {
                 user.isAdmin = 0;
             }
-            console.log(user.changePassword);
             if (user.changePassword) {
                 user.passwordChange = 1;
             } else {
