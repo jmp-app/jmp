@@ -30,7 +30,7 @@ export const user = {
         update({commit}, {user}) {
             commit('userRequest');
 
-            userService.updateUser(user)
+            userService.updadteUser(user)
                 .then(user => commit('updateUserSuccess', user))
                 .catch(error => commit('userRequestFailure', error));
         },

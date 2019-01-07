@@ -3,7 +3,8 @@ import Vue from 'vue';
 
 const initialState = {
     group: {
-        name: ''
+        name: '',
+        users: {}
     }
 };
 
@@ -29,7 +30,7 @@ export const group = {
                 .then(group => commit('updateGroupSuccess', group))
                 .catch(error => commit('groupRequestFailure', error));
         },
-        deleteGroup({commit}, {group}) {
+        delete({commit}, {group}) {
             commit('groupRequest');
 
             groupService.deleteGroup(group.id)
@@ -65,6 +66,15 @@ export const group = {
         },
         reset(state) {
             Vue.set(state.data, 'group', initialState.group);
+        }
+    },
+    getters: {
+        getUsersFiltered: (state) => (filter) => {
+            if (!state.data.group.users) {
+                return {};
+            } else {
+                return state.data.group.users.filter(filter);
+            }
         }
     }
 };
