@@ -35,13 +35,21 @@ $container['validation'] = function () {
             'username' => v::notEmpty()->noWhitespace()->length(1, 101),
             'lastname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
             'firstname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
-            'password' => v::notEmpty()->length(1, 256),
+            'password' => v::notEmpty()->length(8, 256),
             'email' => v::optional(v::notEmpty()->length(1, 256)::email()),
             'isAdmin' => v::optional(v::boolVal()),
             'passwordChange' => v::optional(v::boolVal())
         ],
+        'updateUser' => [
+            'username' => v::optional(v::notEmpty()->noWhitespace()->length(1, 101)),
+            'lastname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
+            'firstname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
+            'password' => v::optional(v::notEmpty()->length(8, 255)),
+            'email' => v::optional(v::notEmpty()->length(1, 255)::email()),
+            'isAdmin' => v::optional(v::boolType())
+        ],
         'listUsers' => [
-            'username' => v::optional(v::notEmpty()->noWhitespace()->numeric()),
+            'group' => v::optional(v::notEmpty()->noWhitespace()->numeric()),
         ],
         'createGroup' => [
             'name' => v::notEmpty()->length(1, 45)
@@ -51,6 +59,10 @@ $container['validation'] = function () {
         ],
         'updateGroup' => [
             'name' => v::optional(v::notEmpty()->length(1, 45))
+        ],
+        'changePassword' => [
+            'password' => v::notEmpty()->length(8, 256),
+            'newPassword' => v::notEmpty()->length(8, 256)
         ],
         'userIdsArray' => [
             'users' => v::arrayType()->length(1, null)->each(v::numeric())

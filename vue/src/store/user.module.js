@@ -64,7 +64,6 @@ export const user = {
                 });
         },
         reset({commit}) {
-            console.log('reset commit');
             commit('reset');
         }
     },

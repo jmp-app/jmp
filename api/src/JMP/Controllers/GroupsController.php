@@ -139,6 +139,7 @@ class GroupsController
      * @param Response $response
      * @param $args
      * @return Response
+     * @throws \Exception
      */
     public function joinGroup(Request $request, Response $response, $args): Response
     {
@@ -151,7 +152,8 @@ class GroupsController
         }
 
         // Add users to the group
-        if (!$this->membershipService->addUsersToGroup($id, $users)) {
+        $optional = $this->membershipService->addUsersToGroup($id, $users);
+        if ($optional->isFailure()) {
             // operation failed
             return $response->withStatus(500);
         }
@@ -167,6 +169,7 @@ class GroupsController
      * @param Response $response
      * @param $args
      * @return Response
+     * @throws \Exception
      */
     public function leaveGroup(Request $request, Response $response, $args): Response
     {
@@ -179,7 +182,8 @@ class GroupsController
         }
 
         // Remove users from the group
-        if (!$this->membershipService->removeUsersFromGroup($id, $users)) {
+        $optional = $this->membershipService->removeUsersFromGroup($id, $users);
+        if ($optional->isFailure()) {
             // operation failed
             return $response->withStatus(500);
         }
