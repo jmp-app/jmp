@@ -2,16 +2,16 @@
     <div class="d-flex align-items-center flex-column my-5">
         <form  @submit.prevent="changePassword" ref="form" class="card" id="change-password">
             <div class="card-header">
-                <span class="h5">Change your password</span>
+                <span class="h5">{{ $t('password.changeYourPw') }}</span>
             </div>
             <div class="card-body">
-                <input type="password" name="current-password" class="form-control mb-1" placeholder="Current Password" minlength="8" v-model="currentPassword">
+                <input type="password" name="current-password" class="form-control mb-1" :placeholder="$t('password.current')" minlength="8" v-model="currentPassword">
                 <hr>
-                <input type="password" name="new-password" class="form-control mb-2" placeholder="New Password" minlength="8" v-model="newPassword">
-                <input type="password" name="repeat-password" class="form-control" placeholder="Repeat Password" minlength="8" v-model="repeatPassword" ref="field">
+                <input type="password" name="new-password" class="form-control mb-2" :placeholder="$t('password.new')" minlength="8" v-model="newPassword">
+                <input type="password" name="repeat-password" class="form-control" :placeholder="$t('password.repeat')" minlength="8" v-model="repeatPassword" ref="field">
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-block btn-primary">Change Password</button>
+                <button type="submit" class="btn btn-block btn-primary">{{ $t('password.change') }}</button>
             </div>
         </form>
     </div>

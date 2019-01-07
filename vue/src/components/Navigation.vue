@@ -8,10 +8,10 @@
         <div class="collapse navbar-collapse" id="navbarToggler">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <router-link tag="li" class="nav-item" to="/" v-bind:class="{active: $route.name === 'eventOverview'}">
-                    <a class="nav-link">Overview</a>
+                    <a class="nav-link">{{ $t('nav.overview') }}</a>
                 </router-link>
                 <router-link tag="li" class="nav-item" to="/change-password" v-bind:class="{active: $route.name === 'changePassword'}">
-                    <a class="nav-link">Change Password</a>
+                    <a class="nav-link">{{ $t('password.change') }}</a>
                 </router-link>
                 <router-link tag="li" class="nav-item" to="/login">
                     <a class="nav-link">Logout</a>
