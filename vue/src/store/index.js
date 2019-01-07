@@ -8,6 +8,8 @@ import {user} from './user.module';
 import {events} from './event.module';
 import {registrationStates} from './registrationState.module';
 import {registration} from './registration.module';
+import {groups} from './groups.module';
+import {group} from './group.module';
 
 Vue.use(Vuex);
 
@@ -19,6 +21,8 @@ export const store = new Vuex.Store({
         users,
         events,
         registrationStates,
-        registration
+        registration,
+        groups,
+        group
     }
 });
