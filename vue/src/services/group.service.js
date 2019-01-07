@@ -27,11 +27,11 @@ function createGroup(group) {
 }
 
 function updateGroup(group) {
-    Vue.axios.put(`/groups/${group.id}`, group).then(response => {
+    return Vue.axios.put(`/groups/${group.id}`, group).then(response => {
         return response.data;
     });
 }
 
 function deleteGroup(id) {
-    Vue.axios.delete(`/groups/${id}`);
+    return Vue.axios.delete(`/groups/${id}`);
 }
