@@ -8,7 +8,7 @@ $container['validation'] = function () {
     return [
         'login' => [
             'username' => v::notEmpty()->noWhitespace()->length(1, 101),
-            'password' => v::notEmpty()->length(8, 255),
+            'password' => v::notEmpty()->length(8, 256),
         ],
         'loginTranslation' => function ($message) {
             $messages = [
@@ -44,7 +44,7 @@ $container['validation'] = function () {
             'username' => v::optional(v::notEmpty()->noWhitespace()->length(1, 101)),
             'lastname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
             'firstname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
-            'password' => v::optional(v::notEmpty()->length(8, 255)),
+            'password' => v::optional(v::notEmpty()->length(8, 256)),
             'email' => v::optional(v::notEmpty()->length(1, 255)::email()),
             'isAdmin' => v::optional(v::boolVal()),
             'passwordChange' => v::optional(v::boolVal())
