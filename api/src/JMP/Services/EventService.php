@@ -4,6 +4,7 @@ namespace JMP\Services;
 
 
 use JMP\Models\Event;
+use JMP\Utils\Optional;
 use PDO;
 use Psr\Container\ContainerInterface;
 
@@ -123,7 +124,7 @@ SQL;
     /**
      * Get event by id
      * @param int $eventId
-     * @return Event
+     * @return Optional
      */
     public function getEventById(int $eventId)
     {
@@ -147,7 +148,12 @@ SQL;
         $stmt->bindValue(':eventId', $eventId, PDO::PARAM_INT);
         $stmt->execute();
 
-        return $this->fetchEvent($stmt->fetch());
+        $event = $stmt->fetch();
+        if ($event === false) {
+            return Optional::failure();
+        } else {
+            return Optional::success($this->fetchEvent($event));
+        }
 
     }
 
@@ -178,7 +184,10 @@ SQL;
     {
         $event = new Event($val);
         $event->eventType = $this->eventTypeService->getEventTypeByEvent($val['eventTypeId']);
-        $event->defaultRegistrationState = $this->registrationStateService->getRegistrationTypeById($val['defaultRegistrationState']);
+        $optional = $this->registrationStateService->getRegistrationTypeById($val['defaultRegistrationState']);
+        if ($optional->isSuccess()) {
+            $event->defaultRegistrationState = $optional->getData();
+        }
         $event->groups = $this->groupService->getGroupsByEventId($val['id']);
         return $event;
     }
