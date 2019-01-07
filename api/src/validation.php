@@ -37,7 +37,8 @@ $container['validation'] = function () {
             'firstname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
             'password' => v::notEmpty()->length(1, 256),
             'email' => v::optional(v::notEmpty()->length(1, 256)::email()),
-            'isAdmin' => v::optional(v::boolType())
+            'isAdmin' => v::optional(v::boolVal()),
+            'passwordChange' => v::optional(v::boolVal())
         ],
         'listUsers' => [
             'username' => v::optional(v::notEmpty()->noWhitespace()->numeric()),

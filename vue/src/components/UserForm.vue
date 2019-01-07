@@ -9,17 +9,23 @@
         <div class="row my-3">
             <div class="col-6">
                 <label for="firstname">{{ $t('user.firstName') }}</label>
-                <input type="text" name="firstname" id="firstname" class="form-control" v-model="user.firstname" required>
+                <input type="text" name="firstname" id="firstname" class="form-control" v-model="user.firstname">
             </div>
             <div class="col-6">
                 <label for="lastname">{{ $t('user.lastName') }}</label>
-                <input type="text" name="lastname" id="lastname" class="form-control" v-model="user.lastname" required>
+                <input type="text" name="lastname" id="lastname" class="form-control" v-model="user.lastname">
             </div>
         </div>
         <div class="row my-3">
             <div class="col">
                 <label for="email">{{ $t('user.email') }}</label>
                 <input type="email" name="email" id="email" class="form-control" v-model="user.email" required>
+            </div>
+        </div>
+        <div class="row my-3">
+            <div class="col">
+                <label for="password">Passwort</label>
+                <input type="password" name="password" id="password" class="form-control" v-model="user.password" required>
             </div>
         </div>
         <div class="row my-3">
