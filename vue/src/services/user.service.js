@@ -7,11 +7,18 @@ export const userService = {
     getUser,
     updateUser,
     createUser,
-    deleteUser
+    deleteUser,
+    getAllOfGroup
 };
 
 function getAll() {
     return Vue.axios.get('/users').then(response => {
+        return response.data;
+    });
+}
+
+function getAllOfGroup(groupId) {
+    return Vue.axios.get(`/users?group=${groupId}`).then(response => {
         return response.data;
     });
 }
