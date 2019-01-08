@@ -58,7 +58,6 @@ export const user = {
             userService.createUser(user)
                 .then(user => commit('createUserSuccess', user))
                 .catch(error => {
-                    commit('userRequestFailure', error);
                     dispatch('alert/error', error.response.data.errors, {root: true});
                 });
         },
