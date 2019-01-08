@@ -27,9 +27,11 @@ export const users = {
         },
         getAllSuccess(state, users) {
             state.all = {items: users};
+            state.all.loading = false;
         },
         getAllFailure(state, error) {
             state.all = {error};
+            state.all.loading = false;
         }
     },
     getters: {

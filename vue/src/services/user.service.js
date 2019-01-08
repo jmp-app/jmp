@@ -66,5 +66,5 @@ function updateUser(user) {
 }
 
 function deleteUser(id) {
-    Vue.axios.delete(`/users/${id}`);
+    return Vue.axios.delete(`/users/${id}`);
 }
