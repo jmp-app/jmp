@@ -27,11 +27,11 @@
     "registration.reason": "Grund",
     "registration.reasonRequired": "Grund ist ein Pflichtfeld",
     "registration.reasonPlaceholder": "Grund eingeben",
-    "registration.state": "Status",
-    "password.change": "Passwort Wechseln",
-    "password.changeYourPw": "Wechsle dein Passwort",
-    "password.current": "Aktuelles Passwort",
-    "password.new": "Neues Passwort",
-    "password.repeat": "Passwort wiederholen",
-    "nav.overview": "Übersicht"
+  "registration.state": "Status",
+  "password.change": "Passwort Wechseln",
+  "password.changeYourPw": "Wechsle dein Passwort",
+  "password.current": "Aktuelles Passwort",
+  "password.new": "Neues Passwort",
+  "password.repeat": "Passwort wiederholen",
+  "nav.overview": "Übersicht"
 }

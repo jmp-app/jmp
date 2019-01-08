@@ -25,10 +25,12 @@
         },
         methods: {
             submit: function() {
-                this.$store.dispatch('user/update', this.data.user);
+                let user = this.data.user;
+                this.$store.dispatch('user/update', {user});
             },
             deleteUser: function() {
-                this.$store.dispatch('user/deleteUser', this.data.user);
+                let user = this.data.user;
+                this.$store.dispatch('user/deleteUser', {user});
                 this.$router.push({ name: 'users' });
             }
         },

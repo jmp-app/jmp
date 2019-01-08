@@ -38,7 +38,7 @@ class UserService
 
         /** @var User $user */
         $user = $optional->getData();
-        unset($user->passwordChange);
+        unset($user->password);
 
         return Optional::success($user);
     }
@@ -92,7 +92,7 @@ SQL;
         $stmt->bindValue(':firstname', $user->firstname, \PDO::PARAM_STR);
         $stmt->bindValue(':email', $user->email, \PDO::PARAM_STR);
         $stmt->bindParam(':password', $user->password);
-        $stmt->bindValue(':password_change', 1, \PDO::PARAM_INT);
+        $stmt->bindValue(':password_change', $user->passwordChange, \PDO::PARAM_INT);
         $stmt->bindValue(':is_admin', $user->isAdmin, \PDO::PARAM_INT);
 
 
@@ -305,7 +305,8 @@ SQL;
      * Delete User
      * @param int $id
      */
-    public function deleteUser(int $id) {
+    public function deleteUser(int $id)
+    {
         // User
         $sql = <<< SQL
             DELETE FROM user

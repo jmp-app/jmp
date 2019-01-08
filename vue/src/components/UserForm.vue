@@ -9,17 +9,23 @@
         <div class="row my-3">
             <div class="col-6">
                 <label for="firstname">{{ $t('user.firstName') }}</label>
-                <input type="text" name="firstname" id="firstname" class="form-control" v-model="user.firstname" required>
+                <input type="text" name="firstname" id="firstname" class="form-control" v-model="user.firstname">
             </div>
             <div class="col-6">
                 <label for="lastname">{{ $t('user.lastName') }}</label>
-                <input type="text" name="lastname" id="lastname" class="form-control" v-model="user.lastname" required>
+                <input type="text" name="lastname" id="lastname" class="form-control" v-model="user.lastname">
             </div>
         </div>
         <div class="row my-3">
             <div class="col">
                 <label for="email">{{ $t('user.email') }}</label>
-                <input type="email" name="email" id="email" class="form-control" v-model="user.email" required>
+                <input class="form-control" id="email" name="email" type="email" v-model="user.email">
+            </div>
+        </div>
+        <div class="row my-3">
+            <div class="col">
+                <label for="password">{{ $t('user.password') }}</label>
+                <input class="form-control" id="password" name="text" type="password" v-model="user.password">
             </div>
         </div>
         <div class="row my-3">
@@ -31,8 +37,8 @@
             </div>
             <div class="col-6">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="change-password" v-model="user.changePassword">
-                    <label class="form-check-label" for="change-password">{{ $t('user.passwordChange') }}</label>
+                    <input class="form-check-input" id="passwordChange" type="checkbox" v-model="user.passwordChange">
+                    <label class="form-check-label" for="passwordChange">{{ $t('user.passwordChange') }}</label>
                 </div>
             </div>
         </div>

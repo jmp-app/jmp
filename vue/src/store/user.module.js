@@ -27,12 +27,12 @@ export const user = {
                 .then(user => commit('getUserSuccess', user))
                 .catch(error => commit('userRequestFailure', error));
         },
-        update({commit}, {user}) {
+        update({dispatch, commit}, {user}) {
             commit('userRequest');
 
             userService.updateUser(user)
                 .then(user => commit('updateUserSuccess', user))
-                .catch(error => commit('userRequestFailure', error));
+                .catch(error => dispatch('alert/error', error.response.data.errors, {root: true}));
         },
         deleteUser({commit}, {user}) {
             commit('userRequest');
@@ -41,12 +41,26 @@ export const user = {
                 .then(() => commit('reset'))
                 .catch(error => commit('userRequestFailure', error));
         },
-        create({commit}, {user}) {
+        create({dispatch, commit}, {user}) {
             commit('userRequest');
+
+            if (user.isAdmin) {
+                user.isAdmin = 1;
+            } else {
+                user.isAdmin = 0;
+            }
+            if (user.passwordChange) {
+                user.passwordChange = 1;
+            } else {
+                user.passwordChange = 0;
+            }
 
             userService.createUser(user)
                 .then(user => commit('createUserSuccess', user))
-                .catch(error => commit('userRequestFailure', error));
+                .catch(error => {
+                    commit('userRequestFailure', error);
+                    dispatch('alert/error', error.response.data.errors, {root: true});
+                });
         },
         reset({commit}) {
             commit('reset');
@@ -60,12 +74,18 @@ export const user = {
             state.data = {error};
         },
         getUserSuccess(state, user) {
+            // eslint-disable-next-line
+            user.passwordChange = user.passwordChange == 1;
             state.data = {user};
         },
         updateUserSuccess(state, user) {
+            // eslint-disable-next-line
+            user.passwordChange = user.passwordChange == 1;
             state.data = {user};
         },
         createUserSuccess(state, user) {
+            // eslint-disable-next-line
+            user.passwordChange = user.passwordChange == 1;
             state.data = {user};
         },
         reset(state) {
