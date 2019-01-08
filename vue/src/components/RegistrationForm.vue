@@ -14,7 +14,7 @@
                    id="reason" type="text"
                    v-bind:placeholder="$t('registration.reasonPlaceholder')" v-model="reason">
             <div class="invalid-feedback" v-show="submitted && !reason.replace(/\s/g, '').length > 0">{{
-                $t("registration.reasonRequired") }}
+                $t('registration.reasonRequired') }}
             </div>
         </div>
         <button class="btn btn-danger" v-show="hasChanges">{{ $t("submit") }}</button>

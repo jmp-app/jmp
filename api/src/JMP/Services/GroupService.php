@@ -36,9 +36,9 @@ class GroupService
 
     /**
      * @param string $name
-     * @return Group
+     * @return Optional
      */
-    public function createGroup(string $name): Group
+    public function createGroup(string $name): Optional
     {
         $sql = <<< SQL
             INSERT INTO `group` (name)
@@ -72,9 +72,9 @@ SQL;
     /**
      * @param int $id
      * @param string $newName
-     * @return Group
+     * @return Optional
      */
-    public function updateGroup(int $id, string $newName): Group
+    public function updateGroup(int $id, string $newName): Optional
     {
         $sql = <<< SQL
             UPDATE `group`
@@ -93,9 +93,9 @@ SQL;
     /**
      * Get a group by its unique name
      * @param $name string <strong>You have to make sure that a group with that name exists</strong>
-     * @return Group
+     * @return Optional
      */
-    private function getGroupByName(string $name): Group
+    private function getGroupByName(string $name): Optional
     {
         $sql = <<< SQL
         SELECT id, name
@@ -107,11 +107,15 @@ SQL;
         $stmt->bindParam(':name', $name);
         $stmt->execute();
 
-        if ($stmt->rowCount() < 1) {
-            throw new \RuntimeException("No group exists with that name.");
-        }
+        $group = $stmt->fetch();
 
-        return new Group($stmt->fetch());
+        if ($group === false) {
+            return Optional::failure();
+        } else {
+            $group = new Group($group);
+            $group->users = $this->userService->getUsers($group->id);
+            return Optional::success($group);
+        }
     }
 
     /**

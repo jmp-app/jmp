@@ -54,6 +54,27 @@ export const router = new Router({
             component: function () {
                 return import('../views/user/UserEdit.vue');
             }
+        },
+        {
+            path: '/groups',
+            name: 'groups',
+            component: function () {
+                return import('../views/group/Groups.vue');
+            }
+        },
+        {
+            path: '/groups/:id',
+            name: 'group',
+            component: function () {
+                return import('../views/group/GroupEdit.vue');
+            }
+        },
+        {
+            path: '/groups/create',
+            name: 'createGroup',
+            component: function () {
+                return import('../views/group/GroupCreate.vue');
+            }
         }
     ]
 });

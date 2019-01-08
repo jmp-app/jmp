@@ -9,11 +9,11 @@
         <div class="row my-3">
             <div class="col-6">
                 <label for="firstname">{{ $t('user.firstName') }}</label>
-                <input type="text" name="firstname" id="firstname" class="form-control" v-model="user.firstname">
+                <input class="form-control" id="firstname" name="firstname" type="text" v-model="user.firstname">
             </div>
             <div class="col-6">
                 <label for="lastname">{{ $t('user.lastName') }}</label>
-                <input type="text" name="lastname" id="lastname" class="form-control" v-model="user.lastname">
+                <input class="form-control" id="lastname" name="lastname" type="text" v-model="user.lastname">
             </div>
         </div>
         <div class="row my-3">
