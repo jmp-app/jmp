@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `jmp`.`event_has_group` (
   CONSTRAINT `fk_event_has_group_group1`
     FOREIGN KEY (`group_id`)
     REFERENCES `jmp`.`group` (`id`)
-    ON DELETE NO ACTION
+      ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `jmp`.`membership` (
   CONSTRAINT `fk_group_has_user_group`
     FOREIGN KEY (`group_id`)
     REFERENCES `jmp`.`group` (`id`)
-    ON DELETE NO ACTION
+      ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_group_has_user_user1`
     FOREIGN KEY (`user_id`)
@@ -182,22 +182,25 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `jmp`.`presence`
 -- -----------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `jmp`.`presence` (
-  `event_id` INT(11) NOT NULL,
-  `user_id` INT(11) NOT NULL,
-  `revisor_id` INT(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `jmp`.`presence`
+(
+  `event_id`     INT(11) NOT NULL,
+  `user_id`      INT(11) NOT NULL,
+  `revisor_id`   INT(11) NOT NULL,
   `has_attended` TINYINT NOT NULL,
   PRIMARY KEY (`event_id`, `user_id`, `revisor_id`),
   CONSTRAINT `presence_actually_ibfk_1`
     FOREIGN KEY (`event_id`)
-    REFERENCES `jmp`.`event` (`id`),
+      REFERENCES `jmp`.`event` (`id`),
   CONSTRAINT `presence_actually_ibfk_2`
     FOREIGN KEY (`user_id`)
       REFERENCES `jmp`.`user` (`id`)
       ON DELETE CASCADE,
   CONSTRAINT `presence_actually_ibfk_3`
     FOREIGN KEY (`revisor_id`)
-    REFERENCES `jmp`.`user` (`id`))
+      REFERENCES `jmp`.`user` (`id`)
+      ON DELETE CASCADE
+)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
