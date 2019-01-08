@@ -18,15 +18,16 @@
                     <a class="nav-link">Logout</a>
                 </router-link>
                 <li class="nav-item dropdown" v-if="showAdmin()">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
+                       data-toggle="dropdown" href="#" id="navbarDropdown" role="button"
+                       v-bind:class="{active: $route.name === 'users' || $route.name === 'groups'}">
                         Admin
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <router-link class="dropdown-item" to="/users" v-bind:class="{active: $route.name === 'users'}">
+                        <router-link class="dropdown-item" to="/users">
                             {{ $tc('user', 2) }}
                         </router-link>
-                        <router-link class="dropdown-item" to="/groups"
-                                     v-bind:class="{active: $route.name === 'groups'}">
+                        <router-link class="dropdown-item" to="/groups">
                             {{ $tc('group', 2) }}
                         </router-link>
                     </div>
