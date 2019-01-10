@@ -63,17 +63,17 @@ export const router = new Router({
             }
         },
         {
-            path: '/groups/:id',
-            name: 'group',
-            component: function () {
-                return import('../views/group/GroupEdit.vue');
-            }
-        },
-        {
             path: '/groups/create',
             name: 'createGroup',
             component: function () {
                 return import('../views/group/GroupCreate.vue');
+            }
+        },
+        {
+            path: '/groups/:id',
+            name: 'group',
+            component: function () {
+                return import('../views/group/GroupEdit.vue');
             }
         }
     ]
