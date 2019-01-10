@@ -1,5 +1,14 @@
 <template>
     <div>
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="my-3">{{ $tc('group', 2) }}</h1>
+            <div>
+                <router-link :to="{ name: 'createGroup' }" tag="button" class="btn btn-primary">
+                    {{ $t('group.create') }}
+                </router-link>
+            </div>
+        </div>
+
         <input :placeholder="$t('search')" class="search my-3 form-control form-control-lg" type="search"
                v-model.trim="search">
 
