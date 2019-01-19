@@ -46,6 +46,6 @@
                     this.$router.push({ name: 'groups' });
                 }
             });
-        },
+        }
     };
 </script>

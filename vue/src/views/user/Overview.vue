@@ -14,6 +14,7 @@
                 :data="users"
                 :filter-key="searchQuery">
         </grid>
+        <button @click="$router.push('/users/0')">Create new</button>
     </div>
 </template>
 

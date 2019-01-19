@@ -1,5 +1,5 @@
 <template>
-    <div class="table-responsive">
+    <div class="table-responsive grid">
         <table class="table table-striped table-hover">
             <thead class="thead-dark">
             <tr>
@@ -7,8 +7,10 @@
                     :key="key"
                     @click="sortBy(key)"
                     v-for="key in columns">
-                    {{ columnTitles[key] }}
-                    <span :class="sortOrders[key] > 0 ? 'asc' : 'dsc'" class="arrow"></span>
+                    <nobr>
+                        {{ columnTitles[key] }}
+                        <span :class="sortOrders[key] > 0 ? 'asc' : 'dsc'" class="arrow"></span>
+                    </nobr>
                 </th>
             </tr>
             </thead>
@@ -86,6 +88,9 @@
 </script>
 
 <style scoped>
+    .grid {
+        cursor: pointer;
+    }
     .arrow {
         display: inline-block;
         vertical-align: middle;

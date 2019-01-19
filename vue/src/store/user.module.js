@@ -75,6 +75,8 @@ export const user = {
         getUserSuccess(state, user) {
             // eslint-disable-next-line
             user.passwordChange = user.passwordChange == 1;
+            // eslint-disable-next-line
+            user.isAdmin = user.isAdmin == 1;
             state.data = {user};
         },
         updateUserSuccess(state, user) {
