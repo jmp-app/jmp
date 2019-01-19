@@ -35,24 +35,31 @@ export const router = new Router({
             }
         },
         {
+            path: '/users_old',
+            name: 'users',
+            component: function () {
+                return import('../views/user_old/Users.vue');
+            }
+        },
+        {
+            path: '/users_old/create',
+            name: 'createUser',
+            component: function () {
+                return import('../views/user_old/UserCreate.vue');
+            }
+        },
+        {
+            path: '/users_old/:id',
+            name: 'user',
+            component: function () {
+                return import('../views/user_old/UserEdit.vue');
+            }
+        },
+        {
             path: '/users',
             name: 'users',
             component: function () {
-                return import('../views/user/Users.vue');
-            }
-        },
-        {
-            path: '/users/create',
-            name: 'createUser',
-            component: function () {
-                return import('../views/user/UserCreate.vue');
-            }
-        },
-        {
-            path: '/users/:id',
-            name: 'user',
-            component: function () {
-                return import('../views/user/UserEdit.vue');
+                return import('../views/user/Overview.vue');
             }
         },
         {

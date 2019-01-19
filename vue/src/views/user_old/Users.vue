@@ -19,6 +19,7 @@
 
 <script>
     import UserListItem from '@/components/UserListItem';
+
     export default {
         name: 'Users',
         components: {UserListItem},
