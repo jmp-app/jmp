@@ -6,14 +6,14 @@
                 <th :class="{ active: sortKey === key }"
                     :key="key"
                     @click="sortBy(key)"
-                    v-for="key in columnTitles">
-                    {{ key | capitalize }}
+                    v-for="key in columns">
+                    {{ columnTitles[key] }}
                     <span :class="sortOrders[key] > 0 ? 'asc' : 'dsc'" class="arrow"></span>
                 </th>
             </tr>
             </thead>
             <tbody>
-            <tr :key="index" v-for="(entry, index) in filteredData">
+            <tr :key="index" @click="selected(entry)" v-for="(entry, index) in filteredData">
                 <td :key="key" v-for="key in columns">
                     {{entry[key]}}
                 </td>
@@ -29,7 +29,8 @@
         props: {
             data: Array,
             columns: Array,
-            columnTitles: Array,
+            columnTitles: Object,
+            routerLinkTo: String,
             filterKey: String
         },
         data: function () {
@@ -74,6 +75,11 @@
             sortBy: function (key) {
                 this.sortKey = key;
                 this.sortOrders[key] = this.sortOrders[key] * -1;
+            },
+            selected: function (item) {
+                if (this.routerLinkTo) {
+                    this.$router.push({path: `/${this.routerLinkTo}/${item.id}`});
+                }
             }
         }
     };

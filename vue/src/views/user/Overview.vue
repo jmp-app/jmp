@@ -10,6 +10,7 @@
         <grid
                 :columns="gridColumns"
                 :columnTitles="gridColumnTitles"
+                :routerLinkTo="routerLinkTo"
                 :data="users"
                 :filter-key="searchQuery">
         </grid>
@@ -28,8 +29,15 @@
             return {
                 searchQuery: '',
                 gridColumns: ['username', 'firstname', 'lastname', 'email'],
-                gridColumnTitles: [this.$t('user.username'), this.$t('user.firstName'), this.$t('user.lastName'), this.$t('user.email')]
-            };
+                gridColumnTitles: {
+                    'username': this.$t('user.username'),
+                    'firstname': this.$t('user.firstName'),
+                    'lastname': this.$t('user.lastName'),
+                    'email': this.$t('user.email')
+                },
+                routerLinkTo: 'users'
+            }
+                ;
         },
         computed: {
             users() {
