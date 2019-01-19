@@ -1,24 +1,26 @@
 <template>
-    <table class="table table-striped table-hover">
-        <thead class="thead-dark">
-        <tr>
-            <th :class="{ active: sortKey === key }"
-                :key="key"
-                @click="sortBy(key)"
-                v-for="key in columns">
-                {{ key | capitalize }}
-                <span :class="sortOrders[key] > 0 ? 'asc' : 'dsc'" class="arrow"></span>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr :key="entry" v-for="entry in filteredData">
-            <td :key="key" v-for="key in columns">
-                {{entry[key]}}
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+            <tr>
+                <th :class="{ active: sortKey === key }"
+                    :key="key"
+                    @click="sortBy(key)"
+                    v-for="key in columnTitles">
+                    {{ key | capitalize }}
+                    <span :class="sortOrders[key] > 0 ? 'asc' : 'dsc'" class="arrow"></span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr :key="index" v-for="(entry, index) in filteredData">
+                <td :key="key" v-for="key in columns">
+                    {{entry[key]}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 
 <script>
@@ -27,6 +29,7 @@
         props: {
             data: Array,
             columns: Array,
+            columnTitles: Array,
             filterKey: String
         },
         data: function () {
