@@ -57,14 +57,14 @@ export const router = new Router({
         },
         {
             path: '/users',
-            name: 'users',
+            name: 'userOverview',
             component: function () {
                 return import('../views/user/Overview.vue');
             }
         },
         {
             path: '/users/:id',
-            name: 'user',
+            name: 'userDetail',
             component: function () {
                 return import('../views/user/Detail.vue');
             }

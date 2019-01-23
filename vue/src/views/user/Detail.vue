@@ -76,7 +76,7 @@
         </div>
         <div class="form-group row" v-if="create() || edit()">
             <div class="col-sm-9">
-                <button @click="handleCancel()" class="btn mr-2" type="button">{{$t('cancel')}}</button>
+                <button @click="handleCancel()" class="btn mr-2" type="button" v-if="edit()">{{$t('cancel')}}</button>
                 <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
             </div>
         </div>
@@ -135,16 +135,38 @@
                 }
                 this.$store.dispatch('user/create', {user});
             },
+            changeUser: function () {
+                let user = this.user;
+                this.$store.dispatch('user/update', {user});
+            },
             handleCancel: function () {
                 if (this.create()) {
                     this.$store.state.user.data.user = {};
                 } else {
-                    const id = this.$route.params.id;
-                    this.$store.dispatch('user/get', {id});
+                    this.renewUserFromDb();
                     this.mode = 'display';
                 }
                 this.submitted = false;
+            },
+            handleMutation: function (mutation) {
+                if (mutation.type === 'user/userRequestFailure') {
+                    this.$store.dispatch('alert/error', 'Not Found', {root: true});
+                }
+
+                if (mutation.type === 'user/updateUserSuccess') {
+                    this.renewUserFromDb();
+                    this.mode = 'display';
+                }
+            },
+            renewUserFromDb: function () {
+                const id = this.$route.params.id;
+                this.$store.dispatch('user/get', {id});
             }
+        },
+        created() {
+            this.$store.subscribe(mutation => {
+                this.handleMutation(mutation);
+            });
         },
         mounted() {
             const id = this.$route.params.id;
