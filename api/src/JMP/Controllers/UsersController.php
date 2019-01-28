@@ -85,6 +85,10 @@ class UsersController
                     'id' => 'The specified id "' . $id . '"does not exist'
                 ]
             ], 404);
+        } elseif (isset($updates['username'])) {
+            if ($this->userService->isUsernameUnique($updates['username']) === false) {
+                return $this->usernameNotAvailable($response, $updates['username']);
+            }
         }
 
         $optional = $this->userService->updateUser($id, $updates);
@@ -161,21 +165,21 @@ class UsersController
         if ($this->userService->isUsernameUnique($user['username'])) {
             return $this->usernameAvailable($response, $user);
         } else {
-            return $this->usernameNotAvailable($response, $user);
+            return $this->usernameNotAvailable($response, $user['username']);
         }
     }
 
     /**
      * Create the error response if a username is already in use
      * @param Response $response
-     * @param $user
+     * @param $username string
      * @return Response
      */
-    private function usernameNotAvailable(Response $response, $user): Response
+    private function usernameNotAvailable(Response $response, string $username): Response
     {
         return $response->withJson([
             'errors' => [
-                'User' => 'A user with the username ' . $user['username'] . ' already exists'
+                'User' => 'A user with the username ' . $username . ' already exists'
             ]
         ], 400);
     }
