@@ -1,8 +1,6 @@
 <?php
 
-
 namespace JMP\Services;
-
 
 use JMP\Models\User;
 use JMP\Utils\Optional;
@@ -18,6 +16,7 @@ class UserService
 
     /**
      * EventService constructor.
+     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
@@ -31,8 +30,28 @@ class UserService
      */
     public function getUserByUserId(int $userId): Optional
     {
+        $optional = $this->getFullUserByUserId($userId);
+
+        if ($optional->isFailure()) {
+            return Optional::failure();
+        }
+
+        /** @var User $user */
+        $user = $optional->getData();
+        unset($user->password);
+
+        return Optional::success($user);
+    }
+
+    /**
+     * Select all data of a user by its id
+     * @param int $userId
+     * @return Optional
+     */
+    private function getFullUserByUserId(int $userId): Optional
+    {
         $sql = <<<SQL
-SELECT user.id, username, lastname, firstname, email, is_admin AS isAdmin
+SELECT user.id, username, lastname, firstname, email, is_admin AS isAdmin, password_change AS passwordChange, password
 FROM user
 WHERE id = :userId
 SQL;
@@ -44,6 +63,7 @@ SQL;
         $stmt->execute();
 
         $user = $stmt->fetch();
+
         if ($user === false) {
             return Optional::failure();
         } else {
@@ -72,7 +92,7 @@ SQL;
         $stmt->bindValue(':firstname', $user->firstname, \PDO::PARAM_STR);
         $stmt->bindValue(':email', $user->email, \PDO::PARAM_STR);
         $stmt->bindParam(':password', $user->password);
-        $stmt->bindValue(':password_change', 1, \PDO::PARAM_INT);
+        $stmt->bindValue(':password_change', $user->passwordChange, \PDO::PARAM_INT);
         $stmt->bindValue(':is_admin', $user->isAdmin, \PDO::PARAM_INT);
 
 
@@ -103,6 +123,26 @@ SQL;
 
         return $stmt->rowCount() < 1;
 
+    }
+
+    /**
+     * Checks whether a user with the specified id exists
+     * @param int $id
+     * @return bool
+     */
+    public function userExists(int $id): bool
+    {
+        $sql = <<< SQL
+            SELECT id
+            FROM user
+            where id = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
     }
 
     /**
@@ -155,6 +195,127 @@ SQL;
         }
 
         return $users;
+    }
+
+    /**
+     * Change the password of a user, fails if the current password is incorrect
+     * @param int $userId
+     * @param string $newPassword
+     * @return bool
+     */
+    public function changePassword(int $userId, string $newPassword): bool
+    {
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        $sql = <<< SQL
+            UPDATE user
+            SET password = :newPassword
+            WHERE id = :userId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':newPassword', $hashedPassword, PDO::PARAM_STR);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Updates a user's properties with the given $updates
+     * @param int $id The id must exist
+     * @param array $updates
+     * @return Optional
+     */
+    public function updateUser(int $id, array $updates): Optional
+    {
+        $optional = $this->getFullUserByUserId($id);
+        if ($optional->isFailure()) {
+            return Optional::failure();
+        }
+
+        /** @var User $user */
+        $user = $optional->getData();
+
+        $sql = <<< SQL
+            UPDATE user
+            SET username = :username, firstname = :firstname, lastname = :lastname, email = :email, password = :password,
+                is_admin = :isAdmin, password_change = :passwordChange
+            WHERE id = :id;
+SQL;
+
+        $updatedUser = $this->getUpdatedUser($updates, $user);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':username', $updatedUser->username);
+        $stmt->bindValue(':firstname', $updatedUser->firstname);
+        $stmt->bindValue(':lastname', $updatedUser->lastname);
+        $stmt->bindValue(':email', $updatedUser->email);
+        $stmt->bindValue(':password', $updatedUser->password);
+        $stmt->bindValue(':isAdmin', $updatedUser->isAdmin, PDO::PARAM_BOOL);
+        $stmt->bindValue(':passwordChange', $updatedUser->passwordChange, PDO::PARAM_BOOL);
+
+        $stmt->execute();
+
+        return $this->getFullUserByUserId($id);
+    }
+
+    /**
+     * Update user with the given updates (key / value pairs)
+     * @param array $userUpdates
+     * @param User $currentUser
+     * @return User
+     */
+    private function getUpdatedUser(array $userUpdates, User $currentUser): User
+    {
+        $username = $userUpdates['username'];
+        $lastname = $userUpdates['lastname'];
+        $firstname = $userUpdates['firstname'];
+        $email = $userUpdates['email'];
+        $password = $userUpdates['password'];
+        $passwordChange = $userUpdates['passwordChange'];
+        $isAdmin = $userUpdates['isAdmin'];
+
+        if (!is_null($username)) {
+            $currentUser->username = $username;
+        }
+        if (!is_null($lastname)) {
+            $currentUser->lastname = $lastname;
+        }
+        if (!is_null($firstname)) {
+            $currentUser->firstname = $firstname;
+        }
+        if (!is_null($email)) {
+            $currentUser->email = $email;
+        }
+        if (!is_null($password)) {
+            $currentUser->password = password_hash($userUpdates['password'], PASSWORD_DEFAULT);
+        }
+        if (!is_null($passwordChange)) {
+            $currentUser->passwordChange = $passwordChange;
+        }
+        if (!is_null($isAdmin)) {
+            $currentUser->isAdmin = $isAdmin;
+        }
+
+        return $currentUser;
+    }
+
+    /**
+     * Delete User
+     * @param int $id
+     */
+    public function deleteUser(int $id)
+    {
+        // User
+        $sql = <<< SQL
+            DELETE FROM user
+            WHERE id = :id;
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->execute();
     }
 
 }

@@ -17,7 +17,13 @@ export const authentication = {
                 .then(
                     user => {
                         commit('loginSuccess', user);
-                        router.push('/');
+                        // eslint-disable-next-line
+                        if (user.user.passwordChange == 1) {
+                            // if password change is true then redirect user to change password
+                            router.push('/change-password');
+                        } else {
+                            router.push('/');
+                        }
                     },
                     error => {
                         commit('loginFailure', error.response.data.errors.authentication.toString());

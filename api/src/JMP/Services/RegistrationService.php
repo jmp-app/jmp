@@ -37,10 +37,10 @@ class RegistrationService
      * @param int $eventId
      * @return Optional
      */
-    public function getRegistrationByUserIdAndEventId(int $userId, int $eventId)
+    public function getRegistrationByUserIdAndEventId(int $userId, int $eventId): Optional
     {
         $sql = <<< SQL
-SELECT event_id as eventId, user_id as userId, reason, registration_state_id as regStateId
+SELECT event_id as eventId, user_id as userId, reason, registration_state_id as registrationStateId
 FROM registration
 WHERE event_id = :eventId AND user_id = :userId
 SQL;
@@ -49,35 +49,22 @@ SQL;
         $stmt->bindParam(':eventId', $eventId, \PDO::PARAM_INT);
         $stmt->bindParam(':userId', $userId, \PDO::PARAM_INT);
         $stmt->execute();
+
         $val = $stmt->fetch();
+        $registrationStateId = $val['registrationStateId'];
+
         if ($val === false) {
             return Optional::failure();
         }
+
         $registration = new Registration($val);
-        $optional = $this->registrationStateService->getRegistrationTypeById($val['regStateId']);
+        $optional = $this->registrationStateService->getRegistrationTypeById($registrationStateId);
+
         if ($optional->isSuccess()) {
             $registration->registrationState = $optional->getData();
             return Optional::success($registration);
         } else {
-            Optional::failure();
-        }
-    }
-
-    /**
-     * @param int $userId
-     * @param int $eventId
-     * @return Optional
-     */
-    private function getRegistrationByDefaultRegistrationStateInEvent(int $userId, int $eventId)
-    {
-        $optional = $this->eventService->getEventById($eventId);
-
-        if ($optional->isFailure()) {
             return Optional::failure();
-        } else {
-            $registration = new Registration([$userId, $eventId, '']);
-            $registration->registrationState = $optional->getData()->defaultRegistrationState;
-            return Optional::success($registration);
         }
     }
 
@@ -107,6 +94,11 @@ SQL;
 
     }
 
+    /**
+     * Update a registration
+     * @param Registration $registration with values to update
+     * @return Optional
+     */
     public function updateRegistration(Registration $registration): Optional
     {
         $sql = <<< SQL
@@ -127,4 +119,22 @@ SQL;
 
         return $this->getRegistrationByUserIdAndEventId($registration->userId, $registration->eventId);
     }
+
+    /**
+     * Delete all registrations of a user
+     * @param int $userId
+     * @return void
+     */
+    public function deleteRegistrationsOfUser(int $userId): void
+    {
+        $sql = <<< SQL
+            DELETE FROM registration
+            WHERE user_id = :userId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':userId', $userId);
+        $stmt->execute();
+    }
+
 }

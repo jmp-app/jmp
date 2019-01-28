@@ -8,14 +8,28 @@
         <div class="collapse navbar-collapse" id="navbarToggler">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <router-link tag="li" class="nav-item" to="/" v-bind:class="{active: $route.name === 'eventOverview'}">
-                    <a class="nav-link">Overview</a>
+                    <a class="nav-link">{{ $t('nav.overview') }}</a>
+                </router-link>
+                <router-link class="nav-item" tag="li" to="/change-password"
+                             v-bind:class="{active: $route.name === 'changePassword'}">
+                    <a class="nav-link">{{ $t('password.change') }}</a>
+                </router-link>
+                <router-link class="nav-item" tag="li" to="/login">
+                    <a class="nav-link">Logout</a>
                 </router-link>
                 <li class="nav-item dropdown" v-if="showAdmin()">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
+                       data-toggle="dropdown" href="#" id="navbarDropdown" role="button"
+                       v-bind:class="{active: $route.name === 'users' || $route.name === 'groups'}">
                         Admin
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <router-link class="dropdown-item" to="/users" v-bind:class="{active: $route.name === 'users'}">Users</router-link>
+                        <router-link class="dropdown-item" to="/users">
+                            {{ $tc('user', 2) }}
+                        </router-link>
+                        <router-link class="dropdown-item" to="/groups">
+                            {{ $tc('group', 2) }}
+                        </router-link>
                     </div>
                 </li>
             </ul>
@@ -38,7 +52,7 @@
             },
             showAdmin() {
                 const user = JSON.parse(localStorage.getItem('user'));
-                return !!(user && user.isAdmin);
+                return !!(user && user.isAdmin === 1);
             }
         }
     };

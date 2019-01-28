@@ -5,8 +5,12 @@
         <div v-if="data.error">Error: {{ user.error }}</div>
         <UserForm v-if="data.user" :user="data.user"></UserForm>
         <div class="d-flex justify-content-end">
-            <router-link :to="{ name: 'users' }" tag="button" class="btn btn-lg btn-outline-danger mx-1">{{ $t('cancel') }}</router-link>
-            <button type="button" class="btn btn-lg btn-danger mx-1" :disabled="!data.user" @click="deleteUser">{{ $t('user.delete') }}</button>
+            <router-link :to="{ name: 'users' }" class="btn btn-lg btn-outline-danger mx-1" tag="button">{{ $t('cancel')
+                }}
+            </router-link>
+            <button :disabled="!data.user" @click="deleteUser" class="btn btn-lg btn-danger mx-1" type="button">{{
+                $t('user.delete') }}
+            </button>
             <button type="submit" class="btn btn-lg btn-primary mx-1" :disabled="!data.user">{{ $t('edit') }}</button>
         </div>
     </form>
@@ -24,12 +28,14 @@
             }
         },
         methods: {
-            submit: function() {
-                this.$store.dispatch('user/update', this.data.user);
+            submit: function () {
+                let user = this.data.user;
+                this.$store.dispatch('user/update', {user});
             },
-            deleteUser: function() {
-                this.$store.dispatch('user/deleteUser', this.data.user);
-                this.$router.push({ name: 'users' });
+            deleteUser: function () {
+                let user = this.data.user;
+                this.$store.dispatch('user/deleteUser', {user});
+                this.$router.push({name: 'users'});
             }
         },
         mounted() {

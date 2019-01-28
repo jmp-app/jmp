@@ -7,11 +7,18 @@ export const userService = {
     getUser,
     updateUser,
     createUser,
-    deleteUser
+    deleteUser,
+    getAllOfGroup
 };
 
 function getAll() {
     return Vue.axios.get('/users').then(response => {
+        return response.data;
+    });
+}
+
+function getAllOfGroup(groupId) {
+    return Vue.axios.get(`/users?group=${groupId}`).then(response => {
         return response.data;
     });
 }
@@ -53,11 +60,11 @@ function createUser(user) {
 }
 
 function updateUser(user) {
-    Vue.axios.put(`/users/${user.id}`, user).then(response => {
+    return Vue.axios.put(`/users/${user.id}`, user).then(response => {
         return response.data;
     });
 }
 
 function deleteUser(id) {
-    Vue.axios.delete(`/users/${id}`);
+    return Vue.axios.delete(`/users/${id}`);
 }

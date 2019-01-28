@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `jmp`.`membership` (
   CONSTRAINT `fk_group_has_user_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `jmp`.`user` (`id`)
-    ON DELETE NO ACTION
+      ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `jmp`.`registration` (
   CONSTRAINT `fk_presence_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `jmp`.`user` (`id`)
-    ON DELETE NO ACTION
+      ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_registration_registration_state1`
     FOREIGN KEY (`registration_state_id`)
@@ -193,24 +193,14 @@ CREATE TABLE IF NOT EXISTS `jmp`.`presence` (
     REFERENCES `jmp`.`event` (`id`),
   CONSTRAINT `presence_actually_ibfk_2`
     FOREIGN KEY (`user_id`)
-    REFERENCES `jmp`.`user` (`id`),
+      REFERENCES `jmp`.`user` (`id`)
+      ON DELETE CASCADE,
   CONSTRAINT `presence_actually_ibfk_3`
     FOREIGN KEY (`revisor_id`)
     REFERENCES `jmp`.`user` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
-
-
--- -----------------------------------------------------
--- Table `jmp`.`user_meta_type`
--- -----------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS `jmp`.`user_meta_type` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -237,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `jmp`.`user_meta` (
   CONSTRAINT `fk_user_has_user_meta_type_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `jmp`.`user` (`id`)
-    ON DELETE NO ACTION
+      ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_has_user_meta_type_user_meta_type1`
     FOREIGN KEY (`user_meta_type_id`)

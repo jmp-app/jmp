@@ -12,6 +12,13 @@ export const users = {
             userService.getAll()
                 .then(users => commit('getAllSuccess', users))
                 .catch(error => commit('getAllFailure', error));
+        },
+        getAllOfGroup({commit, groupId}) {
+            commit('getAllRequests');
+
+            userService.getAllOfGroup(groupId)
+                .then(users => commit('getAllSuccess', users))
+                .catch(error => commit('getAllFailure', error));
         }
     },
     mutations: {
@@ -20,9 +27,11 @@ export const users = {
         },
         getAllSuccess(state, users) {
             state.all = {items: users};
+            state.all.loading = false;
         },
         getAllFailure(state, error) {
             state.all = {error};
+            state.all.loading = false;
         }
     },
     getters: {
