@@ -406,7 +406,7 @@ GET /v1/events?limit=5&offset=10&eventType=1
 ```
 Access rights: authentication required
 
-Returns: List of queried events, sorted __descending__ by their __start date__.
+Returns: List of queried events, sorted __ascending__ by their __start date__ (The near-time events are listed first).
 
 ### Get Event
 
