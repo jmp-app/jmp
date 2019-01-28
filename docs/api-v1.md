@@ -134,7 +134,7 @@
 }
 ```
 
-**Note** [Registration](#Registration) includes a [Registration State](#registration_state)
+**Note** [Registration](#Registration) includes a [Registration State](#registration-state)
 
 ## Error Handling
 
@@ -229,6 +229,7 @@ Parameters:
 | firstname | The user's first name                                        | ❌️        |
 | email     | The user's email                                             | ❌        |
 | password  | The user's initial password                                  | ✔️        |
+| passwordChange  | does the user have to change the password              | ✔️        |
 | isAdmin   | Whether the user is an administrator or not. Defaults to no admin | ❌        |
 
 Example request data:
