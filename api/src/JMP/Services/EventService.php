@@ -60,7 +60,7 @@ class EventService
                 RIGHT JOIN event_type ON event.event_type_id = event_type.id
                 WHERE (:groupId IS NULL OR ehg.group_id = :groupId)
                   AND (:eventType IS NULL OR event_type_id = :eventType)
-                ORDER BY event.`from` DESC 
+                ORDER BY event.`from` 
 SQL;
 
         $stmt = $this->db->prepare($sql);
@@ -95,7 +95,7 @@ SQL;
                 RIGHT JOIN event_type ON event.event_type_id = event_type.id
                 WHERE (:groupId IS NULL OR ehg.group_id = :groupId)
                   AND (:eventType IS NULL OR event_type_id = :eventType)
-                ORDER BY event.`from` DESC 
+                ORDER BY event.`from` 
                 LIMIT :lim OFFSET :off
 SQL;
 
