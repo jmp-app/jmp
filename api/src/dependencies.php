@@ -7,7 +7,7 @@ use Monolog\Processor\WebProcessor;
 use Tuupola\Middleware\JwtAuthentication;
 
 /**
- * @var \Psr\Container\ContainerInterface
+ * @var $container \Psr\Container\ContainerInterface
  */
 $container = $app->getContainer();
 

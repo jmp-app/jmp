@@ -2,6 +2,7 @@
 
 use Respect\Validation\Validator as v;
 
+/** @var $container \Psr\Container\ContainerInterface */
 $container = $app->getContainer();
 
 $container['validation'] = function () {
