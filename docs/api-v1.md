@@ -614,7 +614,7 @@ Parameters:
 
 | Field | Description                         | Required |
 | ----- | ----------------------------------- | -------- |
-| users | One or more users to join the group | ✔️        |
+| users | One or more users to join the group | ✔        |
 
 Example request data:
 
@@ -626,7 +626,19 @@ Example request data:
 
 Access rights: authentication required, user has to be an admin
 
-Returns: the [Group](#Group)
+Returns: A [group](#Group) and [errors](#json-error-objects) with all invalid user id's which could not be added.
+````json
+{
+    "group": {
+        "id": 5,
+        "name": "Admin",
+        "users": []
+    },
+    "errors": {
+        "invalidUsers": "5,-1"
+    }
+}
+````
 
 ### Leave Group
 
