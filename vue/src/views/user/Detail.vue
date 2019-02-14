@@ -157,6 +157,10 @@
                     this.renewUserFromDb();
                     this.mode = 'display';
                 }
+
+                if (mutation.type === 'user/createUserSuccess') {
+                    this.$router.push('/users');
+                }
             },
             renewUserFromDb: function () {
                 const id = this.$route.params.id;
