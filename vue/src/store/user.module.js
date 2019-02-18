@@ -57,9 +57,11 @@ export const user = {
 
             userService.createUser(user)
                 .then(user => commit('createUserSuccess', user))
-                .catch(error => {
-                    dispatch('alert/error', error.response.data.errors, {root: true});
-                });
+                .catch(
+                    error => {
+                        commit('createUserFailure', error.response.data.errors);
+                        dispatch('alert/error', error.response.data.errors, {root: true});
+                    });
         },
         reset({commit}) {
             commit('reset');
@@ -88,6 +90,11 @@ export const user = {
             // eslint-disable-next-line
             user.passwordChange = user.passwordChange == 1;
             state.data = {user};
+        },
+        createUserFailure(state, error, oldUser) {
+            // eslint-disable-next-line
+            state.data = {oldUser};
+            state.error = error;
         },
         reset(state) {
             Vue.set(state.data, 'user', initialState.user);

@@ -94,7 +94,8 @@
         data: function () {
             return {
                 mode: 'display', // display, edit, create
-                submitted: false
+                submitted: false,
+                userOnSubmit: {}
             };
         },
         computed: {
@@ -117,6 +118,7 @@
             },
             handleSubmit: function () {
                 this.submitted = true;
+                this.userOnSubmit = this.user;
                 if (this.mode === 'create') {
                     this.createNewUser();
                 } else if (this.mode === 'edit') {
@@ -149,17 +151,20 @@
                 this.submitted = false;
             },
             handleMutation: function (mutation) {
-                if (mutation.type === 'user/userRequestFailure') {
-                    this.$store.dispatch('alert/error', 'Not Found', {root: true});
-                }
-
-                if (mutation.type === 'user/updateUserSuccess') {
-                    this.renewUserFromDb();
-                    this.mode = 'display';
-                }
-
-                if (mutation.type === 'user/createUserSuccess') {
-                    this.$router.push('/users');
+                switch (mutation.type) {
+                    case 'user/userRequestFailure':
+                        this.$store.dispatch('alert/error', 'Not Found', {root: true});
+                        break;
+                    case 'user/updateUserSuccess':
+                        this.renewUserFromDb();
+                        this.mode = 'display';
+                        break;
+                    case 'user/createUserSuccess':
+                        this.$router.push('/users');
+                        break;
+                    case 'user/createUserFailure':
+                        console.log(this.user);
+                        break;
                 }
             },
             renewUserFromDb: function () {
