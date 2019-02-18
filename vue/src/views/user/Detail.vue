@@ -162,9 +162,6 @@
                     case 'user/createUserSuccess':
                         this.$router.push('/users');
                         break;
-                    case 'user/createUserFailure':
-                        console.log(this.user);
-                        break;
                 }
             },
             renewUserFromDb: function () {

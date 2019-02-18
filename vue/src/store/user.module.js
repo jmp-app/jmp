@@ -58,9 +58,9 @@ export const user = {
             userService.createUser(user)
                 .then(user => commit('createUserSuccess', user))
                 .catch(
-                    error => {
-                        commit('createUserFailure', error.response.data.errors);
-                        dispatch('alert/error', error.response.data.errors, {root: true});
+                    data => {
+                        commit('createUserFailure', data.response.data);
+                        dispatch('alert/error', data.response.data.errors, {root: true});
                     });
         },
         reset({commit}) {
@@ -69,6 +69,7 @@ export const user = {
     },
     mutations: {
         userRequest(state) {
+            state.errors = {};
             state.data = {loading: true};
         },
         userRequestFailure(state, error) {
@@ -91,10 +92,12 @@ export const user = {
             user.passwordChange = user.passwordChange == 1;
             state.data = {user};
         },
-        createUserFailure(state, error, oldUser) {
+        createUserFailure(state, data) {
             // eslint-disable-next-line
-            state.data = {oldUser};
-            state.error = error;
+            const user = data.request;
+            const errors = data.errors;
+            state.data = {user};
+            state.errors = errors;
         },
         reset(state) {
             Vue.set(state.data, 'user', initialState.user);
