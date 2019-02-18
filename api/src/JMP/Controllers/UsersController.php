@@ -161,22 +161,24 @@ class UsersController
         if ($this->userService->isUsernameUnique($user['username'])) {
             return $this->usernameAvailable($response, $user);
         } else {
-            return $this->usernameNotAvailable($response, $user);
+            return $this->usernameNotAvailable($request, $response, $user);
         }
     }
 
     /**
      * Create the error response if a username is already in use
+     * @param Request $request
      * @param Response $response
      * @param $user
      * @return Response
      */
-    private function usernameNotAvailable(Response $response, $user): Response
+    private function usernameNotAvailable(Request $request, Response $response, $user): Response
     {
         return $response->withJson([
             'errors' => [
                 'User' => 'A user with the username ' . $user['username'] . ' already exists'
-            ]
+            ],
+            'request' => $request->getParsedBody()
         ], 400);
     }
 
