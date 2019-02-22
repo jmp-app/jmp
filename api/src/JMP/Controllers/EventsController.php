@@ -2,6 +2,7 @@
 
 namespace JMP\Controllers;
 
+use JMP\Models\User;
 use JMP\Services\Auth;
 use JMP\Services\EventService;
 use JMP\Utils\Converter;
@@ -39,10 +40,17 @@ class EventsController
      */
     public function listEvents(Request $request, Response $response): Response
     {
+        $optional = $this->auth->requestUser($request);
+        if ($optional->isFailure()) {
+            return $response->withStatus(401);
+        }
+        /** @var User $user */
+        $user = new User($optional->getData());
+
         // if limit and offset are not set do not use pagination
         if (empty($request->getQueryParam('limit')) && empty($request->getQueryParam('offset'))) {
             $arguments = $this->fetchArgs($request->getQueryParams());
-            $events = Converter::convertArray($this->eventService->getEventsByGroupAndEventType($arguments['group'], $arguments['eventType']));
+            $events = Converter::convertArray($this->eventService->getEventsByGroupAndEventType($arguments['group'], $arguments['eventType'], $user));
             return $response->withJson($events);
         } else {
             $arguments = $this->fetchArgsWithPagination($request->getQueryParams());
@@ -50,10 +58,10 @@ class EventsController
             if (is_null($arguments['limit'])) {
                 // no limit, just use offset
                 $events = Converter::convertArray($this->eventService->getEventByGroupAndEventWithOffset($arguments['group'],
-                    $arguments['eventType'], $arguments['offset']));
+                    $arguments['eventType'], $user, $arguments['offset']));
             } else {
                 $events = Converter::convertArray($this->eventService->getEventsByGroupAndEventTypeWithPagination($arguments['group'],
-                    $arguments['eventType'], $arguments['limit'], $arguments['offset']));
+                    $arguments['eventType'], $arguments['limit'], $user, $arguments['offset']));
             }
 
             return $response->withJson($events);

@@ -4,6 +4,7 @@ namespace JMP\Services;
 
 
 use JMP\Models\Event;
+use JMP\Models\User;
 use JMP\Utils\Optional;
 use PDO;
 use Psr\Container\ContainerInterface;
@@ -42,9 +43,10 @@ class EventService
     /**
      * @param int $groupId
      * @param int $eventTypeId
+     * @param User $user
      * @return Event[]
      */
-    public function getEventsByGroupAndEventType(?int $groupId, ?int $eventTypeId): array
+    public function getEventsByGroupAndEventType(?int $groupId, ?int $eventTypeId, User $user): array
     {
         $sql = <<< SQL
                 SELECT event.id,
@@ -58,8 +60,12 @@ class EventService
                 FROM event
                 RIGHT JOIN event_has_group ehg ON event.id = ehg.event_id
                 RIGHT JOIN event_type ON event.event_type_id = event_type.id
+                RIGHT JOIN `group` g on ehg.group_id = g.id
+                RIGHT JOIN membership m on g.id = m.group_id
+                RIGHT JOIN user u on m.user_id = u.id
                 WHERE (:groupId IS NULL OR ehg.group_id = :groupId)
                   AND (:eventType IS NULL OR event_type_id = :eventType)
+                  AND u.username = :username
                 ORDER BY event.`from` 
 SQL;
 
@@ -67,7 +73,7 @@ SQL;
 
         $stmt->bindValue(':groupId', $groupId, PDO::PARAM_INT);
         $stmt->bindValue(':eventType', $eventTypeId, PDO::PARAM_INT);
-
+        $stmt->bindParam(':username', $user->username);
 
         return $this->fetchAllEvents($stmt);
     }
@@ -76,10 +82,11 @@ SQL;
      * @param int $groupId
      * @param int $eventTypeId
      * @param int $limit
+     * @param User $user
      * @param int $offset
      * @return Event[]
      */
-    public function getEventsByGroupAndEventTypeWithPagination(?int $groupId, ?int $eventTypeId, int $limit, int $offset = 0): array
+    public function getEventsByGroupAndEventTypeWithPagination(?int $groupId, ?int $eventTypeId, int $limit, User $user, int $offset = 0): array
     {
         $sql = <<< SQL
                 SELECT event.id,
@@ -93,8 +100,12 @@ SQL;
                 FROM event
                 RIGHT JOIN event_has_group ehg ON event.id = ehg.event_id
                 RIGHT JOIN event_type ON event.event_type_id = event_type.id
+                RIGHT JOIN `group` g on ehg.group_id = g.id
+                RIGHT JOIN membership m on g.id = m.group_id
+                RIGHT JOIN user u on m.user_id = u.id
                 WHERE (:groupId IS NULL OR ehg.group_id = :groupId)
                   AND (:eventType IS NULL OR event_type_id = :eventType)
+                  AND u.username = :username
                 ORDER BY event.`from` 
                 LIMIT :lim OFFSET :off
 SQL;
@@ -105,6 +116,8 @@ SQL;
         $stmt->bindValue(':eventType', $eventTypeId, PDO::PARAM_INT);
         $stmt->bindParam(':lim', $limit, PDO::PARAM_INT);
         $stmt->bindParam(':off', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':username', $user->username);
+
 
         return $this->fetchAllEvents($stmt);
     }
@@ -113,12 +126,13 @@ SQL;
      * Get all events with offset.
      * @param int $groupId
      * @param int $eventTypeId
+     * @param User $user
      * @param int $offset
      * @return Event[]
      */
-    public function getEventByGroupAndEventWithOffset(int $groupId, int $eventTypeId, int $offset = 0): array
+    public function getEventByGroupAndEventWithOffset(int $groupId, int $eventTypeId, User $user, int $offset = 0): array
     {
-        $events = $this->getEventsByGroupAndEventType($groupId, $eventTypeId);
+        $events = $this->getEventsByGroupAndEventType($groupId, $eventTypeId, $user);
         return array_slice($events, $offset);
     }
 
