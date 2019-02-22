@@ -24,6 +24,7 @@ $container['validation'] = function () {
             'eventType' => v::optional(v::noWhitespace()->numeric()->min(0)),
             'limit' => v::optional(v::noWhitespace()->numeric()->min(0)),
             'offset' => v::optional(v::noWhitespace()->numeric()->min(0)),
+            'all' => v::optional(v::boolVal()),
         ],
         'getEventById' => [
             'id' => v::notEmpty()->noWhitespace()->numeric()
