@@ -398,17 +398,19 @@ Parameters:
 | eventType | To get all events by type id         |          |
 | limit     | Limit the amount of events retrieved |          |
 | offset    | Skip the fist _x_ events             |          |
-| all       | List all events **(works only as admin)**|          |
+| all       | List events of all users/groups **(works only as admin)**|          |
+| elapsed   | List also elapsed events             |          |
 
 Example request:
 
 ```http
-GET /v1/events?limit=5&offset=10&eventType=1&all=1
+GET /v1/events?limit=5&offset=10&eventType=1&all=1&elapsed=1
 ```
 Access rights: authentication required  
 **Note:** ```all``` is only considered if the user is an admin. Otherwise an 401 is returned.
 
-Returns: List of queried events of all groups in which the user has a membership, sorted __ascending__ by their __start date__ (The near-time events are listed first).
+Returns: List of queried events of all groups in which the user has a membership, sorted __ascending__ by their __start date__ (The near-time events are listed first).  
+By default (without the elapsed parameter set), only current and upcoming events are selected.
 
 ### Get Event
 

@@ -54,7 +54,7 @@ class EventsController
         // if limit and offset are not set do not use pagination
         if (empty($request->getQueryParam('limit')) && empty($request->getQueryParam('offset'))) {
             $arguments = $this->fetchArgs($request->getQueryParams(), $user->isAdmin);
-            $events = Converter::convertArray($this->eventService->getEventsByGroupAndEventType($arguments['group'], $arguments['eventType'], $arguments['all'], $user));
+            $events = Converter::convertArray($this->eventService->getEventsByGroupAndEventType($arguments['group'], $arguments['eventType'], $arguments['all'], $arguments['elapsed'], $user));
             return $response->withJson($events);
         } else {
             $arguments = $this->fetchArgsWithPagination($request->getQueryParams(), $user->isAdmin);
@@ -62,10 +62,10 @@ class EventsController
             if (is_null($arguments['limit'])) {
                 // no limit, just use offset
                 $events = Converter::convertArray($this->eventService->getEventByGroupAndEventWithOffset($arguments['group'],
-                    $arguments['eventType'], $arguments['all'], $user, $arguments['offset']));
+                    $arguments['eventType'], $arguments['all'], $arguments['elapsed'], $user, $arguments['offset']));
             } else {
                 $events = Converter::convertArray($this->eventService->getEventsByGroupAndEventTypeWithPagination($arguments['group'],
-                    $arguments['eventType'], $arguments['limit'], $arguments['all'], $user, $arguments['offset']));
+                    $arguments['eventType'], $arguments['limit'], $arguments['all'], $arguments['elapsed'], $user, $arguments['offset']));
             }
 
             return $response->withJson($events);
@@ -104,7 +104,8 @@ class EventsController
             'eventType' => isset($params['eventType']) ? (int)$params['eventType'] : null,
             'limit' => isset($params['limit']) ? (int)$params['limit'] : null,
             'offset' => (int)$params['offset'],
-            'all' => isset($params['all']) && $isAdmin === true ? (bool)$params['all'] : false
+            'all' => isset($params['all']) && $isAdmin === true ? (bool)$params['all'] : false,
+            'elapsed' => isset($params['elapsed']) ? (bool)$params['elapsed'] : false
         ];
     }
 
@@ -118,7 +119,8 @@ class EventsController
         return [
             'group' => isset($params['group']) ? (int)$params['group'] : null,
             'eventType' => isset($params['eventType']) ? (int)$params['eventType'] : null,
-            'all' => isset($params['all']) && $isAdmin === true ? (bool)$params['all'] : false
+            'all' => isset($params['all']) && $isAdmin === true ? (bool)$params['all'] : false,
+            'elapsed' => isset($params['elapsed']) ? (bool)$params['elapsed'] : false
         ];
     }
 
