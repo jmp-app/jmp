@@ -53,8 +53,8 @@ class User implements ArrayConvertable
         $this->firstname = $args['firstname'];
         $this->password = $args['password'];
         $this->email = $args['email'];
-        $this->passwordChange = $args['passwordChange'];
-        $this->isAdmin = (int)$args['isAdmin'];
+        $this->passwordChange = (bool)$args['passwordChange'];
+        $this->isAdmin = (bool)$args['isAdmin'];
     }
 
     public function toArray(): array
