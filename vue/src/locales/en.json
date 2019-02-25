@@ -24,6 +24,7 @@
   "event.fromTo": "From - To:",
   "event.place": "Place:",
   "event.groups": "Groups:",
+  "event.overview.showAll": "Show events from all groups",
   "registration.reason": "Reason",
   "registration.reasonRequired": "Reason is required",
   "registration.reasonPlaceholder": "Enter reason",
