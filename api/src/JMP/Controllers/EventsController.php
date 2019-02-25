@@ -47,6 +47,10 @@ class EventsController
         /** @var User $user */
         $user = new User($optional->getData());
 
+        if ((bool)$user->isAdmin !== true && isset($request->getQueryParams()['all']) === true) {
+            return $response->withStatus(401);
+        }
+
         // if limit and offset are not set do not use pagination
         if (empty($request->getQueryParam('limit')) && empty($request->getQueryParam('offset'))) {
             $arguments = $this->fetchArgs($request->getQueryParams(), $user->isAdmin);

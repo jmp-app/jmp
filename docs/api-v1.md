@@ -406,7 +406,7 @@ Example request:
 GET /v1/events?limit=5&offset=10&eventType=1&all=1
 ```
 Access rights: authentication required  
-**Note:** ```all``` is only considered if the user is an admin
+**Note:** ```all``` is only considered if the user is an admin. Otherwise an 401 is returned.
 
 Returns: List of queried events of all groups in which the user has a membership, sorted __ascending__ by their __start date__ (The near-time events are listed first).
 
