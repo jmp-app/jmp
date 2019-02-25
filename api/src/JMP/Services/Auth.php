@@ -71,21 +71,22 @@ class Auth
      * @param $password string
      * @return Optional
      */
-    public function attempt($username, $password): Optional
+    public function attempt(string $username, string $password): Optional
     {
         $optional = $this->getUser($username);
         if ($optional->isFailure()) {
             // No User found
-            return $optional;
+            return Optional::failure();
         }
 
-        $data = $optional->getData();
+        /** @var User $user */
+        $user = $optional->getData();
 
         // verify password
-        if (password_verify($password, $data['password'])) {
+        if (password_verify($password, $user->password)) {
             // valid password
-            unset($data['password']);
-            return Optional::success(new User($data));
+            unset($user->password);
+            return Optional::success($user);
         }
 
         // invalid password
@@ -105,7 +106,7 @@ class Auth
                 return $optional;
             } else {
                 $user = $optional->getData();
-                unset($user['password']);
+                unset($user->password);
                 return Optional::success($user);
             }
         } else {
@@ -128,7 +129,7 @@ class Auth
             return $optional;
         }
 
-        if ($optional->getData()['isAdmin'] === "1") {
+        if ($optional->getData()->isAdmin === true) {
             // User has admin permissions
             return $optional;
         }
@@ -155,15 +156,13 @@ SQL;
 
         $stmt->bindParam(':username', $username);
 
-        $stmt->execute();
-
-        if ($stmt->rowCount() === 0) {
+        if ($stmt->execute() === false) {
             return Optional::failure();
         }
 
-        $data = $stmt->fetch();
+        $user = new User($stmt->fetch());
 
-        return Optional::success($data);
+        return Optional::success($user);
     }
 
 }
