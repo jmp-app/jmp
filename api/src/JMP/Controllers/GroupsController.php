@@ -5,6 +5,7 @@ namespace JMP\Controllers;
 use Interop\Container\ContainerInterface;
 use JMP\Services\GroupService;
 use JMP\Services\MembershipService;
+use JMP\Services\UserService;
 use JMP\Utils\Converter;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -21,6 +22,10 @@ class GroupsController
      * @var MembershipService
      */
     private $membershipService;
+    /**
+     * @var UserService
+     */
+    private $userService;
 
     /**
      * EventController constructor.
@@ -30,6 +35,7 @@ class GroupsController
     {
         $this->groupService = $container->get('groupService');
         $this->membershipService = $container->get('membershipService');
+        $this->userService = $container->get('userService');
     }
 
     /**
@@ -160,16 +166,41 @@ class GroupsController
             return $this->groupIdNotAvailable($response, $id);
         }
 
+        // Remove all duplicates
+        array_unique($users);
+
+        // Check which users are valid to join
+        $usersToJoin = [];
+        $usersNotToJoin = [];
+        foreach ($users as $user) {
+            if ($this->userService->userExists($user)) {
+                // user can be added
+                array_push($usersToJoin, $user);
+            } else {
+                // user cant be added
+                array_push($usersNotToJoin, $user);
+            }
+        }
+
         // Add users to the group
-        $optional = $this->membershipService->addUsersToGroup($id, $users);
+        $optional = $this->membershipService->addUsersToGroup($id, $usersToJoin);
         if ($optional->isFailure()) {
             // operation failed
             return $response->withStatus(500);
         }
 
         // Retrieve the updated group and return it
-        $group = $this->groupService->getGroupById($id);
-        return $response->withJson(Converter::convert($group->getData()));
+        $optionalGroup = $this->groupService->getGroupById($id);
+
+        $responseArray = [
+            'group' => Converter::convert($optionalGroup->getData()),
+        ];
+
+        // If user cant be joined to a group, a error message is appended
+        if (!empty($usersNotToJoin)) {
+            $responseArray['errors'] = ['invalidUsers' => implode(',', $usersNotToJoin)];
+        }
+        return $response->withJson($responseArray);
     }
 
     /**

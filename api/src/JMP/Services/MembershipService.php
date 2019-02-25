@@ -57,6 +57,7 @@ SQL;
         $sql = <<< SQL
             INSERT INTO membership (group_id, user_id) 
             VALUES (:groupId, :userId)
+            ON DUPLICATE KEY UPDATE group_id=group_id, user_id=user_id
 SQL;
 
         return $this->executeForEachUser($sql, $groupId, $users);

@@ -37,12 +37,23 @@ export const group = {
                 .then(() => commit('reset'))
                 .catch(error => commit('groupRequestFailure', error));
         },
-        create({commit}, {group}) {
+        create({commit, dispatch}, {group}) {
             commit('groupRequest');
 
             groupService.createGroup(group)
                 .then(group => commit('createGroupSuccess', group))
-                .catch(error => commit('groupRequestFailure', error));
+                .catch(error => {
+                    commit('groupRequestFailure', error.response.data.errors);
+                    let message = '';
+                    const errors = error.response.data.errors;
+                    for (const error in errors) {
+                        if (errors.hasOwnProperty(error)) {
+                            message += `${error}: ${errors[error]}`;
+                        }
+                    }
+                    dispatch('alert/error', message, {root: true});
+                    commit('reset');
+                });
         },
         reset({commit}) {
             commit('reset');

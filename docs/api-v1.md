@@ -134,7 +134,7 @@
 }
 ```
 
-**Note** [Registration](#Registration) includes a [Registration State](#registration_state)
+**Note** [Registration](#Registration) includes a [Registration State](#registration-state)
 
 ## Error Handling
 
@@ -229,6 +229,7 @@ Parameters:
 | firstname | The user's first name                                        | ❌️        |
 | email     | The user's email                                             | ❌        |
 | password  | The user's initial password                                  | ✔️        |
+| passwordChange  | does the user have to change the password              | ✔️        |
 | isAdmin   | Whether the user is an administrator or not. Defaults to no admin | ❌        |
 
 Example request data:
@@ -405,7 +406,7 @@ GET /v1/events?limit=5&offset=10&eventType=1
 ```
 Access rights: authentication required
 
-Returns: List of queried events, sorted __descending__ by their __start date__.
+Returns: List of queried events, sorted __ascending__ by their __start date__ (The near-time events are listed first).
 
 ### Get Event
 
@@ -613,7 +614,7 @@ Parameters:
 
 | Field | Description                         | Required |
 | ----- | ----------------------------------- | -------- |
-| users | One or more users to join the group | ✔️        |
+| users | One or more users to join the group | ✔        |
 
 Example request data:
 
@@ -625,7 +626,19 @@ Example request data:
 
 Access rights: authentication required, user has to be an admin
 
-Returns: the [Group](#Group)
+Returns: A [group](#Group) and [errors](#json-error-objects) with all invalid user id's which could not be added.
+````json
+{
+    "group": {
+        "id": 5,
+        "name": "Admin",
+        "users": []
+    },
+    "errors": {
+        "invalidUsers": "5,-1"
+    }
+}
+````
 
 ### Leave Group
 
