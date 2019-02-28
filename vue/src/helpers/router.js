@@ -35,27 +35,6 @@ export const router = new Router({
             }
         },
         {
-            path: '/users_old',
-            name: 'users_old',
-            component: function () {
-                return import('../views/user_old/Users.vue');
-            }
-        },
-        {
-            path: '/users_old/create',
-            name: 'createUser_old',
-            component: function () {
-                return import('../views/user_old/UserCreate.vue');
-            }
-        },
-        {
-            path: '/users_old/:id',
-            name: 'user_old',
-            component: function () {
-                return import('../views/user_old/UserEdit.vue');
-            }
-        },
-        {
             path: '/users',
             name: 'userOverview',
             component: function () {
