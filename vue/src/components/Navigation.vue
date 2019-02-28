@@ -20,7 +20,7 @@
                 <li class="nav-item dropdown" v-if="showAdmin()">
                     <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
                        data-toggle="dropdown" href="#" id="navbarDropdown" role="button"
-                       v-bind:class="{active: $route.name === 'users' || $route.name === 'groups'}">
+                       v-bind:class="{active: $route.name === 'userOverview' || $route.name === 'groups'}">
                         Admin
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">

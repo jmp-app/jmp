@@ -39,5 +39,11 @@
   "password.current": "Current Password",
   "password.new": "New Password",
   "password.repeat": "Repeat Password",
-  "nav.overview": "Overview"
+  "nav.overview": "Overview",
+  "user.create.password2": "Repeat password",
+  "user.detail.passwordChange": "Must change password at next login",
+  "user.detail.usernameRequired": "Username is required",
+  "user.detail.passwordRequired": "Password is required",
+  "user.isAdmin": "Administrator",
+  "save": "Save"
 }

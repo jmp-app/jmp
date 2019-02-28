@@ -36,23 +36,16 @@ export const router = new Router({
         },
         {
             path: '/users',
-            name: 'users',
+            name: 'userOverview',
             component: function () {
-                return import('../views/user/Users.vue');
-            }
-        },
-        {
-            path: '/users/create',
-            name: 'createUser',
-            component: function () {
-                return import('../views/user/UserCreate.vue');
+                return import('../views/user/Overview.vue');
             }
         },
         {
             path: '/users/:id',
-            name: 'user',
+            name: 'userDetail',
             component: function () {
-                return import('../views/user/UserEdit.vue');
+                return import('../views/user/Detail.vue');
             }
         },
         {
