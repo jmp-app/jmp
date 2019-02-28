@@ -2,6 +2,7 @@
 
 use Respect\Validation\Validator as v;
 
+/** @var $container \Psr\Container\ContainerInterface */
 $container = $app->getContainer();
 
 $container['validation'] = function () {
@@ -23,6 +24,8 @@ $container['validation'] = function () {
             'eventType' => v::optional(v::noWhitespace()->numeric()->min(0)),
             'limit' => v::optional(v::noWhitespace()->numeric()->min(0)),
             'offset' => v::optional(v::noWhitespace()->numeric()->min(0)),
+            'all' => v::optional(v::boolVal()),
+            'elapsed' => v::optional(v::boolVal()),
         ],
         'getEventById' => [
             'id' => v::notEmpty()->noWhitespace()->numeric()
