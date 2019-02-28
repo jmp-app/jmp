@@ -82,7 +82,7 @@
         </div>
         <div class="form-group row" v-if="display()">
             <div class="col-sm-9">
-                <button @click="mode = 'edit'" class="btn mr-2" type="button">Bearbeiten</button>
+                <button @click="mode = 'edit'" class="btn mr-2" type="button">{{$t('edit')}}</button>
             </div>
         </div>
     </form>
