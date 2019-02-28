@@ -65,6 +65,7 @@ return [
         'jwt' => [
             'secret' => getenv('JWT_SECRET'),
             'secure' => getenv('JWT_SECURE') === 'true' ? true : false,
+            'expiration' => getenv('JWT_EXPIRATION'),
         ],
 
         // Auth settings
