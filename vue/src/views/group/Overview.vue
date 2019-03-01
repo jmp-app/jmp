@@ -10,7 +10,7 @@
         <grid
                 :columnTitles="gridColumnTitles"
                 :columns="gridColumns"
-                :data="users"
+                :data="groups"
                 :filter-key="searchQuery"
                 :routerLinkTo="routerLinkTo">
         </grid>
@@ -23,7 +23,7 @@
     import BottomNavigation from '@/components/BottomNavigation';
 
     export default {
-        name: 'Overview',
+        name: 'GroupOverview',
         components: {
             BottomNavigation,
             Grid
@@ -31,25 +31,23 @@
         data: function () {
             return {
                 searchQuery: '',
-                gridColumns: ['username', 'firstname', 'lastname'],
+                gridColumns: ['name'],
                 gridColumnTitles: {
-                    'username': this.$t('user.username'),
-                    'firstname': this.$t('user.firstName'),
-                    'lastname': this.$t('user.lastName')
+                    'name': this.$t('group.name')
                 },
-                routerLinkTo: 'users',
+                routerLinkTo: 'groups',
                 isAdmin: false
             };
         },
         computed: {
-            users() {
-                return this.$store.state.users.all.items;
+            groups() {
+                return this.$store.state.groups.all.items;
             }
         },
         mounted() {
             this.user = JSON.parse(window.localStorage.getItem('user'));
             this.isAdmin = this.user.isAdmin;
-            this.$store.dispatch('users/getAll');
+            this.$store.dispatch('groups/getAll');
         }
     };
 </script>
