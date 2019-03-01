@@ -10,6 +10,13 @@
             >
                 {{$t('user.create')}}
             </button>
+            <button
+                    @click="$router.push('/groups/0')"
+                    class="btn btn-primary nav-item mr-2" type="button"
+                    v-if="isGroupOverview()"
+            >
+                {{$t('group.create')}}
+            </button>
         </form>
     </nav>
 </template>
@@ -23,6 +30,9 @@
             },
             isUserOverview: function () {
                 return this.$route.name === 'userOverview';
+            },
+            isGroupOverview: function () {
+                return this.$route.name === 'groupOverview';
             }
         },
         mounted() {
