@@ -1,106 +1,80 @@
 <template>
-    <form @submit.prevent="handleSubmit" v-if="user">
-        <div class="form-group row">
-            <label class="col-sm-3 col-form-label" for="username">{{$t('user.username')}}</label>
-            <div class="col-sm-9">
-                <input :class="{ 'is-invalid': submitted && !user.username }" :readonly="display()" class="form-control"
-                       id="username" type="text"
-                       v-model="user.username">
-                <div class="invalid-feedback" v-show="submitted && !user.username">
-                    {{ $t("user.detail.usernameRequired") }}
+    <div>
+        <form @submit.prevent="handleSubmit" v-if="group">
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" for="name">{{$t('group.name')}}</label>
+                <div class="col-sm-9">
+                    <input :class="{ 'is-invalid': submitted && !group.name }" :readonly="display()"
+                           class="form-control"
+                           id="name" type="text"
+                           v-model="group.name">
+                    <div class="invalid-feedback" v-show="submitted && !group.name">
+                        {{ $t("group.detail.nameRequired") }}
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-3 col-form-label" for="firstName">{{$t('user.firstName')}}</label>
-            <div class="col-sm-9">
-                <input :readonly="display()" class="form-control" id="firstName" type="text" v-model="user.firstname">
-            </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-3 col-form-label" for="lastName">{{$t('user.lastName')}}</label>
-            <div class="col-sm-9">
-                <input :readonly="display()" class="form-control" id="lastName" type="text" v-model="user.lastname">
-            </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-3 col-form-label" for="email">{{$t('user.email')}}</label>
-            <div class="col-sm-9">
-                <input :readonly="display()" class="form-control" id="email" type="text" v-model="user.email">
-            </div>
-        </div>
-        <div class="form-group row" v-if="create()">
-            <label class="col-sm-3 col-form-label" for="password">{{$t('user.password')}}</label>
-            <div class="col-sm-9">
-                <input :class="{ 'is-invalid': submitted && (!user.password || isPasswordValid()) }"
-                       :readonly="display()" class="form-control" id="password" type="password"
-                       v-model="user.password">
-                <div class="invalid-feedback" v-show="submitted && !user.password">
-                    {{ $t("user.detail.passwordRequired") }}
+            <div class="form-group row" v-if="create() || edit()">
+                <div class="col-sm-9">
+                    <button @click="handleCancel()" class="btn mr-2" type="button" v-if="edit()">{{$t('cancel')}}
+                    </button>
+                    <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
                 </div>
             </div>
-        </div>
-        <div class="form-group row" v-if="create()">
-            <label class="col-sm-3 col-form-label" for="password2">{{$t('user.create.password2')}}</label>
-            <div class="col-sm-9">
-                <input :class="{ 'is-invalid': submitted && (!user.password2 || isPasswordValid())}"
-                       :readonly="display()" class="form-control" id="password2"
-                       type="password"
-                       v-model="user.password2">
-                <div class="invalid-feedback" v-show="submitted && !user.password2">
-                    {{ $t("user.detail.passwordRequired") }}
-                </div>
-                <div class="invalid-feedback" v-show="submitted && isPasswordValid() && user.password2">
-                    Passwörter müssen übereinstimmen
+            <div class="form-group row" v-if="display()">
+                <div class="col-sm-9">
+                    <button @click="mode = 'edit'" class="btn mr-2" type="button">{{$t('edit')}}</button>
                 </div>
             </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-sm-9">
-                <div class="custom-control custom-checkbox">
-                    <input :disabled="display()" class="custom-control-input" id="isAdmin" type="checkbox"
-                           v-model="user.isAdmin">
-                    <label class="custom-control-label" for="isAdmin">{{$t('user.isAdmin')}}</label>
-                </div>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-sm-9">
-                <div class="custom-control custom-checkbox">
-                    <input :disabled="display()" class="custom-control-input" id="passwordChange"
-                           type="checkbox" v-model="user.passwordChange">
-                    <label class="custom-control-label"
-                           for="passwordChange">{{$t('user.detail.passwordChange')}}</label>
-                </div>
-            </div>
-        </div>
-        <div class="form-group row" v-if="create() || edit()">
-            <div class="col-sm-9">
-                <button @click="handleCancel()" class="btn mr-2" type="button" v-if="edit()">{{$t('cancel')}}</button>
-                <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
-            </div>
-        </div>
-        <div class="form-group row" v-if="display()">
-            <div class="col-sm-9">
-                <button @click="mode = 'edit'" class="btn mr-2" type="button">{{$t('edit')}}</button>
-            </div>
-        </div>
-    </form>
+        </form>
+        <hr/>
+        <h4>Mitglieder</h4>
+        <input
+                :placeholder="$t('search')"
+                class="search my-3 form-control"
+                id="search"
+                name="query"
+                type="search"
+                v-model="searchQuery"
+        >
+        <grid
+                :columnTitles="gridColumnTitles"
+                :columns="gridColumns"
+                :data="users"
+                :filter-key="searchQuery"
+                :routerLinkTo="routerLinkTo">
+        </grid>
+    </div>
 </template>
 
 <script>
+    import Grid from '@/components/Grid.vue';
+
     export default {
-        name: 'Detail',
+        name: 'GroupDetail',
+        components: {
+            Grid
+        },
         data: function () {
             return {
                 mode: 'display', // display, edit, create
                 submitted: false,
-                userOnSubmit: {}
+                groupOnSubmit: {},
+                searchQuery: '',
+                gridColumns: ['username', 'firstname', 'lastname'],
+                gridColumnTitles: {
+                    'username': this.$t('user.username'),
+                    'firstname': this.$t('user.firstName'),
+                    'lastname': this.$t('user.lastName')
+                },
+                routerLinkTo: 'users'
             };
         },
         computed: {
-            user() {
-                return this.$store.state.user.data.user;
+            group() {
+                return this.$store.state.group.data.group;
+            },
+            users() {
+                return this.$store.state.group.data.group.users;
             }
         },
         methods: {
@@ -113,60 +87,54 @@
             display: function () {
                 return (this.create() === false && this.edit() === false);
             },
-            isPasswordValid: function () {
-                return this.user.password !== this.user.password2;
-            },
             handleSubmit: function () {
                 this.submitted = true;
-                this.userOnSubmit = this.user;
+                this.groupOnSubmit = this.group;
                 if (this.mode === 'create') {
-                    this.createNewUser();
+                    this.createNewGroup();
                 } else if (this.mode === 'edit') {
-                    this.changeUser();
+                    this.changeGroup();
                 } else {
                     this.submitted = false;
                 }
             },
-            createNewUser: function () {
-                let user = this.user;
-                if (!user.username || !user.password || !user.password2) {
+            createNewGroup: function () {
+                let group = this.group;
+                if (!group.name) {
                     return;
                 }
-                if (user.password !== user.password2) {
-                    return;
-                }
-                this.$store.dispatch('user/create', {user});
+                this.$store.dispatch('group/create', {group});
             },
-            changeUser: function () {
-                let user = this.user;
-                this.$store.dispatch('user/update', {user});
+            changeGroup: function () {
+                let group = this.group;
+                this.$store.dispatch('group/update', {group});
             },
             handleCancel: function () {
                 if (this.create()) {
-                    this.$store.state.user.data.user = {};
+                    this.$store.state.group.data.group = {};
                 } else {
-                    this.renewUserFromDb();
+                    this.renewGroupFromDb();
                     this.mode = 'display';
                 }
                 this.submitted = false;
             },
             handleMutation: function (mutation) {
                 switch (mutation.type) {
-                    case 'user/userRequestFailure':
+                    case 'group/groupRequestFailure':
                         this.$store.dispatch('alert/error', 'Not Found', {root: true});
                         break;
-                    case 'user/updateUserSuccess':
-                        this.renewUserFromDb();
+                    case 'group/updateGroupSuccess':
+                        this.renewGroupFromDb();
                         this.mode = 'display';
                         break;
-                    case 'user/createUserSuccess':
-                        this.$router.push('/users');
+                    case 'group/createGroupSuccess':
+                        this.$router.push('/groups');
                         break;
                 }
             },
-            renewUserFromDb: function () {
+            renewGroupFromDb: function () {
                 const id = this.$route.params.id;
-                this.$store.dispatch('user/get', {id});
+                this.$store.dispatch('group/get', {id});
             }
         },
         created() {
@@ -179,9 +147,9 @@
             // eslint-disable-next-line
             if (id == 0) {
                 this.mode = 'create';
-                this.$store.state.user.data.user = {};
+                this.$store.state.group.data.group = {};
             } else {
-                this.$store.dispatch('user/get', {id});
+                this.$store.dispatch('group/get', {id});
             }
         }
     };
