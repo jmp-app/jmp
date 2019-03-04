@@ -18,7 +18,7 @@
                 {{$t('group.create')}}
             </button>
             <button
-                    @click="$router.push('/groups/addMembers')"
+                    @click="$router.push(`/groups/${groupId}/addMembers`)"
                     class="btn btn-primary nav-item mr-2" type="button"
                     v-if="isGroupDetail()"
             >
@@ -31,6 +31,9 @@
 <script>
     export default {
         name: 'BottomNavigation',
+        props: {
+            groupId: String
+        },
         methods: {
             isEventDetail: function () {
                 return this.$route.name === 'eventDetail';

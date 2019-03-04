@@ -66,7 +66,7 @@ export const router = new Router({
             path: '/groups/:id/addMembers/',
             name: 'groupAddMember',
             component: function () {
-                return import('../views/group/Detail.vue');
+                return import('../views/group/AddMembers.vue');
             }
         }
     ]

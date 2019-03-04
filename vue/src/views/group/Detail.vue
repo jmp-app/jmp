@@ -45,7 +45,7 @@
                     :routerLinkTo="routerLinkTo">
             </grid>
         </div>
-        <BottomNavigation/>
+        <BottomNavigation v-bind:groupId="$route.params.id"/>
     </div>
 </template>
 
