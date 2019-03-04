@@ -61,6 +61,13 @@ export const router = new Router({
             component: function () {
                 return import('../views/group/Detail.vue');
             }
+        },
+        {
+            path: '/groups/:id/addMembers/',
+            name: 'groupAddMember',
+            component: function () {
+                return import('../views/group/Detail.vue');
+            }
         }
     ]
 });

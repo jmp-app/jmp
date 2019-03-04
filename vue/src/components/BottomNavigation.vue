@@ -17,6 +17,13 @@
             >
                 {{$t('group.create')}}
             </button>
+            <button
+                    @click="$router.push('/groups/addMembers')"
+                    class="btn btn-primary nav-item mr-2" type="button"
+                    v-if="isGroupDetail()"
+            >
+                {{$t('group.detail.AddMembers')}}
+            </button>
         </form>
     </nav>
 </template>
@@ -33,6 +40,9 @@
             },
             isGroupOverview: function () {
                 return this.$route.name === 'groupOverview';
+            },
+            isGroupDetail: function () {
+                return this.$route.name === 'groupDetail';
             }
         },
         mounted() {

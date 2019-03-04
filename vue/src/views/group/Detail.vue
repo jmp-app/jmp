@@ -45,16 +45,19 @@
                     :routerLinkTo="routerLinkTo">
             </grid>
         </div>
+        <BottomNavigation/>
     </div>
 </template>
 
 <script>
     import Grid from '@/components/Grid.vue';
+    import BottomNavigation from '@/components/BottomNavigation';
 
     export default {
         name: 'GroupDetail',
         components: {
-            Grid
+            Grid,
+            BottomNavigation
         },
         data: function () {
             return {

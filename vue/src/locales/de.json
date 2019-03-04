@@ -47,5 +47,6 @@
   "group.delete": "Gruppe löschen",
   "group.create": "Gruppe erstellen",
   "group.detail.nameRequired": "Name ist ein Pflichtfeld",
-  "group.detail.members": "Mitglieder"
+  "group.detail.members": "Mitglieder",
+  "group.detail.AddMembers": "Mitglieder hinzufügen"
 }

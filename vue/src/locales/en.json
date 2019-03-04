@@ -47,5 +47,6 @@
   "user.isAdmin": "Administrator",
   "save": "Save",
   "group.detail.nameRequired": "Name is required",
-  "group.detail.members": "Members"
+  "group.detail.members": "Members",
+  "group.detail.AddMembers": "Add members"
 }
