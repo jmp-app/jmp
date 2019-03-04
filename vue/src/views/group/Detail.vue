@@ -27,22 +27,24 @@
             </div>
         </form>
         <hr/>
-        <h4>Mitglieder</h4>
-        <input
-                :placeholder="$t('search')"
-                class="search my-3 form-control"
-                id="search"
-                name="query"
-                type="search"
-                v-model="searchQuery"
-        >
-        <grid
-                :columnTitles="gridColumnTitles"
-                :columns="gridColumns"
-                :data="users"
-                :filter-key="searchQuery"
-                :routerLinkTo="routerLinkTo">
-        </grid>
+        <div v-if="group && users">
+            <h4>{{ $t("group.detail.members") }}</h4>
+            <input
+                    :placeholder="$t('search')"
+                    class="search my-3 form-control"
+                    id="search"
+                    name="query"
+                    type="search"
+                    v-model="searchQuery"
+            >
+            <grid
+                    :columnTitles="gridColumnTitles"
+                    :columns="gridColumns"
+                    :data="users"
+                    :filter-key="searchQuery"
+                    :routerLinkTo="routerLinkTo">
+            </grid>
+        </div>
     </div>
 </template>
 

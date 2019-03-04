@@ -46,5 +46,6 @@
   "user.detail.passwordRequired": "Password is required",
   "user.isAdmin": "Administrator",
   "save": "Save",
-  "group.detail.nameRequired": "Name is required"
+  "group.detail.nameRequired": "Name is required",
+  "group.detail.members": "Members"
 }
