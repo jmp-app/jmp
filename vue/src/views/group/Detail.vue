@@ -27,7 +27,7 @@
             </div>
         </form>
         <hr/>
-        <div v-if="group && users">
+        <div v-if="group">
             <h4>{{ $t("group.detail.members") }}</h4>
             <input
                     :placeholder="$t('search')"
@@ -40,7 +40,7 @@
             <grid
                     :columnTitles="gridColumnTitles"
                     :columns="gridColumns"
-                    :data="users"
+                    :data="group.users"
                     :filter-key="searchQuery"
                     :routerLinkTo="routerLinkTo">
             </grid>
@@ -77,9 +77,6 @@
         computed: {
             group() {
                 return this.$store.state.group.data.group;
-            },
-            users() {
-                return this.$store.state.group.data.group.users;
             }
         },
         methods: {

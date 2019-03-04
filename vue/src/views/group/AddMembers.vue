@@ -114,7 +114,6 @@
                 }
             },
             handleRemoveSelected: function (event) {
-                console.log('bla');
                 const selectedElements = event.target.parentNode.getElementsByTagName('tbody')[0].getElementsByClassName('selected');
                 for (const element of selectedElements) {
                     this.removeUser(this.getUserByUserIdFromArray(this.usersInGroup, element.id));
@@ -173,7 +172,22 @@
                 this.$router.push(`/groups/${this.$route.params.id}`);
             },
             submit: function () {
-
+                const groupId = this.$route.params.id;
+                const userIdsToAdd = [];
+                for (const user of this.membersToAdd) {
+                    userIdsToAdd.push(user.id);
+                }
+                const userIdsToRemove = [];
+                for (const user of this.membersToRemove) {
+                    userIdsToRemove.push(user.id);
+                }
+                if (userIdsToAdd.length > 0) {
+                    this.$store.dispatch('group/join', {groupId, userIdsToAdd});
+                }
+                if (userIdsToRemove.length > 0) {
+                    this.$store.dispatch('group/leave', {groupId, userIdsToRemove});
+                }
+                this.$router.push(`/groups/${this.$route.params.id}`);
             }
         },
         created() {

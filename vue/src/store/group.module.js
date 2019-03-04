@@ -57,6 +57,23 @@ export const group = {
         },
         reset({commit}) {
             commit('reset');
+        },
+        join({commit}, {groupId, userIds}) {
+            commit('groupRequest');
+
+            groupService.joinGroup(groupId, userIds)
+                .then(
+                    data => commit('getGroupSuccess', data.group),
+                    error => commit('join_leave_GroupFailure', error)
+                );
+        },
+        leave({commit}, {groupId, userIds}) {
+            commit('groupRequest');
+            groupService.leaveGroup(groupId, userIds)
+                .then(
+                    data => commit('getGroupSuccess', data.group),
+                    error => commit('join_leave_GroupFailure', error)
+                );
         }
     },
     mutations: {
@@ -74,6 +91,9 @@ export const group = {
         },
         createGroupSuccess(state, group) {
             state.data = {group};
+        },
+        join_leave_GroupFailure(state, errors) {
+            console.log(errors);
         },
         reset(state) {
             Vue.set(state.data, 'group', initialState.group);
