@@ -58,20 +58,20 @@ export const group = {
         reset({commit}) {
             commit('reset');
         },
-        join({commit}, {groupId, userIds}) {
+        join({commit}, {groupId, userIdsToAdd}) {
             commit('groupRequest');
 
-            groupService.joinGroup(groupId, userIds)
+            groupService.joinGroup(groupId, userIdsToAdd)
                 .then(
                     data => commit('getGroupSuccess', data.group),
                     error => commit('join_leave_GroupFailure', error)
                 );
         },
-        leave({commit}, {groupId, userIds}) {
+        leave({commit}, {groupId, userIdsToRemove}) {
             commit('groupRequest');
-            groupService.leaveGroup(groupId, userIds)
+            groupService.leaveGroup(groupId, userIdsToRemove)
                 .then(
-                    data => commit('getGroupSuccess', data.group),
+                    data => commit('getGroupSuccess', data),
                     error => commit('join_leave_GroupFailure', error)
                 );
         }
