@@ -58,21 +58,21 @@ export const group = {
         reset({commit}) {
             commit('reset');
         },
-        join({commit}, {groupId, userIdsToAdd}) {
+        join({dispatch, commit}, {groupId, userIdsToAdd}) {
             commit('groupRequest');
 
             groupService.joinGroup(groupId, userIdsToAdd)
                 .then(
                     data => commit('getGroupSuccess', data.group),
-                    error => commit('join_leave_GroupFailure', error)
+                    error => commit(dispatch, 'join_leave_GroupFailure', error.errors)
                 );
         },
-        leave({commit}, {groupId, userIdsToRemove}) {
+        leave({dispatch, commit}, {groupId, userIdsToRemove}) {
             commit('groupRequest');
             groupService.leaveGroup(groupId, userIdsToRemove)
                 .then(
                     data => commit('getGroupSuccess', data),
-                    error => commit('join_leave_GroupFailure', error)
+                    error => commit(dispatch, 'join_leave_GroupFailure', error)
                 );
         }
     },
@@ -92,8 +92,8 @@ export const group = {
         createGroupSuccess(state, group) {
             state.data = {group};
         },
-        join_leave_GroupFailure(state, errors) {
-            console.log(errors);
+        join_leave_GroupFailure(dispatch, state, errors) {
+            dispatch('alert/error', errors, {root: true});
         },
         reset(state) {
             Vue.set(state.data, 'group', initialState.group);

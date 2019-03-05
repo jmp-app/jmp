@@ -46,8 +46,6 @@ function joinGroup(groupId, userIds) {
 }
 
 function leaveGroup(groupId, userIds) {
-    // const payload = {'users': userIds};
-    console.log(userIds);
     return Vue.axios.delete(`/groups/${groupId}/leave`, {data: {users: userIds}}).then(response => {
         return response.data;
     });
