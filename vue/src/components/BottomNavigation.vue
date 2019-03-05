@@ -10,6 +10,20 @@
             >
                 {{$t('user.create')}}
             </button>
+            <button
+                    @click="$router.push('/groups/0')"
+                    class="btn btn-primary nav-item mr-2" type="button"
+                    v-if="isGroupOverview()"
+            >
+                {{$t('group.create')}}
+            </button>
+            <button
+                    @click="$router.replace(`/groups/${groupId}/addMembers`)"
+                    class="btn btn-primary nav-item mr-2" type="button"
+                    v-if="isGroupDetail()"
+            >
+                {{$t('group.detail.AddMembers')}}
+            </button>
         </form>
     </nav>
 </template>
@@ -17,12 +31,21 @@
 <script>
     export default {
         name: 'BottomNavigation',
+        props: {
+            groupId: String
+        },
         methods: {
             isEventDetail: function () {
                 return this.$route.name === 'eventDetail';
             },
             isUserOverview: function () {
                 return this.$route.name === 'userOverview';
+            },
+            isGroupOverview: function () {
+                return this.$route.name === 'groupOverview';
+            },
+            isGroupDetail: function () {
+                return this.$route.name === 'groupDetail';
             }
         },
         mounted() {

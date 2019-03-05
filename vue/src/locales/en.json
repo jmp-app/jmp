@@ -45,5 +45,13 @@
   "user.detail.usernameRequired": "Username is required",
   "user.detail.passwordRequired": "Password is required",
   "user.isAdmin": "Administrator",
-  "save": "Save"
+  "save": "Save",
+  "group.detail.nameRequired": "Name is required",
+  "group.detail.members": "Members",
+  "group.detail.AddMembers": "Edit Members",
+  "group.detail.title": "Edit Group",
+  "group.addMembers.allUsers": "All Users",
+  "group.addMembers.addSelected": "Add selected",
+  "group.addMembers.removeSelected": "Remove selected",
+  "group.overview.title": "Overview of all groups"
 }

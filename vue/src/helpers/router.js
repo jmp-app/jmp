@@ -50,23 +50,23 @@ export const router = new Router({
         },
         {
             path: '/groups',
-            name: 'groups',
+            name: 'groupOverview',
             component: function () {
-                return import('../views/group/Groups.vue');
-            }
-        },
-        {
-            path: '/groups/create',
-            name: 'createGroup',
-            component: function () {
-                return import('../views/group/GroupCreate.vue');
+                return import('../views/group/Overview.vue');
             }
         },
         {
             path: '/groups/:id',
-            name: 'group',
+            name: 'groupDetail',
             component: function () {
-                return import('../views/group/GroupEdit.vue');
+                return import('../views/group/Detail.vue');
+            }
+        },
+        {
+            path: '/groups/:id/addMembers/',
+            name: 'groupAddMember',
+            component: function () {
+                return import('../views/group/AddMembers.vue');
             }
         },
         {
