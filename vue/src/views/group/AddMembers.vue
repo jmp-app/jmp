@@ -2,6 +2,13 @@
     <div>
         <div class="pb-3" v-if="group && groupUsers && users">
             <h1>Add members to group {{$route.params.id}}</h1>
+            <input
+                    :placeholder="$t('search')"
+                    class="search my-3 form-control"
+                    name="query"
+                    type="search"
+                    v-model="searchQuery"
+            >
             <div class="row">
                 <div class="table-responsive grid col-sm-6 mb-3">
                     <h4>All Users</h4>
@@ -18,7 +25,7 @@
                                 :key="user.id"
                                 @click="event => handleSelect(event)"
                                 v-bind:id="user.id"
-                                v-for="user in usersNotInGroup"
+                                v-for="user in filteredData().usersNotInGroup"
                                 v-on:dblclick="event => handleDbClickAdd(event)"
                         >
                             <td>{{user.username}}</td>
@@ -44,7 +51,7 @@
                                 :key="user.id"
                                 @click="event => handleSelect(event)"
                                 v-bind:id="user.id"
-                                v-for="user in usersInGroup"
+                                v-for="user in filteredData().usersInGroup"
                                 v-on:dblclick="event => handleDbClickRemove(event)"
                         >
                             <td>{{user.username}}</td>
@@ -75,7 +82,8 @@
                 membersToAdd: [],
                 membersToRemove: [],
                 usersNotInGroup: [],
-                usersInGroup: []
+                usersInGroup: [],
+                searchQuery: ''
             };
         },
         computed: {
@@ -188,6 +196,24 @@
                     this.$store.dispatch('group/leave', {groupId, userIdsToRemove});
                 }
                 this.$router.push(`/groups/${this.$route.params.id}`);
+            },
+            filteredData: function () {
+                let filterKey = this.searchQuery && this.searchQuery.toLowerCase();
+                let usersInGroupF = this.usersInGroup;
+                let usersNotInGroupF = this.usersNotInGroup;
+                if (filterKey) {
+                    usersInGroupF = usersInGroupF.filter(function (row) {
+                        return Object.keys(row).some(function (key) {
+                            return String(row[key]).toLowerCase().indexOf(filterKey) > -1;
+                        });
+                    });
+                    usersNotInGroupF = usersNotInGroupF.filter(function (row) {
+                        return Object.keys(row).some(function (key) {
+                            return String(row[key]).toLowerCase().indexOf(filterKey) > -1;
+                        });
+                    });
+                }
+                return {'usersInGroup': usersInGroupF, 'usersNotInGroup': usersNotInGroupF};
             }
         },
         created() {
