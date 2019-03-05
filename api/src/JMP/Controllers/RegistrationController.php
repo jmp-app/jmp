@@ -9,6 +9,7 @@ use JMP\Services\EventService;
 use JMP\Services\RegistrationService;
 use JMP\Services\RegistrationStateService;
 use JMP\Utils\Converter;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -31,6 +32,10 @@ class RegistrationController
      * @var EventService
      */
     private $eventService;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     /**
      * RegistrationController constructor.
@@ -42,6 +47,7 @@ class RegistrationController
         $this->registrationService = $container->get('registrationService');
         $this->registrationStateService = $container->get('registrationStateService');
         $this->eventService = $container->get('eventService');
+        $this->logger = $container->get('logger');
     }
 
     public function getRegistrationByEventIdAndUserId(Request $request, Response $response, array $args): Response
@@ -70,7 +76,12 @@ class RegistrationController
             return $response->withJson(Converter::convert($optional->getData()));
         }
 
-        $event = $this->eventService->getEventById($registration->eventId);
+        try {
+            $event = $this->eventService->getEventById($registration->eventId);
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            return $response->withStatus(500);
+        }
 
         if ($event->isFailure()) {
             return $this->getBadRequestResponse($response, "Invalid parameters");

@@ -142,6 +142,7 @@ SQL;
      * @param User $user
      * @param int $offset
      * @return Event[]
+     * @throws \Exception
      */
     public function getEventByGroupAndEventWithOffset(int $groupId, int $eventTypeId, bool $getAll, bool $getElapsed, User $user, int $offset = 0): array
     {
@@ -153,6 +154,7 @@ SQL;
      * Get event by id
      * @param int $eventId
      * @return Optional
+     * @throws \Exception
      */
     public function getEventById(int $eventId)
     {
