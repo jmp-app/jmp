@@ -47,6 +47,7 @@ class EventService
      * @param bool $getElapsed
      * @param User $user
      * @return Event[]
+     * @throws \Exception
      */
     public function getEventsByGroupAndEventType(?int $groupId, ?int $eventTypeId, bool $getAll, bool $getElapsed, User $user): array
     {
@@ -92,6 +93,7 @@ SQL;
      * @param User $user
      * @param int $offset
      * @return Event[]
+     * @throws \Exception
      */
     public function getEventsByGroupAndEventTypeWithPagination(?int $groupId, ?int $eventTypeId, int $limit, bool $getAll, bool $getElapsed, User $user, int $offset = 0): array
     {
@@ -187,6 +189,7 @@ SQL;
      * Executes the statement and parses its result to return a list of events.
      * @param \PDOStatement $stmt
      * @return Event[]
+     * @throws \Exception
      */
     private function fetchAllEvents(\PDOStatement $stmt): array
     {
@@ -205,6 +208,7 @@ SQL;
      * Parse array to return a event
      * @param array $val
      * @return Event
+     * @throws \Exception
      */
     private function fetchEvent(array $val): Event
     {
