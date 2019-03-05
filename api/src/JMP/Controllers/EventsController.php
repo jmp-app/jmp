@@ -72,8 +72,13 @@ class EventsController
 
             if (is_null($arguments['limit'])) {
                 // no limit, just use offset
-                $events = Converter::convertArray($this->eventService->getEventByGroupAndEventWithOffset($arguments['group'],
-                    $arguments['eventType'], $arguments['all'], $arguments['elapsed'], $user, $arguments['offset']));
+                try {
+                    $events = Converter::convertArray($this->eventService->getEventByGroupAndEventWithOffset($arguments['group'],
+                        $arguments['eventType'], $arguments['all'], $arguments['elapsed'], $user, $arguments['offset']));
+                } catch (\Exception $e) {
+                    $this->logger->error($e->getMessage());
+                    return $response->withStatus(500);
+                }
             } else {
                 try {
                     $events = Converter::convertArray($this->eventService->getEventsByGroupAndEventTypeWithPagination($arguments['group'],
@@ -99,7 +104,12 @@ class EventsController
      */
     public function getEventById(Request $request, Response $response, array $args): Response
     {
-        $optional = $this->eventService->getEventById($args['id']);
+        try {
+            $optional = $this->eventService->getEventById($args['id']);
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            return $response->withStatus(500);
+        }
         if ($optional->isFailure()) {
             return $response->withStatus(404);
         } else {
