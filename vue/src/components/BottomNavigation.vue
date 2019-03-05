@@ -18,7 +18,7 @@
                 {{$t('group.create')}}
             </button>
             <button
-                    @click="$router.push(`/groups/${groupId}/addMembers`)"
+                    @click="$router.replace(`/groups/${groupId}/addMembers`)"
                     class="btn btn-primary nav-item mr-2" type="button"
                     v-if="isGroupDetail()"
             >

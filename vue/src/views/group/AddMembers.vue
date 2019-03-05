@@ -177,7 +177,7 @@
                 });
             },
             cancel: function () {
-                this.$router.push(`/groups/${this.$route.params.id}`);
+                this.$router.replace(`/groups/${this.$route.params.id}`);
             },
             submit: function () {
                 const groupId = this.$route.params.id;
@@ -195,7 +195,7 @@
                 if (userIdsToRemove.length > 0) {
                     this.$store.dispatch('group/leave', {groupId, userIdsToRemove});
                 }
-                this.$router.push(`/groups/${this.$route.params.id}`);
+                this.$router.replace(`/groups/${this.$route.params.id}`);
             },
             filteredData: function () {
                 let filterKey = this.searchQuery && this.searchQuery.toLowerCase();
