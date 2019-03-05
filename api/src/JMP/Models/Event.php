@@ -53,13 +53,14 @@ class Event implements ArrayConvertable
     /**
      * Event constructor.
      * @param array $args
+     * @throws \Exception
      */
     public function __construct(array $args)
     {
         $this->id = (int)$args['id'];
         $this->title = $args['title'];
-        $this->from = $args['from'];
-        $this->to = $args['to'];
+        $this->from = $this->convertDateTime($args['from']);
+        $this->to = $this->convertDateTime($args['to']);
         $this->place = $args['place'];
         $this->description = $args['description'];
     }
@@ -74,5 +75,16 @@ class Event implements ArrayConvertable
         return array_filter((array)$this, function ($value) {
             return $value !== null;
         });
+    }
+
+    /**
+     * @param $dateTime
+     * @return String ISO-Format
+     * @throws \Exception
+     */
+    public function convertDateTime($dateTime): String
+    {
+        $dateTime = new \DateTime($dateTime);
+        return $dateTime->format('Y-m-d\TH:i');
     }
 }
