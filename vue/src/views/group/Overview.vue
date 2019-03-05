@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h3>{{$t('group.overview.title')}}</h3>
         <input
                 :placeholder="$t('search')"
                 class="search my-3 form-control"

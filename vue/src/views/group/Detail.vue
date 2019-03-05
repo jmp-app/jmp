@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h3>{{$t('group.detail.title')}}</h3>
         <form @submit.prevent="handleSubmit" v-if="group">
             <div class="form-group row">
                 <label class="col-sm-3 col-form-label" for="name">{{$t('group.name')}}</label>
@@ -27,7 +28,7 @@
             </div>
         </form>
         <hr/>
-        <div v-if="group">
+        <div v-if="group && !create()">
             <h4>{{ $t("group.detail.members") }}</h4>
             <input
                     :placeholder="$t('search')"
@@ -130,7 +131,8 @@
                         this.mode = 'display';
                         break;
                     case 'group/createGroupSuccess':
-                        this.$router.push('/groups');
+                        this.mode = 'display';
+                        this.$router.replace(`/groups/${this.$store.state.group.data.group.id}`);
                         break;
                 }
             },

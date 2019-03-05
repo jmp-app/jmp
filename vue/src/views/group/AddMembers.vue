@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="pb-3" v-if="group && groupUsers && users">
-            <h1>Add members to group {{$route.params.id}}</h1>
+            <h3>{{ $t('group.detail.AddMembers') }}</h3>
             <input
                     :placeholder="$t('search')"
                     class="search my-3 form-control"
@@ -11,7 +11,7 @@
             >
             <div class="row">
                 <div class="table-responsive grid col-sm-6 mb-3">
-                    <h4>All Users</h4>
+                    <h4>{{$t('group.addMembers.allUsers')}}</h4>
                     <table class="table table-striped">
                         <thead class="thead-dark">
                         <tr>
@@ -34,10 +34,12 @@
                         </tr>
                         </tbody>
                     </table>
-                    <button @click="event => handleAddSelected(event)" class="btn btn-success">Add selected</button>
+                    <button @click="event => handleAddSelected(event)" class="btn btn-success">
+                        {{$t('group.addMembers.addSelected')}}
+                    </button>
                 </div>
                 <div class="table-responsive grid col-sm-6">
-                    <h4>Members</h4>
+                    <h4>{{$t('group.detail.members')}}</h4>
                     <table class="table table-striped">
                         <thead class="thead-dark">
                         <tr>
@@ -60,7 +62,8 @@
                         </tr>
                         </tbody>
                     </table>
-                    <button @click="event => handleRemoveSelected(event)" class="btn btn-danger">Remove selected
+                    <button @click="event => handleRemoveSelected(event)" class="btn btn-danger">
+                        {{$t('group.addMembers.removeSelected')}}
                     </button>
                 </div>
             </div>

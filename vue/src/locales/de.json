@@ -48,5 +48,10 @@
   "group.create": "Gruppe erstellen",
   "group.detail.nameRequired": "Name ist ein Pflichtfeld",
   "group.detail.members": "Mitglieder",
-  "group.detail.AddMembers": "Mitglieder hinzufügen"
+  "group.detail.AddMembers": "Mitglieder bearbeiten",
+  "group.detail.title": "Gruppe bearbeiten",
+  "group.addMembers.allUsers": "Alle Benutzer",
+  "group.addMembers.addSelected": "Hinzufügen",
+  "group.addMembers.removeSelected": "Entfernen",
+  "group.overview.title": "Übersicht über alle Gruppen"
 }
