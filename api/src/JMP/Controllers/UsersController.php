@@ -9,6 +9,7 @@ use JMP\Models\User;
 use JMP\Services\Auth;
 use JMP\Services\UserService;
 use JMP\Utils\Converter;
+use Monolog\Logger;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -23,6 +24,10 @@ class UsersController
      * @var Auth
      */
     protected $auth;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     /**
      * EventController constructor.
@@ -32,6 +37,7 @@ class UsersController
     {
         $this->userService = $container->get('userService');
         $this->auth = $container->get('auth');
+        $this->logger = $container->get('logger');
     }
 
     /**
@@ -46,6 +52,7 @@ class UsersController
 
         if ($optional->isFailure()) {
             // There has to be always a logged in user that accesses this
+            $this->logger->addError('An invalid user was requested as current user. Username: "' . $request->getAttribute('token')['sub'] . '"');
             return $response->withStatus(500);
         }
 
@@ -97,6 +104,7 @@ class UsersController
         $optional = $this->userService->updateUser($id, $updates);
 
         if ($optional->isFailure()) {
+            $this->logger->addError('Failed to update user. ID: "' . $id . '" Updates: "' . $updates . '"');
             return $response->withStatus(500);
         }
 
@@ -129,6 +137,7 @@ class UsersController
 
         $successful = $this->userService->deleteUser($id);
         if ($successful === false) {
+            $this->logger->addError('Failed to delete user: ID: "' . $id . '"');
             return $response->withStatus(500);
         }
 
@@ -169,7 +178,7 @@ class UsersController
 
         // check if the username is already used by an other user
         if ($this->userService->isUsernameUnique($user['username'])) {
-            return $this->usernameAvailable($response, $user);
+            return $this->usernameAvailableAndCreateUser($response, $user);
         } else {
             return $this->usernameNotAvailable($request, $response, $user['username']);
         }
@@ -195,15 +204,17 @@ class UsersController
     /**
      * Create the response if a user can be created successfully
      * @param Response $response
-     * @param $optional
+     * @param $user
      * @return Response
      */
-    private function usernameAvailable(Response $response, $optional): Response
+    private function usernameAvailableAndCreateUser(Response $response, $user): Response
     {
-        $optional['password'] = password_hash($optional['password'], PASSWORD_DEFAULT);
+        $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
 
-        $optional = $this->userService->createUser(new User($optional));
+        $optional = $this->userService->createUser(new User($user));
         if ($optional->isFailure()) {
+            unset($user['password']);
+            $this->logger->addError('Failed to create user. User: "' . $user . '"');
             return $response->withStatus(500);
         }
 
@@ -223,6 +234,7 @@ class UsersController
 
         if ($optional->isFailure()) {
             // There has to be always a logged in user that accesses this
+            $this->logger->addError('Tried to change password of not logged in user. Username: "' . $request->getAttribute('token')['sub'] . '"');
             return $response->withStatus(500);
         }
 
@@ -243,7 +255,8 @@ class UsersController
             ], 400);
         }
 
-        if (!$this->userService->changePassword($user->id, $newPassword)) {
+        if ($this->userService->changePassword($user->id, $newPassword) === false) {
+            $this->logger->addError('Failed to change password of user. User: "' . $user . '"');
             return $response->withStatus(500);
         }
 

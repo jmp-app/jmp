@@ -6,6 +6,7 @@ namespace JMP\Middleware;
 
 use JMP\Services\Auth;
 use JMP\Utils\PermissionLevel;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -20,6 +21,10 @@ class AuthenticationMiddleware
      * @var int
      */
     private $permissionLevel;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     /**
      * AuthenticationMiddleware constructor.
@@ -30,6 +35,7 @@ class AuthenticationMiddleware
     {
         $this->auth = $container->get('auth');
         $this->permissionLevel = $permissionLevel;
+        $this->logger = $container->get('logger');
     }
 
 
@@ -56,7 +62,7 @@ class AuthenticationMiddleware
                 }
             default:
                 {
-                    return $this->invalidPermissionLevel($response);
+                    return $this->invalidPermissionLevel($request, $response);
                 }
         }
     }
@@ -97,11 +103,13 @@ class AuthenticationMiddleware
     }
 
     /**
+     * @param Request $request
      * @param Response $response
      * @return Response
      */
-    private function invalidPermissionLevel(Response $response): Response
+    private function invalidPermissionLevel(Request $request, Response $response): Response
     {
+        $this->logger->addError('An invalid permission level was tried to be used. PermissionLevel: "' . $this->permissionLevel . '" Route: "' . $request->getMethod() . ':' . $request->getUri() . '"');
         return $response->withStatus(500)->withJson(
             [
                 'errors' => [

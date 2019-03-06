@@ -63,4 +63,12 @@ class User implements ArrayConvertable
             return $value !== null;
         });
     }
+
+    public function __toString(): string
+    {
+        unset($this->password);
+        return (string)$this->toArray();
+    }
+
+
 }

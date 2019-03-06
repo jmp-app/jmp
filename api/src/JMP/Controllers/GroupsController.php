@@ -7,6 +7,7 @@ use JMP\Services\GroupService;
 use JMP\Services\MembershipService;
 use JMP\Services\UserService;
 use JMP\Utils\Converter;
+use Monolog\Logger;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -26,6 +27,10 @@ class GroupsController
      * @var UserService
      */
     private $userService;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     /**
      * EventController constructor.
@@ -36,6 +41,7 @@ class GroupsController
         $this->groupService = $container->get('groupService');
         $this->membershipService = $container->get('membershipService');
         $this->userService = $container->get('userService');
+        $this->logger = $container->get('logger');
     }
 
     /**
@@ -186,6 +192,7 @@ class GroupsController
         $successful = $this->membershipService->addUsersToGroup($id, $usersToJoin);
         if ($successful === false) {
             // operation failed
+            $this->logger->addError('Failed to join users to a group. Group: "' . $id . '" Users: "' . $usersToJoin . '"');
             return $response->withStatus(500);
         }
 
@@ -225,12 +232,14 @@ class GroupsController
         $successful = $this->membershipService->removeUsersFromGroup($id, $users);
         if ($successful === false) {
             // operation failed
+            $this->logger->addError('Failed to remove users from a group. Group: "' . $id . '" Users: "' . $users . '"');
             return $response->withStatus(500);
         }
 
         // Retrieve the updated group and return it
         $optional = $this->groupService->getGroupById($id);
         if ($optional->isFailure()) {
+            $this->logger->addError('Failed to query group after removing members. Group: "' . $id . '" Users: "' . $users . '"');
             return $response->withStatus(500);
         } else {
             return $response->withJson(Converter::convert($optional->getData()));
