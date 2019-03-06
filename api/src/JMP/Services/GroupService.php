@@ -237,7 +237,10 @@ SQL;
         }
 
         foreach ($groups as $key => $group) {
-            $groups[$key] = $this->fetchGroup($group);
+            $optional = $this->fetchGroup($group);
+            if ($optional->isSuccess()) {
+                $groups[$key] = $optional->getData();
+            }
         }
         return $groups;
     }
