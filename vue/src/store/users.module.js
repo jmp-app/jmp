@@ -6,12 +6,14 @@ export const users = {
         all: {}
     },
     actions: {
-        getAll({commit}) {
+        getAll({dispatch, commit}) {
             commit('getAllRequest');
 
             userService.getAll()
-                .then(users => commit('getAllSuccess', users))
-                .catch(error => commit('getAllFailure', error));
+                .then(
+                    users => commit('getAllSuccess', users),
+                    error => commit('getAllFailure', error)
+                );
         },
         getAllOfGroup({commit, groupId}) {
             commit('getAllRequests');

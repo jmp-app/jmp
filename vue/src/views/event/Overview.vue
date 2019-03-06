@@ -1,5 +1,11 @@
 <template>
     <div>
+        <div @change="init()" class="container mb-3" style="text-align: right" v-if="isAdmin()">
+            <input class="form-check-input" id="showAll" type="checkbox" v-model="showAll" value="">
+            <label class="form-check-label" for="showAll">
+                {{ $t('event.overview.showAll') }}
+            </label>
+        </div>
         <div id="eventCards">
             <div :key="event.id" v-for="event in events">
                 <EventCard :event="event"/>
@@ -25,7 +31,10 @@
         },
         data() {
             return {
-                windowHeight: window.innerHeight
+                windowHeight: window.innerHeight,
+                showAll: false,
+                unsubscribe() {
+                }
             };
         },
         methods: {
@@ -45,7 +54,8 @@
                     let rect = lastEventCard.getBoundingClientRect();
                     if (rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)) {
                         let offset = this.getOffset();
-                        this.$store.dispatch('events/getNextEvents', {offset});
+                        let showAll = this.showAll;
+                        this.$store.dispatch('events/getNextEvents', {offset, showAll});
                     }
                 }
             },
@@ -74,7 +84,8 @@
 
                 if (bottomOfWindow) {
                     let offset = this.getOffset();
-                    this.$store.dispatch('events/getNextEvents', {offset});
+                    let showAll = this.showAll;
+                    this.$store.dispatch('events/getNextEvents', {offset, showAll});
                 }
             },
             /**
@@ -85,11 +96,19 @@
                 if (mutation.type === 'events/getInitialOverviewSuccess') {
                     this.$nextTick(() => this.loadDataUntilScreenIsFull());
                 }
+            },
+            isAdmin: function () {
+                const user = JSON.parse(localStorage.getItem('user'));
+                return !!(user && user.isAdmin === 1);
+            },
+            init: function () {
+                let showAll = this.showAll;
+                this.$store.dispatch('events/getInitialOverview', {showAll});
             }
         },
         created() {
-            this.$store.dispatch('events/getInitialOverview');
-            this.$store.subscribe(mutation => {
+            this.init();
+            this.unsubscribe = this.$store.subscribe(mutation => {
                 this.handleMutation(mutation);
             });
             this.initWindowHeightListener();
@@ -102,6 +121,8 @@
         },
         beforeDestroy() {
             window.removeEventListener('scroll', this.handleScroll);
+            window.removeEventListener('resize', this.handleResize);
+            this.unsubscribe();
         }
     }
     ;
