@@ -127,7 +127,10 @@ class UsersController
             ], 404);
         }
 
-        $this->userService->deleteUser($id);
+        $successful = $this->userService->deleteUser($id);
+        if ($successful === false) {
+            return $response->withStatus(500);
+        }
 
         return $response->withJson([
             'success' => 'Deleted user with id "' . $id . '"'
@@ -192,16 +195,19 @@ class UsersController
     /**
      * Create the response if a user can be created successfully
      * @param Response $response
-     * @param $user
+     * @param $optional
      * @return Response
      */
-    private function usernameAvailable(Response $response, $user): Response
+    private function usernameAvailable(Response $response, $optional): Response
     {
-        $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
+        $optional['password'] = password_hash($optional['password'], PASSWORD_DEFAULT);
 
-        $user = $this->userService->createUser(new User($user));
+        $optional = $this->userService->createUser(new User($optional));
+        if ($optional->isFailure()) {
+            return $response->withStatus(500);
+        }
 
-        return $response->withJson(Converter::convert($user));
+        return $response->withJson(Converter::convert($optional->getData()));
     }
 
 
@@ -213,9 +219,9 @@ class UsersController
      */
     public function changePassword(Request $request, Response $response)
     {
-        $user = $this->auth->requestUser($request);
+        $optional = $this->auth->requestUser($request);
 
-        if ($user->isFailure()) {
+        if ($optional->isFailure()) {
             // There has to be always a logged in user that accesses this
             return $response->withStatus(500);
         }
@@ -223,7 +229,7 @@ class UsersController
         /**
          * @var User $user
          */
-        $user = $user->getData();
+        $user = $optional->getData();
 
         $password = $request->getParsedBodyParam('password');
         $newPassword = $request->getParsedBodyParam('newPassword');

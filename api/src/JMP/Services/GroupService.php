@@ -54,8 +54,9 @@ SQL;
 
     /**
      * @param $id
+     * @return bool successful
      */
-    public function deleteGroup(int $id): void
+    public function deleteGroup(int $id): bool
     {
         $this->membershipService->deleteMemberships($id);
 
@@ -66,7 +67,7 @@ SQL;
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
-        $stmt->execute();
+        return $stmt->execute();
     }
 
     /**
@@ -85,7 +86,11 @@ SQL;
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':newName', $newName);
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
-        $stmt->execute();
+        $successful = $stmt->execute();
+
+        if ($successful === false) {
+            return Optional::failure();
+        }
 
         return $this->getGroupByName($newName);
     }
@@ -112,9 +117,7 @@ SQL;
         if ($group === false) {
             return Optional::failure();
         } else {
-            $group = new Group($group);
-            $group->users = $this->userService->getUsers($group->id);
-            return Optional::success($group);
+            return $this->fetchGroup($group);
         }
     }
 
@@ -180,10 +183,7 @@ SQL;
             return Optional::failure();
         }
 
-        $group = new Group($data);
-        $group->users = $this->userService->getUsers($id);
-
-        return Optional::success($group);
+        return Optional::success($this->fetchGroup($data));
 
     }
 
@@ -232,10 +232,25 @@ SQL;
     {
         $groups = $stmt->fetchAll();
 
+        if ($groups === false) {
+            return array();
+        }
+
         foreach ($groups as $key => $group) {
-            $groups[$key] = new Group($group);
+            $groups[$key] = $this->fetchGroup($group);
         }
         return $groups;
+    }
+
+    /**
+     * @param $group
+     * @return Optional
+     */
+    private function fetchGroup(array $group): Optional
+    {
+        $group = new Group($group);
+        $group->users = $this->userService->getUsers($group->id);
+        return Optional::success($group);
     }
 
 }

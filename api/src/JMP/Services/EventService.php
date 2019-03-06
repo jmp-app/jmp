@@ -215,7 +215,10 @@ SQL;
     private function fetchEvent(array $val): Event
     {
         $event = new Event($val);
-        $event->eventType = $this->eventTypeService->getEventTypeByEvent($val['eventTypeId']);
+        $optional = $this->eventTypeService->getEventTypeByEvent($val['eventTypeId']);
+        if ($optional->isSuccess()) {
+            $event->eventType = $optional->getData();
+        }
         $optional = $this->registrationStateService->getRegistrationTypeById($val['defaultRegistrationState']);
         if ($optional->isSuccess()) {
             $event->defaultRegistrationState = $optional->getData();

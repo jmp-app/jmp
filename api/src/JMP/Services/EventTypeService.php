@@ -4,6 +4,7 @@ namespace JMP\Services;
 
 
 use JMP\Models\EventType;
+use JMP\Utils\Optional;
 use Psr\Container\ContainerInterface;
 
 class EventTypeService
@@ -24,7 +25,7 @@ class EventTypeService
 
     /**
      * @param int $eventTypeId
-     * @return EventType
+     * @return Optional
      */
     public function getEventTypeByEvent(int $eventTypeId)
     {
@@ -37,6 +38,11 @@ SQL;
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':eventTypeId', $eventTypeId);
         $stmt->execute();
-        return new EventType($stmt->fetch());
+        $eventType = $stmt->fetch();
+        if ($eventType === false) {
+            return Optional::failure();
+        } else {
+            return Optional::success(new EventType($eventType));
+        }
     }
 }

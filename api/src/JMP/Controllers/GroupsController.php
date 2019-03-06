@@ -183,8 +183,8 @@ class GroupsController
         }
 
         // Add users to the group
-        $optional = $this->membershipService->addUsersToGroup($id, $usersToJoin);
-        if ($optional->isFailure()) {
+        $successful = $this->membershipService->addUsersToGroup($id, $usersToJoin);
+        if ($successful === false) {
             // operation failed
             return $response->withStatus(500);
         }
@@ -222,15 +222,19 @@ class GroupsController
         }
 
         // Remove users from the group
-        $optional = $this->membershipService->removeUsersFromGroup($id, $users);
-        if ($optional->isFailure()) {
+        $successful = $this->membershipService->removeUsersFromGroup($id, $users);
+        if ($successful === false) {
             // operation failed
             return $response->withStatus(500);
         }
 
         // Retrieve the updated group and return it
-        $group = $this->groupService->getGroupById($id);
-        return $response->withJson(Converter::convert($group->getData()));
+        $optional = $this->groupService->getGroupById($id);
+        if ($optional->isFailure()) {
+            return $response->withStatus(500);
+        } else {
+            return $response->withJson(Converter::convert($optional->getData()));
+        }
     }
 
     /**

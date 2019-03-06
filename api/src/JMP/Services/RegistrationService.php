@@ -50,22 +50,13 @@ SQL;
         $stmt->bindParam(':userId', $userId, \PDO::PARAM_INT);
         $stmt->execute();
 
-        $val = $stmt->fetch();
-        $registrationStateId = $val['registrationStateId'];
+        $data = $stmt->fetch();
 
-        if ($val === false) {
+        if ($data === false) {
             return Optional::failure();
         }
 
-        $registration = new Registration($val);
-        $optional = $this->registrationStateService->getRegistrationTypeById($registrationStateId);
-
-        if ($optional->isSuccess()) {
-            $registration->registrationState = $optional->getData();
-            return Optional::success($registration);
-        } else {
-            return Optional::failure();
-        }
+        return $this->fetchRegistration($data);
     }
 
     /**
@@ -88,7 +79,10 @@ SQL;
         $stmt->bindParam(':reason', $registration->reason);
         $stmt->bindParam(':registrationStateId', $registration->registrationState->id, \PDO::PARAM_INT);
 
-        $stmt->execute();
+        $successful = $stmt->execute();
+        if ($successful === false) {
+            return Optional::failure();
+        }
 
         return $this->getRegistrationByUserIdAndEventId($registration->userId, $registration->eventId);
 
@@ -115,7 +109,10 @@ SQL;
         $stmt->bindParam(':eventId', $registration->eventId, \PDO::PARAM_INT);
         $stmt->bindParam(':userId', $registration->userId, \PDO::PARAM_INT);
 
-        $stmt->execute();
+        $successful = $stmt->execute();
+        if ($successful === false) {
+            return Optional::failure();
+        }
 
         return $this->getRegistrationByUserIdAndEventId($registration->userId, $registration->eventId);
     }
@@ -123,9 +120,9 @@ SQL;
     /**
      * Delete all registrations of a user
      * @param int $userId
-     * @return void
+     * @return bool
      */
-    public function deleteRegistrationsOfUser(int $userId): void
+    public function deleteRegistrationsOfUser(int $userId): bool
     {
         $sql = <<< SQL
             DELETE FROM registration
@@ -134,7 +131,26 @@ SQL;
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':userId', $userId);
-        $stmt->execute();
+        return $stmt->execute();
+    }
+
+    /**
+     * @param $data
+     * @return Optional
+     */
+    private function fetchRegistration(array $data): Optional
+    {
+        $registration = new Registration($data);
+
+        $registrationStateId = $data['registrationStateId'];
+        $optional = $this->registrationStateService->getRegistrationTypeById($registrationStateId);
+
+        if ($optional->isFailure()) {
+            return Optional::failure();
+        } else {
+            $registration->registrationState = $optional->getData();
+            return Optional::success($registration);
+        }
     }
 
 }
