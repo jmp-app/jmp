@@ -80,3 +80,8 @@ $container['logger'] = function (\Psr\Container\ContainerInterface $container) {
 
     return $logger;
 };
+
+$container['errorHandler'] = function (\Psr\Container\ContainerInterface $container) {
+    $debug = $container->get('settings')['displayErrorDetails'];
+    return new \JMP\Middleware\AppErrorHandler($container, $debug);
+};
