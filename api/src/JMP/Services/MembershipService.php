@@ -50,7 +50,6 @@ SQL;
      * @param int $groupId
      * @param array $users
      * @return Optional
-     * @throws \Exception
      */
     public function addUsersToGroup(int $groupId, array $users): Optional
     {
@@ -69,7 +68,6 @@ SQL;
      * @param int $groupId
      * @param array $users
      * @return Optional
-     * @throws \Exception
      */
     private function executeForEachUser(string $sql, int $groupId, array $users): Optional
     {
