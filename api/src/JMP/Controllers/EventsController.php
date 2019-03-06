@@ -51,7 +51,7 @@ class EventsController
             return $response->withStatus(401);
         }
         /** @var User $user */
-        $user = new User($optional->getData());
+        $user = $optional->getData();
 
         if ((bool)$user->isAdmin !== true && isset($request->getQueryParams()['all']) === true) {
             return $response->withStatus(403);

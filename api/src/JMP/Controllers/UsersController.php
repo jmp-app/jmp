@@ -49,7 +49,10 @@ class UsersController
             return $response->withStatus(500);
         }
 
-        $user = new User($optional->getData());
+        /**
+         * @var User $user
+         */
+        $user = $optional->getData();
 
         return $response->withJson(Converter::convert($user));
     }
@@ -217,7 +220,10 @@ class UsersController
             return $response->withStatus(500);
         }
 
-        $user = new User($user->getData());
+        /**
+         * @var User $user
+         */
+        $user = $user->getData();
 
         $password = $request->getParsedBodyParam('password');
         $newPassword = $request->getParsedBodyParam('newPassword');
