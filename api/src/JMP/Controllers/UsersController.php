@@ -89,14 +89,21 @@ class UsersController
         $id = $args['id'];
         $updates = $request->getParsedBody();
 
-        if ($this->userService->userExists($id) === false) {
+        $optional = $this->userService->getUserByUserId($id);
+
+        if ($optional->isFailure()) {
             return $response->withJson([
                 'errors' => [
                     'id' => 'The specified id "' . $id . '"does not exist'
                 ]
             ], 404);
-        } elseif (isset($updates['username'])) {
-            if ($this->userService->isUsernameUnique($updates['username']) === false) {
+        }
+
+        /** @var User $user */
+        $user = $optional->getData();
+
+        if (isset($updates['username'])) {
+            if ($this->userService->isUsernameUnique($updates['username']) === false && $updates['username'] !== $user->username) {
                 return $this->usernameNotAvailable($request, $response, $updates['username']);
             }
         }
