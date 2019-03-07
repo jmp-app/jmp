@@ -4,6 +4,7 @@ namespace JMP\Controllers;
 
 use JMP\Models\Registration;
 use JMP\Models\RegistrationState;
+use JMP\Models\User;
 use JMP\Services\Auth;
 use JMP\Services\EventService;
 use JMP\Services\RegistrationService;
@@ -76,8 +77,15 @@ class RegistrationController
             return $response->withJson(Converter::convert($optional->getData()));
         }
 
+        $optional = $this->auth->requestUser($request);
+        if ($optional->isFailure()) {
+            return $response->withStatus(401);
+        }
+        /** @var User $user */
+        $user = $optional->getData();
+
         try {
-            $event = $this->eventService->getEventById($registration->eventId);
+            $event = $this->eventService->getEventById($registration->eventId, $user);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             return $response->withStatus(500);

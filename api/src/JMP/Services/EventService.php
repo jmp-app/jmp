@@ -153,10 +153,11 @@ SQL;
     /**
      * Get event by id
      * @param int $eventId
+     * @param User $user
      * @return Optional
      * @throws \Exception
      */
-    public function getEventById(int $eventId)
+    public function getEventById(int $eventId, User $user)
     {
         $sql = <<< SQL
                 SELECT event.id,
@@ -168,14 +169,20 @@ SQL;
                        event_type_id AS eventTypeId,
                        default_registration_state_id AS defaultRegistrationState
                 FROM event
-                RIGHT JOIN event_has_group ehg ON event.id = ehg.event_id
-                RIGHT JOIN event_type ON event.event_type_id = event_type.id
+                LEFT JOIN event_has_group ehg ON event.id = ehg.event_id
+                LEFT JOIN event_type ON event.event_type_id = event_type.id
+                LEFT JOIN `group` g ON ehg.group_id = g.id
+                LEFT JOIN membership m ON g.id = m.group_id
+                LEFT JOIN user u ON m.user_id = u.id
                 WHERE event.id = :eventId
+                  AND (:isAdmin IS TRUE OR u.username = :username)
 SQL;
 
         $stmt = $this->db->prepare($sql);
 
         $stmt->bindValue(':eventId', $eventId, PDO::PARAM_INT);
+        $stmt->bindValue(':isAdmin', $user->isAdmin, PDO::PARAM_BOOL);
+        $stmt->bindValue(':username', $user->username);
         $stmt->execute();
 
         $event = $stmt->fetch();

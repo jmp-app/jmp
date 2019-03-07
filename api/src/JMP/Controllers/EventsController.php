@@ -104,8 +104,14 @@ class EventsController
      */
     public function getEventById(Request $request, Response $response, array $args): Response
     {
+        $optional = $this->auth->requestUser($request);
+        if ($optional->isFailure()) {
+            return $response->withStatus(401);
+        }
+        /** @var User $user */
+        $user = $optional->getData();
         try {
-            $optional = $this->eventService->getEventById($args['id']);
+            $optional = $this->eventService->getEventById($args['id'], $user);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             return $response->withStatus(500);

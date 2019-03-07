@@ -421,6 +421,7 @@ GET /v1/events/{id}
 Parameters: none
 
 Access rights: authentication required
+**Note:** An admin can access every event but a user can only access events of groups in which he has a membership.
 
 Returns: the [Event](#Event)
 
