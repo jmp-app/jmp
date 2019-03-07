@@ -9,6 +9,7 @@ use JMP\Services\Auth;
 use JMP\Services\EventService;
 use JMP\Services\RegistrationService;
 use JMP\Services\RegistrationStateService;
+use JMP\Services\UserService;
 use JMP\Utils\Converter;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -41,6 +42,10 @@ class RegistrationController
      * @var User
      */
     private $user;
+    /**
+     * @var UserService
+     */
+    private $userService;
 
     /**
      * RegistrationController constructor.
@@ -52,6 +57,7 @@ class RegistrationController
         $this->registrationService = $container->get('registrationService');
         $this->registrationStateService = $container->get('registrationStateService');
         $this->eventService = $container->get('eventService');
+        $this->userService = $container->get('userService');
         $this->logger = $container->get('logger');
         $this->user = $container->get('user');
     }
@@ -88,10 +94,15 @@ class RegistrationController
             return $response->withJson(Converter::convert($optional->getData()));
         }
 
-        $event = $this->eventService->getEventById($registration->eventId, $this->user);
+        // Validate input
+        $errors = [];
+        list($errors, $event) = $this->validateEvent($registration->eventId, $errors);
+        $errors = $this->validateUser($registration->userId, $errors);
 
-        if ($event->isFailure()) {
-            return $this->getBadRequestResponse($response, "Invalid parameters");
+        if (empty($errors) === false) {
+            return $response->withJson([
+                "errors" => $errors
+            ], 400);
         }
 
         if (!isset($parsedBody['registrationState'])) {
@@ -168,4 +179,34 @@ class RegistrationController
             ]
         ], 400);
     }
+
+    /**
+     * @param int $eventId
+     * @param array $errors
+     * @return array
+     * @throws \Exception
+     */
+    private function validateEvent(int $eventId, array $errors): array
+    {
+        $event = $this->eventService->getEventById($eventId, $this->user);
+
+        if ($event->isFailure()) {
+            $errors['eventId'] = 'An Event with the id ' . $eventId . ' doesnt exist';
+        }
+        return array($errors, $event);
+    }
+
+    /**
+     * @param int $userId
+     * @param $errors
+     * @return array
+     */
+    private function validateUser(int $userId, $errors): array
+    {
+        if ($this->userService->userExists($userId) === false) {
+            $errors['userId'] = 'An User with the id ' . $userId . ' doesnt exist';
+        }
+        return $errors;
+    }
+
 }
