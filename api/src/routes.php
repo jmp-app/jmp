@@ -41,6 +41,12 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
         ->add($jwtMiddleware);
 
+    $this->post('/events', EventsController::class . ':createEvent')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($container['validation']['createEvent']))
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+        ->add($jwtMiddleware);
+
     $this->get('/registration/{eventId:[0-9]+}/{userId:[0-9]+}', RegistrationController::class . ':getRegistrationByEventIdAndUserId')
         ->add(new ValidationErrorResponseBuilder())
         ->add(new Validation($container['validation']['getRegistrationByEventIdAndUserId']))

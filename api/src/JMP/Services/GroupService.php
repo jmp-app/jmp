@@ -224,6 +224,26 @@ SQL;
         return $this->fetchGroups($stmt);
     }
 
+
+    /**
+     * Add a group to an event
+     * @param int $groupId
+     * @param int $eventId
+     * @return bool
+     */
+    public function addGroupToEvent(int $groupId, int $eventId): bool
+    {
+        $sql = <<< SQL
+INSERT INTO jmp.event_has_group (event_id, group_id) VALUES (:eventId, :groupId);
+SQL;
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':eventId', $eventId);
+        $stmt->bindParam(':groupId', $groupId);
+
+        return $stmt->execute();
+    }
+
     /**
      * @param \PDOStatement $stmt the statement to use
      * @return Group[] array of groups

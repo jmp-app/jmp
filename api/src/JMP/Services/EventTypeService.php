@@ -45,4 +45,24 @@ SQL;
             return Optional::success(new EventType($eventType));
         }
     }
+
+    /**
+     * Checks whether an event type with the given id already exists
+     * @param int $eventTypeId
+     * @return bool
+     */
+    public function eventTypeExists(int $eventTypeId): bool
+    {
+        $sql = <<<SQL
+            SELECT id
+            FROM jmp.`event_type`
+            WHERE id = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $eventTypeId, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
+    }
 }

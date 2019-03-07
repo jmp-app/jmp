@@ -5,6 +5,9 @@ namespace JMP\Controllers;
 use JMP\Models\User;
 use JMP\Services\Auth;
 use JMP\Services\EventService;
+use JMP\Services\EventTypeService;
+use JMP\Services\GroupService;
+use JMP\Services\RegistrationStateService;
 use JMP\Utils\Converter;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -29,6 +32,19 @@ class EventsController
      * @var User
      */
     private $user;
+    /**
+     * @var EventTypeService
+     */
+    private $eventTypeService;
+    /**
+     * @var GroupService
+     */
+    private $groupService;
+
+    /**
+     * @var RegistrationStateService
+     */
+    private $registrationStateService;
 
     /**
      * EventController constructor.
@@ -40,6 +56,9 @@ class EventsController
         $this->eventService = $container->get('eventService');
         $this->logger = $container->get('logger');
         $this->user = $container->get('user');
+        $this->eventTypeService = $container->get('eventTypeService');
+        $this->groupService = $container->get('groupService');
+        $this->registrationStateService = $container->get('registrationStateService');
     }
 
 
@@ -99,21 +118,63 @@ class EventsController
      * @param Response $response
      * @param array $args
      * @return Response
+     * @throws \Exception
      */
     public function getEventById(Request $request, Response $response, array $args): Response
     {
-        try {
-            $optional = $this->eventService->getEventById($args['id'], $this->user);
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
-            return $response->withStatus(500);
-        }
+        $optional = $this->eventService->getEventById($args['id'], $this->user);
+
         if ($optional->isFailure()) {
             return $response->withStatus(404);
         } else {
             $event = Converter::convert($optional->getData());
             return $response->withJson($event);
         }
+    }
+
+    /**
+     * Creates a new Event
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     * @throws \Exception
+     */
+    public function createEvent(Request $request, Response $response): Response
+    {
+        $params = $request->getParsedBody();
+
+        $errors = [];
+
+        if ($this->eventTypeService->eventTypeExists($params['eventType']) === false) {
+            $errors['eventType'] = 'An event type with the id ' . $params['eventType'] . ' doesnt exist';
+        }
+
+        $groupsWhichNotExists = [];
+        foreach ($params['groups'] as $groupId) {
+            if ($this->groupService->groupExists($groupId) === false) {
+                array_push($groupsWhichNotExists, $groupId);
+            }
+        }
+        if (empty($groupsWhichNotExists) === false) {
+            $errors['groups'] = 'The following groups dont exist: ' . $groupsWhichNotExists;
+        }
+
+        if ($this->registrationStateService->registrationStateExists($params['defaultRegistrationState']) === false) {
+            $errors['defaultRegistrationState'] = 'A egistration state with the id ' . $params['defaultRegistrationState'] . ' doesnt exist';
+        }
+
+        if (empty($errors) === false) {
+            return $response->withJson([
+                'errors' => $errors
+            ], 403);
+        }
+
+        $optional = $this->eventService->createEvent($params);
+        if ($optional->isFailure()) {
+            return $response->withStatus(500);
+        }
+
+        return $response->withJson(Converter::convert($optional->getData()));
     }
 
     /**

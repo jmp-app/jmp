@@ -27,6 +27,10 @@ class EventService
      * @var RegistrationStateService
      */
     protected $registrationStateService;
+    /**
+     * @var User
+     */
+    private $user;
 
     /**
      * EventService constructor.
@@ -38,6 +42,7 @@ class EventService
         $this->eventTypeService = $container->get('eventTypeService');
         $this->groupService = $container->get('groupService');
         $this->registrationStateService = $container->get('registrationStateService');
+        $this->user = $container->get('user');
     }
 
     /**
@@ -192,6 +197,62 @@ SQL;
             return Optional::success($this->fetchEvent($event));
         }
 
+    }
+
+    /**
+     * Creates a new Event
+     * @param array $params Contains all required fields
+     * @return Optional
+     * @throws \Exception
+     */
+    public function createEvent(array $params): Optional
+    {
+        $this->db->beginTransaction();
+        try {
+            $sql = <<< SQL
+INSERT INTO `jmp`.`event` (`title`, `from`, `to`, `place`, `description`, `event_type_id`,
+           `default_registration_state_id`)
+VALUES (:title, :from, :to, :place, :description, :eventType, :defaultRegistrationState);
+SQL;
+
+            $stmt = $this->db->prepare($sql);
+
+            $stmt->bindParam(':title', $params['title']);
+            $stmt->bindParam(':from', $params['from']);
+            $stmt->bindParam(':to', $params['to']);
+            $stmt->bindParam(':place', $params['place']);
+            $stmt->bindParam(':description', $params['description']);
+            $stmt->bindParam(':eventType', $params['eventType']);
+            $stmt->bindParam(':defaultRegistrationState', $params['defaultRegistrationState']);
+
+            if ($stmt->execute() === false) {
+                return Optional::failure();
+            }
+
+            $sql = <<< SQL
+SELECT LAST_INSERT_ID() as id;
+SQL;
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+
+            $eventId = $stmt->fetch();
+            if ($eventId === false) {
+                return Optional::failure();
+            }
+
+            $eventId = $eventId['id'];
+            foreach ($params['groups'] as $groupId) {
+                $this->groupService->addGroupToEvent($groupId, $eventId);
+            }
+
+            $optional = $this->getEventById($eventId, $this->user);
+            $this->db->commit();
+            return $optional;
+        } catch (\PDOException $exception) {
+            $this->db->rollBack();
+            return Optional::failure();
+        }
     }
 
     /**

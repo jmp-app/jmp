@@ -27,6 +27,18 @@ $container['validation'] = function () {
             'all' => v::optional(v::boolVal()),
             'elapsed' => v::optional(v::boolVal()),
         ],
+        'createEvent' => [
+            'title' => v::notEmpty()->length(1, 51),
+            'description' => v::optional(v::notEmpty()->length(1, 256)),
+            'from' => v::date('Y-m-d\TH:i'),
+            'to' => v::date('Y-m-d\TH:i'),
+            'place' => v::optional(v::notEmpty()->length(1, 51)),
+            'eventType' => v::noWhitespace()->numeric()->min(0),
+            'defaultRegistrationState' => v::noWhitespace()->numeric()->min(0),
+            'groups' => v::arrayType()->notEmpty()->each(
+                v::noWhitespace()->numeric()->min(0)
+            )
+        ],
         'getEventById' => [
             'id' => v::notEmpty()->noWhitespace()->numeric()
         ],

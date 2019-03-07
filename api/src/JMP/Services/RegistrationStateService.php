@@ -66,4 +66,25 @@ SQL;
             return Optional::success(new RegistrationState($registrationState));
         }
     }
+
+
+    /**
+     * Checks whether a registration state with the given id already exists
+     * @param int $registrationStateId
+     * @return bool
+     */
+    public function registrationStateExists(int $registrationStateId): bool
+    {
+        $sql = <<<SQL
+            SELECT id
+            FROM jmp.`registration_state`
+            WHERE id = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $registrationStateId);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
+    }
 }
