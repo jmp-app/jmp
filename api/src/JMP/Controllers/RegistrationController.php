@@ -2,14 +2,18 @@
 
 namespace JMP\Controllers;
 
+use JMP\Models\Event;
+use JMP\Models\Group;
 use JMP\Models\Registration;
 use JMP\Models\RegistrationState;
 use JMP\Models\User;
 use JMP\Services\Auth;
 use JMP\Services\EventService;
+use JMP\Services\GroupService;
 use JMP\Services\RegistrationService;
 use JMP\Services\RegistrationStateService;
 use JMP\Services\UserService;
+use JMP\Services\ValidationService;
 use JMP\Utils\Converter;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -46,6 +50,14 @@ class RegistrationController
      * @var UserService
      */
     private $userService;
+    /**
+     * @var GroupService
+     */
+    private $groupService;
+    /**
+     * @var ValidationService
+     */
+    private $validationService;
 
     /**
      * RegistrationController constructor.
@@ -60,6 +72,8 @@ class RegistrationController
         $this->userService = $container->get('userService');
         $this->logger = $container->get('logger');
         $this->user = $container->get('user');
+        $this->groupService = $container->get('groupService');
+        $this->validationService = $container->get('validationService');
     }
 
     public function getRegistrationByEventIdAndUserId(Request $request, Response $response, array $args): Response
@@ -96,6 +110,9 @@ class RegistrationController
 
         // Validate input
         $errors = [];
+        /**
+         * @var Event $event
+         */
         list($errors, $event) = $this->validateEvent($registration->eventId, $errors);
         $errors = $this->validateUser($registration->userId, $errors);
 
@@ -103,6 +120,17 @@ class RegistrationController
             return $response->withJson([
                 "errors" => $errors
             ], 400);
+        }
+
+        // Check if user can be registered to event
+        $groups = $this->groupService->getGroupsByEventId($registration->eventId);
+        $groupIds = array_map(function (Group $value) {
+            return $value->id;
+        }, $groups);
+        if ($this->validationService->isUserInOneOfTheGroups($groupIds, $registration->userId) === false) {
+            return $response->withJson([
+                'errors' => 'Cant register user with the id ' . $registration->userId . ' to the event ' . $registration->eventId
+            ], 403);
         }
 
         if (!isset($parsedBody['registrationState'])) {

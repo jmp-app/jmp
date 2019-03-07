@@ -66,6 +66,10 @@ $container['userService'] = function (\Psr\Container\ContainerInterface $contain
     return new \JMP\Services\UserService($container);
 };
 
+$container['validationService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\ValidationService($container);
+};
+
 // Logger
 $container['logger'] = function (\Psr\Container\ContainerInterface $container) {
     $settings = $container->get('settings')['logger'];
