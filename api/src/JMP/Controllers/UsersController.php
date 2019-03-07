@@ -28,6 +28,10 @@ class UsersController
      * @var Logger
      */
     private $logger;
+    /**
+     * @var User
+     */
+    private $user;
 
     /**
      * EventController constructor.
@@ -38,6 +42,7 @@ class UsersController
         $this->userService = $container->get('userService');
         $this->auth = $container->get('auth');
         $this->logger = $container->get('logger');
+        $this->user = $container->get('user');
     }
 
     /**
@@ -48,20 +53,7 @@ class UsersController
      */
     public function getCurrentUser(Request $request, Response $response): Response
     {
-        $optional = $this->auth->requestUser($request);
-
-        if ($optional->isFailure()) {
-            // There has to be always a logged in user that accesses this
-            $this->logger->addError('An invalid user was requested as current user. Username: "' . $request->getAttribute('token')['sub'] . '"');
-            return $response->withStatus(500);
-        }
-
-        /**
-         * @var User $user
-         */
-        $user = $optional->getData();
-
-        return $response->withJson(Converter::convert($user));
+        return $response->withJson(Converter::convert($this->user));
     }
 
     /**
@@ -237,23 +229,10 @@ class UsersController
      */
     public function changePassword(Request $request, Response $response)
     {
-        $optional = $this->auth->requestUser($request);
-
-        if ($optional->isFailure()) {
-            // There has to be always a logged in user that accesses this
-            $this->logger->addError('Tried to change password of not logged in user. Username: "' . $request->getAttribute('token')['sub'] . '"');
-            return $response->withStatus(500);
-        }
-
-        /**
-         * @var User $user
-         */
-        $user = $optional->getData();
-
         $password = $request->getParsedBodyParam('password');
         $newPassword = $request->getParsedBodyParam('newPassword');
 
-        $passwordCheck = $this->auth->attempt($user->username, $password);
+        $passwordCheck = $this->auth->attempt($this->user->username, $password);
         if ($passwordCheck->isFailure()) {
             return $response->withJson([
                 'errors' => [
@@ -262,14 +241,14 @@ class UsersController
             ], 400);
         }
 
-        if ($this->userService->changePassword($user->id, $newPassword) === false) {
-            $this->logger->addError('Failed to change password of user. User: "' . $user . '"');
+        if ($this->userService->changePassword($this->user->id, $newPassword) === false) {
+            $this->logger->addError('Failed to change password of user. User: "' . $this->user . '"');
             return $response->withStatus(500);
         }
 
         // password change was true but user changed the password -> set back to false
-        if ($user->passwordChange) {
-            $this->userService->updateUser($user->id, [
+        if ($this->user->passwordChange) {
+            $this->userService->updateUser($this->user->id, [
                 'passwordChange' => false
             ]);
         }

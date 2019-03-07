@@ -25,6 +25,10 @@ class EventsController
      * @var Logger
      */
     private $logger;
+    /**
+     * @var User
+     */
+    private $user;
 
     /**
      * EventController constructor.
@@ -35,6 +39,7 @@ class EventsController
         $this->auth = $container->get('auth');
         $this->eventService = $container->get('eventService');
         $this->logger = $container->get('logger');
+        $this->user = $container->get('user');
     }
 
 
@@ -46,35 +51,28 @@ class EventsController
      */
     public function listEvents(Request $request, Response $response): Response
     {
-        $optional = $this->auth->requestUser($request);
-        if ($optional->isFailure()) {
-            return $response->withStatus(401);
-        }
-        /** @var User $user */
-        $user = $optional->getData();
-
-        if ((bool)$user->isAdmin !== true && isset($request->getQueryParams()['all']) === true) {
+        if ((bool)$this->user->isAdmin !== true && isset($request->getQueryParams()['all']) === true) {
             return $response->withStatus(403);
         }
 
         // if limit and offset are not set do not use pagination
         if (empty($request->getQueryParam('limit')) && empty($request->getQueryParam('offset'))) {
-            $arguments = $this->fetchArgs($request->getQueryParams(), $user->isAdmin);
+            $arguments = $this->fetchArgs($request->getQueryParams(), $this->user->isAdmin);
             try {
-                $events = Converter::convertArray($this->eventService->getEventsByGroupAndEventType($arguments['group'], $arguments['eventType'], $arguments['all'], $arguments['elapsed'], $user));
+                $events = Converter::convertArray($this->eventService->getEventsByGroupAndEventType($arguments['group'], $arguments['eventType'], $arguments['all'], $arguments['elapsed'], $this->user));
             } catch (\Exception $e) {
                 $this->logger->error($e->getMessage());
                 return $response->withStatus(500);
             }
             return $response->withJson($events);
         } else {
-            $arguments = $this->fetchArgsWithPagination($request->getQueryParams(), $user->isAdmin);
+            $arguments = $this->fetchArgsWithPagination($request->getQueryParams(), $this->user->isAdmin);
 
             if (is_null($arguments['limit'])) {
                 // no limit, just use offset
                 try {
                     $events = Converter::convertArray($this->eventService->getEventByGroupAndEventWithOffset($arguments['group'],
-                        $arguments['eventType'], $arguments['all'], $arguments['elapsed'], $user, $arguments['offset']));
+                        $arguments['eventType'], $arguments['all'], $arguments['elapsed'], $this->user, $arguments['offset']));
                 } catch (\Exception $e) {
                     $this->logger->error($e->getMessage());
                     return $response->withStatus(500);
@@ -82,7 +80,7 @@ class EventsController
             } else {
                 try {
                     $events = Converter::convertArray($this->eventService->getEventsByGroupAndEventTypeWithPagination($arguments['group'],
-                        $arguments['eventType'], $arguments['limit'], $arguments['all'], $arguments['elapsed'], $user, $arguments['offset']));
+                        $arguments['eventType'], $arguments['limit'], $arguments['all'], $arguments['elapsed'], $this->user, $arguments['offset']));
                 } catch (\Exception $e) {
                     $this->logger->error($e->getMessage());
                     return $response->withStatus(500);
@@ -104,14 +102,8 @@ class EventsController
      */
     public function getEventById(Request $request, Response $response, array $args): Response
     {
-        $optional = $this->auth->requestUser($request);
-        if ($optional->isFailure()) {
-            return $response->withStatus(401);
-        }
-        /** @var User $user */
-        $user = $optional->getData();
         try {
-            $optional = $this->eventService->getEventById($args['id'], $user);
+            $optional = $this->eventService->getEventById($args['id'], $this->user);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             return $response->withStatus(500);

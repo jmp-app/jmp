@@ -37,6 +37,10 @@ class RegistrationController
      * @var Logger
      */
     private $logger;
+    /**
+     * @var User
+     */
+    private $user;
 
     /**
      * RegistrationController constructor.
@@ -49,6 +53,7 @@ class RegistrationController
         $this->registrationStateService = $container->get('registrationStateService');
         $this->eventService = $container->get('eventService');
         $this->logger = $container->get('logger');
+        $this->user = $container->get('user');
     }
 
     public function getRegistrationByEventIdAndUserId(Request $request, Response $response, array $args): Response
@@ -77,15 +82,8 @@ class RegistrationController
             return $response->withJson(Converter::convert($optional->getData()));
         }
 
-        $optional = $this->auth->requestUser($request);
-        if ($optional->isFailure()) {
-            return $response->withStatus(401);
-        }
-        /** @var User $user */
-        $user = $optional->getData();
-
         try {
-            $event = $this->eventService->getEventById($registration->eventId, $user);
+            $event = $this->eventService->getEventById($registration->eventId, $this->user);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             return $response->withStatus(500);
