@@ -143,30 +143,16 @@ class EventsController
     {
         $params = $request->getParsedBody();
 
+        // Validate the input
         $errors = [];
-
-        if ($this->eventTypeService->eventTypeExists($params['eventType']) === false) {
-            $errors['eventType'] = 'An event type with the id ' . $params['eventType'] . ' doesnt exist';
-        }
-
-        $groupsWhichNotExists = [];
-        foreach ($params['groups'] as $groupId) {
-            if ($this->groupService->groupExists($groupId) === false) {
-                array_push($groupsWhichNotExists, $groupId);
-            }
-        }
-        if (empty($groupsWhichNotExists) === false) {
-            $errors['groups'] = 'The following groups dont exist: ' . $groupsWhichNotExists;
-        }
-
-        if ($this->registrationStateService->registrationStateExists($params['defaultRegistrationState']) === false) {
-            $errors['defaultRegistrationState'] = 'A egistration state with the id ' . $params['defaultRegistrationState'] . ' doesnt exist';
-        }
+        $errors = $this->validateEventType($params, $errors);
+        $errors = $this->validateGroups($params, $errors);
+        $errors = $this->validateRegistrationState($params, $errors);
 
         if (empty($errors) === false) {
             return $response->withJson([
                 'errors' => $errors
-            ], 403);
+            ], 400);
         }
 
         $optional = $this->eventService->createEvent($params);
@@ -207,6 +193,51 @@ class EventsController
             'all' => isset($params['all']) && $isAdmin === true ? (bool)$params['all'] : false,
             'elapsed' => isset($params['elapsed']) ? (bool)$params['elapsed'] : false
         ];
+    }
+
+    /**
+     * @param $params
+     * @param array $errors
+     * @return array
+     */
+    private function validateEventType($params, array $errors): array
+    {
+        if ($this->eventTypeService->eventTypeExists($params['eventType']) === false) {
+            $errors['eventType'] = 'An event type with the id ' . $params['eventType'] . ' doesnt exist';
+        }
+        return $errors;
+    }
+
+    /**
+     * @param $params
+     * @param array $errors
+     * @return array
+     */
+    private function validateGroups($params, array $errors): array
+    {
+        $groupsWhichNotExists = [];
+        foreach ($params['groups'] as $groupId) {
+            if ($this->groupService->groupExists($groupId) === false) {
+                array_push($groupsWhichNotExists, $groupId);
+            }
+        }
+        if (empty($groupsWhichNotExists) === false) {
+            $errors['groups'] = 'The following groups dont exist: [' . implode(', ', $groupsWhichNotExists) . ']';
+        }
+        return $errors;
+    }
+
+    /**
+     * @param $params
+     * @param array $errors
+     * @return array
+     */
+    private function validateRegistrationState($params, array $errors): array
+    {
+        if ($this->registrationStateService->registrationStateExists($params['defaultRegistrationState']) === false) {
+            $errors['defaultRegistrationState'] = 'A egistration state with the id ' . $params['defaultRegistrationState'] . ' doesnt exist';
+        }
+        return $errors;
     }
 
 }
