@@ -392,14 +392,14 @@ GET /v1/events/
 
 Parameters:
 
-| Field     | Description                          | Required |
-| --------- | ------------------------------------ | -------- |
-| group     | To get all events by the group id    |          |
-| eventType | To get all events by type id         |          |
-| limit     | Limit the amount of events retrieved |          |
-| offset    | Skip the fist _x_ events             |          |
-| all       | List events of all users/groups **(works only as admin)**|          |
-| elapsed   | List also elapsed events             |          |
+| Field     | Description                          | Required | Type |
+| --------- | ------------------------------------ | -------- | -------- |
+| group     | To get all events by the group id    |          | numeric  |
+| eventType | To get all events by type id         |          | numeric  |
+| limit     | Limit the amount of events retrieved |          | numeric  |
+| offset    | Skip the fist _x_ events             |          | numeric |
+| all       | List events of all users/groups **(works only as ks only as admin)**| | bool |
+| elapsed   | List also elapsed events             |          | bool |
 
 Example request:
 
@@ -415,7 +415,7 @@ By default (without the elapsed parameter set), only current and upcoming events
 ### Get Event
 
 ```http
-GET /v1/events/{id}
+GET /v1/events/{id:[0-9]+}
 ```
 
 Parameters: none
