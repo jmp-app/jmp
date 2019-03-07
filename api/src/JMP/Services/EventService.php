@@ -209,47 +209,31 @@ SQL;
     {
         $this->db->beginTransaction();
         try {
-            $sql = <<< SQL
-INSERT INTO `jmp`.`event` (`title`, `from`, `to`, `place`, `description`, `event_type_id`,
-           `default_registration_state_id`)
-VALUES (:title, :from, :to, :place, :description, :eventType, :defaultRegistrationState);
-SQL;
-
-            $stmt = $this->db->prepare($sql);
-
-            $stmt->bindParam(':title', $params['title']);
-            $stmt->bindParam(':from', $params['from']);
-            $stmt->bindParam(':to', $params['to']);
-            $stmt->bindParam(':place', $params['place']);
-            $stmt->bindParam(':description', $params['description']);
-            $stmt->bindParam(':eventType', $params['eventType']);
-            $stmt->bindParam(':defaultRegistrationState', $params['defaultRegistrationState']);
-
-            if ($stmt->execute() === false) {
+            if ($this->insertEvent($params) === false) {
+                $this->db->rollBack();
                 return Optional::failure();
             }
 
-            $sql = <<< SQL
-SELECT LAST_INSERT_ID() as id;
-SQL;
-
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute();
-
-            $eventId = $stmt->fetch();
+            $eventId = $this->getLastInsertedEventId();
             if ($eventId === false) {
+                $this->db->rollBack();
                 return Optional::failure();
             }
 
             $eventId = $eventId['id'];
-            foreach ($params['groups'] as $groupId) {
-                $this->groupService->addGroupToEvent($groupId, $eventId);
+            if ($this->addGroupsToEvent($params, $eventId) === false) {
+                $this->db->rollBack();
+                return Optional::failure();
             }
 
+            // Return the fully created event
             $optional = $this->getEventById($eventId, $this->user);
+
+            // Everything went well, do a commit
             $this->db->commit();
             return $optional;
         } catch (\PDOException $exception) {
+            // Something went wrong, do a rollback
             $this->db->rollBack();
             return Optional::failure();
         }
@@ -293,6 +277,65 @@ SQL;
         }
         $event->groups = $this->groupService->getGroupsByEventId($val['id']);
         return $event;
+    }
+
+    /**
+     * @param array $params
+     * @return array
+     */
+    private function insertEvent(array $params): bool
+    {
+        $sql = <<< SQL
+INSERT INTO `jmp`.`event` (`title`, `from`, `to`, `place`, `description`, `event_type_id`,
+           `default_registration_state_id`)
+VALUES (:title, :from, :to, :place, :description, :eventType, :defaultRegistrationState);
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':title', $params['title']);
+        $stmt->bindParam(':from', $params['from']);
+        $stmt->bindParam(':to', $params['to']);
+        $stmt->bindParam(':place', $params['place']);
+        $stmt->bindParam(':description', $params['description']);
+        $stmt->bindParam(':eventType', $params['eventType']);
+        $stmt->bindParam(':defaultRegistrationState', $params['defaultRegistrationState']);
+
+        // Insert event
+        return $stmt->execute();
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getLastInsertedEventId()
+    {
+        $sql = <<< SQL
+SELECT LAST_INSERT_ID() as id;
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        // Gets the ID of the inserted event
+        $stmt->execute();
+
+        $eventId = $stmt->fetch();
+        return $eventId;
+    }
+
+    /**
+     * @param array $params
+     * @param $eventId
+     * @return bool
+     */
+    private function addGroupsToEvent(array $params, $eventId): bool
+    {
+// Adds all groups to the event
+        $successful = [];
+        foreach ($params['groups'] as $groupId) {
+            $success = $this->groupService->addGroupToEvent($groupId, $eventId);
+            array_push($successful, $success);
+        }
+        return !in_array(false, $successful, true);
     }
 
 }
