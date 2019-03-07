@@ -4,6 +4,8 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Processor\WebProcessor;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Tuupola\Middleware\JwtAuthentication;
 
 /**
@@ -81,7 +83,22 @@ $container['logger'] = function (\Psr\Container\ContainerInterface $container) {
     return $logger;
 };
 
-$container['errorHandler'] = function (\Psr\Container\ContainerInterface $container) {
-    $debug = $container->get('settings')['displayErrorDetails'];
-    return new \JMP\Middleware\AppErrorHandler($container, $debug);
+// Custom Error Handler
+$container['phpErrorHandler'] = $container['errorHandler'] = function (\Psr\Container\ContainerInterface $container) {
+    return function (RequestInterface $request, ResponseInterface $response, Exception $exception) use ($container): ResponseInterface {
+
+        $logger = $container->get('logger');
+        $debug = $container->get('settings')['displayErrorDetails'];
+
+        $logger->addError($exception->getMessage());
+
+        return $response
+            ->withStatus(500)
+            ->withHeader('Content-Type', 'application/json;charset=utf-8')
+            ->write(json_encode([
+                'errors' => [
+                    'internalServerError' => $debug ? $exception->getMessage() : 'Internal Server Error'
+                ]
+            ]));
+    };
 };
