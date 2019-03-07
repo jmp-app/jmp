@@ -85,19 +85,20 @@ $container['logger'] = function (\Psr\Container\ContainerInterface $container) {
 
 // Custom Error Handler
 $container['phpErrorHandler'] = $container['errorHandler'] = function (\Psr\Container\ContainerInterface $container) {
-    return function (RequestInterface $request, ResponseInterface $response, Exception $exception) use ($container): ResponseInterface {
+    return function (RequestInterface $request, ResponseInterface $response, $exception) use ($container): ResponseInterface {
 
         $logger = $container->get('logger');
         $debug = $container->get('settings')['displayErrorDetails'];
 
-        $logger->addError($exception->getMessage());
+        $logger->addError('Message: {' . $exception->getMessage() . '} Trace: {' . $exception->getTrace() . '}');
 
         return $response
             ->withStatus(500)
             ->withHeader('Content-Type', 'application/json;charset=utf-8')
             ->write(json_encode([
                 'errors' => [
-                    'internalServerError' => $debug ? $exception->getMessage() : 'Internal Server Error'
+                    'internalServerError' => $debug ? $exception->getMessage() : 'Internal Server Error',
+                    'trace' => $debug ? $exception->getTrace() : null
                 ]
             ]));
     };
