@@ -3,26 +3,25 @@
         <p v-if="loading">Loading...</p>
         <p v-if="!event && !loading">{{ $t("noDataFound") }}</p>
         <div v-if="event">
-            <EventDetail :event="event"></EventDetail>
+            <Bla :isIntegrated="true"></Bla>
             <hr class="mt-4 mb-4"/>
             <RegistrationForm v-if="registration"></RegistrationForm>
-            <BottomNavigation v-if="isAdmin"></BottomNavigation>
+            <BottomNavigation v-if="isAdmin()"></BottomNavigation>
         </div>
     </div>
 </template>
 
 <script>
-    import EventDetail from '@/components/EventDetail';
     import BottomNavigation from '@/components/BottomNavigation';
     import RegistrationForm from '@/components/RegistrationForm';
+    import Bla from '@/views/event/Bla.vue';
 
     export default {
         name: 'Detail',
-        components: {RegistrationForm, BottomNavigation, EventDetail},
+        components: {RegistrationForm, BottomNavigation, Bla},
         data: function () {
             return {
-                user: {},
-                isAdmin: false
+                user: {}
             };
         },
         computed: {
@@ -36,9 +35,14 @@
                 return this.$store.state.registration.detail.registration;
             }
         },
+        methods: {
+            isAdmin: function () {
+                const user = JSON.parse(localStorage.getItem('user'));
+                return !!(user && user.isAdmin === 1);
+            }
+        },
         created() {
             this.user = JSON.parse(window.localStorage.getItem('user'));
-            this.isAdmin = this.user.isAdmin;
             let eventId = this.$route.params.id;
             let userId = this.user.id;
 
