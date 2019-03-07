@@ -66,6 +66,12 @@ class RegistrationController
         }
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     * @throws \Exception
+     */
     public function createRegistration(Request $request, Response $response): Response
     {
         $parsedBody = $request->getParsedBody();
@@ -82,12 +88,7 @@ class RegistrationController
             return $response->withJson(Converter::convert($optional->getData()));
         }
 
-        try {
-            $event = $this->eventService->getEventById($registration->eventId, $this->user);
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
-            return $response->withStatus(500);
-        }
+        $event = $this->eventService->getEventById($registration->eventId, $this->user);
 
         if ($event->isFailure()) {
             return $this->getBadRequestResponse($response, "Invalid parameters");

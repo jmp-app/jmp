@@ -67,6 +67,7 @@ class EventsController
      * @param Request $request
      * @param Response $response
      * @return Response
+     * @throws \Exception
      */
     public function listEvents(Request $request, Response $response): Response
     {
@@ -77,33 +78,18 @@ class EventsController
         // if limit and offset are not set do not use pagination
         if (empty($request->getQueryParam('limit')) && empty($request->getQueryParam('offset'))) {
             $arguments = $this->fetchArgs($request->getQueryParams(), $this->user->isAdmin);
-            try {
-                $events = Converter::convertArray($this->eventService->getEventsByGroupAndEventType($arguments['group'], $arguments['eventType'], $arguments['all'], $arguments['elapsed'], $this->user));
-            } catch (\Exception $e) {
-                $this->logger->error($e->getMessage());
-                return $response->withStatus(500);
-            }
+            $events = Converter::convertArray($this->eventService->getEventsByGroupAndEventType($arguments['group'], $arguments['eventType'], $arguments['all'], $arguments['elapsed'], $this->user));
             return $response->withJson($events);
         } else {
             $arguments = $this->fetchArgsWithPagination($request->getQueryParams(), $this->user->isAdmin);
 
             if (is_null($arguments['limit'])) {
                 // no limit, just use offset
-                try {
-                    $events = Converter::convertArray($this->eventService->getEventByGroupAndEventWithOffset($arguments['group'],
-                        $arguments['eventType'], $arguments['all'], $arguments['elapsed'], $this->user, $arguments['offset']));
-                } catch (\Exception $e) {
-                    $this->logger->error($e->getMessage());
-                    return $response->withStatus(500);
-                }
+                $events = Converter::convertArray($this->eventService->getEventByGroupAndEventWithOffset($arguments['group'],
+                    $arguments['eventType'], $arguments['all'], $arguments['elapsed'], $this->user, $arguments['offset']));
             } else {
-                try {
-                    $events = Converter::convertArray($this->eventService->getEventsByGroupAndEventTypeWithPagination($arguments['group'],
-                        $arguments['eventType'], $arguments['limit'], $arguments['all'], $arguments['elapsed'], $this->user, $arguments['offset']));
-                } catch (\Exception $e) {
-                    $this->logger->error($e->getMessage());
-                    return $response->withStatus(500);
-                }
+                $events = Converter::convertArray($this->eventService->getEventsByGroupAndEventTypeWithPagination($arguments['group'],
+                    $arguments['eventType'], $arguments['limit'], $arguments['all'], $arguments['elapsed'], $this->user, $arguments['offset']));
             }
 
             return $response->withJson($events);
