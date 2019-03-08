@@ -58,6 +58,8 @@ INSERT INTO jmp.registration_state (id, name, reason_required)
 VALUES (2, 'subscribed', 1);
 INSERT INTO jmp.registration_state (id, name, reason_required)
 VALUES (3, 'perhaps', 1);
+INSERT INTO jmp.registration_state (id, name, reason_required)
+VALUES (4, 'no-reason', 0);
 INSERT INTO jmp.user (id, username, lastname, firstname, email, password, password_change, is_admin)
 VALUES (161, 'allen', 'Burdon', 'Allen', null, '$2y$10$T8pnjmUmDywvUIr9R7xfZOt6Qc0OgMa11DfVNNJ6m.KLMouUj47Sm', 0, 0);
 INSERT INTO jmp.user (id, username, lastname, firstname, email, password, password_change, is_admin)
