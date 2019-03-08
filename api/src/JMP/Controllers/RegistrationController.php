@@ -172,19 +172,23 @@ class RegistrationController
         $newRegistrationState = $request->getParsedBodyParam('registrationState');
         $newReason = $request->getParsedBodyParam('reason');
 
-        $registration = $this->registrationService->getRegistrationByUserIdAndEventId($userId, $eventId);
-
-        if ($registration->isFailure()) {
+        $optional = $this->registrationService->getRegistrationByUserIdAndEventId($userId, $eventId);
+        if ($optional->isFailure()) {
             return $response->withStatus(404);
         }
+        /** @var Registration $oldRegistration */
+        $oldRegistration = $optional->getData();
 
-        $newRegistrationState = $this->registrationStateService->getRegistrationTypeById($newRegistrationState);
-        if ($newRegistrationState->isFailure()) {
-            $message = 'A registrationState with the id ' . $request->getParsedBodyParam('registrationState') . ' doesnt exist';
-            return $this->getBadRequestResponseWithKey($response, "registrationState", $message);
+        if (!$newRegistrationState) {
+            $newRegistrationState = $oldRegistration->registrationState;
+        } else {
+            $optional = $this->registrationStateService->getRegistrationTypeById($newRegistrationState);
+            if ($optional->isFailure()) {
+                $message = 'A registrationState with the id ' . (int)$request->getParsedBodyParam('registrationState') . ' doesnt exist';
+                return $this->getBadRequestResponseWithKey($response, "registrationState", $message);
+            }
+            $newRegistrationState = $optional->getData();
         }
-
-        $newRegistrationState = $newRegistrationState->getData();
 
         if ($newRegistrationState->reasonRequired) {
             if (empty($newReason)) {

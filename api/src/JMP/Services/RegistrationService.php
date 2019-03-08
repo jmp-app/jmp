@@ -123,7 +123,7 @@ SQL;
 
         $stmt = $this->db->prepare($sql);
 
-        $stmt->bindParam(':reason', $registration->reason);
+        $stmt->bindValue(':reason', $registration->reason, \PDO::PARAM_STR);
         $stmt->bindParam(':registrationStateId', $registration->registrationState->id, \PDO::PARAM_INT);
         $stmt->bindParam(':eventId', $registration->eventId, \PDO::PARAM_INT);
         $stmt->bindParam(':userId', $registration->userId, \PDO::PARAM_INT);
