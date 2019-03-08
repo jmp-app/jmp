@@ -94,59 +94,77 @@ class RegistrationController
      */
     public function createRegistration(Request $request, Response $response): Response
     {
+        // Parse input
         $parsedBody = $request->getParsedBody();
-
         $registration = new Registration($parsedBody);
         $registration->registrationState = new RegistrationState([
             'id' => $parsedBody['registrationState']
         ]);
 
+        // Check if registration already exists -> return registration
         $optional = $this->registrationService->getRegistrationByUserIdAndEventId($registration->userId, $registration->eventId);
-
         if ($optional->isSuccess()) {
             //Registration already exists
             return $response->withJson(Converter::convert($optional->getData()));
         }
 
-        // Validate input
         $errors = [];
-        /**
-         * @var Event $event
-         */
-        list($errors, $event) = $this->validateEvent($registration->eventId, $errors);
+        // Validate Event
+        $errors = $this->validateEvent($registration->eventId, $errors);
+        // Validate User
         $errors = $this->validateUser($registration->userId, $errors);
-
+        // Return bad request error when one of the above failed
         if (empty($errors) === false) {
-            return $response->withJson([
-                "errors" => $errors
-            ], 400);
+            return $this->getBadRequestResponse($response, $errors);
         }
 
-        // Check if user can be registered to event
-        $groups = $this->groupService->getGroupsByEventId($registration->eventId);
-        $groupIds = array_map(function (Group $value) {
-            return $value->id;
-        }, $groups);
-        if ($this->validationService->isUserInOneOfTheGroups($groupIds, $registration->userId) === false) {
-            return $response->withJson([
-                'errors' => 'Cant register user with the id ' . $registration->userId . ' to the event ' . $registration->eventId
-            ], 403);
+        // Validate User belongs to the event
+        $errors = $this->validateUserBelongsToEvent($registration);
+        if (empty($errors) === false) {
+            return $this->getBadRequestResponse($response, $errors);
         }
 
-        if (!isset($parsedBody['registrationState'])) {
-            $registration->registrationState->id = $event->getData()->defaultRegistrationState->id;
-        }
-
-        $optional = $this->registrationService->createRegistration($registration);
-
+        $optional = $this->eventService->getEventById($registration->eventId, $this->user);
         if ($optional->isFailure()) {
-            return $this->getBadRequestResponse($response, "Invalid parameters");
+            $message = 'Cant register user with the id ' . $registration->userId . ' to the event ' . $registration->eventId;
+            return $this->getBadRequestResponseWithKey($response, 'registration', $message);
+        }
+
+        // Have to check if the id is falsy, because default value of an int is 0 and not null
+        if ($registration->registrationState->id == false) {
+            /** @var Event $event */
+            $event = $optional->getData();
+            $registration->registrationState = $event->defaultRegistrationState;
+        } else {
+            // Validate registrationState
+            if ($this->registrationStateService->registrationStateExists($registration->registrationState->id) === false) {
+                $message = 'A registrationState with the id ' . $registration->registrationState->id . ' doesnt exist';
+                return $this->getBadRequestResponseWithKey($response, 'registrationState', $message);
+            }
+        }
+
+        // Validate reason if required
+        if ($registration->registrationState->reasonRequired === true && isset($registration->reason) === false) {
+            $message = 'A reason is required but not delivered';
+            return $this->getBadRequestResponseWithKey($response, 'reason', $message);
+        }
+
+        // Create registration
+        $optional = $this->registrationService->createRegistration($registration);
+        if ($optional->isFailure()) {
+            return $response->withStatus(500);
         } else {
             return $response->withJson(Converter::convert($optional->getData()));
         }
 
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     * @return Response
+     */
     public function updateRegistration(Request $request, Response $response, $args): Response
     {
         $eventId = $args['eventId'];
@@ -162,14 +180,16 @@ class RegistrationController
 
         $newRegistrationState = $this->registrationStateService->getRegistrationTypeById($newRegistrationState);
         if ($newRegistrationState->isFailure()) {
-            return $this->getBadRequestResponse($response, "Invalid RegistrationState");
+            $message = 'A registrationState with the id ' . $request->getParsedBodyParam('registrationState') . ' doesnt exist';
+            return $this->getBadRequestResponseWithKey($response, "registrationState", $message);
         }
 
         $newRegistrationState = $newRegistrationState->getData();
 
         if ($newRegistrationState->reasonRequired) {
             if (empty($newReason)) {
-                return $this->getBadRequestResponse($response, "Reason is required");
+                $message = 'A reason is required but not delivered';
+                return $this->getBadRequestResponseWithKey($response, 'reason', $message);
             }
         }
 
@@ -186,12 +206,27 @@ class RegistrationController
         $optional = $this->registrationService->updateRegistration($updatedRegistration);
 
         if ($optional->isFailure()) {
-            return $this->getBadRequestResponse($response, "Invalid parameters");
+            return $response->withStatus(500);
         } else {
             return $response->withJson(Converter::convert($optional->getData()));
         }
 
 
+    }
+
+    /**
+     * @param Response $response
+     * @param string $key
+     * @param $message
+     * @return Response
+     */
+    public function getBadRequestResponseWithKey(Response $response, string $key, $message): Response
+    {
+        return $response->withJson([
+            'errors' => [
+                $key => $message
+            ]
+        ], 400);
     }
 
     /**
@@ -202,13 +237,12 @@ class RegistrationController
     public function getBadRequestResponse(Response $response, $message): Response
     {
         return $response->withJson([
-            "errors" => [
-                $message
-            ]
+            "errors" => $message
         ], 400);
     }
 
     /**
+     * Checks if the event exists
      * @param int $eventId
      * @param array $errors
      * @return array
@@ -216,12 +250,10 @@ class RegistrationController
      */
     private function validateEvent(int $eventId, array $errors): array
     {
-        $event = $this->eventService->getEventById($eventId, $this->user);
-
-        if ($event->isFailure()) {
+        if ($this->eventService->eventExists($eventId) === false) {
             $errors['eventId'] = 'An Event with the id ' . $eventId . ' doesnt exist';
         }
-        return array($errors, $event);
+        return $errors;
     }
 
     /**
@@ -235,6 +267,27 @@ class RegistrationController
             $errors['userId'] = 'An User with the id ' . $userId . ' doesnt exist';
         }
         return $errors;
+    }
+
+    /**
+     * Validates if the user can be registered to event
+     * @param Registration $registration
+     * @return array
+     */
+    private function validateUserBelongsToEvent(Registration $registration): array
+    {
+        $error = [];
+        // Get all groups of the event
+        $groups = $this->groupService->getGroupsByEventId($registration->eventId);
+        // Map Groups to groupIds
+        $groupIds = array_map(function (Group $value) {
+            return $value->id;
+        }, $groups);
+        // Check if the User has a membership in at least one of the groups
+        if ($this->validationService->isUserInOneOfTheGroups($groupIds, $registration->userId) === false) {
+            $error['registration'] = 'Cant register user with the id ' . $registration->userId . ' to the event ' . $registration->eventId;
+        }
+        return $error;
     }
 
 }

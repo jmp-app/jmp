@@ -240,6 +240,25 @@ SQL;
     }
 
     /**
+     * Checks if an event exists
+     * @param int $eventId
+     * @return bool
+     */
+    public function eventExists(int $eventId): bool
+    {
+        $sql = <<< SQL
+SELECT *
+FROM jmp.event
+WHERE id = :eventId
+SQL;
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':eventId', $eventId);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
      * Executes the statement and parses its result to return a list of events.
      * @param \PDOStatement $stmt
      * @return Event[]
@@ -281,7 +300,7 @@ SQL;
 
     /**
      * @param array $params
-     * @return array
+     * @return bool
      */
     private function insertEvent(array $params): bool
     {
