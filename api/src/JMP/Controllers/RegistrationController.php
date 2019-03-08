@@ -124,7 +124,7 @@ class RegistrationController
             return $this->getBadRequestResponse($response, $errors);
         }
 
-        $optional = $this->eventService->getEventById($registration->eventId, $this->user);
+        $optional = $this->eventService->getEventById($registration->eventId);
         if ($optional->isFailure()) {
             $message = 'Cant register user with the id ' . $registration->userId . ' to the event ' . $registration->eventId;
             return $this->getBadRequestResponseWithKey($response, 'registration', $message);

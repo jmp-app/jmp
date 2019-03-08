@@ -3,6 +3,7 @@
 namespace JMP\Services;
 
 use JMP\Models\Registration;
+use JMP\Models\User;
 use JMP\Utils\Optional;
 use Psr\Container\ContainerInterface;
 
@@ -20,6 +21,10 @@ class RegistrationService
      * @var EventService
      */
     protected $eventService;
+    /**
+     * @var User $user
+     */
+    private $user;
 
     /**
      * RegistrationService constructor.
@@ -30,24 +35,38 @@ class RegistrationService
         $this->db = $container->get('database');
         $this->registrationStateService = $container->get('registrationStateService');
         $this->eventService = $container->get('eventService');
+        $this->user = $container->get('user');
     }
 
     /**
      * @param int $userId
      * @param int $eventId
+     * @param User $user
      * @return Optional
      */
     public function getRegistrationByUserIdAndEventId(int $userId, int $eventId): Optional
     {
         $sql = <<< SQL
-SELECT event_id as eventId, user_id as userId, reason, registration_state_id as registrationStateId
+SELECT DISTINCT registration.event_id as eventId,
+                registration.user_id  as userId,
+                reason,
+                registration_state_id as registrationStateId
 FROM registration
-WHERE event_id = :eventId AND user_id = :userId
+       LEFT JOIN event e on registration.event_id = e.id
+       LEFT JOIN event_has_group ehg on e.id = ehg.event_id
+       LEFT JOIN `group` g on ehg.group_id = g.id
+       LEFT JOIN membership m on g.id = m.group_id
+       LEFT JOIN user u on m.user_id = u.id
+WHERE registration.event_id = :eventId
+  AND registration.user_id = :userId
+  AND (:isAdmin IS TRUE OR u.username = :username)
 SQL;
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':eventId', $eventId, \PDO::PARAM_INT);
         $stmt->bindParam(':userId', $userId, \PDO::PARAM_INT);
+        $stmt->bindParam(':isAdmin', $this->user->isAdmin);
+        $stmt->bindParam(':username', $this->user->username);
         $stmt->execute();
 
         $data = $stmt->fetch();

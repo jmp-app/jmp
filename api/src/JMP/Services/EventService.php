@@ -162,7 +162,7 @@ SQL;
      * @return Optional
      * @throws \Exception
      */
-    public function getEventById(int $eventId, User $user)
+    public function getEventById(int $eventId)
     {
         $sql = <<< SQL
                 SELECT event.id,
@@ -186,8 +186,8 @@ SQL;
         $stmt = $this->db->prepare($sql);
 
         $stmt->bindValue(':eventId', $eventId, PDO::PARAM_INT);
-        $stmt->bindValue(':isAdmin', $user->isAdmin, PDO::PARAM_BOOL);
-        $stmt->bindValue(':username', $user->username);
+        $stmt->bindValue(':isAdmin', $this->user->isAdmin, PDO::PARAM_BOOL);
+        $stmt->bindValue(':username', $this->user->username);
         $stmt->execute();
 
         $event = $stmt->fetch();
@@ -227,7 +227,7 @@ SQL;
             }
 
             // Return the fully created event
-            $optional = $this->getEventById($eventId, $this->user);
+            $optional = $this->getEventById($eventId);
 
             // Everything went well, do a commit
             $this->db->commit();
