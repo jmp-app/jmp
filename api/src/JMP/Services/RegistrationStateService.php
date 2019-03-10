@@ -24,7 +24,7 @@ class RegistrationStateService
     }
 
     /**
-     * @return array RegistrationStates
+     * @return Optional
      */
     public function getAllRegStates()
     {
@@ -37,18 +37,22 @@ SQL;
         $stmt->execute();
         $registrationStates = $stmt->fetchAll();
 
+        if ($registrationStates === false) {
+            return Optional::failure();
+        }
+
         foreach ($registrationStates as $key => $val) {
             $registrationStates[$key] = new RegistrationState($val);
         }
 
-        return $registrationStates;
+        return Optional::success($registrationStates);
     }
 
     /**
      * @param int $registrationStateId
      * @return Optional
      */
-    public function getRegistrationTypeById(int $registrationStateId)
+    public function getRegistrationStateById(int $registrationStateId)
     {
         $sql = <<< SQL
 SELECT id, name, reason_required as reasonRequired

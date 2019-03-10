@@ -71,6 +71,12 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
         ->add($jwtMiddleware);
 
+    $this->get('/registration-state/{registrationStateId:[0-9]+}', \JMP\Controllers\RegistrationStateController::class . ':getRegistrationStateById')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($this->getContainer()['validation']['getRegistrationStateById']))
+        ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
+        ->add($jwtMiddleware);
+
     $this->get('/user', UsersController::class . ':getCurrentUser')
         ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
         ->add($jwtMiddleware);

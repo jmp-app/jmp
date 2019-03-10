@@ -290,7 +290,7 @@ SQL;
         if ($optional->isSuccess()) {
             $event->eventType = $optional->getData();
         }
-        $optional = $this->registrationStateService->getRegistrationTypeById($val['defaultRegistrationState']);
+        $optional = $this->registrationStateService->getRegistrationStateById($val['defaultRegistrationState']);
         if ($optional->isSuccess()) {
             $event->defaultRegistrationState = $optional->getData();
         }

@@ -90,10 +90,13 @@ $container['validation'] = function () {
             'registrationState' => v::optional(v::notEmpty()->noWhitespace()->numeric()->min(0))
         ],
         'updateRegistration' => [
-            'eventId' => v::notEmpty()->noWhitespace()->numeric(),
-            'userId' => v::notEmpty()->noWhitespace()->numeric(),
+            'eventId' => v::notEmpty()->noWhitespace()->numeric()->min(0),
+            'userId' => v::notEmpty()->noWhitespace()->numeric()->min(0),
             'reason' => v::optional(v::notEmpty()->length(1, 80)),
             'registrationState' => v::optional(v::notEmpty()->noWhitespace()->numeric()->min(0))
+        ],
+        'getRegistrationStateById' => [
+            'registrationStateId' => v::notEmpty()->noWhitespace()->numeric()->min(0)
         ]
     ];
 };

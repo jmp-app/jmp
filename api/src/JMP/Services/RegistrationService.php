@@ -162,7 +162,7 @@ SQL;
         $registration = new Registration($data);
 
         $registrationStateId = $data['registrationStateId'];
-        $optional = $this->registrationStateService->getRegistrationTypeById($registrationStateId);
+        $optional = $this->registrationStateService->getRegistrationStateById($registrationStateId);
 
         if ($optional->isFailure()) {
             return Optional::failure();

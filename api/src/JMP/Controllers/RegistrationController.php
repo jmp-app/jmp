@@ -182,7 +182,7 @@ class RegistrationController
         if (!$newRegistrationState) {
             $newRegistrationState = $oldRegistration->registrationState;
         } else {
-            $optional = $this->registrationStateService->getRegistrationTypeById($newRegistrationState);
+            $optional = $this->registrationStateService->getRegistrationStateById($newRegistrationState);
             if ($optional->isFailure()) {
                 $message = 'A registrationState with the id ' . (int)$request->getParsedBodyParam('registrationState') . ' doesnt exist';
                 return $this->getBadRequestResponseWithKey($response, "registrationState", $message);
