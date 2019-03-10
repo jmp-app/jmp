@@ -10,10 +10,14 @@ use JMP\Middleware\AuthenticationMiddleware;
 use JMP\Middleware\ValidationErrorResponseBuilder;
 use JMP\Utils\PermissionLevel;
 
+/** @var $app Slim\App */
+
 // API Routes - version 1
 $app->group('/v1', function () {
-
+    /** @var $this Slim\App */
     /** @var \Psr\Container\ContainerInterface $container */
+    /** @var $jwtMiddleware \Tuupola\Middleware\JwtAuthentication */
+
     $container = $this->getContainer();
     $jwtMiddleware = $container['jwt'];
 

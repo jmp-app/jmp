@@ -4,6 +4,7 @@ namespace JMP\Services;
 
 
 use JMP\Models\Event;
+use JMP\Models\User;
 use JMP\Utils\Optional;
 use PDO;
 use Psr\Container\ContainerInterface;
@@ -42,12 +43,15 @@ class EventService
     /**
      * @param int $groupId
      * @param int $eventTypeId
+     * @param bool $getAll
+     * @param bool $getElapsed
+     * @param User $user
      * @return Event[]
      */
-    public function getEventsByGroupAndEventType(?int $groupId, ?int $eventTypeId): array
+    public function getEventsByGroupAndEventType(?int $groupId, ?int $eventTypeId, bool $getAll, bool $getElapsed, User $user): array
     {
         $sql = <<< SQL
-                SELECT event.id,
+                SELECT DISTINCT event.id,
                        event.title,
                        event.description,
                        `from`,
@@ -56,18 +60,25 @@ class EventService
                        event_type_id AS eventTypeId,
                        default_registration_state_id AS defaultRegistrationState
                 FROM event
-                RIGHT JOIN event_has_group ehg ON event.id = ehg.event_id
-                RIGHT JOIN event_type ON event.event_type_id = event_type.id
+                LEFT JOIN event_has_group ehg ON event.id = ehg.event_id
+                LEFT JOIN event_type ON event.event_type_id = event_type.id
+                LEFT JOIN `group` g ON ehg.group_id = g.id
+                LEFT JOIN membership m ON g.id = m.group_id
+                LEFT JOIN user u ON m.user_id = u.id
                 WHERE (:groupId IS NULL OR ehg.group_id = :groupId)
                   AND (:eventType IS NULL OR event_type_id = :eventType)
-                ORDER BY event.`from` 
+                  AND (:getAll IS TRUE OR :username = u.username)
+                  AND (:elapsed IS TRUE OR event.`to` >= NOW())
+                ORDER BY event.`from`, event.`to` 
 SQL;
 
         $stmt = $this->db->prepare($sql);
 
         $stmt->bindValue(':groupId', $groupId, PDO::PARAM_INT);
         $stmt->bindValue(':eventType', $eventTypeId, PDO::PARAM_INT);
-
+        $stmt->bindParam(':username', $user->username);
+        $stmt->bindParam(':getAll', $getAll);
+        $stmt->bindParam(':elapsed', $getElapsed);
 
         return $this->fetchAllEvents($stmt);
     }
@@ -76,13 +87,16 @@ SQL;
      * @param int $groupId
      * @param int $eventTypeId
      * @param int $limit
+     * @param bool $getAll
+     * @param bool $getElapsed
+     * @param User $user
      * @param int $offset
      * @return Event[]
      */
-    public function getEventsByGroupAndEventTypeWithPagination(?int $groupId, ?int $eventTypeId, int $limit, int $offset = 0): array
+    public function getEventsByGroupAndEventTypeWithPagination(?int $groupId, ?int $eventTypeId, int $limit, bool $getAll, bool $getElapsed, User $user, int $offset = 0): array
     {
         $sql = <<< SQL
-                SELECT event.id,
+                SELECT DISTINCT event.id,
                        event.title,
                        event.description,
                        `from`,
@@ -91,11 +105,16 @@ SQL;
                        event_type_id AS eventTypeId,
                        default_registration_state_id AS defaultRegistrationState
                 FROM event
-                RIGHT JOIN event_has_group ehg ON event.id = ehg.event_id
-                RIGHT JOIN event_type ON event.event_type_id = event_type.id
+                LEFT JOIN event_has_group ehg ON event.id = ehg.event_id
+                LEFT JOIN event_type ON event.event_type_id = event_type.id
+                LEFT JOIN `group` g ON ehg.group_id = g.id
+                LEFT JOIN membership m ON g.id = m.group_id
+                LEFT JOIN user u ON m.user_id = u.id
                 WHERE (:groupId IS NULL OR ehg.group_id = :groupId)
                   AND (:eventType IS NULL OR event_type_id = :eventType)
-                ORDER BY event.`from` 
+                  AND (:getAll IS TRUE OR :username = u.username)
+                  AND (:elapsed IS TRUE OR event.`to` >= NOW())
+                ORDER BY event.`from`, event.`to` 
                 LIMIT :lim OFFSET :off
 SQL;
 
@@ -105,6 +124,9 @@ SQL;
         $stmt->bindValue(':eventType', $eventTypeId, PDO::PARAM_INT);
         $stmt->bindParam(':lim', $limit, PDO::PARAM_INT);
         $stmt->bindParam(':off', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':username', $user->username);
+        $stmt->bindParam(':getAll', $getAll);
+        $stmt->bindParam(':elapsed', $getElapsed);
 
         return $this->fetchAllEvents($stmt);
     }
@@ -113,12 +135,15 @@ SQL;
      * Get all events with offset.
      * @param int $groupId
      * @param int $eventTypeId
+     * @param bool $getAll
+     * @param bool $getElapsed
+     * @param User $user
      * @param int $offset
      * @return Event[]
      */
-    public function getEventByGroupAndEventWithOffset(int $groupId, int $eventTypeId, int $offset = 0): array
+    public function getEventByGroupAndEventWithOffset(int $groupId, int $eventTypeId, bool $getAll, bool $getElapsed, User $user, int $offset = 0): array
     {
-        $events = $this->getEventsByGroupAndEventType($groupId, $eventTypeId);
+        $events = $this->getEventsByGroupAndEventType($groupId, $eventTypeId, $getAll, $getElapsed, $user);
         return array_slice($events, $offset);
     }
 

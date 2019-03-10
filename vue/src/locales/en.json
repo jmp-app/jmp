@@ -24,6 +24,7 @@
   "event.fromTo": "From - To:",
   "event.place": "Place:",
   "event.groups": "Groups:",
+  "event.overview.showAll": "Show events from all groups",
   "registration.reason": "Reason",
   "registration.reasonRequired": "Reason is required",
   "registration.reasonPlaceholder": "Enter reason",
@@ -38,5 +39,19 @@
   "password.current": "Current Password",
   "password.new": "New Password",
   "password.repeat": "Repeat Password",
-  "nav.overview": "Overview"
+  "nav.overview": "Overview",
+  "user.create.password2": "Repeat password",
+  "user.detail.passwordChange": "Must change password at next login",
+  "user.detail.usernameRequired": "Username is required",
+  "user.detail.passwordRequired": "Password is required",
+  "user.isAdmin": "Administrator",
+  "save": "Save",
+  "group.detail.nameRequired": "Name is required",
+  "group.detail.members": "Members",
+  "group.detail.AddMembers": "Edit Members",
+  "group.detail.title": "Edit Group",
+  "group.addMembers.allUsers": "All Users",
+  "group.addMembers.addSelected": "Add selected",
+  "group.addMembers.removeSelected": "Remove selected",
+  "group.overview.title": "Overview of all groups"
 }

@@ -5,7 +5,9 @@ export const groupService = {
     getGroup,
     updateGroup,
     createGroup,
-    deleteGroup
+    deleteGroup,
+    joinGroup,
+    leaveGroup
 };
 
 function getAll() {
@@ -34,4 +36,17 @@ function updateGroup(group) {
 
 function deleteGroup(id) {
     return Vue.axios.delete(`/groups/${id}`);
+}
+
+function joinGroup(groupId, userIds) {
+    const payload = {'users': userIds};
+    return Vue.axios.post(`/groups/${groupId}/join`, payload).then(response => {
+        return response.data;
+    });
+}
+
+function leaveGroup(groupId, userIds) {
+    return Vue.axios.delete(`/groups/${groupId}/leave`, {data: {users: userIds}}).then(response => {
+        return response.data;
+    });
 }
