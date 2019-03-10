@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-  "content-hash": "b84aad33aa1836ba6db7986a73337ad0",
+  "content-hash": "8126a0691c83e449698753f8823ed1b6",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -676,16 +676,16 @@
         },
         {
             "name": "slim/slim",
-            "version": "3.11.0",
+          "version": "3.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "d378e70431e78ee92ee32ddde61ecc72edf5dc0a"
+              "reference": "f4947cc900b6e51cbfda58b9f1247bca2f76f9f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/d378e70431e78ee92ee32ddde61ecc72edf5dc0a",
-                "reference": "d378e70431e78ee92ee32ddde61ecc72edf5dc0a",
+              "url": "https://api.github.com/repos/slimphp/Slim/zipball/f4947cc900b6e51cbfda58b9f1247bca2f76f9f0",
+              "reference": "f4947cc900b6e51cbfda58b9f1247bca2f76f9f0",
                 "shasum": ""
             },
             "require": {
@@ -743,7 +743,65 @@
                 "micro",
                 "router"
             ],
-            "time": "2018-09-16T10:54:21+00:00"
+          "time": "2019-01-15T13:21:25+00:00"
+        },
+      {
+        "name": "symfony/polyfill-ctype",
+        "version": "v1.10.0",
+        "source": {
+          "type": "git",
+          "url": "https://github.com/symfony/polyfill-ctype.git",
+          "reference": "e3d826245268269cd66f8326bd8bc066687b4a19"
+        },
+        "dist": {
+          "type": "zip",
+          "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/e3d826245268269cd66f8326bd8bc066687b4a19",
+          "reference": "e3d826245268269cd66f8326bd8bc066687b4a19",
+          "shasum": ""
+        },
+        "require": {
+          "php": ">=5.3.3"
+        },
+        "suggest": {
+          "ext-ctype": "For best performance"
+        },
+        "type": "library",
+        "extra": {
+          "branch-alias": {
+            "dev-master": "1.9-dev"
+          }
+        },
+        "autoload": {
+          "psr-4": {
+            "Symfony\\Polyfill\\Ctype\\": ""
+          },
+          "files": [
+            "bootstrap.php"
+          ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+          "MIT"
+        ],
+        "authors": [
+          {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+          },
+          {
+            "name": "Gert de Pagter",
+            "email": "backendtea@gmail.com"
+          }
+        ],
+        "description": "Symfony polyfill for ctype functions",
+        "homepage": "https://symfony.com",
+        "keywords": [
+          "compatibility",
+          "ctype",
+          "polyfill",
+          "portable"
+        ],
+        "time": "2018-08-06T14:22:27+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -859,16 +917,16 @@
         },
         {
             "name": "tuupola/http-factory",
-          "version": "1.0.2",
+          "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tuupola/http-factory.git",
-              "reference": "60f44b13e5363fbe6876b5b5edc03af5e4cb6294"
+              "reference": "1fd4eaafe3a6e0c26d288e3b3e17d777ea1991bf"
             },
             "dist": {
                 "type": "zip",
-              "url": "https://api.github.com/repos/tuupola/http-factory/zipball/60f44b13e5363fbe6876b5b5edc03af5e4cb6294",
-              "reference": "60f44b13e5363fbe6876b5b5edc03af5e4cb6294",
+              "url": "https://api.github.com/repos/tuupola/http-factory/zipball/1fd4eaafe3a6e0c26d288e3b3e17d777ea1991bf",
+              "reference": "1fd4eaafe3a6e0c26d288e3b3e17d777ea1991bf",
                 "shasum": ""
             },
             "require": {
@@ -912,20 +970,20 @@
                 "psr-17",
                 "psr-7"
             ],
-          "time": "2018-12-22T06:14:23+00:00"
+          "time": "2019-01-11T15:13:01+00:00"
         },
         {
             "name": "tuupola/slim-jwt-auth",
-            "version": "3.1.1",
+          "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tuupola/slim-jwt-auth.git",
-                "reference": "e50fa3cc6135abdc1b03e88c0425258a4955d01b"
+              "reference": "33521e30ff8e11458ecb88316d91296122b3c0a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tuupola/slim-jwt-auth/zipball/e50fa3cc6135abdc1b03e88c0425258a4955d01b",
-                "reference": "e50fa3cc6135abdc1b03e88c0425258a4955d01b",
+              "url": "https://api.github.com/repos/tuupola/slim-jwt-auth/zipball/33521e30ff8e11458ecb88316d91296122b3c0a0",
+              "reference": "33521e30ff8e11458ecb88316d91296122b3c0a0",
                 "shasum": ""
             },
             "require": {
@@ -938,12 +996,12 @@
                 "tuupola/http-factory": "^0.4.0|^1.0"
             },
             "require-dev": {
-                "codedungeon/phpunit-result-printer": "^0.5.4",
+              "codedungeon/phpunit-result-printer": "^0.23.4",
                 "equip/dispatch": "^2.0",
-                "overtrue/phplint": "^0.2.4",
+              "overtrue/phplint": "^1.0",
                 "phpstan/phpstan": "^0.9.1",
-                "phpunit/phpunit": "^6.5",
-                "squizlabs/php_codesniffer": "^2.3",
+              "phpunit/phpunit": "^6.0|^7.0",
+              "squizlabs/php_codesniffer": "^3.4",
                 "zendframework/zend-diactoros": "^1.3|^2.0"
             },
             "type": "library",
@@ -965,7 +1023,7 @@
                 {
                     "name": "Mika Tuupola",
                     "email": "tuupola@appelsiini.net",
-                    "homepage": "http://www.appelsiini.net/",
+                  "homepage": "https://appelsiini.net/",
                     "role": "Developer"
                 }
             ],
@@ -979,24 +1037,25 @@
                 "psr-15",
                 "psr-7"
             ],
-            "time": "2018-10-12T11:44:47+00:00"
+          "time": "2019-01-26T06:31:33+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
-          "version": "v2.5.2",
+          "version": "v2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-              "reference": "cfd5dc225767ca154853752abc93aeec040fcf36"
+              "reference": "2a7dcf7e3e02dc5e701004e51a6f304b713107d5"
             },
             "dist": {
                 "type": "zip",
-              "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/cfd5dc225767ca154853752abc93aeec040fcf36",
-              "reference": "cfd5dc225767ca154853752abc93aeec040fcf36",
+              "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/2a7dcf7e3e02dc5e701004e51a6f304b713107d5",
+              "reference": "2a7dcf7e3e02dc5e701004e51a6f304b713107d5",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+              "php": ">=5.3.9",
+              "symfony/polyfill-ctype": "^1.9"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8.35 || ^5.0"
@@ -1004,7 +1063,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                  "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -1029,7 +1088,7 @@
                 "env",
                 "environment"
             ],
-          "time": "2018-10-30T17:29:25+00:00"
+          "time": "2019-01-29T11:11:52+00:00"
         }
     ],
     "packages-dev": [],
