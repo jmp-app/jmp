@@ -2,11 +2,11 @@
   "name": "jmp",
   "version": "0.1.0",
   "license": "MIT",
-  "homepage": "https://github.com/Simai00/jmp#readme",
-  "bugs": "https://github.com/Simai00/jmp/issues",
+  "homepage": "https://github.com/jmp-app/jmp#readme",
+  "bugs": "https://github.com/jmp-app/jmp/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Simai00/jmp.git"
+    "url": "https://github.com/jmp-app/jmp.git"
   },
   "contributors": [
     "Kay Mattern",
