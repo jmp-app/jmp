@@ -158,7 +158,6 @@ SQL;
     /**
      * Get event by id
      * @param int $eventId
-     * @param User $user
      * @return Optional
      * @throws \Exception
      */

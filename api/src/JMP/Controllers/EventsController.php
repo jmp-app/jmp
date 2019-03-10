@@ -221,7 +221,7 @@ class EventsController
     private function validateRegistrationState($params, array $errors): array
     {
         if ($this->registrationStateService->registrationStateExists($params['defaultRegistrationState']) === false) {
-            $errors['defaultRegistrationState'] = 'A egistration state with the id ' . $params['defaultRegistrationState'] . ' doesnt exist';
+            $errors['defaultRegistrationState'] = 'A registration state with the id ' . $params['defaultRegistrationState'] . ' doesnt exist';
         }
         return $errors;
     }

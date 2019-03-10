@@ -41,7 +41,6 @@ class RegistrationService
     /**
      * @param int $userId
      * @param int $eventId
-     * @param User $user
      * @return Optional
      */
     public function getRegistrationByUserIdAndEventId(int $userId, int $eventId): Optional

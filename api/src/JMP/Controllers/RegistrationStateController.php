@@ -34,7 +34,7 @@ class RegistrationStateController
     {
         $optional = $this->registrationStateService->getAllRegStates();
         if ($optional->isFailure()) {
-            $this->logger->addError('Failed to get all registraton states');
+            $this->logger->addError('Failed to get all registration states');
             return $response->withStatus(500);
         }
         return $response->withJson(Converter::convertArray($optional->getData()));
