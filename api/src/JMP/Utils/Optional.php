@@ -71,6 +71,9 @@ class Optional
         return $this->success;
     }
 
+    /**
+     * @return bool
+     */
     public function isFailure(): bool
     {
         return !$this->success;

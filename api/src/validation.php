@@ -27,6 +27,18 @@ $container['validation'] = function () {
             'all' => v::optional(v::boolVal()),
             'elapsed' => v::optional(v::boolVal()),
         ],
+        'createEvent' => [
+            'title' => v::notEmpty()->length(1, 51),
+            'description' => v::optional(v::notEmpty()->length(1, 256)),
+            'from' => v::date('Y-m-d\TH:i'),
+            'to' => v::date('Y-m-d\TH:i'),
+            'place' => v::optional(v::notEmpty()->length(1, 51)),
+            'eventType' => v::noWhitespace()->numeric()->min(0),
+            'defaultRegistrationState' => v::noWhitespace()->numeric()->min(0),
+            'groups' => v::arrayType()->notEmpty()->each(
+                v::noWhitespace()->numeric()->min(0)
+            )
+        ],
         'getEventById' => [
             'id' => v::notEmpty()->noWhitespace()->numeric()
         ],
@@ -75,13 +87,13 @@ $container['validation'] = function () {
             'eventId' => v::notEmpty()->noWhitespace()->numeric(),
             'userId' => v::notEmpty()->noWhitespace()->numeric(),
             'reason' => v::optional(v::notEmpty()->length(1, 80)),
-            'registrationState' => v::optional(v::notEmpty()->noWhitespace()->numeric())
+            'registrationState' => v::optional(v::notEmpty()->noWhitespace()->numeric()->min(0))
         ],
         'updateRegistration' => [
             'eventId' => v::notEmpty()->noWhitespace()->numeric(),
             'userId' => v::notEmpty()->noWhitespace()->numeric(),
             'reason' => v::optional(v::notEmpty()->length(1, 80)),
-            'registrationState' => v::notEmpty()->noWhitespace()->numeric()
+            'registrationState' => v::optional(v::notEmpty()->noWhitespace()->numeric()->min(0))
         ]
     ];
 };

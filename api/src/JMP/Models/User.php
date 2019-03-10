@@ -6,6 +6,7 @@ namespace JMP\Models;
 
 class User implements ArrayConvertable
 {
+    use ArrayConvertableTrait;
     /**
      * @var int
      */
@@ -57,10 +58,9 @@ class User implements ArrayConvertable
         $this->isAdmin = (bool)$args['isAdmin'];
     }
 
-    public function toArray(): array
+    public function __toString(): string
     {
-        return array_filter((array)$this, function ($value) {
-            return $value !== null;
-        });
+        unset($this->password);
+        return (string)$this->toArray();
     }
 }

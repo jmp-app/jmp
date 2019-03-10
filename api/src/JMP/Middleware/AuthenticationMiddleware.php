@@ -6,6 +6,7 @@ namespace JMP\Middleware;
 
 use JMP\Services\Auth;
 use JMP\Utils\PermissionLevel;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -20,6 +21,14 @@ class AuthenticationMiddleware
      * @var int
      */
     private $permissionLevel;
+    /**
+     * @var Logger
+     */
+    private $logger;
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
 
     /**
      * AuthenticationMiddleware constructor.
@@ -30,6 +39,8 @@ class AuthenticationMiddleware
     {
         $this->auth = $container->get('auth');
         $this->permissionLevel = $permissionLevel;
+        $this->logger = $container->get('logger');
+        $this->container = $container;
     }
 
 
@@ -56,7 +67,7 @@ class AuthenticationMiddleware
                 }
             default:
                 {
-                    return $this->invalidPermissionLevel($response);
+                    return $this->invalidPermissionLevel($request, $response);
                 }
         }
     }
@@ -69,10 +80,13 @@ class AuthenticationMiddleware
      */
     private function user(Request $request, Response $response, callable $next): Response
     {
-        if ($this->auth->requestUser($request)->isFailure()) {
+        $optional = $this->auth->requestUser($request);
+        if ($optional->isFailure()) {
             return $response->withStatus(401);
+        } else {
+            $this->container['user'] = $optional->getData();
+            return $next($request, $response);
         }
-        return $next($request, $response);
     }
 
     /**
@@ -84,7 +98,8 @@ class AuthenticationMiddleware
     private function admin(Request $request, Response $response, callable $next): Response
     {
 // Check user for admin permissions
-        if ($this->auth->requestAdmin($request)->isFailure()) {
+        $optional = $this->auth->requestAdmin($request);
+        if ($optional->isFailure()) {
             if ($request->getAttribute('token')) {
                 // Token supplied, but no admin permissions
                 return $response->withStatus(403);
@@ -92,16 +107,20 @@ class AuthenticationMiddleware
                 // No token supplied
                 return $response->withStatus(401);
             }
+        } else {
+            $this->container['user'] = $optional->getData();
+            return $next($request, $response);
         }
-        return $next($request, $response);
     }
 
     /**
+     * @param Request $request
      * @param Response $response
      * @return Response
      */
-    private function invalidPermissionLevel(Response $response): Response
+    private function invalidPermissionLevel(Request $request, Response $response): Response
     {
+        $this->logger->addError('An invalid permission level was tried to be used. PermissionLevel: "' . $this->permissionLevel . '" Route: "' . $request->getMethod() . ':' . $request->getUri() . '"');
         return $response->withStatus(500)->withJson(
             [
                 'errors' => [

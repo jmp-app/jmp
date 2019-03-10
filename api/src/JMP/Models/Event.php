@@ -5,6 +5,7 @@ namespace JMP\Models;
 
 class Event implements ArrayConvertable
 {
+    use ArrayConvertableTrait;
     /**
      * @var int
      */
@@ -53,26 +54,26 @@ class Event implements ArrayConvertable
     /**
      * Event constructor.
      * @param array $args
+     * @throws \Exception
      */
     public function __construct(array $args)
     {
         $this->id = (int)$args['id'];
         $this->title = $args['title'];
-        $this->from = $args['from'];
-        $this->to = $args['to'];
+        $this->from = $this->convertDateTime($args['from']);
+        $this->to = $this->convertDateTime($args['to']);
         $this->place = $args['place'];
         $this->description = $args['description'];
     }
 
     /**
-     * Returns an array representing the current object.
-     * This method makes it possible to do some conversion or filtering before casting the object to an array
-     * @return array
+     * @param $dateTime
+     * @return String ISO-Format
+     * @throws \Exception
      */
-    public function toArray(): array
+    public function convertDateTime($dateTime): String
     {
-        return array_filter((array)$this, function ($value) {
-            return $value !== null;
-        });
+        $dateTime = new \DateTime($dateTime);
+        return $dateTime->format('Y-m-d\TH:i');
     }
 }

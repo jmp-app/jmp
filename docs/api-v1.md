@@ -48,21 +48,31 @@
 
 ```json
 {
-    "id": 1,
-    "username": "jake",
-    "lastname": "Smith",
-    "firstname": "Jacob",
-    "email": "jake@example.com",
-    "isAdmin": true
+  "id": 162,
+  "username": "walter",
+  "lastname": "White",
+  "firstname": "Walter",
+  "email": "walter@white.me",
+  "passwordChange": false,
+  "isAdmin": false
 }
 ```
 ### Group
 
 ```json
 {
-    "id": 1,
-    "name": "Members",
-    "users": [1, 3, 5]
+  "id": 6,
+  "name": "green",
+  "users": [
+    {
+      "id": 161,
+      "username": "allen",
+      "lastname": "Burdon",
+      "firstname": "Allen",
+      "passwordChange": false,
+      "isAdmin": false
+    }
+  ]
 }
 ```
 
@@ -70,26 +80,36 @@
 
 ```json
 {
-  "id": 29,
-  "title": "GA",
-  "from": "2019-01-15 12:12:12",
-  "to": "2019-01-15 13:13:13",
-  "place": "Earth",
-  "description": "General Assembly",
+  "id": 31,
+  "title": "green event",
+  "from": "2019-01-15T12:12",
+  "to": "2019-01-15T13:13",
+  "place": "GibmIT, Pratteln",
+  "description": "1",
   "eventType": {
     "id": 1,
-    "title": "Default",
-    "color": "#d6f936"
+    "title": "foo",
+    "color": "#FF0000"
   },
   "defaultRegistrationState": {
-    "id": "2",
-    "name": "Accepted",
-    "reasonRequired": false
+    "id": 2,
+    "name": "subscribed",
+    "reasonRequired": true
   },
   "groups": [
     {
-      "id": 5,
-      "name": "Members"
+      "id": 6,
+      "name": "green",
+      "users": [
+        {
+          "id": 161,
+          "username": "allen",
+          "lastname": "Burdon",
+          "firstname": "Allen",
+          "passwordChange": false,
+          "isAdmin": false
+        }
+      ]
     }
   ]
 }
@@ -263,7 +283,7 @@ Parameters:
 
 Access rights: authentication required, user has to be an admin
 
-Returns: List of queried users
+Returns: List of queried [Users](#User)
 
 ### Get Current User
 
@@ -355,28 +375,28 @@ POST /v1/events
 
 Parameters:
 
-| Field                    | Description                                                  | Required |
-| ------------------------ | ------------------------------------------------------------ | -------- |
-| title                    | The title of the event                                       | ✔️        |
-| description              | Description of the event                                     | ❌        |
-| from                     | The begin date of the event                                  | ✔️        |
-| to                       | The end date of the event                                    | ✔️        |
-| place                    | Where the event takes place                                  | ❌        |
-| eventType                | The id of the event type this event has                      | ✔️        |
-| defaultRegistrationState | The id of the registration state that is used as default for this event. | ✔️        |
-| groups                   | An array of group ids that are assigned to the event         | ✔️        |
+| Field                    | Description                                                  | Required | Type |
+| ------------------------ | ------------------------------------------------------------ | -------- | ---- |
+| title                    | The title of the event                                       | ✔️        |  varchar(50) |
+| description              | Description of the event                                     | ❌        | varchar(255) |
+| from                     | The begin date of the event                                  | ✔️        |  Date in the ISO format: `Y-m-d\TH:i` |
+| to                       | The end date of the event                                    | ✔️        |  Date in the ISO format: `Y-m-d\TH:i` |
+| place                    | Where the event takes place                                  | ❌        | varchar(50) |
+| eventType                | The id of the event type this event has                      | ✔️        |  numeric |
+| defaultRegistrationState | The id of the registration state that is used as default for this event. | ✔️        |  numeric |
+| groups                   | An array of group ids that are assigned to the event         | ✔️        |  Array of numbers |
 
 Example request data:
 
 ```json
 {
-    "title": "GA",
-    "description": "General Assembly",
-    "from": "2018-11-28T10:00:00Z",
-    "to": "2018-11-29T18:00:00Z",
-    "eventType": "3",
-    "defaultRegistrationState": "2",
-    "groups": [1, 4]
+  "title": "GA",
+  "description": "General Assembly",
+  "from": "2018-11-28T10:00:00Z",
+  "to": "2018-11-29T18:00:00Z",
+  "eventType": 3,
+  "defaultRegistrationState": 2,
+  "groups": [1, 4]
 }
 ```
 
@@ -392,14 +412,14 @@ GET /v1/events/
 
 Parameters:
 
-| Field     | Description                          | Required |
-| --------- | ------------------------------------ | -------- |
-| group     | To get all events by the group id    |          |
-| eventType | To get all events by type id         |          |
-| limit     | Limit the amount of events retrieved |          |
-| offset    | Skip the fist _x_ events             |          |
-| all       | List events of all users/groups **(works only as admin)**|          |
-| elapsed   | List also elapsed events             |          |
+| Field     | Description                          | Required | Type |
+| --------- | ------------------------------------ | -------- | -------- |
+| group     | To get all events by the group id    |          | numeric  |
+| eventType | To get all events by type id         |          | numeric  |
+| limit     | Limit the amount of events retrieved |          | numeric  |
+| offset    | Skip the fist _x_ events             |          | numeric |
+| all       | List events of all users/groups **(works only as ks only as admin)**| | bool |
+| elapsed   | List also elapsed events             |          | bool |
 
 Example request:
 
@@ -409,18 +429,20 @@ GET /v1/events?limit=5&offset=10&eventType=1&all=1&elapsed=1
 Access rights: authentication required  
 **Note:** ```all``` is only considered if the user is an admin. Otherwise an 401 is returned.
 
-Returns: List of queried events of all groups in which the user has a membership, sorted __ascending__ by their __start date__ (The near-time events are listed first).  
+Returns:  
+List of queried [Events](#event) of all groups in which the user has a membership, sorted __ascending__ by their __start date__ (The near-time events are listed first).  
 By default (without the elapsed parameter set), only current and upcoming events are selected.
 
 ### Get Event
 
 ```http
-GET /v1/events/{id}
+GET /v1/events/{id:[0-9]+}
 ```
 
 Parameters: none
 
-Access rights: authentication required
+Access rights: authentication required  
+**Note:** An admin can access every event but a user can only access events of groups in which he has a membership.
 
 Returns: the [Event](#Event)
 
@@ -432,23 +454,26 @@ PUT /v1/events/{id}
 
 Parameters:
 
-| Field                    | Description                                                  | Required |
-| ------------------------ | ------------------------------------------------------------ | -------- |
-| title                    | The title of the event                                       | ❌        |
-| description              | Description of the event                                     | ❌        |
-| from                     | The begin date of the event                                  | ❌        |
-| to                       | The end date of the event                                    | ❌        |
-| place                    | Where the event takes place                                  | ❌        |
-| eventType                | The id of the event type this event has                      | ❌        |
-| defaultRegistrationState | The id of the registration state that is used as default for this event. | ❌        |
-| groups                   | An array of group ids that are assigned to the event         | ❌        |
+| Field                    | Description                                                  | Required | Type |
+| ------------------------ | ------------------------------------------------------------ | -------- | ---- |
+| title                    | The title of the event                                       | ❌        |  varchar(50) |
+| description              | Description of the event                                     | ❌        | varchar(255) |
+| from                     | The begin date of the event                                  | ❌        |  Date in the ISO format: `Y-m-d\TH:i` |
+| to                       | The end date of the event                                    | ❌        |  Date in the ISO format: `Y-m-d\TH:i` |
+| place                    | Where the event takes place                                  | ❌        | varchar(50) |
+| eventType                | The id of the event type this event has                      | ❌        |  numeric |
+| defaultRegistrationState | The id of the registration state that is used as default for this event. | ❌        |  numeric |
+| groups                   | An array of group ids that are assigned to the event         | ❌        |  Array of numbers |
 
 Example request data:
 
 ```json
 {
-    "title": "",
-    "description": ""
+  "title": "GA",
+  "description": "General Assembly",
+  "from": "2018-11-28T10:00:00Z",
+  "to": "2018-11-29T18:00:00Z",
+  "groups": [1, 4]
 }
 ```
 

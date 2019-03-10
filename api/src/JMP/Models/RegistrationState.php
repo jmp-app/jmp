@@ -5,6 +5,7 @@ namespace JMP\Models;
 
 class RegistrationState implements ArrayConvertable
 {
+    use ArrayConvertableTrait;
     /**
      * @var int
      */
@@ -28,14 +29,6 @@ class RegistrationState implements ArrayConvertable
     {
         $this->id = (int)$args['id'];
         $this->name = $args['name'];
-        $this->reasonRequired = $args['reasonRequired'] === "0" ? false : true;
+        $this->reasonRequired = $args['reasonRequired'] ? true : false;
     }
-
-    public function toArray(): array
-    {
-        return array_filter((array)$this, function ($value) {
-            return $value !== null;
-        });
-    }
-
 }

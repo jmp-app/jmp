@@ -2,7 +2,6 @@
 
 namespace JMP\Services;
 
-use JMP\Utils\Optional;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
@@ -32,8 +31,9 @@ class MembershipService
     /**
      * Deletes all memberships that exist between any user and the specified group
      * @param int $groupId
+     * @return bool
      */
-    public function deleteMemberships(int $groupId): void
+    public function deleteMemberships(int $groupId): bool
     {
         $sql = <<< SQL
             DELETE FROM `membership`
@@ -42,17 +42,16 @@ SQL;
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':groupId', $groupId, \PDO::PARAM_INT);
-        $stmt->execute();
+        return $stmt->execute();
     }
 
     /**
      * Creates a membership for each user with the group
      * @param int $groupId
      * @param array $users
-     * @return Optional
-     * @throws \Exception
+     * @return bool
      */
-    public function addUsersToGroup(int $groupId, array $users): Optional
+    public function addUsersToGroup(int $groupId, array $users): bool
     {
         $sql = <<< SQL
             INSERT INTO membership (group_id, user_id) 
@@ -68,10 +67,9 @@ SQL;
      * @param string $sql
      * @param int $groupId
      * @param array $users
-     * @return Optional
-     * @throws \Exception
+     * @return bool
      */
-    private function executeForEachUser(string $sql, int $groupId, array $users): Optional
+    private function executeForEachUser(string $sql, int $groupId, array $users): bool
     {
         try {
             $this->db->beginTransaction();
@@ -93,20 +91,20 @@ SQL;
         } catch (\Exception $e) {
             $this->db->rollBack();
             $this->logger->error($e->getMessage());
-            return Optional::failure();
+            return false;
         }
 
-        return Optional::success(true);
+        return true;
     }
 
     /**
      * Creates a membership for each user with the group
      * @param int $groupId
      * @param array $users
-     * @return Optional
+     * @return bool
      * @throws \Exception
      */
-    public function removeUsersFromGroup(int $groupId, array $users): Optional
+    public function removeUsersFromGroup(int $groupId, array $users): bool
     {
         $sql = <<< SQL
             DELETE FROM membership 

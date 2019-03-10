@@ -4,6 +4,7 @@ namespace JMP\Services;
 
 
 use JMP\Models\EventType;
+use JMP\Utils\Optional;
 use Psr\Container\ContainerInterface;
 
 class EventTypeService
@@ -24,7 +25,7 @@ class EventTypeService
 
     /**
      * @param int $eventTypeId
-     * @return EventType
+     * @return Optional
      */
     public function getEventTypeByEvent(int $eventTypeId)
     {
@@ -37,6 +38,31 @@ SQL;
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':eventTypeId', $eventTypeId);
         $stmt->execute();
-        return new EventType($stmt->fetch());
+        $eventType = $stmt->fetch();
+        if ($eventType === false) {
+            return Optional::failure();
+        } else {
+            return Optional::success(new EventType($eventType));
+        }
+    }
+
+    /**
+     * Checks whether an event type with the given id already exists
+     * @param int $eventTypeId
+     * @return bool
+     */
+    public function eventTypeExists(int $eventTypeId): bool
+    {
+        $sql = <<<SQL
+            SELECT id
+            FROM jmp.`event_type`
+            WHERE id = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $eventTypeId, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
     }
 }

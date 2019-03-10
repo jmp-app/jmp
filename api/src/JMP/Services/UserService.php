@@ -75,9 +75,9 @@ SQL;
      * Creates a new user and returns the created one by @uses UserService::getUserByUsername()
      * The given user is saved as is. E.g password hashing must be done in advance
      * @param User $user
-     * @return User
+     * @return Optional
      */
-    public function createUser(User $user): User
+    public function createUser(User $user): Optional
     {
         $sql = <<<SQL
 INSERT INTO user
@@ -96,7 +96,11 @@ SQL;
         $stmt->bindValue(':is_admin', $user->isAdmin, \PDO::PARAM_INT);
 
 
-        $stmt->execute();
+        $successful = $stmt->execute();
+
+        if ($successful === false) {
+            return Optional::failure();
+        }
 
         return $this->getUserByUsername($user->username);
 
@@ -150,9 +154,9 @@ SQL;
      * The password isn't returned.
      * Null fields are returned
      * @param $username
-     * @return User
+     * @return Optional
      */
-    private function getUserByUsername(string $username): User
+    private function getUserByUsername(string $username): Optional
     {
         $sql = <<<SQL
 SELECT user.id, username, lastname, firstname, email, is_admin AS isAdmin
@@ -167,7 +171,13 @@ SQL;
 
         $stmt->execute();
 
-        return new User($stmt->fetch());
+        $data = $stmt->fetch();
+
+        if ($data === false) {
+            return Optional::failure();
+        }
+
+        return Optional::success(new User($data));
     }
 
     /**
@@ -177,7 +187,7 @@ SQL;
     public function getUsers(?int $groupId): array
     {
         $sql = <<< SQL
-            SELECT DISTINCT user.id, username, lastname, firstname, email, is_admin
+            SELECT DISTINCT user.id, username, lastname, firstname, email, is_admin as isAdmin
             FROM user
                 LEFT JOIN membership m on user.id = m.user_id
             WHERE (:groupId IS NULL OR m.group_id = :groupId)
@@ -189,6 +199,10 @@ SQL;
         $stmt->execute();
 
         $users = $stmt->fetchAll();
+
+        if ($users === false) {
+            return array();
+        }
 
         foreach ($users as $key => $val) {
             $users[$key] = new User($val);
@@ -255,7 +269,10 @@ SQL;
         $stmt->bindValue(':isAdmin', $updatedUser->isAdmin, PDO::PARAM_BOOL);
         $stmt->bindValue(':passwordChange', $updatedUser->passwordChange, PDO::PARAM_BOOL);
 
-        $stmt->execute();
+        $successful = $stmt->execute();
+        if ($successful === false) {
+            return Optional::failure();
+        }
 
         return $this->getFullUserByUserId($id);
     }
@@ -304,8 +321,9 @@ SQL;
     /**
      * Delete User
      * @param int $id
+     * @return bool
      */
-    public function deleteUser(int $id)
+    public function deleteUser(int $id): bool
     {
         // User
         $sql = <<< SQL
@@ -315,7 +333,7 @@ SQL;
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
-        $stmt->execute();
+        return $stmt->execute();
     }
 
 }

@@ -3,6 +3,7 @@
 namespace JMP\Services;
 
 use JMP\Models\Registration;
+use JMP\Models\User;
 use JMP\Utils\Optional;
 use Psr\Container\ContainerInterface;
 
@@ -20,6 +21,10 @@ class RegistrationService
      * @var EventService
      */
     protected $eventService;
+    /**
+     * @var User $user
+     */
+    private $user;
 
     /**
      * RegistrationService constructor.
@@ -30,42 +35,47 @@ class RegistrationService
         $this->db = $container->get('database');
         $this->registrationStateService = $container->get('registrationStateService');
         $this->eventService = $container->get('eventService');
+        $this->user = $container->get('user');
     }
 
     /**
      * @param int $userId
      * @param int $eventId
+     * @param User $user
      * @return Optional
      */
     public function getRegistrationByUserIdAndEventId(int $userId, int $eventId): Optional
     {
         $sql = <<< SQL
-SELECT event_id as eventId, user_id as userId, reason, registration_state_id as registrationStateId
+SELECT DISTINCT registration.event_id as eventId,
+                registration.user_id  as userId,
+                reason,
+                registration_state_id as registrationStateId
 FROM registration
-WHERE event_id = :eventId AND user_id = :userId
+       LEFT JOIN event e on registration.event_id = e.id
+       LEFT JOIN event_has_group ehg on e.id = ehg.event_id
+       LEFT JOIN `group` g on ehg.group_id = g.id
+       LEFT JOIN membership m on g.id = m.group_id
+       LEFT JOIN user u on m.user_id = u.id
+WHERE registration.event_id = :eventId
+  AND registration.user_id = :userId
+  AND (:isAdmin IS TRUE OR u.username = :username)
 SQL;
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':eventId', $eventId, \PDO::PARAM_INT);
         $stmt->bindParam(':userId', $userId, \PDO::PARAM_INT);
+        $stmt->bindParam(':isAdmin', $this->user->isAdmin);
+        $stmt->bindParam(':username', $this->user->username);
         $stmt->execute();
 
-        $val = $stmt->fetch();
-        $registrationStateId = $val['registrationStateId'];
+        $data = $stmt->fetch();
 
-        if ($val === false) {
+        if ($data === false) {
             return Optional::failure();
         }
 
-        $registration = new Registration($val);
-        $optional = $this->registrationStateService->getRegistrationTypeById($registrationStateId);
-
-        if ($optional->isSuccess()) {
-            $registration->registrationState = $optional->getData();
-            return Optional::success($registration);
-        } else {
-            return Optional::failure();
-        }
+        return $this->fetchRegistration($data);
     }
 
     /**
@@ -88,7 +98,10 @@ SQL;
         $stmt->bindParam(':reason', $registration->reason);
         $stmt->bindParam(':registrationStateId', $registration->registrationState->id, \PDO::PARAM_INT);
 
-        $stmt->execute();
+        $successful = $stmt->execute();
+        if ($successful === false) {
+            return Optional::failure();
+        }
 
         return $this->getRegistrationByUserIdAndEventId($registration->userId, $registration->eventId);
 
@@ -110,12 +123,15 @@ SQL;
 
         $stmt = $this->db->prepare($sql);
 
-        $stmt->bindParam(':reason', $registration->reason);
+        $stmt->bindValue(':reason', $registration->reason, \PDO::PARAM_STR);
         $stmt->bindParam(':registrationStateId', $registration->registrationState->id, \PDO::PARAM_INT);
         $stmt->bindParam(':eventId', $registration->eventId, \PDO::PARAM_INT);
         $stmt->bindParam(':userId', $registration->userId, \PDO::PARAM_INT);
 
-        $stmt->execute();
+        $successful = $stmt->execute();
+        if ($successful === false) {
+            return Optional::failure();
+        }
 
         return $this->getRegistrationByUserIdAndEventId($registration->userId, $registration->eventId);
     }
@@ -123,9 +139,9 @@ SQL;
     /**
      * Delete all registrations of a user
      * @param int $userId
-     * @return void
+     * @return bool
      */
-    public function deleteRegistrationsOfUser(int $userId): void
+    public function deleteRegistrationsOfUser(int $userId): bool
     {
         $sql = <<< SQL
             DELETE FROM registration
@@ -134,7 +150,26 @@ SQL;
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':userId', $userId);
-        $stmt->execute();
+        return $stmt->execute();
+    }
+
+    /**
+     * @param $data
+     * @return Optional
+     */
+    private function fetchRegistration(array $data): Optional
+    {
+        $registration = new Registration($data);
+
+        $registrationStateId = $data['registrationStateId'];
+        $optional = $this->registrationStateService->getRegistrationTypeById($registrationStateId);
+
+        if ($optional->isFailure()) {
+            return Optional::failure();
+        } else {
+            $registration->registrationState = $optional->getData();
+            return Optional::success($registration);
+        }
     }
 
 }

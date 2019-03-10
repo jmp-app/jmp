@@ -27,6 +27,10 @@ class EventService
      * @var RegistrationStateService
      */
     protected $registrationStateService;
+    /**
+     * @var User
+     */
+    private $user;
 
     /**
      * EventService constructor.
@@ -38,6 +42,7 @@ class EventService
         $this->eventTypeService = $container->get('eventTypeService');
         $this->groupService = $container->get('groupService');
         $this->registrationStateService = $container->get('registrationStateService');
+        $this->user = $container->get('user');
     }
 
     /**
@@ -47,6 +52,7 @@ class EventService
      * @param bool $getElapsed
      * @param User $user
      * @return Event[]
+     * @throws \Exception
      */
     public function getEventsByGroupAndEventType(?int $groupId, ?int $eventTypeId, bool $getAll, bool $getElapsed, User $user): array
     {
@@ -92,6 +98,7 @@ SQL;
      * @param User $user
      * @param int $offset
      * @return Event[]
+     * @throws \Exception
      */
     public function getEventsByGroupAndEventTypeWithPagination(?int $groupId, ?int $eventTypeId, int $limit, bool $getAll, bool $getElapsed, User $user, int $offset = 0): array
     {
@@ -140,6 +147,7 @@ SQL;
      * @param User $user
      * @param int $offset
      * @return Event[]
+     * @throws \Exception
      */
     public function getEventByGroupAndEventWithOffset(int $groupId, int $eventTypeId, bool $getAll, bool $getElapsed, User $user, int $offset = 0): array
     {
@@ -150,7 +158,9 @@ SQL;
     /**
      * Get event by id
      * @param int $eventId
+     * @param User $user
      * @return Optional
+     * @throws \Exception
      */
     public function getEventById(int $eventId)
     {
@@ -164,14 +174,20 @@ SQL;
                        event_type_id AS eventTypeId,
                        default_registration_state_id AS defaultRegistrationState
                 FROM event
-                RIGHT JOIN event_has_group ehg ON event.id = ehg.event_id
-                RIGHT JOIN event_type ON event.event_type_id = event_type.id
+                LEFT JOIN event_has_group ehg ON event.id = ehg.event_id
+                LEFT JOIN event_type ON event.event_type_id = event_type.id
+                LEFT JOIN `group` g ON ehg.group_id = g.id
+                LEFT JOIN membership m ON g.id = m.group_id
+                LEFT JOIN user u ON m.user_id = u.id
                 WHERE event.id = :eventId
+                  AND (:isAdmin IS TRUE OR u.username = :username)
 SQL;
 
         $stmt = $this->db->prepare($sql);
 
         $stmt->bindValue(':eventId', $eventId, PDO::PARAM_INT);
+        $stmt->bindValue(':isAdmin', $this->user->isAdmin, PDO::PARAM_BOOL);
+        $stmt->bindValue(':username', $this->user->username);
         $stmt->execute();
 
         $event = $stmt->fetch();
@@ -184,9 +200,69 @@ SQL;
     }
 
     /**
+     * Creates a new Event
+     * @param array $params Contains all required fields
+     * @return Optional
+     * @throws \Exception
+     */
+    public function createEvent(array $params): Optional
+    {
+        $this->db->beginTransaction();
+        try {
+            if ($this->insertEvent($params) === false) {
+                $this->db->rollBack();
+                return Optional::failure();
+            }
+
+            $eventId = $this->getLastInsertedEventId();
+            if ($eventId === false) {
+                $this->db->rollBack();
+                return Optional::failure();
+            }
+
+            $eventId = $eventId['id'];
+            if ($this->addGroupsToEvent($params, $eventId) === false) {
+                $this->db->rollBack();
+                return Optional::failure();
+            }
+
+            // Return the fully created event
+            $optional = $this->getEventById($eventId);
+
+            // Everything went well, do a commit
+            $this->db->commit();
+            return $optional;
+        } catch (\PDOException $exception) {
+            // Something went wrong, do a rollback
+            $this->db->rollBack();
+            return Optional::failure();
+        }
+    }
+
+    /**
+     * Checks if an event exists
+     * @param int $eventId
+     * @return bool
+     */
+    public function eventExists(int $eventId): bool
+    {
+        $sql = <<< SQL
+SELECT *
+FROM jmp.event
+WHERE id = :eventId
+SQL;
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':eventId', $eventId);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
      * Executes the statement and parses its result to return a list of events.
      * @param \PDOStatement $stmt
      * @return Event[]
+     * @throws \Exception
      */
     private function fetchAllEvents(\PDOStatement $stmt): array
     {
@@ -205,17 +281,80 @@ SQL;
      * Parse array to return a event
      * @param array $val
      * @return Event
+     * @throws \Exception
      */
     private function fetchEvent(array $val): Event
     {
         $event = new Event($val);
-        $event->eventType = $this->eventTypeService->getEventTypeByEvent($val['eventTypeId']);
+        $optional = $this->eventTypeService->getEventTypeByEvent($val['eventTypeId']);
+        if ($optional->isSuccess()) {
+            $event->eventType = $optional->getData();
+        }
         $optional = $this->registrationStateService->getRegistrationTypeById($val['defaultRegistrationState']);
         if ($optional->isSuccess()) {
             $event->defaultRegistrationState = $optional->getData();
         }
         $event->groups = $this->groupService->getGroupsByEventId($val['id']);
         return $event;
+    }
+
+    /**
+     * @param array $params
+     * @return bool
+     */
+    private function insertEvent(array $params): bool
+    {
+        $sql = <<< SQL
+INSERT INTO `jmp`.`event` (`title`, `from`, `to`, `place`, `description`, `event_type_id`,
+           `default_registration_state_id`)
+VALUES (:title, :from, :to, :place, :description, :eventType, :defaultRegistrationState);
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':title', $params['title']);
+        $stmt->bindParam(':from', $params['from']);
+        $stmt->bindParam(':to', $params['to']);
+        $stmt->bindParam(':place', $params['place']);
+        $stmt->bindParam(':description', $params['description']);
+        $stmt->bindParam(':eventType', $params['eventType']);
+        $stmt->bindParam(':defaultRegistrationState', $params['defaultRegistrationState']);
+
+        // Insert event
+        return $stmt->execute();
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getLastInsertedEventId()
+    {
+        $sql = <<< SQL
+SELECT LAST_INSERT_ID() as id;
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        // Gets the ID of the inserted event
+        $stmt->execute();
+
+        $eventId = $stmt->fetch();
+        return $eventId;
+    }
+
+    /**
+     * @param array $params
+     * @param $eventId
+     * @return bool
+     */
+    private function addGroupsToEvent(array $params, $eventId): bool
+    {
+// Adds all groups to the event
+        $successful = [];
+        foreach ($params['groups'] as $groupId) {
+            $success = $this->groupService->addGroupToEvent($groupId, $eventId);
+            array_push($successful, $success);
+        }
+        return !in_array(false, $successful, true);
     }
 
 }

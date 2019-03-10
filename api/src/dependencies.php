@@ -4,6 +4,8 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Processor\WebProcessor;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Tuupola\Middleware\JwtAuthentication;
 
 /**
@@ -64,6 +66,10 @@ $container['userService'] = function (\Psr\Container\ContainerInterface $contain
     return new \JMP\Services\UserService($container);
 };
 
+$container['validationService'] = function (\Psr\Container\ContainerInterface $container) {
+    return new \JMP\Services\ValidationService($container);
+};
+
 // Logger
 $container['logger'] = function (\Psr\Container\ContainerInterface $container) {
     $settings = $container->get('settings')['logger'];
@@ -79,4 +85,25 @@ $container['logger'] = function (\Psr\Container\ContainerInterface $container) {
     }
 
     return $logger;
+};
+
+// Custom Error Handler
+$container['phpErrorHandler'] = $container['errorHandler'] = function (\Psr\Container\ContainerInterface $container) {
+    return function (RequestInterface $request, ResponseInterface $response, $exception) use ($container): ResponseInterface {
+
+        $logger = $container->get('logger');
+        $debug = $container->get('settings')['displayErrorDetails'];
+
+        $logger->addError('Message: {' . $exception->getMessage() . '} Trace: {' . $exception->getTrace() . '}');
+
+        return $response
+            ->withStatus(500)
+            ->withHeader('Content-Type', 'application/json;charset=utf-8')
+            ->write(json_encode([
+                'errors' => [
+                    'internalServerError' => $debug ? $exception->getMessage() : 'Internal Server Error',
+                    'trace' => $debug ? $exception->getTrace() : null
+                ]
+            ]));
+    };
 };

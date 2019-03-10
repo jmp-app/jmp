@@ -4,6 +4,7 @@ namespace JMP\Models;
 
 class Registration implements ArrayConvertable
 {
+    use ArrayConvertableTrait;
     /**
      * @var int
      */
@@ -33,17 +34,5 @@ class Registration implements ArrayConvertable
         $this->eventId = (int)$args['eventId'];
         $this->userId = (int)$args['userId'];
         $this->reason = $args['reason'];
-    }
-
-    /**
-     * Returns an array representing the current object.
-     * This method makes it possible to do some conversion or filtering before casting the object to an array
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return array_filter((array)$this, function ($value) {
-            return $value !== null;
-        });
     }
 }

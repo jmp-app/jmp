@@ -9,6 +9,7 @@ use JMP\Models\User;
 use JMP\Services\Auth;
 use JMP\Services\UserService;
 use JMP\Utils\Converter;
+use Monolog\Logger;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -23,6 +24,14 @@ class UsersController
      * @var Auth
      */
     protected $auth;
+    /**
+     * @var Logger
+     */
+    private $logger;
+    /**
+     * @var User
+     */
+    private $user;
 
     /**
      * EventController constructor.
@@ -32,6 +41,8 @@ class UsersController
     {
         $this->userService = $container->get('userService');
         $this->auth = $container->get('auth');
+        $this->logger = $container->get('logger');
+        $this->user = $container->get('user');
     }
 
     /**
@@ -42,16 +53,7 @@ class UsersController
      */
     public function getCurrentUser(Request $request, Response $response): Response
     {
-        $optional = $this->auth->requestUser($request);
-
-        if ($optional->isFailure()) {
-            // There has to be always a logged in user that accesses this
-            return $response->withStatus(500);
-        }
-
-        $user = new User($optional->getData());
-
-        return $response->withJson(Converter::convert($user));
+        return $response->withJson(Converter::convert($this->user));
     }
 
     /**
@@ -79,14 +81,21 @@ class UsersController
         $id = $args['id'];
         $updates = $request->getParsedBody();
 
-        if ($this->userService->userExists($id) === false) {
+        $optional = $this->userService->getUserByUserId($id);
+
+        if ($optional->isFailure()) {
             return $response->withJson([
                 'errors' => [
                     'id' => 'The specified id "' . $id . '"does not exist'
                 ]
             ], 404);
-        } elseif (isset($updates['username'])) {
-            if ($this->userService->isUsernameUnique($updates['username']) === false) {
+        }
+
+        /** @var User $user */
+        $user = $optional->getData();
+
+        if (isset($updates['username'])) {
+            if ($this->userService->isUsernameUnique($updates['username']) === false && $updates['username'] !== $user->username) {
                 return $this->usernameNotAvailable($request, $response, $updates['username']);
             }
         }
@@ -94,6 +103,7 @@ class UsersController
         $optional = $this->userService->updateUser($id, $updates);
 
         if ($optional->isFailure()) {
+            $this->logger->addError('Failed to update user. ID: "' . $id . '" Updates: "' . $updates . '"');
             return $response->withStatus(500);
         }
 
@@ -124,7 +134,11 @@ class UsersController
             ], 404);
         }
 
-        $this->userService->deleteUser($id);
+        $successful = $this->userService->deleteUser($id);
+        if ($successful === false) {
+            $this->logger->addError('Failed to delete user: ID: "' . $id . '"');
+            return $response->withStatus(500);
+        }
 
         return $response->withJson([
             'success' => 'Deleted user with id "' . $id . '"'
@@ -163,7 +177,7 @@ class UsersController
 
         // check if the username is already used by an other user
         if ($this->userService->isUsernameUnique($user['username'])) {
-            return $this->usernameAvailable($response, $user);
+            return $this->usernameAvailableAndCreateUser($response, $user);
         } else {
             return $this->usernameNotAvailable($request, $response, $user['username']);
         }
@@ -192,13 +206,18 @@ class UsersController
      * @param $user
      * @return Response
      */
-    private function usernameAvailable(Response $response, $user): Response
+    private function usernameAvailableAndCreateUser(Response $response, $user): Response
     {
         $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
 
-        $user = $this->userService->createUser(new User($user));
+        $optional = $this->userService->createUser(new User($user));
+        if ($optional->isFailure()) {
+            unset($user['password']);
+            $this->logger->addError('Failed to create user. User: "' . $user . '"');
+            return $response->withStatus(500);
+        }
 
-        return $response->withJson(Converter::convert($user));
+        return $response->withJson(Converter::convert($optional->getData()));
     }
 
 
@@ -210,19 +229,10 @@ class UsersController
      */
     public function changePassword(Request $request, Response $response)
     {
-        $user = $this->auth->requestUser($request);
-
-        if ($user->isFailure()) {
-            // There has to be always a logged in user that accesses this
-            return $response->withStatus(500);
-        }
-
-        $user = new User($user->getData());
-
         $password = $request->getParsedBodyParam('password');
         $newPassword = $request->getParsedBodyParam('newPassword');
 
-        $passwordCheck = $this->auth->attempt($user->username, $password);
+        $passwordCheck = $this->auth->attempt($this->user->username, $password);
         if ($passwordCheck->isFailure()) {
             return $response->withJson([
                 'errors' => [
@@ -231,13 +241,14 @@ class UsersController
             ], 400);
         }
 
-        if (!$this->userService->changePassword($user->id, $newPassword)) {
+        if ($this->userService->changePassword($this->user->id, $newPassword) === false) {
+            $this->logger->addError('Failed to change password of user. User: "' . $this->user . '"');
             return $response->withStatus(500);
         }
 
         // password change was true but user changed the password -> set back to false
-        if ($user->passwordChange) {
-            $this->userService->updateUser($user->id, [
+        if ($this->user->passwordChange) {
+            $this->userService->updateUser($this->user->id, [
                 'passwordChange' => false
             ]);
         }

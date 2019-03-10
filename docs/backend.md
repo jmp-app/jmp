@@ -146,18 +146,9 @@ if ($optional->isFailure()) {
 The response object of the slim framework offers a method called `withJson`. This method converts an associative array to JSON.
 Because the php cast functionality doesn't comply with our requirements to cast model objects to associative arrays, we use the following util and interface:
 
-**[ArrayConvertable](../api/src/JMP/Models/ArrayConvertable.php):**
-Every model has to implement this class, so that it can be properly converted to an associative array.
-For example implementations see the existing models: [Models](../api/src/JMP/Models).
-```php
-public function toArray(): array
-{
-    return array_filter((array)$this, function ($value) {
-        return $value !== null;
-    });
-}
-```
-The implementation has to **remove all null variables**.
+**[ArrayConvertable](../api/src/JMP/Models/ArrayConvertable.php) & [ArrayConvertableTrait](../api/src/JMP/Models/ArrayConvertableTrait.php):**
+Every model has to implement this interface and use this trait. It is necessary to properly convert the models into arrays.
+
 
 **[Converter](../api/src/JMP/Utils/Converter.php):**
 This util is used to convert a model object or  a list of model objects properly to an associative array.
@@ -240,6 +231,7 @@ The model must
 * have a constructor with one array as parameter
 * set all attributes (except the ones which are foreign keys in the database) by the values of the array inside the constructor
 * implement the [ArrayConvertable Interface](../api/src/JMP/Models/ArrayConvertable.php)
+* use the [ArrayConvertable Trait](../api/src/JMP/Models/ArrayConvertableTrait.php)
 
 Check out already existing model as examples. [Models](../api/src/JMP/Models) 
 

@@ -11,7 +11,6 @@ class Converter
 
     /**
      * Converts an array of @uses ArrayConvertable into an array of arrays
-     * If a value isn't an instance of @uses ArrayConvertable it is casted with (array)
      * @param array $data
      * @return array
      */
@@ -19,12 +18,13 @@ class Converter
     {
         foreach ($data as $key => $value) {
             if (is_array($value)) {
-                $value = self::convertArray($value);
-            }
-            if ($value instanceof ArrayConvertable) {
-                $data[$key] = self::convert($value);
+                $data[$key] = Converter::convertArray($value);
+            } elseif ($value === null) {
+                unset($data[$key]);
+            } elseif ($value instanceof ArrayConvertable) {
+                $data[$key] = $value->toArray();
             } else {
-                $data[$key] = (array)$value;
+                $data[$key] = $value;
             }
         }
         return $data;

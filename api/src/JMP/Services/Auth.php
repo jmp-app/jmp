@@ -160,7 +160,12 @@ SQL;
             return Optional::failure();
         }
 
-        $user = new User($stmt->fetch());
+        $user = $stmt->fetch();
+        if ($user === false) {
+            return Optional::failure();
+        }
+
+        $user = new User($user);
 
         return Optional::success($user);
     }
