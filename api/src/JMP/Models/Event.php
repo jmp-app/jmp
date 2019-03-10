@@ -76,4 +76,15 @@ class Event implements ArrayConvertable
         $dateTime = new \DateTime($dateTime);
         return $dateTime->format('Y-m-d\TH:i');
     }
+
+    /**
+     * @param $dateTime
+     * @return String ISO-Format
+     * @throws \Exception
+     */
+    public function convertDateTime($dateTime): String
+    {
+        $dateTime = new \DateTime($dateTime);
+        return $dateTime->format('Y-m-d\TH:i');
+    }
 }

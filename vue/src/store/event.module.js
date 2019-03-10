@@ -43,6 +43,11 @@ export const events = {
                     event => commit('getEventByIdSuccess', event),
                     error => commit('getEventByIdFailure', error)
                 );
+        },
+        getEmptyEvent({commit}) {
+            commit('getEmptyEventRequest');
+
+            commit('getEmptyEvent', {'eventType': {}});
         }
     },
     mutations: {
@@ -86,7 +91,14 @@ export const events = {
         getEventByIdRequest(state) {
             state.detail = {loading: true};
         },
+        getEmptyEventRequest(state) {
+            state.detail = {loading: true};
+        },
         getEventByIdSuccess(state, event) {
+            state.detail = {event};
+            state.detail.loading = false;
+        },
+        getEmptyEvent(state, event) {
             state.detail = {event};
             state.detail.loading = false;
         },
