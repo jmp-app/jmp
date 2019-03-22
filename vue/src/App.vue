@@ -1,13 +1,15 @@
 <template>
-    <div id="app">
-        <header>
-            <Navigation/>
-        </header>
-        <div class="container">
-            <router-view/>
-            <div :class="`alert ${alert.type}`" v-if="alert.message">{{alert.message}}</div>
+    <v-app>
+        <div id="app">
+            <header>
+                <Navigation/>
+            </header>
+            <div class="container">
+                <router-view/>
+                <div :class="`alert ${alert.type}`" v-if="alert.message">{{alert.message}}</div>
+            </div>
         </div>
-    </div>
+    </v-app>
 </template>
 
 <script>
