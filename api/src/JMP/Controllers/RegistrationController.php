@@ -131,20 +131,23 @@ class RegistrationController
         }
 
         // Have to check if the id is falsy, because default value of an int is 0 and not null
-        if ($registration->registrationState->id == false) {
+        if (isset($registration->registrationState->id) == false) {
             /** @var Event $event */
             $event = $optional->getData();
             $registration->registrationState = $event->defaultRegistrationState;
         } else {
             // Validate registrationState
-            if ($this->registrationStateService->registrationStateExists($registration->registrationState->id) === false) {
+            $optional = $this->registrationStateService->getRegistrationStateById($registration->registrationState->id);
+            if ($optional->isSuccess()) {
+                $registration->registrationState = $optional->getData();
+            } else {
                 $message = 'A registrationState with the id ' . $registration->registrationState->id . ' doesnt exist';
                 return $this->getBadRequestResponseWithKey($response, 'registrationState', $message);
             }
         }
 
         // Validate reason if required
-        if ($registration->registrationState->reasonRequired === true && isset($registration->reason) === false) {
+        if ($registration->registrationState->reasonRequired == true && isset($registration->reason) == false) {
             $message = 'A reason is required but not delivered';
             return $this->getBadRequestResponseWithKey($response, 'reason', $message);
         }
