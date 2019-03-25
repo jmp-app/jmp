@@ -143,6 +143,7 @@ class EventsController
 
         $optional = $this->eventService->createEvent($params);
         if ($optional->isFailure()) {
+            $this->logger->error('Failed to create event with the following fields: {' . $params . '}');
             return $response->withStatus(500);
         }
 

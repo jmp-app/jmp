@@ -253,9 +253,7 @@ class UsersController
             ]);
         }
 
-        return $response->withJson([
-            'success' => true
-        ]);
+        return $response->withStatus(204);
 
     }
 

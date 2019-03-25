@@ -155,6 +155,7 @@ class RegistrationController
         // Create registration
         $optional = $this->registrationService->createRegistration($registration);
         if ($optional->isFailure()) {
+            $this->logger->error('Failed to create a registration: {' . Converter::convert($registration) . '}');
             return $response->withStatus(500);
         } else {
             return $response->withJson(Converter::convert($optional->getData()));
@@ -213,6 +214,7 @@ class RegistrationController
         $optional = $this->registrationService->updateRegistration($updatedRegistration);
 
         if ($optional->isFailure()) {
+            $this->logger->error('Failed to update registration with the following fields: {' . Converter::convert($updatedRegistration) . '}');
             return $response->withStatus(500);
         } else {
             return $response->withJson(Converter::convert($optional->getData()));
@@ -242,6 +244,7 @@ class RegistrationController
             if ($success) {
                 return $response->withStatus(204);
             } else {
+                $this->logger->error('Failed to delete a registration: {' . Converter::convert($optional->getData()) . '}');
                 return $response->withStatus(500);
             }
         } else {
