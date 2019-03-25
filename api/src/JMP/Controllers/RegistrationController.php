@@ -222,6 +222,34 @@ class RegistrationController
     }
 
     /**
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     * @return Response
+     */
+    public function deleteRegistration(Request $request, Response $response, $args): Response
+    {
+        $eventId = $args['eventId'];
+        $userId = $args['userId'];
+
+        $optional = $this->registrationService->getRegistrationByUserIdAndEventId($userId, $eventId);
+
+        // Check if the user is allowed to delete this registration
+        $allowed = $userId == $this->user->id || $this->user->isAdmin ? true : false;
+
+        if ($optional->isSuccess() && $allowed) {
+            $success = $this->registrationService->deleteRegistration($userId, $eventId);
+            if ($success) {
+                return $response->withStatus(204);
+            } else {
+                return $response->withStatus(500);
+            }
+        } else {
+            return $response->withStatus(404);
+        }
+    }
+
+    /**
      * @param Response $response
      * @param string $key
      * @param $message

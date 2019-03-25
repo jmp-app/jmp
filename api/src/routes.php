@@ -65,6 +65,12 @@ $app->group('/v1', function () {
         ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
         ->add($jwtMiddleware);
 
+    $this->delete('/registration/{eventId}/{userId}', RegistrationController::class . ':deleteRegistration')
+        ->add(new ValidationErrorResponseBuilder())
+        ->add(new Validation($this->getContainer()['validation']['deleteRegistration']))
+        ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
+        ->add($jwtMiddleware);
+
     $this->get('/registration-state', \JMP\Controllers\RegistrationStateController::class . ':getAllRegStates')
         ->add(new ValidationErrorResponseBuilder())
         ->add(new Validation($this->getContainer()['validation']['getAllRegStates']))

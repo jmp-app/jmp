@@ -97,6 +97,10 @@ $container['validation'] = function () {
         ],
         'getRegistrationStateById' => [
             'registrationStateId' => v::notEmpty()->noWhitespace()->numeric()->min(0)
+        ],
+        'deleteRegistration' => [
+            'eventId' => v::notEmpty()->noWhitespace()->numeric()->min(0),
+            'userId' => v::notEmpty()->noWhitespace()->numeric()->min(0),
         ]
     ];
 };

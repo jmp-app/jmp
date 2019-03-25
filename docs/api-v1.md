@@ -35,6 +35,10 @@
   * [Delete Group](#delete-group)
   * [Join Group](#join-group)
   * [Leave Group](#leave-group)
+  * [Create Registration](#create-registration)
+  * [Update Registration](#update-registration)
+  * [Get Registration](#get-registration)
+  * [Delete Registration](#delete-registration)
   * [Create Registration State](#create-registration-state)
   * [List Registration States](#list-registration-states)
   * [Get Registration State](#get-registration-state)
@@ -799,6 +803,24 @@ Access rights: authentication required
 
 Returns: the [Registration](#registration)
 
+### Get Registration 
+
+```http
+GET /v1/registration/{{eventId}}/{{userId}}
+```
+
+Parameters:
+
+| Field     | Description                                                  | Required |
+| --------- | ------------------------------------------------------------ | -------- |
+| eventId   | The event's id                                               | ✔️     |
+| userId    | The user's id                                                | ✔        |
+
+
+Access rights: authentication required
+
+Returns: the [Registration](#registration)
+
 ### Update Registration 
 
 ```http
@@ -824,5 +846,23 @@ Example request data:
 Access rights: authentication required
 
 Returns: the [Registration](#registration)
+
+### Delete Registration 
+
+```http
+DELETE /v1/registration/{eventId}/{userId}
+```
+
+Parameters:
+
+| Field     | Description                                                  | Required |
+| --------- | ------------------------------------------------------------ | -------- |
+| eventId   | The event's id                                               | ✔️     |
+| userId    | The user's id                                                | ✔        |
+
+
+Access rights: authentication required
+
+Returns: HTTP 204 status code when successful
 
 ___TODO:___ Registration, Presence and User Meta

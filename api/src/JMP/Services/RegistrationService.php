@@ -70,7 +70,7 @@ SQL;
 
         $data = $stmt->fetch();
 
-        if ($data === false) {
+        if ($data == false) {
             return Optional::failure();
         }
 
@@ -148,6 +148,26 @@ SQL;
 SQL;
 
         $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':userId', $userId);
+        return $stmt->execute();
+    }
+
+    /**
+     * Deletes a registration of a userl
+     * @param int $userId
+     * @param int $eventId
+     * @return bool
+     */
+    public function deleteRegistration(int $userId, int $eventId): bool
+    {
+        $sql = <<< SQL
+DELETE FROM jmp.registration
+WHERE jmp.registration.event_id = :eventId
+  AND jmp.registration.user_id = :userId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':eventId', $eventId);
         $stmt->bindParam(':userId', $userId);
         return $stmt->execute();
     }
