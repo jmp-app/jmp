@@ -65,7 +65,7 @@ $container['validation'] = function () {
             'passwordChange' => v::optional(v::boolVal())
         ],
         'listUsers' => [
-            'group' => v::optional(v::notEmpty()->noWhitespace()->numeric()),
+            'group' => v::optional(v::notEmpty()->noWhitespace()->numeric()->min(0)),
         ],
         'createGroup' => [
             'name' => v::notEmpty()->length(1, 45)
