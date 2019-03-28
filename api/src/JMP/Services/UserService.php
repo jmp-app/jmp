@@ -92,8 +92,8 @@ SQL;
         $stmt->bindValue(':firstname', $user->firstname, \PDO::PARAM_STR);
         $stmt->bindValue(':email', $user->email, \PDO::PARAM_STR);
         $stmt->bindParam(':password', $user->password);
-        $stmt->bindValue(':password_change', $user->passwordChange, \PDO::PARAM_INT);
-        $stmt->bindValue(':is_admin', $user->isAdmin, \PDO::PARAM_INT);
+        $stmt->bindValue(':password_change', $user->passwordChange, \PDO::PARAM_BOOL);
+        $stmt->bindValue(':is_admin', $user->isAdmin, \PDO::PARAM_BOOL);
 
 
         $successful = $stmt->execute();
@@ -159,7 +159,7 @@ SQL;
     private function getUserByUsername(string $username): Optional
     {
         $sql = <<<SQL
-SELECT user.id, username, lastname, firstname, email, is_admin AS isAdmin
+SELECT user.id, username, lastname, firstname, email, password_change as passwordChange, is_admin AS isAdmin
 FROM user
 WHERE username = :username
 SQL;

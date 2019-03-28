@@ -110,7 +110,6 @@ class UsersController
 
         /** @var User $user */
         $user = $optional->getData();
-        $user->passwordChange = null;
         $user->password = null;
         return $response->withJson(Converter::convert($user));
     }

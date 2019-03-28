@@ -1,5 +1,5 @@
 # API Spec Version 1
-# Table of Contens:
+# Table of Content:
 - [API Spec Version 1](#api-spec-version-1)
 - [JSON Objects](#json-objects)
   * [User](#user)
@@ -865,4 +865,4 @@ Access rights: authentication required
 
 Returns: HTTP 204 status code when successful
 
-___TODO:___ Registration, Presence and User Meta
+___TODO:___ Presence and User Meta
