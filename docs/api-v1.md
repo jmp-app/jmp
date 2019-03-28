@@ -246,15 +246,15 @@ POST /v1/users
 
 Parameters:
 
-| Field     | Description                                                  | Required |
-| --------- | ------------------------------------------------------------ | -------- |
-| username  | The user's username                                          | ✔️        |
-| lastname  | The user's last name                                         | ❌        |
-| firstname | The user's first name                                        | ❌️        |
-| email     | The user's email                                             | ❌        |
-| password  | The user's initial password                                  | ✔️        |
-| passwordChange  | does the user have to change the password              | ✔️        |
-| isAdmin   | Whether the user is an administrator or not. Defaults to no admin | ❌        |
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| username  | The user's username                                          | ✔️        | varchar(100) |
+| lastname  | The user's last name                                         | ❌        | varchar(50) |
+| firstname | The user's first name                                        | ❌️        | varchar(50) |
+| email     | The user's email                                             | ❌        | varchar(255) |
+| password  | The user's initial password                                  | ✔️        | varchar(255) |
+| passwordChange  | does the user have to change the password              | ✔️        | boolean(0 or 1) |
+| isAdmin   | Whether the user is an administrator or not. Defaults to no admin | ❌        | boolean(0 or 1) |
 
 Example request data:
 
@@ -281,9 +281,9 @@ GET /v1/users
 
 Parameters:
 
-| Field | Description               | Required |
-| ----- | ------------------------- | -------- |
-| group | Get all users by group id | ❌        |
+| Field | Description               | Required | Type |
+| ----- | ------------------------- | -------- | ---- |
+| group | Get all users by group id | ❌        | numeric |
 
 Access rights: authentication required, user has to be an admin
 
@@ -321,14 +321,15 @@ PUT /v1/users/{id}
 
 Parameters:
 
-| Field     | Description         | Required |
-| --------- | ------------------- | -------- |
-| username  | The new username    | ❌        |
-| lastname  | The new last name   | ❌        |
-| firstname | The new first name  | ❌        |
-| email     | The new email       | ❌        |
-| password  | The new password    | ❌        |
-| isAdmin   | The new admin state | ❌        |
+| Field     | Description         | Required | Type |
+| --------- | ------------------- | -------- | ---- |
+| username  | The new username    | ❌        | varchar(100) |
+| lastname  | The new last name   | ❌        | varchar(50) |
+| firstname | The new first name  | ❌        | varchar(50) |
+| email     | The new email       | ❌        | varchar(255) |
+| password  | The new password    | ❌        | varchar(255) |
+| isAdmin   | The new admin state | ❌        | boolean(0 or 1) |
+| passwordChange | does the user have to change the password | ❌        | boolean(0 or 1) |
 
 Example request data:
 
@@ -353,6 +354,8 @@ DELETE /v1/users/{id}
 Parameters: none
 
 Access rights: authentication required, user has to be an admin
+
+Returns: Status 204 or errors
 
 ### Change Password
 
