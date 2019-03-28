@@ -498,6 +498,10 @@ Parameters: none
 
 Access rights: authentication required, user has to be an admin
 
+**Note:**  
+When an Event is deleted, all associated registrations and presences are also deleted.  
+So be careful and ask the user twice if he really wants to delete an Event.
+
 ### Create Event Type
 
 ```http
