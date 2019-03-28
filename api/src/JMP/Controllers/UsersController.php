@@ -139,9 +139,7 @@ class UsersController
             return $response->withStatus(500);
         }
 
-        return $response->withJson([
-            'success' => 'Deleted user with id "' . $id . '"'
-        ]);
+        return $response->withStatus(204);
     }
 
     /**
