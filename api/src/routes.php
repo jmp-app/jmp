@@ -2,6 +2,7 @@
 
 use DavidePastore\Slim\Validation\Validation;
 use JMP\Controllers\EventsController;
+use JMP\Controllers\EventTypesController;
 use JMP\Controllers\GroupsController;
 use JMP\Controllers\LoginController;
 use JMP\Controllers\RegistrationController;
@@ -194,6 +195,16 @@ $app->group('/v1', function () {
         $this->delete('/{id:[0-9]+}/leave', GroupsController::class . ':leaveGroup')
             ->add(new ValidationErrorResponseBuilder())
             ->add(new Validation($container['validation']['userIdsArray']))
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+            ->add($jwtMiddleware);
+    });
+
+    $this->group('/event-types', function () use ($container, $jwtMiddleware) {
+        /** @var $this Slim\App */
+
+        $this->post('', EventTypesController::class . ':createEventType')
+            ->add(new ValidationErrorResponseBuilder())
+            ->add(new Validation($container['validation']['createEventType']))
             ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
             ->add($jwtMiddleware);
     });

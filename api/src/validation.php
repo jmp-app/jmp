@@ -114,6 +114,10 @@ $container['validation'] = function () {
         'deleteRegistration' => [
             'eventId' => v::notEmpty()->noWhitespace()->numeric()->min(0),
             'userId' => v::notEmpty()->noWhitespace()->numeric()->min(0),
+        ],
+        'createEventType' => [
+            'title' => v::notEmpty()->length(1, 51),
+            'color' => v::hexRgbColor()
         ]
     ];
 };

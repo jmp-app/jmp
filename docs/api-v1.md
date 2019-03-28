@@ -510,10 +510,10 @@ POST /v1/event-types
 
 Parameters:
 
-| Field | Description                        | Required |
-| ----- | ---------------------------------- | -------- |
-| title | The title of the event type        | ✔️        |
-| color | The color used for this event type | ✔️        |
+| Field | Description                        | Required | Type |
+| ----- | ---------------------------------- | -------- | ---- |
+| title | The title of the event type        | ✔️        | varchar(50) |
+| color | The color used for this event type | ✔️        | hex-rgb-color |
 
 Example request data:
 
