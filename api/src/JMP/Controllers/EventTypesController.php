@@ -40,6 +40,24 @@ class EventTypesController
     /**
      * @param Request $request
      * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function getEventTypeById(Request $request, Response $response, array $args): Response
+    {
+        $id = $args['id'];
+
+        $optional = $this->eventTypeService->getEventTypeById($id);
+        if ($optional->isFailure()) {
+            return $response->withStatus(404);
+        }
+
+        return $response->withJson(Converter::convert($optional->getData()));
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
      * @return Response
      */
     public function createEventType(Request $request, Response $response): Response

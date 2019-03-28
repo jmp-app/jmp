@@ -211,5 +211,9 @@ $app->group('/v1', function () {
         $this->get('', EventTypesController::class . ':listEventTypes')
             ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
             ->add($jwtMiddleware);
+
+        $this->get('/{id:[0-9]+}', EventTypesController::class . ':getEventTypeById')
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
+            ->add($jwtMiddleware);
     });
 });
