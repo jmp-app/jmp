@@ -245,6 +245,23 @@ SQL;
     }
 
     /**
+     * @param int $eventId
+     * @return bool
+     */
+    public function removeAllGroupsFromEvent(int $eventId): bool
+    {
+        $sql = <<< SQL
+DELETE FROM event_has_group
+WHERE event_id = :eventId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':eventId', $eventId);
+        return $stmt->execute();
+
+    }
+
+    /**
      * @param \PDOStatement $stmt the statement to use
      * @return Group[] array of groups
      */

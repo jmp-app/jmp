@@ -151,6 +151,55 @@ class EventsController
     }
 
     /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     * @throws \Exception
+     */
+    public function updateEvent(Request $request, Response $response, array $args): Response
+    {
+        $id = $args['id'];
+        $params = $request->getParsedBody();
+
+        // Validate the input
+        $errors = [];
+        $errors = $this->validateEventExists($id, $errors);
+        $errors = isset($params['eventType']) ? $this->validateEventType($params, $errors) : $errors;
+        $errors = isset($params['groups']) ? $this->validateGroups($params, $errors) : $errors;
+        $errors = isset($params['defaultRegistrationState']) ? $this->validateRegistrationState($params, $errors) : $errors;
+
+        if (empty($errors) === false) {
+            return $response->withJson([
+                'errors' => $errors
+            ], 400);
+        }
+
+        $optional = $this->eventService->updateEvent($id, $params);
+        if ($optional->isFailure()) {
+            $this->logger->error('Failed to update event with the id ' . $id . ' and the following fields: {' . $params . '}');
+            return $response->withStatus(500);
+        }
+
+        return $response->withJson(Converter::convert($optional->getData()));
+    }
+
+    public function deleteEvent(Request $request, Response $response, array $args): Response
+    {
+        $id = $args['id'];
+
+        if ($this->eventService->eventExists($id) === false) {
+            return $response->withStatus(404);
+        }
+
+        if ($this->eventService->deleteEvent($id) === false) {
+            $this->logger->error('Failed to delete event with the id ' . $id . '.');
+            return $response->withStatus(500);
+        }
+
+        return $response->withStatus(204);
+    }
+
+    /**
      * @param array $params
      * @param bool $isAdmin
      * @return array
@@ -223,6 +272,19 @@ class EventsController
     {
         if ($this->registrationStateService->registrationStateExists($params['defaultRegistrationState']) === false) {
             $errors['defaultRegistrationState'] = 'A registration state with the id ' . $params['defaultRegistrationState'] . ' doesnt exist';
+        }
+        return $errors;
+    }
+
+    /**
+     * @param int $id
+     * @param array $errors
+     * @return array
+     */
+    private function validateEventExists(int $id, array $errors): array
+    {
+        if ($this->eventService->eventExists($id) === false) {
+            $errors['event'] = 'An event with the id ' . $id . ' doesnt exist';
         }
         return $errors;
     }

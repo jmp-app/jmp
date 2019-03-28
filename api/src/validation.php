@@ -39,6 +39,19 @@ $container['validation'] = function () {
                 v::noWhitespace()->numeric()->min(0)
             )
         ],
+        'updateEvent' => [
+            'title' => v::optional(v::notEmpty()->length(1, 51)),
+            'description' => v::optional(v::notEmpty()->length(1, 256)),
+            'from' => v::optional(v::date('Y-m-d\TH:i')),
+            'to' => v::optional(v::date('Y-m-d\TH:i')),
+            'place' => v::optional(v::notEmpty()->length(1, 51)),
+            'eventType' => v::optional(v::noWhitespace()->numeric()->min(0)),
+            'defaultRegistrationState' => v::optional(v::noWhitespace()->numeric()->min(0)),
+            'groups' => v::optional(
+                v::arrayType()->notEmpty()->each(
+                    v::noWhitespace()->numeric()->min(0)
+                )
+            )],
         'getEventById' => [
             'id' => v::notEmpty()->noWhitespace()->numeric()
         ],

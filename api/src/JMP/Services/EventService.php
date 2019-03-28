@@ -239,6 +239,58 @@ SQL;
     }
 
     /**
+     * @param int $id
+     * @param array $params
+     * @return Optional
+     * @throws \Exception
+     */
+    public function updateEvent(int $id, array $params): Optional
+    {
+        $this->db->beginTransaction();
+        try {
+            // insert event
+            if ($this->updateEventFields($id, $params) === false) {
+                $this->db->rollBack();
+                return Optional::failure();
+            }
+
+            // remove groups / add groups
+            if (isset($params['groups'])) {
+                if ($this->updateEventGroups($id, $params) === false) {
+                    $this->db->rollBack();
+                    return Optional::failure();
+                }
+            }
+            // get event
+            $optional = $this->getEventById($id);
+
+            // commit
+            $this->db->commit();
+            return $optional;
+        } catch (\PDOException $exception) {
+            // Something went wrong, do a rollback
+            $this->db->rollBack();
+            return Optional::failure();
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     */
+    public function deleteEvent(int $id): bool
+    {
+        $sql = <<< SQL
+DELETE FROM jmp.event
+WHERE jmp.event.id = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        return $stmt->execute();
+    }
+
+    /**
      * Checks if an event exists
      * @param int $eventId
      * @return bool
@@ -354,6 +406,51 @@ SQL;
             array_push($successful, $success);
         }
         return !in_array(false, $successful, true);
+    }
+
+    /**
+     * @param int $id
+     * @param array $params
+     * @return bool
+     */
+    private function updateEventFields(int $id, array $params)
+    {
+        $sql = <<< SQL
+UPDATE `jmp`.`event` e
+SET e.`title`                         = COALESCE(:title, e.`title`),
+    e.`from`                          = COALESCE(:from, e.`from`),
+    e.`to`                            = COALESCE(:to, e.`to`),
+    e.`place`                         = COALESCE(:place, e.`place`),
+    e.`description`                   = COALESCE(:description, e.`description`),
+    e.`event_type_id`                 = COALESCE(:eventType, e.`event_type_id`),
+    e.`default_registration_state_id` = COALESCE(:defaultRegistrationState, e.`default_registration_state_id`)
+WHERE e.`id` = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindValue(':title', $params['title'], PDO::PARAM_STR);
+        $stmt->bindValue(':from', $params['from'], PDO::PARAM_STR);
+        $stmt->bindValue(':to', $params['to'], PDO::PARAM_STR);
+        $stmt->bindValue(':place', $params['place'], PDO::PARAM_STR);
+        $stmt->bindValue(':description', $params['description'], PDO::PARAM_STR);
+        $stmt->bindValue(':eventType', $params['eventType'], PDO::PARAM_INT);
+        $stmt->bindValue(':defaultRegistrationState', $params['defaultRegistrationState'], PDO::PARAM_INT);
+        $stmt->bindParam(':id', $id);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * @param int $id
+     * @param array $params
+     * @return bool
+     */
+    private function updateEventGroups(int $id, array $params): bool
+    {
+        if ($this->groupService->removeAllGroupsFromEvent($id) === false) return false;
+
+        return $this->addGroupsToEvent($params, $id);
     }
 
 }

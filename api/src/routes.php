@@ -49,6 +49,16 @@ $app->group('/v1', function () {
             ->add(new Validation($container['validation']['createEvent']))
             ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
             ->add($jwtMiddleware);
+
+        $this->put('/{id:[0-9]+}', EventsController::class . ':updateEvent')
+            ->add(new ValidationErrorResponseBuilder())
+            ->add(new Validation($container['validation']['updateEvent']))
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+            ->add($jwtMiddleware);
+
+        $this->delete('/{id:[0-9]+}', EventsController::class . ':deleteEvent')
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+            ->add($jwtMiddleware);
     });
 
     // Registration
