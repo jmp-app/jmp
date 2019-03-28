@@ -531,7 +531,7 @@ Returns: the [Event Type](#event-type)
 ### List Event Types
 
 ```http
-GET /v1/event-types/
+GET /v1/event-types
 ```
 
 Parameters: none

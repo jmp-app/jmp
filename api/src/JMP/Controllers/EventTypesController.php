@@ -55,4 +55,21 @@ class EventTypesController
 
         return $response->withJson(Converter::convert($optional->getData()));
     }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function listEventTypes(Request $request, Response $response): Response
+    {
+        $optional = $this->eventTypeService->getAllEventTypes();
+
+        if ($optional->isFailure()) {
+            $this->logger->error('Failed to list all event types');
+            return $response->withStatus(500);
+        }
+
+        return $response->withJson(Converter::convertArray($optional->getData()));
+    }
 }

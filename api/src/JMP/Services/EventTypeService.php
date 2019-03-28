@@ -24,6 +24,32 @@ class EventTypeService
     }
 
     /**
+     * @return Optional
+     */
+    public function getAllEventTypes(): Optional
+    {
+        $sql = <<< SQL
+SELECT *
+FROM jmp.event_type
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        $eventTypes = $stmt->fetchAll();
+        if ($eventTypes === false) {
+            return Optional::failure();
+        }
+
+        // Convert array to model objects
+        foreach ($eventTypes as $key => $value) {
+            $eventTypes[$key] = new EventType($value);
+        }
+
+        return Optional::success($eventTypes);
+    }
+
+    /**
      * @param EventType $eventType
      * @return Optional
      */

@@ -207,5 +207,9 @@ $app->group('/v1', function () {
             ->add(new Validation($container['validation']['createEventType']))
             ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
             ->add($jwtMiddleware);
+
+        $this->get('', EventTypesController::class . ':listEventTypes')
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
+            ->add($jwtMiddleware);
     });
 });
