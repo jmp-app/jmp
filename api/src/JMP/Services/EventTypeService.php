@@ -24,6 +24,50 @@ class EventTypeService
     }
 
     /**
+     * Deletes an event type
+     * @param int $id
+     * @return bool true on success, false on failure
+     */
+    public function deleteEventType(int $id): bool
+    {
+        $sql = <<<SQL
+DELETE FROM jmp.event_type
+WHERE jmp.event_type.id = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Checks if one or more events use the given event type
+     * @param int $id
+     * @return bool true when used, false when not used
+     */
+    public function isEventTypeUsed(int $id): bool
+    {
+        $sql = <<<SQL
+SELECT COUNT(*) AS count
+FROM event
+WHERE event_type_id = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+
+        $count = (int)$stmt->fetch()['count'];
+
+        if ($count !== 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * @return Optional
      */
     public function getAllEventTypes(): Optional

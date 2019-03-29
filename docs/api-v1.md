@@ -562,6 +562,10 @@ Parameters: none
 
 Access rights: authentication required, user has to be an admin
 
+**Note:** Event types can only be deleted when they currently aren't in use.
+
+Returns: Status 204 or errors
+
 ### Create Group
 
 ```http

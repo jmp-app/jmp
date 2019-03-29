@@ -38,6 +38,38 @@ class EventTypesController
     }
 
     /**
+     * Delete an event type
+     * The event type is only deleted when it currently isn't in use.
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function deleteEventType(Request $request, Response $response, array $args): Response
+    {
+        $id = $args['id'];
+
+        if ($this->eventTypeService->eventTypeExists($id) === false) {
+            return $response->withStatus(404);
+        }
+
+        if ($this->eventTypeService->isEventTypeUsed($id) === true) {
+            return $response->withJson([
+                'errors' => [
+                    'eventType' => 'The event type with the id ' . $id . ' is currently in use by some events and can therefore not be deleted'
+                ]
+            ], 400);
+        }
+
+        if ($this->eventTypeService->deleteEventType($id) === false) {
+            $this->logger->error('Failed to delete event type with the id ' . $id . '.');
+            return $response->withStatus(500);
+        }
+
+        return $response->withStatus(204);
+    }
+
+    /**
      * @param Request $request
      * @param Response $response
      * @param array $args
