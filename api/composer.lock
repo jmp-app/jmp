@@ -797,16 +797,16 @@
         },
       {
         "name": "symfony/polyfill-ctype",
-        "version": "v1.10.0",
+        "version": "v1.11.0",
         "source": {
           "type": "git",
           "url": "https://github.com/symfony/polyfill-ctype.git",
-          "reference": "e3d826245268269cd66f8326bd8bc066687b4a19"
+          "reference": "82ebae02209c21113908c229e9883c419720738a"
         },
         "dist": {
           "type": "zip",
-          "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/e3d826245268269cd66f8326bd8bc066687b4a19",
-          "reference": "e3d826245268269cd66f8326bd8bc066687b4a19",
+          "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/82ebae02209c21113908c229e9883c419720738a",
+          "reference": "82ebae02209c21113908c229e9883c419720738a",
           "shasum": ""
         },
         "require": {
@@ -818,7 +818,7 @@
         "type": "library",
         "extra": {
           "branch-alias": {
-            "dev-master": "1.9-dev"
+            "dev-master": "1.11-dev"
           }
         },
         "autoload": {
@@ -851,20 +851,20 @@
           "polyfill",
           "portable"
         ],
-        "time": "2018-08-06T14:22:27+00:00"
+        "time": "2019-02-06T07:57:58+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.10.0",
+          "version": "v1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "c79c051f5b3a46be09205c73b80b346e4153e494"
+              "reference": "fe5e94c604826c35a32fa832f35bd036b6799609"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/c79c051f5b3a46be09205c73b80b346e4153e494",
-                "reference": "c79c051f5b3a46be09205c73b80b346e4153e494",
+              "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/fe5e94c604826c35a32fa832f35bd036b6799609",
+              "reference": "fe5e94c604826c35a32fa832f35bd036b6799609",
                 "shasum": ""
             },
             "require": {
@@ -876,7 +876,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.9-dev"
+                  "dev-master": "1.11-dev"
                 }
             },
             "autoload": {
@@ -910,7 +910,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2018-09-21T13:07:52+00:00"
+          "time": "2019-02-06T07:57:58+00:00"
         },
         {
             "name": "tuupola/callable-handler",
@@ -1024,16 +1024,16 @@
         },
         {
             "name": "tuupola/slim-jwt-auth",
-          "version": "3.2.0",
+          "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tuupola/slim-jwt-auth.git",
-              "reference": "33521e30ff8e11458ecb88316d91296122b3c0a0"
+              "reference": "9350eb8c1f9a36c79b6275297aee11f9d7184471"
             },
             "dist": {
                 "type": "zip",
-              "url": "https://api.github.com/repos/tuupola/slim-jwt-auth/zipball/33521e30ff8e11458ecb88316d91296122b3c0a0",
-              "reference": "33521e30ff8e11458ecb88316d91296122b3c0a0",
+              "url": "https://api.github.com/repos/tuupola/slim-jwt-auth/zipball/9350eb8c1f9a36c79b6275297aee11f9d7184471",
+              "reference": "9350eb8c1f9a36c79b6275297aee11f9d7184471",
                 "shasum": ""
             },
             "require": {
@@ -1087,7 +1087,7 @@
                 "psr-15",
                 "psr-7"
             ],
-          "time": "2019-01-26T06:31:33+00:00"
+          "time": "2019-03-11T09:26:29+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

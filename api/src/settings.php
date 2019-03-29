@@ -72,7 +72,7 @@ return [
 
         // Auth settings
         'auth' => [
-            'subjectIdentifier' => 'username'
+            'subjectIdentifier' => 'id'
         ],
 
         // Monolog settings

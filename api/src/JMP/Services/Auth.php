@@ -141,20 +141,20 @@ class Auth
     /**
      * Selects the user by username
      * Note: the password is also selected and must be removed!
-     * @param string $username
+     * @param string $id
      * @return Optional
      */
-    private function getUser(string $username): Optional
+    private function getUser(string $id): Optional
     {
         $sql = <<<SQL
 SELECT user.id, username, lastname, firstname, email, password, password_change AS passwordChange, is_admin AS isAdmin
 FROM user
-WHERE username = :username
+WHERE id = :id
 SQL;
 
         $stmt = $this->db->prepare($sql);
 
-        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':id', $id);
 
         if ($stmt->execute() === false) {
             return Optional::failure();
