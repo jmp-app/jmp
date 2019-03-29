@@ -41,7 +41,7 @@ class LoginController
         // user is authenticated
         if ($optional->isSuccess()) {
             $data = [
-                'token' => $this->auth->generateToken($body),
+                'token' => $this->auth->generateToken(Converter::convert($optional->getData())),
                 'user' => Converter::convert($optional->getData())
             ];
             return $response->withJson($data);

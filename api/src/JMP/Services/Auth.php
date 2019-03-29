@@ -73,7 +73,7 @@ class Auth
      */
     public function attempt(string $username, string $password): Optional
     {
-        $optional = $this->getUser($username);
+        $optional = $this->getUserByUsername($username);
         if ($optional->isFailure()) {
             // No User found
             return Optional::failure();
@@ -139,12 +139,12 @@ class Auth
     }
 
     /**
-     * Selects the user by username
+     * Selects the user by id
      * Note: the password is also selected and must be removed!
      * @param string $id
      * @return Optional
      */
-    private function getUser(string $id): Optional
+    private function getUser(int $id): Optional
     {
         $sql = <<<SQL
 SELECT user.id, username, lastname, firstname, email, password, password_change AS passwordChange, is_admin AS isAdmin
@@ -155,6 +155,38 @@ SQL;
         $stmt = $this->db->prepare($sql);
 
         $stmt->bindParam(':id', $id);
+
+        if ($stmt->execute() === false) {
+            return Optional::failure();
+        }
+
+        $user = $stmt->fetch();
+        if ($user === false) {
+            return Optional::failure();
+        }
+
+        $user = new User($user);
+
+        return Optional::success($user);
+    }
+
+    /**
+     * Selects the user by username
+     * Note: the password is also selected and must be removed!
+     * @param string $username
+     * @return Optional
+     */
+    private function getUserByUsername(string $username): Optional
+    {
+        $sql = <<<SQL
+SELECT user.id, username, lastname, firstname, email, password, password_change AS passwordChange, is_admin AS isAdmin
+FROM user
+WHERE username = :username
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':username', $username);
 
         if ($stmt->execute() === false) {
             return Optional::failure();
