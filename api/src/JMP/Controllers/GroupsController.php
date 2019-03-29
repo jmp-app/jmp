@@ -89,10 +89,11 @@ class GroupsController
     public function deleteGroup(Request $request, Response $response, $args): Response
     {
         $id = $args['id'];
-        $this->groupService->deleteGroup($id);
-        return $response->withJson([
-            'success' => 'Deleted group with id "' . $id . '"'
-        ]);
+        if ($this->groupService->deleteGroup($id) === false) {
+            $this->logger->error('Failed to delete group with the id ' . $id . '.');
+            return $response->withStatus(500);
+        }
+        return $response->withStatus(204);
     }
 
     /**
