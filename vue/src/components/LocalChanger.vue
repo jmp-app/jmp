@@ -15,6 +15,8 @@
         methods: {
             handleChange: function () {
                 window.localStorage.setItem('locale', this.$i18n.locale);
+                this.$vuetify.lang.current = this.$i18n.locale;
+                console.log(this.$vuetify.lang.current);
             }
         },
         created() {
@@ -22,6 +24,7 @@
             if (!this.$i18n.locale) {
                 this.$i18n.locale = process.env.VUE_APP_I18N_LOCALE;
             }
+            this.$vuetify.lang.current = this.$i18n.locale;
         }
     };
 </script>

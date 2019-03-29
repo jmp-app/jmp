@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
         <input
                 :placeholder="$t('search')"
@@ -7,6 +7,17 @@
                 type="search"
                 v-model="searchQuery"
         >
+        <v-data-table
+                :headers="headers"
+                :items="users"
+                :search="searchQuery"
+        >
+            <template v-slot:items="props">
+                <td>{{ props.item.username }}</td>
+                <td>{{ props.item.firstname }}</td>
+                <td>{{ props.item.lastname }}</td>
+            </template>
+        </v-data-table>
         <grid
                 :columns="gridColumns"
                 :columnTitles="gridColumnTitles"
@@ -32,6 +43,26 @@
             return {
                 searchQuery: '',
                 gridColumns: ['username', 'firstname', 'lastname'],
+                headers: [
+                    {
+                        text: this.$t('user.username'),
+                        align: 'left',
+                        sortable: true,
+                        value: 'username'
+                    },
+                    {
+                        text: this.$t('user.firstName'),
+                        align: 'left',
+                        sortable: true,
+                        value: 'firstname'
+                    },
+                    {
+                        text: this.$t('user.lastName'),
+                        align: 'left',
+                        sortable: true,
+                        value: 'lastname'
+                    }
+                ],
                 gridColumnTitles: {
                     'username': this.$t('user.username'),
                     'firstname': this.$t('user.firstName'),
