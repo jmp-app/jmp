@@ -91,6 +91,7 @@ $container['logger'] = function (\Psr\Container\ContainerInterface $container) {
 $container['phpErrorHandler'] = $container['errorHandler'] = function (\Psr\Container\ContainerInterface $container) {
     return function (RequestInterface $request, ResponseInterface $response, $exception) use ($container): ResponseInterface {
 
+        /** @var Logger $logger */
         $logger = $container->get('logger');
         $debug = $container->get('settings')['displayErrorDetails'];
 
@@ -98,11 +99,11 @@ $container['phpErrorHandler'] = $container['errorHandler'] = function (\Psr\Cont
             /** @var Error $exception */
             ;
         if ($exception instanceof Exception)
-            /** Exception $exception */
+            /** @var Exception $exception */
             ;
 
 
-        $logger->addError('Message: {' . $exception->getMessage() . '} Trace: {' . $exception->getTrace() . '}');
+        $logger->error('Message: {' . $exception->getMessage() . '} Trace: {' . $exception->getTrace() . '}');
 
         return $response
             ->withStatus(500)
