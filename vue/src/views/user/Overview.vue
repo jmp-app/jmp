@@ -36,7 +36,6 @@
         data: function () {
             return {
                 searchQuery: '',
-                gridColumns: ['username', 'firstname', 'lastname'],
                 headers: [
                     {
                         text: this.$t('user.username'),
@@ -57,12 +56,6 @@
                         value: 'lastname'
                     }
                 ],
-                gridColumnTitles: {
-                    'username': this.$t('user.username'),
-                    'firstname': this.$t('user.firstName'),
-                    'lastname': this.$t('user.lastName')
-                },
-                routerLinkTo: 'users',
                 isAdmin: false
             };
         },
