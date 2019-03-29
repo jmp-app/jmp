@@ -6,6 +6,144 @@
 	},
 	"item": [
 		{
+			"name": "login",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "91bb1e02-d583-413e-9193-42bf78a2008b",
+								"exec": [
+									"pm.test(\"Test login\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user.username).to.eql(pm.variables.get(\"username\"));",
+									"    pm.expect(jsonData.token).to.be.a('string')",
+									"});",
+									"",
+									"// Parsing the response returned by the request.",
+									"var jsonData = pm.response.json();",
+									"postman.setEnvironmentVariable(\"admin-token\", jsonData.token);",
+									"",
+									"postman.setNextRequest(\"loginAsUser\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "e5e26017-357c-4719-9f78-7874e5f46b2d",
+								"exec": [
+									"pm.variables.set(\"username\", \"adam\");",
+									"pm.variables.set(\"password\", \"pass4dev\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost/api/v1/login",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "loginAsUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "91bb1e02-d583-413e-9193-42bf78a2008b",
+								"exec": [
+									"pm.test(\"Test login\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user.username).to.eql(pm.variables.get(\"username\"));",
+									"    pm.expect(jsonData.token).to.be.a('string')",
+									"});",
+									"",
+									"",
+									"// Parsing the response returned by the request.",
+									"var jsonData = pm.response.json();",
+									"postman.setEnvironmentVariable(\"nonadmin-token\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ff371bfe-d462-42c2-a26c-238d4e62e898",
+								"exec": [
+									"pm.variables.set(\"username\", \"allen\");",
+									"pm.variables.set(\"password\", \"pass4dev\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost/api/v1/login",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "registration",
 			"item": [
 				{
@@ -10115,141 +10253,1827 @@
 						}
 					],
 					"_postman_isSubFolder": true
+				},
+				{
+					"name": "delete",
+					"item": [
+						{
+							"name": "admin",
+							"item": [
+								{
+									"name": "/create",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "dd7391d1-9c3a-47ca-bf1f-ba4bade8c0e2",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('title', 'MyTitle');",
+													"vars.set('color', '#FFFFFF');"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "8452f818-45b3-48bf-960e-cf4f7d2a392b",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test('All values are correct', function() {",
+													"    json = pm.response.json();",
+													"    pm.expect(json.title).to.be.eq(vars.get('title'));",
+													"    pm.expect(json.color).to.be.eq(vars.get('color'));",
+													"    pm.response.to.have.jsonBody('id');",
+													"});",
+													"",
+													"pm.environment.set(\"created-event-type-id\", pm.response.json().id);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "title",
+													"value": "{{title}}",
+													"type": "text"
+												},
+												{
+													"key": "color",
+													"value": "{{color}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/event-types",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"event-types"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/event-types/{id:[0-9]+}",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c8aaa7b9-c1b8-4378-9745-ee5a562c74eb",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"eventTypeId = pm.environment.get(\"created-event-type-id\");",
+													"vars.set('eventTypeId', eventTypeId);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "751e21a2-3ae9-4565-a323-764a470b22c3",
+												"exec": [
+													"pm.test(\"Status is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/event-types/{{eventTypeId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"event-types",
+												"{{eventTypeId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/event-types/{id:[0-9]+}-not-found",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c8aaa7b9-c1b8-4378-9745-ee5a562c74eb",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('eventTypeId', -1);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "751e21a2-3ae9-4565-a323-764a470b22c3",
+												"exec": [
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/event-types/{{eventTypeId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"event-types",
+												"{{eventTypeId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/event-types/{id:[0-9]+}-not-found-invalid-id",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c8aaa7b9-c1b8-4378-9745-ee5a562c74eb",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('eventTypeId', 99999);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "751e21a2-3ae9-4565-a323-764a470b22c3",
+												"exec": [
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/event-types/{{eventTypeId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"event-types",
+												"{{eventTypeId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/event-types/{id:[0-9]+}-bad-request-in-use",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c8aaa7b9-c1b8-4378-9745-ee5a562c74eb",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('eventTypeId', 1);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "751e21a2-3ae9-4565-a323-764a470b22c3",
+												"exec": [
+													"pm.test(\"Status is 400\", function () {",
+													"    pm.response.to.have.status(400);",
+													"});",
+													"",
+													"pm.test(\"All errors are returned\", function () {",
+													"    pm.response.to.have.jsonBody(\"errors\");",
+													"    pm.response.to.have.jsonBody(\"errors.eventType\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/event-types/{{eventTypeId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"event-types",
+												"{{eventTypeId}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{admin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "nonadmin",
+							"item": [
+								{
+									"name": "/event-types/{id:[0-9]+}-forbidden",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c8aaa7b9-c1b8-4378-9745-ee5a562c74eb",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"eventTypeId = pm.environment.get(\"created-event-type-id\");",
+													"vars.set('eventTypeId', eventTypeId);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "751e21a2-3ae9-4565-a323-764a470b22c3",
+												"exec": [
+													"pm.test(\"Status is 403\", function () {",
+													"    pm.response.to.have.status(403);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/event-types/{{eventTypeId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"event-types",
+												"{{eventTypeId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/event-types/{id:[0-9]+}-not-found",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c8aaa7b9-c1b8-4378-9745-ee5a562c74eb",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('eventTypeId', -1);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "751e21a2-3ae9-4565-a323-764a470b22c3",
+												"exec": [
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/event-types/{{eventTypeId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"event-types",
+												"{{eventTypeId}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{nonadmin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "6416eff0-7703-4d94-b17b-a522ef2bcc42",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "84b3832c-56c2-422a-b126-9070716ebc92",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							],
+							"_postman_isSubFolder": true
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0b5d413f-c830-4c3d-8637-ddda1c20871c",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "34ffe8ca-878f-419a-92ca-cf1d27bc4304",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
 				}
 			]
 		},
 		{
-			"name": "login",
-			"event": [
+			"name": "group",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"id": "91bb1e02-d583-413e-9193-42bf78a2008b",
-						"exec": [
-							"pm.test(\"Test login\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.user.username).to.eql(pm.variables.get(\"username\"));",
-							"    pm.expect(jsonData.token).to.be.a('string')",
-							"});",
-							"",
-							"// Parsing the response returned by the request.",
-							"var jsonData = pm.response.json();",
-							"postman.setEnvironmentVariable(\"admin-token\", jsonData.token);",
-							"",
-							"postman.setNextRequest(\"loginAsUser\");"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "e5e26017-357c-4719-9f78-7874e5f46b2d",
-						"exec": [
-							"pm.variables.set(\"username\", \"adam\");",
-							"pm.variables.set(\"password\", \"pass4dev\");"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
+					"name": "create",
+					"item": [
 						{
-							"key": "username",
-							"value": "{{username}}",
-							"type": "text"
+							"name": "admin",
+							"item": [
+								{
+									"name": "/groups",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('name', 'test-group');"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test('Values are correct', function() {",
+													"    json = pm.response.json();",
+													"    pm.expect(json.name).to.be.eq(vars.get('name'));",
+													"    pm.response.to.have.jsonBody('id');",
+													"    pm.expect(json.id).to.be.a('number');",
+													"});",
+													"",
+													"pm.test('Users array is returend', function() {",
+													"    json = pm.response.json();",
+													"    pm.response.to.have.jsonBody('users');",
+													"    pm.expect(json.users).to.be.an('array');",
+													"    pm.expect(json.users).to.be.empty;",
+													"})",
+													"",
+													"pm.environment.set(\"created-group-id\", pm.response.json().id);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{name}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/groups-bad-request",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('name', ' ');"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"pm.test(\"Status is 400\", function () {",
+													"    pm.response.to.have.status(400);",
+													"});",
+													"",
+													"pm.test(\"All errors are returned\", function () {",
+													"    pm.response.to.have.jsonBody(\"errors\");",
+													"    pm.response.to.have.jsonBody(\"errors.name\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{name}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/groups-bad-request-name-already-used",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('name', 'test-group');"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"pm.test(\"Status is 400\", function () {",
+													"    pm.response.to.have.status(400);",
+													"});",
+													"",
+													"pm.test(\"All errors are returned\", function () {",
+													"    pm.response.to.have.jsonBody(\"errors\");",
+													"    pm.response.to.have.jsonBody(\"errors.name\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{name}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{admin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "659d4ce2-6739-4b21-8046-a73568e2bb7d",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "7bafd068-b08f-449b-bea0-1efb54307853",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							],
+							"_postman_isSubFolder": true
 						},
 						{
-							"key": "password",
-							"value": "{{password}}",
-							"type": "text"
+							"name": "nonadmin",
+							"item": [
+								{
+									"name": "/groups-forbidden",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('name', 'test-group');"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"pm.test(\"Status is 403\", function () {",
+													"    pm.response.to.have.status(403);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{name}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{nonadmin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "659d4ce2-6739-4b21-8046-a73568e2bb7d",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "7bafd068-b08f-449b-bea0-1efb54307853",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							],
+							"_postman_isSubFolder": true
 						}
-					]
-				},
-				"url": {
-					"raw": "localhost/api/v1/login",
-					"host": [
-						"localhost"
 					],
-					"path": [
-						"api",
-						"v1",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "loginAsUser",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "91bb1e02-d583-413e-9193-42bf78a2008b",
-						"exec": [
-							"pm.test(\"Test login\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.user.username).to.eql(pm.variables.get(\"username\"));",
-							"    pm.expect(jsonData.token).to.be.a('string')",
-							"});",
-							"",
-							"",
-							"// Parsing the response returned by the request.",
-							"var jsonData = pm.response.json();",
-							"postman.setEnvironmentVariable(\"nonadmin-token\", jsonData.token);"
-						],
-						"type": "text/javascript"
-					}
+					"_postman_isSubFolder": true
 				},
 				{
-					"listen": "prerequest",
-					"script": {
-						"id": "ff371bfe-d462-42c2-a26c-238d4e62e898",
-						"exec": [
-							"pm.variables.set(\"username\", \"allen\");",
-							"pm.variables.set(\"password\", \"pass4dev\");"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
+					"name": "list",
+					"item": [
 						{
-							"key": "username",
-							"value": "{{username}}",
-							"type": "text"
+							"name": "admin",
+							"item": [
+								{
+									"name": "/groups",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "df1027fa-8f30-4ef7-b4b6-d9a7910d1f43",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test('List is returned', function() {",
+													"    json = pm.response.json();",
+													"    pm.expect(json).to.be.an('array');",
+													"    pm.expect(json).to.have.lengthOf.at.least(3);",
+													"});",
+													"",
+													"pm.test('First entry is correct', function() {",
+													"    json = pm.response.json();",
+													"    json = json[0];",
+													"    pm.expect(json.id).to.be.eq(7);",
+													"    pm.expect(json.name).to.be.eq('blue');",
+													"    pm.expect(json.users).to.have.lengthOf(2);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/groups/{id:[0-9]+}",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "fc2e33da-5259-405b-a721-8d6868fbf4d7",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('groupId', 7);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1976a0df-a0fc-4935-9df6-f9183d7cae94",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test('Values are correct', function() {",
+													"    json = pm.response.json();",
+													"    pm.expect(json.id).to.be.eq(vars.get('groupId'));",
+													"    pm.expect(json.name).to.be.eq('blue');",
+													"    pm.expect(json.users).to.have.lengthOf(2);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/event-types/{id:[0-9]+}-not-found",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "8ce83910-af7f-4c28-ac59-56ffbdbfbf36",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "fe408da1-591e-4aa3-bd73-d88458b7878a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('groupId', -1);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/event-types/{id:[0-9]+}-not-found-invalid-id",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "8ce83910-af7f-4c28-ac59-56ffbdbfbf36",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "fe408da1-591e-4aa3-bd73-d88458b7878a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('groupId', 99999);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{admin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"_postman_isSubFolder": true
 						},
 						{
-							"key": "password",
-							"value": "{{password}}",
-							"type": "text"
+							"name": "nonadmin",
+							"item": [
+								{
+									"name": "/groups",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "df1027fa-8f30-4ef7-b4b6-d9a7910d1f43",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test('List is returned', function() {",
+													"    json = pm.response.json();",
+													"    pm.expect(json).to.be.an('array');",
+													"    pm.expect(json).to.have.lengthOf.at.least(3);",
+													"});",
+													"",
+													"pm.test('First entry is correct', function() {",
+													"    json = pm.response.json();",
+													"    json = json[0];",
+													"    pm.expect(json.id).to.be.eq(7);",
+													"    pm.expect(json.name).to.be.eq('blue');",
+													"    pm.expect(json.users).to.have.lengthOf(2);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/groups/{id:[0-9]+}",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "fc2e33da-5259-405b-a721-8d6868fbf4d7",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('groupId', 7);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1976a0df-a0fc-4935-9df6-f9183d7cae94",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test('Values are correct', function() {",
+													"    json = pm.response.json();",
+													"    pm.expect(json.id).to.be.eq(vars.get('groupId'));",
+													"    pm.expect(json.name).to.be.eq('blue');",
+													"    pm.expect(json.users).to.have.lengthOf(2);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/event-types/{id:[0-9]+}-not-found",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "8ce83910-af7f-4c28-ac59-56ffbdbfbf36",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "fe408da1-591e-4aa3-bd73-d88458b7878a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('groupId', -1);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/event-types/{id:[0-9]+}-not-found-invalid-id",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "8ce83910-af7f-4c28-ac59-56ffbdbfbf36",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "fe408da1-591e-4aa3-bd73-d88458b7878a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('groupId', 99999);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{nonadmin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "18584f20-de8e-4260-8a6b-1960d1e9774d",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "3de9c560-c9ed-4b0b-8e2f-ef0a7f298478",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							],
+							"_postman_isSubFolder": true
 						}
-					]
-				},
-				"url": {
-					"raw": "localhost/api/v1/login",
-					"host": [
-						"localhost"
 					],
-					"path": [
-						"api",
-						"v1",
-						"login"
-					]
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "update",
+					"item": [
+						{
+							"name": "admin",
+							"item": [
+								{
+									"name": "/groups/{id:[0-9]+}",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "9abcd39f-9553-4020-b2ad-4b24ab7ebef0",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"groupId = pm.environment.get('created-group-id');",
+													"vars.set('groupId', groupId);",
+													"",
+													"vars.set('name', 'new-group-name');"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1d1538f9-3445-49d2-912e-e4284b9f3843",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test('Values are correct', function() {",
+													"    json = pm.response.json();",
+													"    pm.expect(json.id).to.be.eq(vars.get('groupId'));",
+													"    pm.expect(json.name).to.be.eq(vars.get('name'));",
+													"    pm.expect(json.users).to.be.an('array');",
+													"});",
+													"",
+													"pm.environment.set(\"updated-group-name\", pm.response.json().name);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{name}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/groups-bad-request",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"groupId = pm.environment.get('created-group-id');",
+													"vars.set('groupId', groupId);",
+													"",
+													"vars.set('name', ' ');"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"pm.test(\"Status is 400\", function () {",
+													"    pm.response.to.have.status(400);",
+													"});",
+													"",
+													"pm.test(\"All errors are returned\", function () {",
+													"    pm.response.to.have.jsonBody(\"errors\");",
+													"    pm.response.to.have.jsonBody(\"errors.name\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{name}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/groups-bad-request-name-already-used",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('groupId', 7);",
+													"",
+													"",
+													"name = pm.environment.get(\"updated-group-name\");",
+													"vars.set('name', name);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"pm.test(\"Status is 400\", function () {",
+													"    pm.response.to.have.status(400);",
+													"});",
+													"",
+													"pm.test(\"All errors are returned\", function () {",
+													"    pm.response.to.have.jsonBody(\"errors\");",
+													"    pm.response.to.have.jsonBody(\"errors.name\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{name}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/groups/{id:[0-9]+}",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "ab65429c-de87-4219-a5c9-bd7f822d6447",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"groupId = pm.environment.get('created-group-id');",
+													"vars.set('groupId', groupId);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "108f8674-fc4b-4157-ba39-43dcb11e0bd3",
+												"exec": [
+													"pm.test(\"Status is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{admin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "nonadmin",
+							"item": [
+								{
+									"name": "/groups-forbidden",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"groupId = pm.environment.get('created-group-id');",
+													"vars.set('groupId', groupId);",
+													"",
+													"vars.set('name', 'new-group-name');"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"pm.test(\"Status is 403\", function () {",
+													"    pm.response.to.have.status(403);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{name}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{nonadmin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"_postman_isSubFolder": true
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "delete",
+					"item": [
+						{
+							"name": "admin",
+							"item": [
+								{
+									"name": "/groups",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('name', 'test-group');"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test('Values are correct', function() {",
+													"    json = pm.response.json();",
+													"    pm.expect(json.name).to.be.eq(vars.get('name'));",
+													"    pm.response.to.have.jsonBody('id');",
+													"    pm.expect(json.id).to.be.a('number');",
+													"});",
+													"",
+													"pm.test('Users array is returend', function() {",
+													"    json = pm.response.json();",
+													"    pm.response.to.have.jsonBody('users');",
+													"    pm.expect(json.users).to.be.an('array');",
+													"    pm.expect(json.users).to.be.empty;",
+													"})",
+													"",
+													"pm.environment.set(\"created-group-id\", pm.response.json().id);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{name}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "TODO",
+											"host": [
+												"TODO"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{admin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"_postman_isSubFolder": true
+						}
+					],
+					"_postman_isSubFolder": true
 				}
-			},
-			"response": []
+			]
 		}
 	]
 }
