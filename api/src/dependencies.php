@@ -95,14 +95,6 @@ $container['phpErrorHandler'] = $container['errorHandler'] = function (\Psr\Cont
         $logger = $container->get('logger');
         $debug = $container->get('settings')['displayErrorDetails'];
 
-        if ($exception instanceof Error)
-            /** @var Error $exception */
-            ;
-        if ($exception instanceof Exception)
-            /** @var Exception $exception */
-            ;
-
-
         $logger->error('Message: {' . $exception->getMessage() . '} Trace: {' . $exception->getTrace() . '}');
 
         return $response
