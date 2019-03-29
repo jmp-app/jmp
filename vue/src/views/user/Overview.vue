@@ -11,33 +11,27 @@
                 :headers="headers"
                 :items="users"
                 :search="searchQuery"
+                v-if="users"
         >
             <template v-slot:items="props">
-                <td>{{ props.item.username }}</td>
-                <td>{{ props.item.firstname }}</td>
-                <td>{{ props.item.lastname }}</td>
+                <tr @click="$router.push(`/users/${props.item.id}`)">
+                    <td>{{ props.item.username }}</td>
+                    <td>{{ props.item.firstname }}</td>
+                    <td>{{ props.item.lastname }}</td>
+                </tr>
             </template>
         </v-data-table>
-        <grid
-                :columns="gridColumns"
-                :columnTitles="gridColumnTitles"
-                :routerLinkTo="routerLinkTo"
-                :data="users"
-                :filter-key="searchQuery">
-        </grid>
         <BottomNavigation v-if="isAdmin"></BottomNavigation>
     </div>
 </template>
 
 <script>
-    import Grid from '@/components/Grid.vue';
     import BottomNavigation from '@/components/BottomNavigation';
 
     export default {
         name: 'Overview',
         components: {
-            BottomNavigation,
-            Grid
+            BottomNavigation
         },
         data: function () {
             return {

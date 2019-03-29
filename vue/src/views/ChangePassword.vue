@@ -11,7 +11,7 @@
                             <v-text-field
                                     :append-icon="showCurrentPassword ? 'visibility' : 'visibility_off'"
                                     :label="$t('password.current')"
-                                    :rules="[rules.required, rules.min]"
+                                    :rules="[rules.required]"
                                     :type="showCurrentPassword ? 'text' : 'password'"
                                     @click:append="showCurrentPassword = !showCurrentPassword"
                                     ref="currentPassword"
