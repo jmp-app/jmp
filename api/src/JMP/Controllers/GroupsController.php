@@ -105,13 +105,13 @@ class GroupsController
     public function getGroupById(Request $request, Response $response, $args): Response
     {
         $id = $args['id'];
-        $group = $this->groupService->getGroupById($id);
+        $optional = $this->groupService->getGroupById($id);
 
-        if ($group->isFailure()) {
+        if ($optional->isFailure()) {
             return $this->groupIdNotAvailable($response, $id);
         }
 
-        return $response->withJson(Converter::convert($group->getData()));
+        return $response->withJson(Converter::convert($optional->getData()));
     }
 
     /**

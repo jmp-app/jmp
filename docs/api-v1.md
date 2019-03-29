@@ -574,9 +574,9 @@ POST /v1/groups
 
 Parameters:
 
-| Field | Description           | Required |
-| ----- | --------------------- | -------- |
-| name  | The name of the group | ✔️        |
+| Field | Description           | Required | Type |
+| ----- | --------------------- | -------- | ---- |
+| name  | The name of the group | ✔️    | varchar(45) |
 
 Example request data:
 

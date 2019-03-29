@@ -183,7 +183,7 @@ SQL;
             return Optional::failure();
         }
 
-        return Optional::success($this->fetchGroup($data));
+        return $this->fetchGroup($data);
 
     }
 
