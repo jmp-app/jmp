@@ -648,6 +648,8 @@ Parameters: none
 
 Access rights: authentication required, user has to be an admin
 
+Returns: 204 or errors
+
 ### Join Group
 
 ```http
@@ -679,7 +681,7 @@ Returns: A [group](#Group) and [errors](#json-error-objects) with all invalid us
         "users": []
     },
     "errors": {
-        "invalidUsers": "5,-1"
+        "invalidUsers": [5,10]
     }
 }
 ````
