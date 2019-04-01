@@ -2,6 +2,7 @@
 
 namespace JMP\Controllers;
 
+use Exception;
 use Interop\Container\ContainerInterface;
 use JMP\Services\GroupService;
 use JMP\Services\MembershipService;
@@ -161,7 +162,7 @@ class GroupsController
      * @param Response $response
      * @param $args
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function joinGroup(Request $request, Response $response, $args): Response
     {
@@ -217,7 +218,7 @@ class GroupsController
      * @param Response $response
      * @param $args
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function leaveGroup(Request $request, Response $response, $args): Response
     {
