@@ -2,14 +2,16 @@
 
 namespace JMP\Services;
 
+use Exception;
 use Monolog\Logger;
+use PDO;
 use Psr\Container\ContainerInterface;
 
 class MembershipService
 {
 
     /**
-     * @var \PDO
+     * @var PDO
      */
     protected $db;
 
@@ -41,7 +43,7 @@ class MembershipService
 SQL;
 
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':groupId', $groupId, \PDO::PARAM_INT);
+        $stmt->bindParam(':groupId', $groupId, PDO::PARAM_INT);
         return $stmt->execute();
     }
 
@@ -77,18 +79,18 @@ SQL;
             $stmt = $this->db->prepare($sql);
 
             foreach ($users as $userId) {
-                $stmt->bindValue(':groupId', $groupId, \PDO::PARAM_INT);
-                $stmt->bindValue(':userId', $userId, \PDO::PARAM_INT);
+                $stmt->bindValue(':groupId', $groupId, PDO::PARAM_INT);
+                $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
 
                 $success = $stmt->execute();
                 if ($success === false) {
-                    throw new \Exception('Failed to insert into membership with groupId: ' . $groupId .
+                    throw new Exception('Failed to insert/update/delete membership with groupId: ' . $groupId .
                         ' and userId: ' . $userId . '. ' . $sql);
                 }
             }
 
             $this->db->commit();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->db->rollBack();
             $this->logger->error($e->getMessage());
             return false;
@@ -102,7 +104,7 @@ SQL;
      * @param int $groupId
      * @param array $users
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function removeUsersFromGroup(int $groupId, array $users): bool
     {

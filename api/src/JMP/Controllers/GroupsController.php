@@ -249,7 +249,7 @@ class GroupsController
             $this->logger->addError('Failed to query group after removing members. Group: "' . $id . '" Users: "' . $users . '"');
             return $response->withStatus(500);
         } else {
-            return $response->withJson(Converter::convert($optional->getData()));
+            return $response->withJson(Converter::convert($optional->getData()), 200);
         }
     }
 
