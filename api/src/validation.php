@@ -1,8 +1,9 @@
 <?php
 
+use Psr\Container\ContainerInterface;
 use Respect\Validation\Validator as v;
 
-/** @var $container \Psr\Container\ContainerInterface */
+/** @var $container ContainerInterface */
 $container = $app->getContainer();
 
 $container['validation'] = function () {
@@ -118,6 +119,10 @@ $container['validation'] = function () {
         'createEventType' => [
             'title' => v::notEmpty()->length(1, 51),
             'color' => v::hexRgbColor()
+        ],
+        'updateEventType' => [
+            'title' => v::optional(v::notEmpty()->length(1, 51)),
+            'color' => v::optional(v::hexRgbColor())
         ]
     ];
 };

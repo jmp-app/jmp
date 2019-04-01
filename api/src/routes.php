@@ -6,18 +6,21 @@ use JMP\Controllers\EventTypesController;
 use JMP\Controllers\GroupsController;
 use JMP\Controllers\LoginController;
 use JMP\Controllers\RegistrationController;
+use JMP\Controllers\RegistrationStateController;
 use JMP\Controllers\UsersController;
 use JMP\Middleware\AuthenticationMiddleware;
 use JMP\Middleware\ValidationErrorResponseBuilder;
 use JMP\Utils\PermissionLevel;
+use Psr\Container\ContainerInterface;
+use Tuupola\Middleware\JwtAuthentication;
 
 /** @var $app Slim\App */
 
 // API Routes - version 1
 $app->group('/v1', function () {
     /** @var $this Slim\App */
-    /** @var \Psr\Container\ContainerInterface $container */
-    /** @var $jwtMiddleware \Tuupola\Middleware\JwtAuthentication */
+    /** @var ContainerInterface $container */
+    /** @var $jwtMiddleware JwtAuthentication */
 
     $container = $this->getContainer();
     $jwtMiddleware = $container['jwt'];
@@ -69,25 +72,25 @@ $app->group('/v1', function () {
         $this->get('/{eventId:[0-9]+}/{userId:[0-9]+}', RegistrationController::class . ':getRegistrationByEventIdAndUserId')
             ->add(new ValidationErrorResponseBuilder())
             ->add(new Validation($container['validation']['getRegistrationByEventIdAndUserId']))
-            ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
             ->add($jwtMiddleware);
 
         $this->post('', RegistrationController::class . ':createRegistration')
             ->add(new ValidationErrorResponseBuilder())
             ->add(new Validation($this->getContainer()['validation']['createRegistration']))
-            ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
             ->add($jwtMiddleware);
 
         $this->put('/{eventId}/{userId}', RegistrationController::class . ':updateRegistration')
             ->add(new ValidationErrorResponseBuilder())
             ->add(new Validation($this->getContainer()['validation']['updateRegistration']))
-            ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
             ->add($jwtMiddleware);
 
         $this->delete('/{eventId}/{userId}', RegistrationController::class . ':deleteRegistration')
             ->add(new ValidationErrorResponseBuilder())
             ->add(new Validation($this->getContainer()['validation']['deleteRegistration']))
-            ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
             ->add($jwtMiddleware);
     });
 
@@ -95,13 +98,13 @@ $app->group('/v1', function () {
     $this->group('/registration-state', function () use ($container, $jwtMiddleware) {
         /** @var $this Slim\App */
 
-        $this->get('', \JMP\Controllers\RegistrationStateController::class . ':getAllRegStates')
+        $this->get('', RegistrationStateController::class . ':getAllRegStates')
             ->add(new ValidationErrorResponseBuilder())
             ->add(new Validation($this->getContainer()['validation']['getAllRegStates']))
-            ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::USER))
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
             ->add($jwtMiddleware);
 
-        $this->get('/{registrationStateId:[0-9]+}', \JMP\Controllers\RegistrationStateController::class . ':getRegistrationStateById')
+        $this->get('/{registrationStateId:[0-9]+}', RegistrationStateController::class . ':getRegistrationStateById')
             ->add(new ValidationErrorResponseBuilder())
             ->add(new Validation($this->getContainer()['validation']['getRegistrationStateById']))
             ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
@@ -152,7 +155,7 @@ $app->group('/v1', function () {
             ->add($jwtMiddleware);
 
         $this->get('/{id:[0-9]+}', UsersController::class . ':getUser')
-            ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::ADMIN))
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
             ->add($jwtMiddleware);
     });
 
@@ -214,6 +217,12 @@ $app->group('/v1', function () {
 
         $this->get('/{id:[0-9]+}', EventTypesController::class . ':getEventTypeById')
             ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
+            ->add($jwtMiddleware);
+
+        $this->put('/{id:[0-9]+}', EventTypesController::class . ':updateEventType')
+            ->add(new ValidationErrorResponseBuilder())
+            ->add(new Validation($container['validation']['updateEventType']))
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
             ->add($jwtMiddleware);
 
         $this->delete('/{id:[0-9]+}', EventTypesController::class . ':deleteEventType')

@@ -38,6 +38,34 @@ class EventTypesController
     }
 
     /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function updateEventType(Request $request, Response $response, array $args): Response
+    {
+        $id = $args['id'];
+        $params = $request->getParams();
+
+        if ($this->eventTypeService->eventTypeExists($id) === false) {
+            return $response->withStatus(404);
+        }
+
+        $eventType = new EventType($params);
+        $eventType->id = $id;
+
+        $optional = $this->eventTypeService->updateEventType($eventType);
+
+        if ($optional->isFailure()) {
+            $this->logger->error('Failed to update event type with the id ' . $id . '.');
+            return $response->withStatus(500);
+        }
+
+        return $response->withJson(Converter::convert($optional->getData()));
+    }
+
+    /**
      * Delete an event type
      * The event type is only deleted when it currently isn't in use.
      * @param Request $request

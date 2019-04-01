@@ -552,6 +552,32 @@ Access rights: authentication required
 
 Returns: the [Event Type](#event-type)
 
+### Update Event Type
+
+```http
+PUT /v1/event-types/{id}
+```
+
+Parameters:
+
+| Field | Description                        | Required | Type |
+| ----- | ---------------------------------- | -------- | ---- |
+| title | The title of the event type        | ❌        | varchar(50) |
+| color | The color used for this event type | ❌        | hex-rgb-color |
+
+Example request data:
+
+```json
+{
+    "title": "Default",
+    "color": "#ff0000"
+}
+```
+
+Access rights: authentication required, user has to be an admin
+
+Returns: the [Event Type](#event-type)
+
 ### Delete Event Type
 
 ```http

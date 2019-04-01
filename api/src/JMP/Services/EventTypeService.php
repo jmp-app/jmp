@@ -5,12 +5,13 @@ namespace JMP\Services;
 
 use JMP\Models\EventType;
 use JMP\Utils\Optional;
+use PDO;
 use Psr\Container\ContainerInterface;
 
 class EventTypeService
 {
     /**
-     * @var \PDO
+     * @var PDO
      */
     protected $db;
 
@@ -21,6 +22,33 @@ class EventTypeService
     public function __construct(ContainerInterface $container)
     {
         $this->db = $container->get('database');
+    }
+
+    /**
+     * @param EventType $eventType
+     * @return Optional
+     */
+    public function updateEventType(EventType $eventType): Optional
+    {
+        $sql = <<<SQL
+UPDATE jmp.event_type
+SET jmp.event_type.title = COALESCE(:title, event_type.title),
+    jmp.event_type.color = COALESCE(:color, jmp.event_type.color)
+WHERE jmp.event_type.id = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':title', $eventType->title, PDO::PARAM_STR);
+        $stmt->bindValue(':color', $eventType->color, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $eventType->id);
+
+        if ($stmt->execute() === false) {
+            return Optional::failure();
+        } else {
+            return $this->getEventTypeById($eventType->id);
+        }
+
+
     }
 
     /**
@@ -175,7 +203,7 @@ SQL;
 SQL;
 
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $eventTypeId, \PDO::PARAM_INT);
+        $stmt->bindParam(':id', $eventTypeId, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->rowCount() > 0;
