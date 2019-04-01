@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3be735cc-a556-4bf4-902e-25082666eb80",
+		"_postman_id": "788f5f70-587c-4ddf-afb7-856b699a0881",
 		"name": "jmp",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -9652,6 +9652,58 @@
 										}
 									},
 									"response": []
+								},
+								{
+									"name": "/event-types/{id:[0-9]+}",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c8aaa7b9-c1b8-4378-9745-ee5a562c74eb",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"eventTypeId = pm.environment.get(\"created-event-type-id\");",
+													"vars.set('eventTypeId', eventTypeId);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "751e21a2-3ae9-4565-a323-764a470b22c3",
+												"exec": [
+													"pm.test(\"Status is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/event-types/{{eventTypeId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"event-types",
+												"{{eventTypeId}}"
+											]
+										}
+									},
+									"response": []
 								}
 							],
 							"auth": {
@@ -10956,6 +11008,64 @@
 										}
 									},
 									"response": []
+								},
+								{
+									"name": "/groups",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"groupId = pm.environment.get(\"created-group-id\"); ",
+													"vars.set('groupId', groupId);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
 								}
 							],
 							"auth": {
@@ -11603,6 +11713,87 @@
 							"name": "admin",
 							"item": [
 								{
+									"name": "/groups",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('name', 'test-group');"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test('Values are correct', function() {",
+													"    json = pm.response.json();",
+													"    pm.expect(json.name).to.be.eq(vars.get('name'));",
+													"    pm.response.to.have.jsonBody('id');",
+													"    pm.expect(json.id).to.be.a('number');",
+													"});",
+													"",
+													"pm.test('Users array is returend', function() {",
+													"    json = pm.response.json();",
+													"    pm.response.to.have.jsonBody('users');",
+													"    pm.expect(json.users).to.be.an('array');",
+													"    pm.expect(json.users).to.be.empty;",
+													"})",
+													"",
+													"pm.environment.set(\"created-group-id\", pm.response.json().id);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{name}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups"
+											]
+										}
+									},
+									"response": []
+								},
+								{
 									"name": "/groups/{id:[0-9]+}",
 									"event": [
 										{
@@ -12049,9 +12240,187 @@
 											]
 										},
 										"url": {
-											"raw": "TODO",
+											"raw": "http://localhost/api/v1/groups",
+											"protocol": "http",
 											"host": [
-												"TODO"
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/groups",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"groupId = pm.environment.get(\"created-group-id\"); ",
+													"vars.set('groupId', groupId);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/groups-not-found",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('groupId', -1);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/groups-not-found-invalid-id",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('groupId', 9999);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
 											]
 										}
 									},
@@ -12064,6 +12433,913 @@
 									{
 										"key": "token",
 										"value": "{{admin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "nonadmin",
+							"item": [
+								{
+									"name": "/groups-forbidden",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"groupId = pm.environment.get(\"created-group-id\"); ",
+													"vars.set('groupId', groupId);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 403\", function () {",
+													"    pm.response.to.have.status(403);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/groups-not-found",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('groupId', -1);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{nonadmin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"_postman_isSubFolder": true
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "join",
+					"item": [
+						{
+							"name": "admin",
+							"item": [
+								{
+									"name": "/groups",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('name', 'test-group');"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test('Values are correct', function() {",
+													"    json = pm.response.json();",
+													"    pm.expect(json.name).to.be.eq(vars.get('name'));",
+													"    pm.response.to.have.jsonBody('id');",
+													"    pm.expect(json.id).to.be.a('number');",
+													"});",
+													"",
+													"pm.test('Users array is returend', function() {",
+													"    json = pm.response.json();",
+													"    pm.response.to.have.jsonBody('users');",
+													"    pm.expect(json.users).to.be.an('array');",
+													"    pm.expect(json.users).to.be.empty;",
+													"})",
+													"",
+													"pm.environment.set(\"created-group-id\", pm.response.json().id);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{name}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/join",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"groupId = pm.environment.get(\"created-group-id\"); ",
+													"vars.set('groupId', groupId);",
+													"",
+													"pm.variables.set('users[0]', 161);",
+													"pm.variables.set('users[1]', 162);",
+													"pm.variables.set('users', [vars.get('users[0]'), vars.get('users[1]')]);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test('Values are correct', function() {",
+													"    json = pm.response.json().group;",
+													"    pm.expect(json.name).to.be.a('string');",
+													"    pm.response.to.have.jsonBody('group.id');",
+													"    pm.expect(json.id).to.be.a('number');",
+													"});",
+													"",
+													"pm.test('Users array is returend', function() {",
+													"    json = pm.response.json().group;",
+													"    pm.response.to.have.jsonBody('group.users');",
+													"    pm.expect(json.users).to.be.an('array');",
+													"    ",
+													"    users = json.users.map(function(user) {",
+													"        return user.id;",
+													"    });",
+													"    ",
+													"    pm.expect(users).to.have.members(vars.get('users'));",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "users[0]",
+													"value": "{{users[0]}}",
+													"type": "text"
+												},
+												{
+													"key": "users[1]",
+													"value": "{{users[1]}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}/join",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}",
+												"join"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/join-some-invalid-members",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"groupId = pm.environment.get(\"created-group-id\"); ",
+													"vars.set('groupId', groupId);",
+													"",
+													"pm.variables.set('users[0]', 161);",
+													"pm.variables.set('users[1]', 162);",
+													"pm.variables.set('users[2]', 999991);",
+													"pm.variables.set('users[3]', 99999);",
+													"pm.variables.set('users', [vars.get('users[0]'), vars.get('users[1]')]);",
+													"pm.variables.set('invalidUsers', [vars.get('users[2]'), vars.get('users[3]')]);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test('Values are correct', function() {",
+													"    json = pm.response.json().group;",
+													"    pm.expect(json.name).to.be.a('string');",
+													"    pm.response.to.have.jsonBody('group.id');",
+													"    pm.expect(json.id).to.be.a('number');",
+													"});",
+													"",
+													"pm.test('Users array is returend', function() {",
+													"    json = pm.response.json().group;",
+													"    pm.response.to.have.jsonBody('group.users');",
+													"    pm.expect(json.users).to.be.an('array');",
+													"    ",
+													"    users = json.users.map(function(user) {",
+													"        return user.id;",
+													"    });",
+													"    ",
+													"    pm.expect(users).to.have.members(vars.get('users'));",
+													"});",
+													"",
+													"pm.test('Invalid users are returned', function(){",
+													"    json = pm.response.json().errors.invalidUsers;",
+													"    pm.expect(json).to.be.an('array').that.have.members(vars.get('invalidUsers'));",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "users[0]",
+													"value": "{{users[0]}}",
+													"type": "text"
+												},
+												{
+													"key": "users[1]",
+													"value": "{{users[1]}}",
+													"type": "text"
+												},
+												{
+													"key": "users[2]",
+													"value": "{{users[2]}}",
+													"type": "text"
+												},
+												{
+													"key": "users[3]",
+													"value": "{{users[3]}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}/join",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}",
+												"join"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/join-bad-request",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"groupId = pm.environment.get(\"created-group-id\"); ",
+													"vars.set('groupId', groupId);",
+													"",
+													"pm.variables.set('users[0]', ' ');",
+													"pm.variables.set('users[1]', -1);",
+													"pm.variables.set('users', [vars.get('users[0]'), vars.get('users[1]')]);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"pm.test(\"Status is 400\", function () {",
+													"    pm.response.to.have.status(400);",
+													"});",
+													"",
+													"pm.test(\"All errors are returned\", function () {",
+													"    pm.response.to.have.jsonBody(\"errors\");",
+													"    pm.response.to.have.jsonBody(\"errors.users\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "users[0]",
+													"value": "{{users[0]}}",
+													"type": "text"
+												},
+												{
+													"key": "users[1]",
+													"value": "{{users[1]}}",
+													"type": "text"
+												},
+												{
+													"key": "users[2]",
+													"value": "{{users[2]}}",
+													"type": "text"
+												},
+												{
+													"key": "users[3]",
+													"value": "{{users[3]}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}/join",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}",
+												"join"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/join-not-found-invalid-id",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('groupId', 99999);",
+													"",
+													"pm.variables.set('users[0]', 1);",
+													"pm.variables.set('users[1]', 2);",
+													"pm.variables.set('users', [vars.get('users[0]'), vars.get('users[1]')]);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "users[0]",
+													"value": "{{users[0]}}",
+													"type": "text"
+												},
+												{
+													"key": "users[1]",
+													"value": "{{users[1]}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}/join",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}",
+												"join"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/join-not-found",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('groupId', -1);",
+													"",
+													"pm.variables.set('users[0]', 1);",
+													"pm.variables.set('users[1]', 2);",
+													"pm.variables.set('users', [vars.get('users[0]'), vars.get('users[1]')]);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "users[0]",
+													"value": "{{users[0]}}",
+													"type": "text"
+												},
+												{
+													"key": "users[1]",
+													"value": "{{users[1]}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}/join",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}",
+												"join"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/groups",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"groupId = pm.environment.get(\"created-group-id\"); ",
+													"vars.set('groupId', groupId);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{admin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "nonadmin",
+							"item": [
+								{
+									"name": "/join",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"groupId = pm.environment.get(\"created-group-id\"); ",
+													"vars.set('groupId', groupId);",
+													"",
+													"pm.variables.set('users[0]', 161);",
+													"pm.variables.set('users[1]', 162);",
+													"pm.variables.set('users', [vars.get('users[0]'), vars.get('users[1]')]);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 403\", function () {",
+													"    pm.response.to.have.status(403);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "users[0]",
+													"value": "{{users[0]}}",
+													"type": "text"
+												},
+												{
+													"key": "users[1]",
+													"value": "{{users[1]}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}/join",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}",
+												"join"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/join-not-found",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "40225e92-1fa0-41a9-91ca-41e5c8784a0f",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('groupId', -1);",
+													"",
+													"pm.variables.set('users[0]', 1);",
+													"pm.variables.set('users[1]', 2);",
+													"pm.variables.set('users', [vars.get('users[0]'), vars.get('users[1]')]);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1a281493-93c3-47df-8e43-d02d25ac6d8a",
+												"exec": [
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "users[0]",
+													"value": "{{users[0]}}",
+													"type": "text"
+												},
+												{
+													"key": "users[1]",
+													"value": "{{users[1]}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/groups/{{groupId}}/join",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"groups",
+												"{{groupId}}",
+												"join"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{nonadmin-token}}",
 										"type": "string"
 									}
 								]

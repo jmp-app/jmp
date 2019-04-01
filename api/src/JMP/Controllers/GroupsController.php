@@ -90,6 +90,11 @@ class GroupsController
     public function deleteGroup(Request $request, Response $response, $args): Response
     {
         $id = $args['id'];
+
+        if ($this->groupService->groupExists($id) === false) {
+            return $response->withStatus(404);
+        }
+
         if ($this->groupService->deleteGroup($id) === false) {
             $this->logger->error('Failed to delete group with the id ' . $id . '.');
             return $response->withStatus(500);
@@ -110,7 +115,7 @@ class GroupsController
         $optional = $this->groupService->getGroupById($id);
 
         if ($optional->isFailure()) {
-            return $this->groupIdNotAvailable($response, $id);
+            return $response->withStatus(404);
         }
 
         return $response->withJson(Converter::convert($optional->getData()));
@@ -130,7 +135,7 @@ class GroupsController
 
         // Check if group exists
         if ($group->isFailure()) {
-            return $this->groupIdNotAvailable($response, $id);
+            return $response->withStatus(404);
         }
         $group = $group->getData();
 
@@ -171,7 +176,7 @@ class GroupsController
 
         // Check if group exists
         if (!$this->groupService->groupExists($id)) {
-            return $this->groupIdNotAvailable($response, $id);
+            return $response->withStatus(404);
         }
 
         // Remove all duplicates
@@ -186,7 +191,7 @@ class GroupsController
                 array_push($usersToJoin, $user);
             } else {
                 // user cant be added
-                array_push($usersNotToJoin, $user);
+                array_push($usersNotToJoin, (int)$user);
             }
         }
 
@@ -207,7 +212,7 @@ class GroupsController
 
         // If user cant be joined to a group, a error message is appended
         if (!empty($usersNotToJoin)) {
-            $responseArray['errors'] = ['invalidUsers' => implode(',', $usersNotToJoin)];
+            $responseArray['errors'] = ['invalidUsers' => $usersNotToJoin];
         }
         return $response->withJson($responseArray);
     }
@@ -227,7 +232,7 @@ class GroupsController
 
         // Check if group exists
         if (!$this->groupService->groupExists($id)) {
-            return $this->groupIdNotAvailable($response, $id);
+            return $response->withStatus(404);
         }
 
         // Remove users from the group
