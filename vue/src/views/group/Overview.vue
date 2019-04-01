@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
         <h3>{{$t('group.overview.title')}}</h3>
         <input
@@ -8,35 +8,41 @@
                 type="search"
                 v-model="searchQuery"
         >
-        <grid
-                :columnTitles="gridColumnTitles"
-                :columns="gridColumns"
-                :data="groups"
-                :filter-key="searchQuery"
-                :routerLinkTo="routerLinkTo">
-        </grid>
+        <v-data-table
+                :headers="headers"
+                :items="groups"
+                :search="searchQuery"
+                v-if="groups"
+        >
+            <template v-slot:items="props">
+                <tr @click="$router.push(`/groups/${props.item.id}`)">
+                    <td>{{ props.item.name }}</td>
+                </tr>
+            </template>
+        </v-data-table>
         <BottomNavigation v-if="isAdmin"></BottomNavigation>
     </div>
 </template>
 
 <script>
-    import Grid from '@/components/Grid.vue';
     import BottomNavigation from '@/components/BottomNavigation';
 
     export default {
         name: 'GroupOverview',
         components: {
-            BottomNavigation,
-            Grid
+            BottomNavigation
         },
         data: function () {
             return {
                 searchQuery: '',
-                gridColumns: ['name'],
-                gridColumnTitles: {
-                    'name': this.$t('group.name')
-                },
-                routerLinkTo: 'groups',
+                headers: [
+                    {
+                        text: this.$t('group.name'),
+                        align: 'left',
+                        sortable: true,
+                        value: 'name'
+                    }
+                ],
                 isAdmin: false
             };
         },

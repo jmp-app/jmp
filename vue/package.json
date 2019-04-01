@@ -1,18 +1,6 @@
 {
   "name": "jmp",
   "version": "0.1.0",
-  "license": "MIT",
-  "homepage": "https://github.com/Simai00/jmp#readme",
-  "bugs": "https://github.com/Simai00/jmp/issues",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Simai00/jmp.git"
-  },
-  "contributors": [
-    "Kay Mattern",
-    "Dominik Strässle",
-    "Simon Friedli"
-  ],
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -26,10 +14,11 @@
     "dateformat": "^3.0.3",
     "font-color-contrast": "^1.0.3",
     "register-service-worker": "^1.0.0",
-    "vue": "^2.5.17",
+    "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
     "vue-i18n": "^8.3.2",
     "vue-router": "^3.0.1",
+    "vuetify": "^1.5.5",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
@@ -40,7 +29,23 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0-0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
     "vue-cli-plugin-i18n": "^0.5.1",
-    "vue-template-compiler": "^2.5.17"
+    "vue-cli-plugin-vuetify": "^0.5.0",
+    "vue-template-compiler": "^2.6.10",
+    "vuetify-loader": "^1.0.5"
+  },
+  "bugs": "https://github.com/jmp-app/jmp/issues",
+  "contributors": [
+    "Kay Mattern",
+    "Dominik Strässle",
+    "Simon Friedli"
+  ],
+  "homepage": "https://github.com/jmp-app/jmp#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jmp-app/jmp.git"
   }
 }

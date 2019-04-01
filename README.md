@@ -23,7 +23,7 @@ Make sure you have [docker](https://www.docker.com/) and [npm](https://www.npmjs
 
 Clone the repository
 ```bash
-git clone https://github.com/Simai00/jmp.git
+git clone https://github.com/jmp-app/jmp.git
 cd jmp
 ```
 
