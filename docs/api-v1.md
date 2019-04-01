@@ -203,10 +203,10 @@ POST /v1/login
 
 Parameters:
 
-| Field    | Description         | Required |
-| -------- | ------------------- | -------- |
-| username | The user's username | ✔️        |
-| password | The user's password | ✔️        |
+| Field     | Description         | Required | Type |
+| --------- | ------------------- | -------- | ---- |
+| username  | The user's username | ✔️        | varchar(100) |
+| password | The user's password | ✔️        | varchar(255) |
 
 Example request data:
 
@@ -365,10 +365,10 @@ PUT /v1/user/change-password
 
 Parameters:
 
-| Field       | Description                 | Required |
-| ----------- | --------------------------- | -------- |
-| password    | The user's current password | ✔️        |
-| newPassword | The new password to set     | ✔️        |
+| Field       | Description                 | Required || Type |
+| ----------- | --------------------------- | -------- || ---- |
+| password    | The user's current password | ✔️        | varchar(255) |
+| newPassword | The new password to set     | ✔️        | varchar(255) |
 
 Access rights: authentication required
 
@@ -648,9 +648,9 @@ PUT /v1/groups/{id}
 
 Parameters:
 
-| Field | Description  | Required |
-| ----- | ------------ | -------- |
-| name  | The new name | ❌        |
+| Field | Description  | Required | Type |
+| ----- | ------------ | -------- | ---- |
+| name  | The new name | ❌        | varchar(45) |
 
 Example request data:
 
@@ -684,9 +684,9 @@ POST /v1/groups/{id}/join
 
 Parameters:
 
-| Field | Description                         | Required |
-| ----- | ----------------------------------- | -------- |
-| users | One or more users to join the group | ✔        |
+| Field | Description                         | Required | Type |
+| ----- | ----------------------------------- | -------- | ---- |
+| users | One or more users to join the group | ✔        | array with id's (numeric) |
 
 Example request data:
 
@@ -720,9 +720,9 @@ DELETE /v1/groups/{id}/leave
 
 Parameters:
 
-| Field | Description                          | Required |
-| ----- | ------------------------------------ | -------- |
-| users | One or more users to leave the group | ✔️        |
+| Field | Description                          | Required | Type |
+| ----- | ------------------------------------ | -------- | ---- |
+| users | One or more users to leave the group | ✔️       | array with id's (numeric) |
 
 Example request data:
 
@@ -818,12 +818,12 @@ POST /v1/registration
 
 Parameters:
 
-| Field     | Description                                                  | Required |
-| --------- | ------------------------------------------------------------ | -------- |
-| eventId   | The event's id                                               | ✔️     |
-| userId    | The user's id                                                | ✔        |
-| reason    | The reason for the registration                              | ❌        |
-| registrationState | [Registration State](#registration-state)'s id       | ❌       |
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| eventId   | The event's id                                               | ✔️     | numeric |
+| userId    | The user's id                                                | ✔        | numeric |
+| reason    | The reason for the registration                              | ❌        | varchar(80) |
+| registrationState | [Registration State](#registration-state)'s id       | ❌       | numeric |
 
 Example request data:
 
@@ -852,10 +852,10 @@ GET /v1/registration/{{eventId}}/{{userId}}
 
 Parameters:
 
-| Field     | Description                                                  | Required |
-| --------- | ------------------------------------------------------------ | -------- |
-| eventId   | The event's id                                               | ✔️     |
-| userId    | The user's id                                                | ✔        |
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| eventId   | The event's id                                               | ✔️      | numeric |
+| userId    | The user's id                                                | ✔        | numeric |
 
 
 Access rights: authentication required
@@ -870,10 +870,10 @@ PUT /v1/registration/{eventId}/{userId}
 
 Parameters:
 
-| Field     | Description                                                  | Required |
-| --------- | ------------------------------------------------------------ | -------- |
-| reason    | The reason for the registration                              | ❌        |
-| registrationState | [Registration State](#registration-state)'s id       | ✔ |
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| reason    | The reason for the registration                              | ❌        | varchar(80) |
+| registrationState | [Registration State](#registration-state)'s id       | ✔        | numeric |
 
 Example request data:
 
@@ -896,10 +896,10 @@ DELETE /v1/registration/{eventId}/{userId}
 
 Parameters:
 
-| Field     | Description                                                  | Required |
-| --------- | ------------------------------------------------------------ | -------- |
-| eventId   | The event's id                                               | ✔️     |
-| userId    | The user's id                                                | ✔        |
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| eventId   | The event's id                                               | ✔️     | varchar(80) |
+| userId    | The user's id                                                | ✔        | numeric |
 
 
 Access rights: authentication required
