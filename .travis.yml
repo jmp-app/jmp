@@ -21,8 +21,6 @@ before_install:
   - sudo /etc/init.d/mysql stop
   - sudo /etc/init.d/postgresql stop
   - docker-compose up -d --build
-  - sudo chmod 777 -R api/
-  - docker exec -it app composer install
 
 script:
   - node_modules/.bin/newman run docker/newman/collections/jmp.postman_collection.json
