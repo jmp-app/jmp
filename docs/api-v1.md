@@ -732,6 +732,8 @@ Example request data:
 }
 ```
 
+**Note:** If any of the given user id's should be invalid, there is no notification about this.
+
 Access rights: authentication required, user has to be an admin
 
 Returns: the [Group](#Group)
