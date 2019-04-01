@@ -1,0 +1,25 @@
+language: node_js
+
+node_js:
+  - "node"
+
+install:
+  - npm install newman
+
+before_script:
+  - node --version
+  - npm --version
+  - node_modules/.bin/newman --version
+
+services:
+  - docker
+
+before_install:
+  - cp db.env.example db.env
+  - cp api/.env.example api/.env
+  - cp api/db.env.example api/db.env
+  - docker-compose up -d
+  - docker exec -it app composer install
+
+script:
+  - node_modules/.bin/newman run docker/newman/collections/jmp.postman_collection.json
