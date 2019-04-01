@@ -18,7 +18,9 @@ before_install:
   - cp db.env.example db.env
   - cp api/.env.example api/.env
   - cp api/db.env.example api/db.env
-  - docker-compose up -d
+  - sudo /etc/init.d/mysql stop
+  - sudo /etc/init.d/postgresql stop
+  - docker-compose up -d --build
   - docker exec -it app composer install
 
 script:
