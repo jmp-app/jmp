@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
         <h3>{{$t('group.detail.title')}}</h3>
         <form @submit.prevent="handleSubmit" v-if="group">
@@ -16,14 +16,14 @@
             </div>
             <div class="form-group row" v-if="create() || edit()">
                 <div class="col-sm-9">
-                    <button @click="handleCancel()" class="btn mr-2" type="button" v-if="edit()">{{$t('cancel')}}
-                    </button>
-                    <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+                    <v-btn @click="handleCancel()" type="button" v-if="edit()">{{$t('cancel')}}
+                    </v-btn>
+                    <v-btn color="info" type="submit">{{$t('save')}}</v-btn>
                 </div>
             </div>
             <div class="form-group row" v-if="display()">
                 <div class="col-sm-9">
-                    <button @click="mode = 'edit'" class="btn mr-2" type="button">{{$t('edit')}}</button>
+                    <v-btn @click="mode = 'edit'" type="button">{{$t('edit')}}</v-btn>
                 </div>
             </div>
         </form>
@@ -38,40 +38,57 @@
                     type="search"
                     v-model="searchQuery"
             >
-            <grid
-                    :columnTitles="gridColumnTitles"
-                    :columns="gridColumns"
-                    :data="group.users"
-                    :filter-key="searchQuery"
-                    :routerLinkTo="routerLinkTo">
-            </grid>
+            <v-data-table
+                    :headers="headers"
+                    :items="group.users"
+                    :search="searchQuery"
+            >
+                <template v-slot:items="props">
+                    <tr @click="$router.push(`/users/${props.item.id}`)">
+                        <td>{{ props.item.username }}</td>
+                        <td>{{ props.item.firstname }}</td>
+                        <td>{{ props.item.lastname }}</td>
+                    </tr>
+                </template>
+            </v-data-table>
         </div>
         <BottomNavigation v-bind:groupId="$route.params.id"/>
     </div>
 </template>
 
 <script>
-    import Grid from '@/components/Grid.vue';
     import BottomNavigation from '@/components/BottomNavigation';
 
     export default {
         name: 'GroupDetail',
         components: {
-            Grid,
             BottomNavigation
         },
         data: function () {
             return {
                 mode: 'display', // display, edit, create
                 submitted: false,
-                groupOnSubmit: {},
                 searchQuery: '',
-                gridColumns: ['username', 'firstname', 'lastname'],
-                gridColumnTitles: {
-                    'username': this.$t('user.username'),
-                    'firstname': this.$t('user.firstName'),
-                    'lastname': this.$t('user.lastName')
-                },
+                headers: [
+                    {
+                        text: this.$t('user.username'),
+                        align: 'left',
+                        sortable: true,
+                        value: 'username'
+                    },
+                    {
+                        text: this.$t('user.firstName'),
+                        align: 'left',
+                        sortable: true,
+                        value: 'firstname'
+                    },
+                    {
+                        text: this.$t('user.lastName'),
+                        align: 'left',
+                        sortable: true,
+                        value: 'lastname'
+                    }
+                ],
                 routerLinkTo: 'users'
             };
         },
@@ -92,7 +109,6 @@
             },
             handleSubmit: function () {
                 this.submitted = true;
-                this.groupOnSubmit = this.group;
                 if (this.mode === 'create') {
                     this.createNewGroup();
                 } else if (this.mode === 'edit') {
