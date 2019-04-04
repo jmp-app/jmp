@@ -23,4 +23,4 @@ before_install:
   - docker-compose up -d --build
 
 script:
-  - node_modules/.bin/newman run docker/newman/collections/jmp.postman_collection.json
+  - node_modules/.bin/newman run docker/newman/collections/jmp.postman_collection.json -e docker/newman/collections/jmp.postman_environment.json -n 2
