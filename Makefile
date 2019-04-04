@@ -1,11 +1,11 @@
 help:
-	# Don't works in powershell
+# Don't works in powershell
 	cat Makefile
 
 test:
-	# Argument DIR with the project base directory required
+# Argument DIR with the project base directory required e.g. "$(pwd)"
 	docker pull postman/newman
-	docker run --network='host' -v "$(DIR)\docker\newman\collections":/etc/newman -t  postman/newman run -e jmp.postman_environment.json -n 2  jmp.postman_collection.json
+	docker run --network='host' -v "$(DIR)/docker/newman/collections":/etc/newman -t  postman/newman run -e jmp.postman_environment.json -n 2  jmp.postman_collection.json
 
 build-up:
 	docker-compose up -d --build
@@ -15,9 +15,10 @@ up:
 	docker-compose up -d
 
 vue-build:
-	cd vue
-	npm install
+	cd vue && \
+	npm install && \
 	npm run build
 
-vue-run-watch:
+vue-watch:
+	cd vue && \
 	npm run watch
