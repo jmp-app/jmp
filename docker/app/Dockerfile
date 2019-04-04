@@ -32,9 +32,6 @@ RUN chown www:www .
 # Change current user to www
 USER www
 
-# Install dependecies form composer
-RUN composer install
-
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
 CMD ["php-fpm"]
