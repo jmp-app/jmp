@@ -265,7 +265,7 @@ Example request data:
     "firstname": "Jacob",
     "email": "jake@example.com",
     "password": "secure",
-    "isAdmin": true
+    "isAdmin": 1
 }
 ```
 
