@@ -23,12 +23,18 @@ Make sure everything is running as explained in [README.md](../README.md).
   * [SQL](#sql)
 - [Developing a new route](#developing-a-new-route)
   * [Api specification](#api-specification)
+  * [Create Tests](#create-tests)
   * [Service & Model](#service--model)
     + [Create a new service class](#create-a-new-service-class)
     + [Create a new model](#create-a-new-model)
   * [Controller](#controller)
     + [Create a new controller class](#create-a-new-controller-class)
   * [Route](#route)
+  * [Verify Tests](#verify-all-tests)
+- [Integration Tests](#integration-tests)
+    * [Create a new test](#create-a-new-test)
+    * [Running Tests](#running-tests)
+    * [Travis CI Build Status](#travis-ci-and-build-status)
 
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
@@ -206,6 +212,9 @@ Make sure you've read [Code Style](#code-style) before reading the following gui
 ## Api specification
 First of all the new route has to be documented in the [api-specification](api-v1.md).
 
+## Create tests
+Then you have to create tests for the new route as documented in [Create a new test](#create-a-new-test).
+
 ## Service & Model
 Routes return JSON mostly containing one or a list of model objects. So you have to [create a new model](#create-a-new-model) if the required doesn't exist yet. The model is just a raw data object with the functionality to convert properly to an array.
 
@@ -269,3 +278,82 @@ $this->get('/users/{id:[0-9]+}', UsersController::class . ':getUser')
     ->add(new AuthenticationMiddleware($container, \jmp\Utils\PermissionLevel::ADMIN))
     ->add($jwtMiddleware);
 ```
+
+## Verify all tests
+First run all tests locally with two iterations as described in [Running tests](#running-tests) and after pushing your changes you should watch the [Travis CI Build Status](#travis-ci-and-build-status).
+
+# Integration Tests
+We use [Postman](https://www.getpostman.com/) and [newman](https://www.npmjs.com/package/newman) for integration tests.  
+
+## Create a new test
+The following tests are required to create a new test
+
+**Test Data:**  
+Initially test data is inserted into the database during the docker-compose build. The following SQL-Script contains all test data: [03_initData.sql](../docker/db/03_initData.sql). 
+
+**Import existing tests and environments:**  
+First import the test collection and environment from the [docker/newman/collections](../docker/newman/collections) directory.  
+
+**Structure:**  
+* jmp
+    * category (e.g. `events`)
+        * action (e.g. `create`)
+            * admin (uses the environment variable `admin-token` as authentication-token)
+                * all requests creating events are located here
+                * one request for each possible scenario
+                    * Successful
+                    * Bad Request
+                    * Not Found
+                    * Forbidden
+                    * etc.
+            * nonadmin (uses the environment variable `nonadmin-token` as authentication-token)
+                * all requests creating events are located here
+                * one request for each possible scenario
+                    * Successful
+                    * Bad Request
+                    * Not Found
+                    * Forbidden
+                    * etc.
+
+Create the missing directory structure needed for your tests and set the authentication tokens for the `admin` and `nonadmin` directories.
+
+**Prerequest scripts:**  
+Use the prerequest scripts to set all query parameters and body-data:
+````javascript
+vars = pm.variables;
+vars.set('limit', 10);
+````
+You can pass the variables using double braces:
+````http request
+http://localhost/api/v1/events?eventType={{eventType}}&group={{group}}&limit={{limit}}&offset={{offset}}&all={{all}}&elapsed={{elapsed}}
+````
+
+**Tests:**  
+Postman internally uses [Chai](https://www.chaijs.com/) as BDD / TDD assertion library.  
+You should test as much as possible and as precise as possible.
+The tests have to:
+* be as precise as possible
+* test as much as possible
+* avoid side-effects (only per admin/nonadmin directory)
+* use the variables set in the prerequest scripts: `vars.get('limit');`
+
+Use the already existing tests as reference.
+
+**Save:**  
+To save the newly created tests export the `jmp`-collection and replace the existing in the repository with the new one.
+Then you only have to commit and push the changes.
+
+### Running tests:  
+You can run the tests with the postman runner (don't forget to set the jmp-environment) or with newman.
+
+newman:
+````bash
+make test DIR="$(pwd)"
+````
+
+### Travis CI and Build Status:  
+Everytime you push your changes, a Travis CI job is triggered and all tests are executed.  
+Build Status:  
+[![Build Status](https://travis-ci.com/jmp-app/jmp.svg?branch=master)](https://travis-ci.com/jmp-app/jmp)
+
+ 

@@ -23,6 +23,9 @@ Make sure you have [docker](https://www.docker.com/) and [npm](https://www.npmjs
 
 ## Installation
 
+There is also a Makefile accessible for the most common tasks: [Makefile](Makefile)  
+Run `make help` for more information.
+
 Clone the repository
 ```bash
 git clone https://github.com/jmp-app/jmp.git
