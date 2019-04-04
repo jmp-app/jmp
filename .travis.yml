@@ -21,6 +21,7 @@ before_install:
     -F 'password=pass4dev'"
   - cd api/
   - composer install --no-interaction
+  - cd ..
   - "curl -X POST \
     http://localhost/api/v1/login \
     -H 'cache-control: no-cache' \
