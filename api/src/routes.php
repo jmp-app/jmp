@@ -1,16 +1,16 @@
 <?php
 
 use DavidePastore\Slim\Validation\Validation;
-use JMP\Controllers\EventsController;
-use JMP\Controllers\EventTypesController;
-use JMP\Controllers\GroupsController;
-use JMP\Controllers\LoginController;
-use JMP\Controllers\RegistrationController;
-use JMP\Controllers\RegistrationStateController;
-use JMP\Controllers\UsersController;
-use JMP\Middleware\AuthenticationMiddleware;
-use JMP\Middleware\ValidationErrorResponseBuilder;
-use JMP\Utils\PermissionLevel;
+use jmp\Controllers\EventsController;
+use jmp\Controllers\EventTypesController;
+use jmp\Controllers\GroupsController;
+use jmp\Controllers\LoginController;
+use jmp\Controllers\RegistrationController;
+use jmp\Controllers\RegistrationStateController;
+use jmp\Controllers\UsersController;
+use jmp\Middleware\AuthenticationMiddleware;
+use jmp\Middleware\ValidationErrorResponseBuilder;
+use jmp\Utils\PermissionLevel;
 use Psr\Container\ContainerInterface;
 use Tuupola\Middleware\JwtAuthentication;
 

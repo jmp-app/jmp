@@ -1,21 +1,31 @@
 <?php
 
+use jmp\Services\Auth;
+use jmp\Services\EventService;
+use jmp\Services\EventTypeService;
+use jmp\Services\GroupService;
+use jmp\Services\MembershipService;
+use jmp\Services\RegistrationService;
+use jmp\Services\RegistrationStateService;
+use jmp\Services\UserService;
+use jmp\Services\ValidationService;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Processor\WebProcessor;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Tuupola\Middleware\JwtAuthentication;
 
 /**
- * @var $container \Psr\Container\ContainerInterface
+ * @var $container ContainerInterface
  */
 $container = $app->getContainer();
 
 // Database
 
-$container['database'] = function (\Psr\Container\ContainerInterface $container) {
+$container['database'] = function (ContainerInterface $container) {
     $config = $container->get('settings')['database'];
 
     $dsn = "{$config['engine']}:host={$config['host']};port={$config['port']};dbname={$config['database']};charset={$config['charset']}";
@@ -25,7 +35,7 @@ $container['database'] = function (\Psr\Container\ContainerInterface $container)
 
 // Middlewares
 
-$container['jwt'] = function (\Psr\Container\ContainerInterface $container) {
+$container['jwt'] = function (ContainerInterface $container) {
 
     $jwt_settings = $container->get('settings')['jwt'];
 
@@ -34,44 +44,44 @@ $container['jwt'] = function (\Psr\Container\ContainerInterface $container) {
 
 // Services
 
-$container['auth'] = function (\Psr\Container\ContainerInterface $container) {
-    return new \JMP\Services\Auth($container);
+$container['auth'] = function (ContainerInterface $container) {
+    return new Auth($container);
 };
 
-$container['eventService'] = function (\Psr\Container\ContainerInterface $container) {
-    return new \JMP\Services\EventService($container);
+$container['eventService'] = function (ContainerInterface $container) {
+    return new EventService($container);
 };
 
-$container['groupService'] = function (\Psr\Container\ContainerInterface $container) {
-    return new \JMP\Services\GroupService($container);
+$container['groupService'] = function (ContainerInterface $container) {
+    return new GroupService($container);
 };
 
-$container['membershipService'] = function (\Psr\Container\ContainerInterface $container) {
-    return new \JMP\Services\MembershipService($container);
+$container['membershipService'] = function (ContainerInterface $container) {
+    return new MembershipService($container);
 };
 
-$container['registrationStateService'] = function (\Psr\Container\ContainerInterface $container) {
-    return new \JMP\Services\RegistrationStateService($container);
+$container['registrationStateService'] = function (ContainerInterface $container) {
+    return new RegistrationStateService($container);
 };
 
-$container['registrationService'] = function (\Psr\Container\ContainerInterface $container) {
-    return new \JMP\Services\RegistrationService($container);
+$container['registrationService'] = function (ContainerInterface $container) {
+    return new RegistrationService($container);
 };
 
-$container['eventTypeService'] = function (\Psr\Container\ContainerInterface $container) {
-    return new \JMP\Services\EventTypeService($container);
+$container['eventTypeService'] = function (ContainerInterface $container) {
+    return new EventTypeService($container);
 };
 
-$container['userService'] = function (\Psr\Container\ContainerInterface $container) {
-    return new \JMP\Services\UserService($container);
+$container['userService'] = function (ContainerInterface $container) {
+    return new UserService($container);
 };
 
-$container['validationService'] = function (\Psr\Container\ContainerInterface $container) {
-    return new \JMP\Services\ValidationService($container);
+$container['validationService'] = function (ContainerInterface $container) {
+    return new ValidationService($container);
 };
 
 // Logger
-$container['logger'] = function (\Psr\Container\ContainerInterface $container) {
+$container['logger'] = function (ContainerInterface $container) {
     $settings = $container->get('settings')['logger'];
     $logger = new Logger($settings['name']);
 
@@ -88,7 +98,7 @@ $container['logger'] = function (\Psr\Container\ContainerInterface $container) {
 };
 
 // Custom Error Handler
-$container['phpErrorHandler'] = $container['errorHandler'] = function (\Psr\Container\ContainerInterface $container) {
+$container['phpErrorHandler'] = $container['errorHandler'] = function (ContainerInterface $container) {
     return function (RequestInterface $request, ResponseInterface $response, $exception) use ($container): ResponseInterface {
 
         /** @var Logger $logger */

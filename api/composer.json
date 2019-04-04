@@ -1,5 +1,5 @@
 {
-    "name": "JMP/JMP",
+    "name": "jmp/jmp",
     "homepage": "https://github.com/jmp-app/jmp#readme",
     "license": "MIT",
     "authors": [
@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "JMP\\": "src/JMP"
+            "jmp\\": "src/jmp"
         }
     },
     "scripts": {
