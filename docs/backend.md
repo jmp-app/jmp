@@ -23,12 +23,18 @@ Make sure everything is running as explained in [README.md](../README.md).
   * [SQL](#sql)
 - [Developing a new route](#developing-a-new-route)
   * [Api specification](#api-specification)
+  * [Create Tests](#create-tests)
   * [Service & Model](#service--model)
     + [Create a new service class](#create-a-new-service-class)
     + [Create a new model](#create-a-new-model)
   * [Controller](#controller)
     + [Create a new controller class](#create-a-new-controller-class)
   * [Route](#route)
+  * [Verify Tests](#verify-all-tests)
+- [Integration Tests](#integration-tests)
+    * [Create a new test](#create-a-new-test)
+    * [Running Tests](#running-tests)
+    * [Travis CI Build Status](#travis-ci-and-build-status)
 
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
@@ -36,12 +42,12 @@ Make sure everything is running as explained in [README.md](../README.md).
 # Code Overview
 ## Directory Structure
 * [`src/`](../api/src) Source directory. Not public
-    * [`JMP/`](../api/src/JMP) Application directory
-        * [`Controllers/`](../api/src/JMP/Controllers) Controllers to handle requests and build the responses
-        * [`Middleware/`](../api/src/JMP/Middleware) Custom [Middlewares](https://www.slimframework.com/docs/v3/concepts/middleware.html)
-        * [``Models/``](../api/src/JMP/Models) Raw data objects with the functionality to convert to an array
-        * [``Services/``](../api/src/JMP/Services) Business logic and database communication
-        * [``Utils/``](../api/src/JMP/Utils) Utility classes
+    * [`jmp/`](../api/src/jmp) Application directory
+        * [`Controllers/`](../api/src/jmp/Controllers) Controllers to handle requests and build the responses
+        * [`Middleware/`](../api/src/jmp/Middleware) Custom [Middlewares](https://www.slimframework.com/docs/v3/concepts/middleware.html)
+        * [``Models/``](../api/src/jmp/Models) Raw data objects with the functionality to convert to an array
+        * [``Services/``](../api/src/jmp/Services) Business logic and database communication
+        * [``Utils/``](../api/src/jmp/Utils) Utility classes
 
 ## Slim specific classes
 * Private
@@ -69,9 +75,9 @@ To adjust the settings, look here:
  * [.env](../api/.env) and [.env docs](dotenv.md)
 
 ### Implementation
-The submitted token is decoded by the [jwt-middleware](https://github.com/tuupola/slim-jwt-auth). The custom [authentication middleware](../api/src/JMP/Middleware/AuthenticationMiddleware.php) checks the permissions of the enquirer using the `sub` entry of the decoded token. If the enquirer has got the right permissions for the route, he can pass. If no token is supplied or if the supplied token is invalid, a 401 is returned. In case the enquirer just hasn't got the required permissions, a 403 is returned.
+The submitted token is decoded by the [jwt-middleware](https://github.com/tuupola/slim-jwt-auth). The custom [authentication middleware](../api/src/jmp/Middleware/AuthenticationMiddleware.php) checks the permissions of the enquirer using the `sub` entry of the decoded token. If the enquirer has got the right permissions for the route, he can pass. If no token is supplied or if the supplied token is invalid, a 401 is returned. In case the enquirer just hasn't got the required permissions, a 403 is returned.
 ### Login
-To receive a new token, the user have to call the [login route](api-v1.md#login). If the username and the password are valid, a new token is generated with the following service class [Auth.php](../api/src/JMP/Services/Auth.php). The password is hashed using [`password_hash`](https://secure.php.net/manual/en/function.password-hash.php) with the `PASSWORD_DEFAULT` option before it is stored in the database. To verify a password at a login, [`password_verify`](https://secure.php.net/manual/en/function.password-verify.php) is used.
+To receive a new token, the user have to call the [login route](api-v1.md#login). If the username and the password are valid, a new token is generated with the following service class [Auth.php](../api/src/jmp/Services/Auth.php). The password is hashed using [`password_hash`](https://secure.php.net/manual/en/function.password-hash.php) with the `PASSWORD_DEFAULT` option before it is stored in the database. To verify a password at a login, [`password_verify`](https://secure.php.net/manual/en/function.password-verify.php) is used.
 ### Registration
 Only administrators can register new users. To register a new user, the [register route](api-v1.md#create-user) has to be called.
 
@@ -105,7 +111,7 @@ It's important, that everyone complies with the following rules.
 If you recognize code, which doesn't comply with these rules, just correct them. 
 
 ## Optional
-In this application we use the [`Optional`](../api/src/JMP/Utils/Optional.php) very often.
+In this application we use the [`Optional`](../api/src/jmp/Utils/Optional.php) very often.
 
 In php it's possible to let a method return `mixed` types (e.g. `User|bool`) or null able objects, but we decided to not use these possibilities.
 
@@ -146,20 +152,11 @@ if ($optional->isFailure()) {
 The response object of the slim framework offers a method called `withJson`. This method converts an associative array to JSON.
 Because the php cast functionality doesn't comply with our requirements to cast model objects to associative arrays, we use the following util and interface:
 
-**[ArrayConvertable](../api/src/JMP/Models/ArrayConvertable.php):**
-Every model has to implement this class, so that it can be properly converted to an associative array.
-For example implementations see the existing models: [Models](../api/src/JMP/Models).
-```php
-public function toArray(): array
-{
-    return array_filter((array)$this, function ($value) {
-        return $value !== null;
-    });
-}
-```
-The implementation has to **remove all null variables**.
+**[ArrayConvertable](../api/src/jmp/Models/ArrayConvertable.php) & [ArrayConvertableTrait](../api/src/jmp/Models/ArrayConvertableTrait.php):**
+Every model has to implement this interface and use this trait. It is necessary to properly convert the models into arrays.
 
-**[Converter](../api/src/JMP/Utils/Converter.php):**
+
+**[Converter](../api/src/jmp/Utils/Converter.php):**
 This util is used to convert a model object or  a list of model objects properly to an associative array.
 Use it in the controller as shown in this examples:
 ```php
@@ -175,7 +172,7 @@ Everywhere it is possible we use object oriented php. So every method signature 
 
 Also, every method has to be documented with phpdoc. A short summary or description of the method and a documented signature is sufficient.
 
-**Example (from [UserService.php](../api/src/JMP/Services/UserService.php)):**
+**Example (from [UserService.php](../api/src/jmp/Services/UserService.php)):**
 ```php
 /**
  * Select a user by its id
@@ -200,7 +197,7 @@ SQL;
 ```SQL
 SELECT user_id AS userId ...
 ```
-* Use the following for optional parameters (Examples in [EventService.php](../api/src/JMP/Services/EventService.php)): 
+* Use the following for optional parameters (Examples in [EventService.php](../api/src/jmp/Services/EventService.php)): 
 ```SQL
 ... WHERE (:optionalId IS NULL OR id = :optionalId)
 ```
@@ -214,6 +211,9 @@ Make sure you've read [Code Style](#code-style) before reading the following gui
 
 ## Api specification
 First of all the new route has to be documented in the [api-specification](api-v1.md).
+
+## Create tests
+Then you have to create tests for the new route as documented in [Create a new test](#create-a-new-test).
 
 ## Service & Model
 Routes return JSON mostly containing one or a list of model objects. So you have to [create a new model](#create-a-new-model) if the required doesn't exist yet. The model is just a raw data object with the functionality to convert properly to an array.
@@ -230,7 +230,7 @@ The service must
 * have all dependencies set inside the constructor
 * be added to the slim container inside [dependencies.php](../api/src/dependencies.php)
 
-Check out already existing services as examples. [Services](../api/src/JMP/Services) 
+Check out already existing services as examples. [Services](../api/src/jmp/Services) 
 
 ### Create a new model
 If the required model doesn't already exist, you have to create a new one.
@@ -239,9 +239,10 @@ The model must
 * have all columns (as in the database) as public attributes
 * have a constructor with one array as parameter
 * set all attributes (except the ones which are foreign keys in the database) by the values of the array inside the constructor
-* implement the [ArrayConvertable Interface](../api/src/JMP/Models/ArrayConvertable.php)
+* implement the [ArrayConvertable Interface](../api/src/jmp/Models/ArrayConvertable.php)
+* use the [ArrayConvertable Trait](../api/src/jmp/Models/ArrayConvertableTrait.php)
 
-Check out already existing model as examples. [Models](../api/src/JMP/Models) 
+Check out already existing model as examples. [Models](../api/src/jmp/Models) 
 
 ## Controller
 For each route a specific controller method exists. A controller class itself holds methods handling similar subjects. So if no appropriate controller already exists, a [new controller has to be created](#create-a-new-controller-class).
@@ -256,17 +257,17 @@ The controller must
 * hold all dependencies as private attributes
 * have all dependencies set inside the constructor
 
-Check out already existing controllers as examples. [Controllers](../api/src/JMP/Controllers) 
+Check out already existing controllers as examples. [Controllers](../api/src/jmp/Controllers) 
 
 ## Route
 Now the new route has to be registered in [route.php](../api/src/routes.php).
 It's very important, that the middlewares are added in the **right order** and with the **right configuration**.
 
-1. [ValidationErrorResponseBuilder](../api/src/JMP/Middleware/ValidationErrorResponseBuilder.php)
+1. [ValidationErrorResponseBuilder](../api/src/jmp/Middleware/ValidationErrorResponseBuilder.php)
 2. Validation Middleware
     1. Use the right validation settings. Add them to [validation.php](../api/src/validation.php)
-3. [AuthenticationMiddleware](../api/src/JMP/Middleware/AuthenticationMiddleware.php)
-    1. Set the right [PermissionLevel](../api/src/JMP/Utils/PermissionLevel.php) as noted in the [api specification](api-v1.md) of your route
+3. [AuthenticationMiddleware](../api/src/jmp/Middleware/AuthenticationMiddleware.php)
+    1. Set the right [PermissionLevel](../api/src/jmp/Utils/PermissionLevel.php) as noted in the [api specification](api-v1.md) of your route
 4. JWT Middleware
 
 **Example:**
@@ -274,6 +275,85 @@ It's very important, that the middlewares are added in the **right order** and w
 $this->get('/users/{id:[0-9]+}', UsersController::class . ':getUser')
     ->add(new ValidationErrorResponseBuilder())
     ->add(new Validation($container['validation']['getUser']))
-    ->add(new AuthenticationMiddleware($container, \JMP\Utils\PermissionLevel::ADMIN))
+    ->add(new AuthenticationMiddleware($container, \jmp\Utils\PermissionLevel::ADMIN))
     ->add($jwtMiddleware);
 ```
+
+## Verify all tests
+First run all tests locally with two iterations as described in [Running tests](#running-tests) and after pushing your changes you should watch the [Travis CI Build Status](#travis-ci-and-build-status).
+
+# Integration Tests
+We use [Postman](https://www.getpostman.com/) and [newman](https://www.npmjs.com/package/newman) for integration tests.  
+
+## Create a new test
+The following tests are required to create a new test
+
+**Test Data:**  
+Initially test data is inserted into the database during the docker-compose build. The following SQL-Script contains all test data: [03_initData.sql](../docker/db/03_initData.sql). 
+
+**Import existing tests and environments:**  
+First import the test collection and environment from the [docker/newman/collections](../docker/newman/collections) directory.  
+
+**Structure:**  
+* jmp
+    * category (e.g. `events`)
+        * action (e.g. `create`)
+            * admin (uses the environment variable `admin-token` as authentication-token)
+                * all requests creating events are located here
+                * one request for each possible scenario
+                    * Successful
+                    * Bad Request
+                    * Not Found
+                    * Forbidden
+                    * etc.
+            * nonadmin (uses the environment variable `nonadmin-token` as authentication-token)
+                * all requests creating events are located here
+                * one request for each possible scenario
+                    * Successful
+                    * Bad Request
+                    * Not Found
+                    * Forbidden
+                    * etc.
+
+Create the missing directory structure needed for your tests and set the authentication tokens for the `admin` and `nonadmin` directories.
+
+**Prerequest scripts:**  
+Use the prerequest scripts to set all query parameters and body-data:
+````javascript
+vars = pm.variables;
+vars.set('limit', 10);
+````
+You can pass the variables using double braces:
+````http request
+http://localhost/api/v1/events?eventType={{eventType}}&group={{group}}&limit={{limit}}&offset={{offset}}&all={{all}}&elapsed={{elapsed}}
+````
+
+**Tests:**  
+Postman internally uses [Chai](https://www.chaijs.com/) as BDD / TDD assertion library.  
+You should test as much as possible and as precise as possible.
+The tests have to:
+* be as precise as possible
+* test as much as possible
+* avoid side-effects (only per admin/nonadmin directory)
+* use the variables set in the prerequest scripts: `vars.get('limit');`
+
+Use the already existing tests as reference.
+
+**Save:**  
+To save the newly created tests export the `jmp`-collection and replace the existing in the repository with the new one.
+Then you only have to commit and push the changes.
+
+### Running tests:  
+You can run the tests with the postman runner (don't forget to set the jmp-environment) or with newman.
+
+newman:
+````bash
+make test DIR="$(pwd)"
+````
+
+### Travis CI and Build Status:  
+Everytime you push your changes, a Travis CI job is triggered and all tests are executed.  
+Build Status:  
+[![Build Status](https://travis-ci.com/jmp-app/jmp.svg?branch=master)](https://travis-ci.com/jmp-app/jmp)
+
+ 

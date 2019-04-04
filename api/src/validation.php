@@ -1,8 +1,9 @@
 <?php
 
+use Psr\Container\ContainerInterface;
 use Respect\Validation\Validator as v;
 
-/** @var $container \Psr\Container\ContainerInterface */
+/** @var $container ContainerInterface */
 $container = $app->getContainer();
 
 $container['validation'] = function () {
@@ -27,6 +28,31 @@ $container['validation'] = function () {
             'all' => v::optional(v::boolVal()),
             'elapsed' => v::optional(v::boolVal()),
         ],
+        'createEvent' => [
+            'title' => v::notEmpty()->length(1, 51),
+            'description' => v::optional(v::notEmpty()->length(1, 256)),
+            'from' => v::date('Y-m-d\TH:i'),
+            'to' => v::date('Y-m-d\TH:i'),
+            'place' => v::optional(v::notEmpty()->length(1, 51)),
+            'eventType' => v::noWhitespace()->numeric()->min(0),
+            'defaultRegistrationState' => v::noWhitespace()->numeric()->min(0),
+            'groups' => v::arrayType()->notEmpty()->each(
+                v::noWhitespace()->numeric()->min(0)
+            )
+        ],
+        'updateEvent' => [
+            'title' => v::optional(v::notEmpty()->length(1, 51)),
+            'description' => v::optional(v::notEmpty()->length(1, 256)),
+            'from' => v::optional(v::date('Y-m-d\TH:i')),
+            'to' => v::optional(v::date('Y-m-d\TH:i')),
+            'place' => v::optional(v::notEmpty()->length(1, 51)),
+            'eventType' => v::optional(v::noWhitespace()->numeric()->min(0)),
+            'defaultRegistrationState' => v::optional(v::noWhitespace()->numeric()->min(0)),
+            'groups' => v::optional(
+                v::arrayType()->notEmpty()->each(
+                    v::noWhitespace()->numeric()->min(0)
+                )
+            )],
         'getEventById' => [
             'id' => v::notEmpty()->noWhitespace()->numeric()
         ],
@@ -53,7 +79,7 @@ $container['validation'] = function () {
             'passwordChange' => v::optional(v::boolVal())
         ],
         'listUsers' => [
-            'group' => v::optional(v::notEmpty()->noWhitespace()->numeric()),
+            'group' => v::optional(v::notEmpty()->noWhitespace()->numeric()->min(0)),
         ],
         'createGroup' => [
             'name' => v::notEmpty()->length(1, 45)
@@ -75,13 +101,28 @@ $container['validation'] = function () {
             'eventId' => v::notEmpty()->noWhitespace()->numeric(),
             'userId' => v::notEmpty()->noWhitespace()->numeric(),
             'reason' => v::optional(v::notEmpty()->length(1, 80)),
-            'registrationState' => v::optional(v::notEmpty()->noWhitespace()->numeric())
+            'registrationState' => v::optional(v::notEmpty()->noWhitespace()->numeric()->min(0))
         ],
         'updateRegistration' => [
-            'eventId' => v::notEmpty()->noWhitespace()->numeric(),
-            'userId' => v::notEmpty()->noWhitespace()->numeric(),
+            'eventId' => v::notEmpty()->noWhitespace()->numeric()->min(0),
+            'userId' => v::notEmpty()->noWhitespace()->numeric()->min(0),
             'reason' => v::optional(v::notEmpty()->length(1, 80)),
-            'registrationState' => v::notEmpty()->noWhitespace()->numeric()
+            'registrationState' => v::optional(v::notEmpty()->noWhitespace()->numeric()->min(0))
+        ],
+        'getRegistrationStateById' => [
+            'registrationStateId' => v::notEmpty()->noWhitespace()->numeric()->min(0)
+        ],
+        'deleteRegistration' => [
+            'eventId' => v::notEmpty()->noWhitespace()->numeric()->min(0),
+            'userId' => v::notEmpty()->noWhitespace()->numeric()->min(0),
+        ],
+        'createEventType' => [
+            'title' => v::notEmpty()->length(1, 51),
+            'color' => v::hexRgbColor()
+        ],
+        'updateEventType' => [
+            'title' => v::optional(v::notEmpty()->length(1, 51)),
+            'color' => v::optional(v::hexRgbColor())
         ]
     ];
 };

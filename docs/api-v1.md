@@ -1,5 +1,5 @@
 # API Spec Version 1
-# Table of Contens:
+# Table of Content:
 - [API Spec Version 1](#api-spec-version-1)
 - [JSON Objects](#json-objects)
   * [User](#user)
@@ -35,6 +35,10 @@
   * [Delete Group](#delete-group)
   * [Join Group](#join-group)
   * [Leave Group](#leave-group)
+  * [Create Registration](#create-registration)
+  * [Update Registration](#update-registration)
+  * [Get Registration](#get-registration)
+  * [Delete Registration](#delete-registration)
   * [Create Registration State](#create-registration-state)
   * [List Registration States](#list-registration-states)
   * [Get Registration State](#get-registration-state)
@@ -48,21 +52,31 @@
 
 ```json
 {
-    "id": 1,
-    "username": "jake",
-    "lastname": "Smith",
-    "firstname": "Jacob",
-    "email": "jake@example.com",
-    "isAdmin": true
+  "id": 162,
+  "username": "walter",
+  "lastname": "White",
+  "firstname": "Walter",
+  "email": "walter@white.me",
+  "passwordChange": false,
+  "isAdmin": false
 }
 ```
 ### Group
 
 ```json
 {
-    "id": 1,
-    "name": "Members",
-    "users": [1, 3, 5]
+  "id": 6,
+  "name": "green",
+  "users": [
+    {
+      "id": 161,
+      "username": "allen",
+      "lastname": "Burdon",
+      "firstname": "Allen",
+      "passwordChange": false,
+      "isAdmin": false
+    }
+  ]
 }
 ```
 
@@ -70,26 +84,36 @@
 
 ```json
 {
-  "id": 29,
-  "title": "GA",
-  "from": "2019-01-15 12:12:12",
-  "to": "2019-01-15 13:13:13",
-  "place": "Earth",
-  "description": "General Assembly",
+  "id": 31,
+  "title": "green event",
+  "from": "2019-01-15T12:12",
+  "to": "2019-01-15T13:13",
+  "place": "GibmIT, Pratteln",
+  "description": "1",
   "eventType": {
     "id": 1,
-    "title": "Default",
-    "color": "#d6f936"
+    "title": "foo",
+    "color": "#FF0000"
   },
   "defaultRegistrationState": {
-    "id": "2",
-    "name": "Accepted",
-    "reasonRequired": false
+    "id": 2,
+    "name": "subscribed",
+    "reasonRequired": true
   },
   "groups": [
     {
-      "id": 5,
-      "name": "Members"
+      "id": 6,
+      "name": "green",
+      "users": [
+        {
+          "id": 161,
+          "username": "allen",
+          "lastname": "Burdon",
+          "firstname": "Allen",
+          "passwordChange": false,
+          "isAdmin": false
+        }
+      ]
     }
   ]
 }
@@ -179,10 +203,10 @@ POST /v1/login
 
 Parameters:
 
-| Field    | Description         | Required |
-| -------- | ------------------- | -------- |
-| username | The user's username | ✔️        |
-| password | The user's password | ✔️        |
+| Field     | Description         | Required | Type |
+| --------- | ------------------- | -------- | ---- |
+| username  | The user's username | ✔️        | varchar(100) |
+| password | The user's password | ✔️        | varchar(255) |
 
 Example request data:
 
@@ -222,15 +246,15 @@ POST /v1/users
 
 Parameters:
 
-| Field     | Description                                                  | Required |
-| --------- | ------------------------------------------------------------ | -------- |
-| username  | The user's username                                          | ✔️        |
-| lastname  | The user's last name                                         | ❌        |
-| firstname | The user's first name                                        | ❌️        |
-| email     | The user's email                                             | ❌        |
-| password  | The user's initial password                                  | ✔️        |
-| passwordChange  | does the user have to change the password              | ✔️        |
-| isAdmin   | Whether the user is an administrator or not. Defaults to no admin | ❌        |
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| username  | The user's username                                          | ✔️        | varchar(100) |
+| lastname  | The user's last name                                         | ❌        | varchar(50) |
+| firstname | The user's first name                                        | ❌️        | varchar(50) |
+| email     | The user's email                                             | ❌        | varchar(255) |
+| password  | The user's initial password                                  | ✔️        | varchar(255) |
+| passwordChange  | does the user have to change the password              | ✔️        | boolean(0 or 1) |
+| isAdmin   | Whether the user is an administrator or not. Defaults to no admin | ❌        | boolean(0 or 1) |
 
 Example request data:
 
@@ -241,7 +265,7 @@ Example request data:
     "firstname": "Jacob",
     "email": "jake@example.com",
     "password": "secure",
-    "isAdmin": true
+    "isAdmin": 1
 }
 ```
 
@@ -257,13 +281,13 @@ GET /v1/users
 
 Parameters:
 
-| Field | Description               | Required |
-| ----- | ------------------------- | -------- |
-| group | Get all users by group id | ❌        |
+| Field | Description               | Required | Type |
+| ----- | ------------------------- | -------- | ---- |
+| group | Get all users by group id | ❌        | numeric |
 
 Access rights: authentication required, user has to be an admin
 
-Returns: List of queried users
+Returns: List of queried [Users](#User)
 
 ### Get Current User
 
@@ -297,14 +321,15 @@ PUT /v1/users/{id}
 
 Parameters:
 
-| Field     | Description         | Required |
-| --------- | ------------------- | -------- |
-| username  | The new username    | ❌        |
-| lastname  | The new last name   | ❌        |
-| firstname | The new first name  | ❌        |
-| email     | The new email       | ❌        |
-| password  | The new password    | ❌        |
-| isAdmin   | The new admin state | ❌        |
+| Field     | Description         | Required | Type |
+| --------- | ------------------- | -------- | ---- |
+| username  | The new username    | ❌        | varchar(100) |
+| lastname  | The new last name   | ❌        | varchar(50) |
+| firstname | The new first name  | ❌        | varchar(50) |
+| email     | The new email       | ❌        | varchar(255) |
+| password  | The new password    | ❌        | varchar(255) |
+| isAdmin   | The new admin state | ❌        | boolean(0 or 1) |
+| passwordChange | does the user have to change the password | ❌        | boolean(0 or 1) |
 
 Example request data:
 
@@ -330,6 +355,8 @@ Parameters: none
 
 Access rights: authentication required, user has to be an admin
 
+Returns: Status 204 or errors
+
 ### Change Password
 
 ```http
@@ -338,10 +365,10 @@ PUT /v1/user/change-password
 
 Parameters:
 
-| Field       | Description                 | Required |
-| ----------- | --------------------------- | -------- |
-| password    | The user's current password | ✔️        |
-| newPassword | The new password to set     | ✔️        |
+| Field       | Description                 | Required || Type |
+| ----------- | --------------------------- | -------- || ---- |
+| password    | The user's current password | ✔️        | varchar(255) |
+| newPassword | The new password to set     | ✔️        | varchar(255) |
 
 Access rights: authentication required
 
@@ -355,28 +382,28 @@ POST /v1/events
 
 Parameters:
 
-| Field                    | Description                                                  | Required |
-| ------------------------ | ------------------------------------------------------------ | -------- |
-| title                    | The title of the event                                       | ✔️        |
-| description              | Description of the event                                     | ❌        |
-| from                     | The begin date of the event                                  | ✔️        |
-| to                       | The end date of the event                                    | ✔️        |
-| place                    | Where the event takes place                                  | ❌        |
-| eventType                | The id of the event type this event has                      | ✔️        |
-| defaultRegistrationState | The id of the registration state that is used as default for this event. | ✔️        |
-| groups                   | An array of group ids that are assigned to the event         | ✔️        |
+| Field                    | Description                                                  | Required | Type |
+| ------------------------ | ------------------------------------------------------------ | -------- | ---- |
+| title                    | The title of the event                                       | ✔️        |  varchar(50) |
+| description              | Description of the event                                     | ❌        | varchar(255) |
+| from                     | The begin date of the event                                  | ✔️        |  Date in the ISO format: `Y-m-d\TH:i` |
+| to                       | The end date of the event                                    | ✔️        |  Date in the ISO format: `Y-m-d\TH:i` |
+| place                    | Where the event takes place                                  | ❌        | varchar(50) |
+| eventType                | The id of the event type this event has                      | ✔️        |  numeric |
+| defaultRegistrationState | The id of the registration state that is used as default for this event. | ✔️        |  numeric |
+| groups                   | An array of group ids that are assigned to the event         | ✔️        |  Array of numbers |
 
 Example request data:
 
 ```json
 {
-    "title": "GA",
-    "description": "General Assembly",
-    "from": "2018-11-28T10:00:00Z",
-    "to": "2018-11-29T18:00:00Z",
-    "eventType": "3",
-    "defaultRegistrationState": "2",
-    "groups": [1, 4]
+  "title": "GA",
+  "description": "General Assembly",
+  "from": "2018-11-28T10:00:00Z",
+  "to": "2018-11-29T18:00:00Z",
+  "eventType": 3,
+  "defaultRegistrationState": 2,
+  "groups": [1, 4]
 }
 ```
 
@@ -392,14 +419,14 @@ GET /v1/events/
 
 Parameters:
 
-| Field     | Description                          | Required |
-| --------- | ------------------------------------ | -------- |
-| group     | To get all events by the group id    |          |
-| eventType | To get all events by type id         |          |
-| limit     | Limit the amount of events retrieved |          |
-| offset    | Skip the fist _x_ events             |          |
-| all       | List events of all users/groups **(works only as admin)**|          |
-| elapsed   | List also elapsed events             |          |
+| Field     | Description                          | Required | Type |
+| --------- | ------------------------------------ | -------- | -------- |
+| group     | To get all events by the group id    |          | numeric  |
+| eventType | To get all events by type id         |          | numeric  |
+| limit     | Limit the amount of events retrieved |          | numeric  |
+| offset    | Skip the fist _x_ events             |          | numeric |
+| all       | List events of all users/groups **(works only as ks only as admin)**| | bool |
+| elapsed   | List also elapsed events             |          | bool |
 
 Example request:
 
@@ -409,18 +436,20 @@ GET /v1/events?limit=5&offset=10&eventType=1&all=1&elapsed=1
 Access rights: authentication required  
 **Note:** ```all``` is only considered if the user is an admin. Otherwise an 401 is returned.
 
-Returns: List of queried events of all groups in which the user has a membership, sorted __ascending__ by their __start date__ (The near-time events are listed first).  
+Returns:  
+List of queried [Events](#event) of all groups in which the user has a membership, sorted __ascending__ by their __start date__ (The near-time events are listed first).  
 By default (without the elapsed parameter set), only current and upcoming events are selected.
 
 ### Get Event
 
 ```http
-GET /v1/events/{id}
+GET /v1/events/{id:[0-9]+}
 ```
 
 Parameters: none
 
-Access rights: authentication required
+Access rights: authentication required  
+**Note:** An admin can access every event but a user can only access events of groups in which he has a membership.
 
 Returns: the [Event](#Event)
 
@@ -432,23 +461,26 @@ PUT /v1/events/{id}
 
 Parameters:
 
-| Field                    | Description                                                  | Required |
-| ------------------------ | ------------------------------------------------------------ | -------- |
-| title                    | The title of the event                                       | ❌        |
-| description              | Description of the event                                     | ❌        |
-| from                     | The begin date of the event                                  | ❌        |
-| to                       | The end date of the event                                    | ❌        |
-| place                    | Where the event takes place                                  | ❌        |
-| eventType                | The id of the event type this event has                      | ❌        |
-| defaultRegistrationState | The id of the registration state that is used as default for this event. | ❌        |
-| groups                   | An array of group ids that are assigned to the event         | ❌        |
+| Field                    | Description                                                  | Required | Type |
+| ------------------------ | ------------------------------------------------------------ | -------- | ---- |
+| title                    | The title of the event                                       | ❌        |  varchar(50) |
+| description              | Description of the event                                     | ❌        | varchar(255) |
+| from                     | The begin date of the event                                  | ❌        |  Date in the ISO format: `Y-m-d\TH:i` |
+| to                       | The end date of the event                                    | ❌        |  Date in the ISO format: `Y-m-d\TH:i` |
+| place                    | Where the event takes place                                  | ❌        | varchar(50) |
+| eventType                | The id of the event type this event has                      | ❌        |  numeric |
+| defaultRegistrationState | The id of the registration state that is used as default for this event. | ❌        |  numeric |
+| groups                   | An array of group ids that are assigned to the event         | ❌        |  Array of numbers |
 
 Example request data:
 
 ```json
 {
-    "title": "",
-    "description": ""
+  "title": "GA",
+  "description": "General Assembly",
+  "from": "2018-11-28T10:00:00Z",
+  "to": "2018-11-29T18:00:00Z",
+  "groups": [1, 4]
 }
 ```
 
@@ -466,6 +498,10 @@ Parameters: none
 
 Access rights: authentication required, user has to be an admin
 
+**Note:**  
+When an Event is deleted, all associated registrations and presences are also deleted.  
+So be careful and ask the user twice if he really wants to delete an Event.
+
 ### Create Event Type
 
 ```http
@@ -474,10 +510,10 @@ POST /v1/event-types
 
 Parameters:
 
-| Field | Description                        | Required |
-| ----- | ---------------------------------- | -------- |
-| title | The title of the event type        | ✔️        |
-| color | The color used for this event type | ✔️        |
+| Field | Description                        | Required | Type |
+| ----- | ---------------------------------- | -------- | ---- |
+| title | The title of the event type        | ✔️        | varchar(50) |
+| color | The color used for this event type | ✔️        | hex-rgb-color |
 
 Example request data:
 
@@ -495,7 +531,7 @@ Returns: the [Event Type](#event-type)
 ### List Event Types
 
 ```http
-GET /v1/event-types/
+GET /v1/event-types
 ```
 
 Parameters: none
@@ -516,6 +552,32 @@ Access rights: authentication required
 
 Returns: the [Event Type](#event-type)
 
+### Update Event Type
+
+```http
+PUT /v1/event-types/{id}
+```
+
+Parameters:
+
+| Field | Description                        | Required | Type |
+| ----- | ---------------------------------- | -------- | ---- |
+| title | The title of the event type        | ❌        | varchar(50) |
+| color | The color used for this event type | ❌        | hex-rgb-color |
+
+Example request data:
+
+```json
+{
+    "title": "Default",
+    "color": "#ff0000"
+}
+```
+
+Access rights: authentication required, user has to be an admin
+
+Returns: the [Event Type](#event-type)
+
 ### Delete Event Type
 
 ```http
@@ -526,6 +588,10 @@ Parameters: none
 
 Access rights: authentication required, user has to be an admin
 
+**Note:** Event types can only be deleted when they currently aren't in use.
+
+Returns: Status 204 or errors
+
 ### Create Group
 
 ```http
@@ -534,9 +600,9 @@ POST /v1/groups
 
 Parameters:
 
-| Field | Description           | Required |
-| ----- | --------------------- | -------- |
-| name  | The name of the group | ✔️        |
+| Field | Description           | Required | Type |
+| ----- | --------------------- | -------- | ---- |
+| name  | The name of the group | ✔️    | varchar(45) |
 
 Example request data:
 
@@ -582,9 +648,9 @@ PUT /v1/groups/{id}
 
 Parameters:
 
-| Field | Description  | Required |
-| ----- | ------------ | -------- |
-| name  | The new name | ❌        |
+| Field | Description  | Required | Type |
+| ----- | ------------ | -------- | ---- |
+| name  | The new name | ❌        | varchar(45) |
 
 Example request data:
 
@@ -608,6 +674,8 @@ Parameters: none
 
 Access rights: authentication required, user has to be an admin
 
+Returns: 204 or errors
+
 ### Join Group
 
 ```http
@@ -616,9 +684,9 @@ POST /v1/groups/{id}/join
 
 Parameters:
 
-| Field | Description                         | Required |
-| ----- | ----------------------------------- | -------- |
-| users | One or more users to join the group | ✔        |
+| Field | Description                         | Required | Type |
+| ----- | ----------------------------------- | -------- | ---- |
+| users | One or more users to join the group | ✔        | array with id's (numeric) |
 
 Example request data:
 
@@ -639,7 +707,7 @@ Returns: A [group](#Group) and [errors](#json-error-objects) with all invalid us
         "users": []
     },
     "errors": {
-        "invalidUsers": "5,-1"
+        "invalidUsers": [5,10]
     }
 }
 ````
@@ -652,9 +720,9 @@ DELETE /v1/groups/{id}/leave
 
 Parameters:
 
-| Field | Description                          | Required |
-| ----- | ------------------------------------ | -------- |
-| users | One or more users to leave the group | ✔️        |
+| Field | Description                          | Required | Type |
+| ----- | ------------------------------------ | -------- | ---- |
+| users | One or more users to leave the group | ✔️       | array with id's (numeric) |
 
 Example request data:
 
@@ -663,6 +731,8 @@ Example request data:
     "users": [1]
 }
 ```
+
+**Note:** If any of the given user id's should be invalid, there is no notification about this.
 
 Access rights: authentication required, user has to be an admin
 
@@ -748,12 +818,12 @@ POST /v1/registration
 
 Parameters:
 
-| Field     | Description                                                  | Required |
-| --------- | ------------------------------------------------------------ | -------- |
-| eventId   | The event's id                                               | ✔️     |
-| userId    | The user's id                                                | ✔        |
-| reason    | The reason for the registration                              | ❌        |
-| registrationState | [Registration State](#registration-state)'s id       | ❌       |
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| eventId   | The event's id                                               | ✔️     | numeric |
+| userId    | The user's id                                                | ✔        | numeric |
+| reason    | The reason for the registration                              | ❌        | varchar(80) |
+| registrationState | [Registration State](#registration-state)'s id       | ❌       | numeric |
 
 Example request data:
 
@@ -774,6 +844,24 @@ Access rights: authentication required
 
 Returns: the [Registration](#registration)
 
+### Get Registration 
+
+```http
+GET /v1/registration/{{eventId}}/{{userId}}
+```
+
+Parameters:
+
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| eventId   | The event's id                                               | ✔️      | numeric |
+| userId    | The user's id                                                | ✔        | numeric |
+
+
+Access rights: authentication required
+
+Returns: the [Registration](#registration)
+
 ### Update Registration 
 
 ```http
@@ -782,10 +870,10 @@ PUT /v1/registration/{eventId}/{userId}
 
 Parameters:
 
-| Field     | Description                                                  | Required |
-| --------- | ------------------------------------------------------------ | -------- |
-| reason    | The reason for the registration                              | ❌        |
-| registrationState | [Registration State](#registration-state)'s id       | ✔ |
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| reason    | The reason for the registration                              | ❌        | varchar(80) |
+| registrationState | [Registration State](#registration-state)'s id       | ✔        | numeric |
 
 Example request data:
 
@@ -800,4 +888,22 @@ Access rights: authentication required
 
 Returns: the [Registration](#registration)
 
-___TODO:___ Registration, Presence and User Meta
+### Delete Registration 
+
+```http
+DELETE /v1/registration/{eventId}/{userId}
+```
+
+Parameters:
+
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| eventId   | The event's id                                               | ✔️     | varchar(80) |
+| userId    | The user's id                                                | ✔        | numeric |
+
+
+Access rights: authentication required
+
+Returns: HTTP 204 status code when successful
+
+___TODO:___ Presence and User Meta

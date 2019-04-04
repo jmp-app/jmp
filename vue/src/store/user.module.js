@@ -45,15 +45,18 @@ export const user = {
             commit('userRequest');
 
             if (user.isAdmin) {
-                user.isAdmin = 1;
+                user.isAdmin = '1';
             } else {
-                user.isAdmin = 0;
+                user.isAdmin = '0';
             }
             if (user.passwordChange) {
-                user.passwordChange = 1;
+                user.passwordChange = '1';
             } else {
-                user.passwordChange = 0;
+                user.passwordChange = '0';
             }
+
+            console.log(user.isAdmin);
+            console.log(user.passwordChange);
 
             userService.createUser(user)
                 .then(user => commit('createUserSuccess', user))

@@ -76,13 +76,13 @@
         </div>
         <div class="form-group row" v-if="create() || edit()">
             <div class="col-sm-9">
-                <button @click="handleCancel()" class="btn mr-2" type="button" v-if="edit()">{{$t('cancel')}}</button>
-                <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+                <v-btn @click="handleCancel()" type="button" v-if="edit()">{{$t('cancel')}}</v-btn>
+                <v-btn class="btn btn-primary" color="info" type="submit">{{$t('save')}}</v-btn>
             </div>
         </div>
         <div class="form-group row" v-if="display()">
             <div class="col-sm-9">
-                <button @click="mode = 'edit'" class="btn mr-2" type="button">{{$t('edit')}}</button>
+                <v-btn @click="mode = 'edit'" type="button">{{$t('edit')}}</v-btn>
             </div>
         </div>
     </form>

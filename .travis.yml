@@ -1,0 +1,27 @@
+language: php
+
+php:
+  - '7.1'
+
+services:
+  - docker
+
+before_install:
+  # Set environment variables
+  - cp db.env.example db.env
+  - cp api/.env.example api/.env
+  - cp api/db.env.example api/db.env
+  # Stop all databases possibly blocking the 3306 port
+  - sudo /etc/init.d/mysql stop
+  - sudo /etc/init.d/postgresql stop
+  # Build and start the containers
+  - docker-compose up -d --build
+  # Install php dependencies
+  - cd api/
+  - composer install --no-interaction
+  - cd ..
+  # Install newman
+  - docker pull postman/newman
+
+script:
+  - docker run --network='host' -v "$PWD/docker/newman/collections":/etc/newman -t  postman/newman run -e jmp.postman_environment.json -n 2  jmp.postman_collection.json

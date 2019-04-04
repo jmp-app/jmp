@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="handleSubmit">
+    <form>
         <div class="form-group">
             <label for="regState">{{ $t("registration.state") }}</label>
             <select @change="handleChange()" class="form-control" id="regState" v-model="selected">
@@ -17,7 +17,7 @@
                 $t('registration.reasonRequired') }}
             </div>
         </div>
-        <button class="btn btn-danger" v-show="hasChanges">{{ $t("submit") }}</button>
+        <v-btn @click="handleSubmit()" color="error" v-show="hasChanges">{{ $t("submit") }}</v-btn>
     </form>
 </template>
 

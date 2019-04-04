@@ -20,7 +20,7 @@
 
 | Name | Desc | Default Value | Options | Note |
 |------|------|---------------|---------|------|
-| `APP_NAME` | Application Name | `JMP` | |Same as set in [composer.json](../api/composer.json) at the autoload section |
+| `APP_NAME` | Application Name | `jmp` | |Same as set in [composer.json](../api/composer.json) at the autoload section |
 | `APP_ENV` | Environment | `local` |  |Defines the environment|
 | `APP_DEBUG` | Debugging | `true` | true, false |Display error details as explained in [Slim Default Settings](https://www.slimframework.com/docs/v3/objects/application.html#slim-default-settings). **Not recommended for production environments**|
 | `APP_URL` | URL of the application | `http://localhost` | |Issuer of the jwt|

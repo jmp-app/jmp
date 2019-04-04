@@ -1,7 +1,8 @@
 import Vue from 'vue';
+import './plugins/vuetify';
 import App from './App.vue';
 import VueAxios from 'vue-axios';
-import {router, config, http} from './helpers';
+import {config, http, router} from './helpers';
 import {store} from './store';
 import './registerServiceWorker';
 import i18n from './i18n';

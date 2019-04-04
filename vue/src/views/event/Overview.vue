@@ -1,10 +1,7 @@
 <template>
     <div>
-        <div @change="init()" class="container mb-3" style="text-align: right" v-if="isAdmin()">
-            <input class="form-check-input" id="showAll" type="checkbox" v-model="showAll" value="">
-            <label class="form-check-label" for="showAll">
-                {{ $t('event.overview.showAll') }}
-            </label>
+        <div v-if="isAdmin()">
+            <v-switch :label="$t('event.overview.showAll')" v-model="showAll"></v-switch>
         </div>
         <div id="eventCards">
             <div :key="event.id" v-for="event in events">
@@ -99,7 +96,7 @@
             },
             isAdmin: function () {
                 const user = JSON.parse(localStorage.getItem('user'));
-                return !!(user && user.isAdmin === 1);
+                return !!(user && user.isAdmin);
             },
             init: function () {
                 let showAll = this.showAll;
@@ -117,6 +114,9 @@
         watch: {
             windowHeight: function () {
                 this.loadDataUntilScreenIsFull();
+            },
+            showAll: function () {
+                this.init();
             }
         },
         beforeDestroy() {
