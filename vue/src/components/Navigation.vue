@@ -48,7 +48,7 @@
             },
             showAdmin() {
                 const user = JSON.parse(localStorage.getItem('user'));
-                return !!(user && user.isAdmin === 1);
+                return !!(user && user.isAdmin);
             }
         }
     };
