@@ -28,8 +28,6 @@ before_install:
     -F 'username=adam' \
     -F 'password=pass4dev'"
   - docker pull postman/newman
-  - volume_path="$(pwd)/docker/newman/collections"
-
 
 script:
-  - docker run --network='host' -v "$volume_path":/etc/newman -t  postman/newman run -e jmp.postman_environment.json -n 2  jmp.postman_collection.json
+  - docker run --network='host' -v "$PWD/docker/newman/collections":/etc/newman -t  postman/newman run -e jmp.postman_environment.json -n 2  jmp.postman_collection.json
