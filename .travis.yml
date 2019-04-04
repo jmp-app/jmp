@@ -31,4 +31,4 @@ before_install:
 
 
 script:
-  - docker run -v "$(pwd)/docker/newman/collections":/etc/newman -t  postman/newman run -e jmp.postman_environment.json -n 2  jmp.postman_collection.json
+  - docker run --network='host' -v "$(pwd)/docker/newman/collections":/etc/newman -t  postman/newman run -e jmp.postman_environment.json -n 2  jmp.postman_collection.json
