@@ -1,5 +1,7 @@
 # ![JMP](logo.png)
 
+[![Build Status](https://travis-ci.com/jmp-app/jmp.svg?branch=master)](https://travis-ci.com/jmp-app/jmp)
+
 # Table of Contents:
 - [JMP](#jmplogopng)
 - [Getting Started](#getting-started)
