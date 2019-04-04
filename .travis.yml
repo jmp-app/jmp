@@ -21,7 +21,6 @@ before_install:
   - sudo /etc/init.d/mysql stop
   - sudo /etc/init.d/postgresql stop
   - docker-compose up -d --build
-  - docker exec
   - "curl -X POST \
     http://localhost/api/v1/login \
     -H 'cache-control: no-cache' \
