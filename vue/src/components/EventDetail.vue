@@ -18,9 +18,9 @@
             <tr>
                 <th>{{ $t("event.groups") }}</th>
                 <td>
-                        <span :key="group.id" class="badge badge-pill badge-primary" v-for="group in event.groups">
-                            {{group.name}}
-                        </span>
+                    <v-chip :key="group.id" v-for="group in event.groups">
+                        {{group.name}}
+                    </v-chip>
                 </td>
             </tr>
             <tr>
