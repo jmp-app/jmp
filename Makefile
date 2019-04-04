@@ -14,6 +14,14 @@ build-up:
 up:
 	docker-compose up -d
 
+rm-volume:
+	docker-compose down
+	docker volume rm jmp_dbdata
+	docker-compose up -d
+
+down:
+	docker-compose down
+
 vue-build:
 	cd vue && \
 	npm install && \
