@@ -14,6 +14,8 @@ before_install:
   # Stop all databases possibly blocking the 3306 port
   - sudo /etc/init.d/mysql stop
   - sudo /etc/init.d/postgresql stop
+
+install:
   # Build and start the containers
   - docker-compose up -d --build
   # Install php dependencies
