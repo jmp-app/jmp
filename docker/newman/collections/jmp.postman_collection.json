@@ -14728,6 +14728,296 @@
 					"_postman_isSubFolder": true
 				}
 			]
+        },
+      {
+        "name": "registration-state",
+        "item": [
+          {
+            "name": "create",
+            "item": [
+              {
+                "name": "admin",
+                "item": [
+                  {
+                    "name": "/create",
+                    "event": [
+                      {
+                        "listen": "prerequest",
+                        "script": {
+                          "id": "e93da247-3c1c-4c98-9a51-951ba78c756b",
+                          "exec": [
+                            "vars = pm.variables;",
+                            "",
+                            "vars.set('name', 'test-registration-state');",
+                            "vars.set('reasonRequired', 1);"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      },
+                      {
+                        "listen": "test",
+                        "script": {
+                          "id": "7de048fd-65f4-418a-b220-774ceb87b452",
+                          "exec": [
+                            "vars = pm.variables;",
+                            "",
+                            "pm.test(\"Status is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test('Values are correct', function() {",
+                            "    json = pm.response.json();",
+                            "    pm.expect(json.name).to.be.eq(vars.get('name'));",
+                            "    pm.response.to.have.jsonBody('id');",
+                            "    pm.expect(json.id).to.be.a('number');",
+                            "    pm.expect(json.reasonRequired).to.eq(Boolean(vars.get('reasonRequired')));",
+                            "});",
+                            "",
+                            "pm.environment.set(\"created-registration-state-id\", pm.response.json().id);"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      }
+                    ],
+                    "request": {
+                      "method": "POST",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "name": "Content-Type",
+                          "value": "application/x-www-form-urlencoded",
+                          "type": "text"
+                        }
+                      ],
+                      "body": {
+                        "mode": "urlencoded",
+                        "urlencoded": [
+                          {
+                            "key": "name",
+                            "value": "{{name}}",
+                            "type": "text"
+                          },
+                          {
+                            "key": "reasonRequired",
+                            "value": "{{reasonRequired}}",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      "url": {
+                        "raw": "http://localhost/api/v1/registration-state",
+                        "protocol": "http",
+                        "host": [
+                          "localhost"
+                        ],
+                        "path": [
+                          "api",
+                          "v1",
+                          "registration-state"
+                        ]
+                      }
+                    },
+                    "response": []
+                  },
+                  {
+                    "name": "/create-bad-reqeust",
+                    "event": [
+                      {
+                        "listen": "prerequest",
+                        "script": {
+                          "id": "e93da247-3c1c-4c98-9a51-951ba78c756b",
+                          "exec": [
+                            "vars = pm.variables;",
+                            "",
+                            "vars.set('name', ' ');",
+                            "vars.set('reasonRequired', \"fdsf sdf\");"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      },
+                      {
+                        "listen": "test",
+                        "script": {
+                          "id": "7de048fd-65f4-418a-b220-774ceb87b452",
+                          "exec": [
+                            "pm.test(\"Status is 400\", function () {",
+                            "    pm.response.to.have.status(400);",
+                            "});",
+                            "",
+                            "pm.test(\"All errors are returned\", function () {",
+                            "    pm.response.to.have.jsonBody(\"errors\");",
+                            "    pm.response.to.have.jsonBody(\"errors.name\");",
+                            "    pm.response.to.have.jsonBody(\"errors.reasonRequired\");",
+                            "});"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      }
+                    ],
+                    "request": {
+                      "method": "POST",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "name": "Content-Type",
+                          "type": "text",
+                          "value": "application/x-www-form-urlencoded"
+                        }
+                      ],
+                      "body": {
+                        "mode": "urlencoded",
+                        "urlencoded": [
+                          {
+                            "key": "name",
+                            "value": "{{name}}",
+                            "type": "text"
+                          },
+                          {
+                            "key": "reasonRequired",
+                            "value": "{{reasonRequired}}",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      "url": {
+                        "raw": "http://localhost/api/v1/registration-state",
+                        "protocol": "http",
+                        "host": [
+                          "localhost"
+                        ],
+                        "path": [
+                          "api",
+                          "v1",
+                          "registration-state"
+                        ]
+                      }
+                    },
+                    "response": []
+                  }
+                ],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin-token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "_postman_isSubFolder": true
+              },
+              {
+                "name": "nonadmin",
+                "item": [
+                  {
+                    "name": "/create-forbidden",
+                    "event": [
+                      {
+                        "listen": "prerequest",
+                        "script": {
+                          "id": "e93da247-3c1c-4c98-9a51-951ba78c756b",
+                          "exec": [
+                            "vars = pm.variables;",
+                            "",
+                            "vars.set('name', ' ');",
+                            "vars.set('reasonRequired', \"fdsf sdf\");"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      },
+                      {
+                        "listen": "test",
+                        "script": {
+                          "id": "7de048fd-65f4-418a-b220-774ceb87b452",
+                          "exec": [
+                            "pm.test(\"Status is 403\", function () {",
+                            "    pm.response.to.have.status(403);",
+                            "});"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      }
+                    ],
+                    "request": {
+                      "method": "POST",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "name": "Content-Type",
+                          "type": "text",
+                          "value": "application/x-www-form-urlencoded"
+                        }
+                      ],
+                      "body": {
+                        "mode": "urlencoded",
+                        "urlencoded": [
+                          {
+                            "key": "name",
+                            "value": "{{name}}",
+                            "type": "text"
+                          },
+                          {
+                            "key": "reasonRequired",
+                            "value": "{{reasonRequired}}",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      "url": {
+                        "raw": "http://localhost/api/v1/registration-state",
+                        "protocol": "http",
+                        "host": [
+                          "localhost"
+                        ],
+                        "path": [
+                          "api",
+                          "v1",
+                          "registration-state"
+                        ]
+                      }
+                    },
+                    "response": []
+                  }
+                ],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{nonadmin-token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "0e148c74-038f-453d-8365-94dadd455ab2",
+                      "type": "text/javascript",
+                      "exec": [
+                        ""
+                      ]
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "01c5b5b2-820c-48db-86fe-336fd476d8ca",
+                      "type": "text/javascript",
+                      "exec": [
+                        ""
+                      ]
+                    }
+                  }
+                ],
+                "_postman_isSubFolder": true
+              }
+            ],
+            "_postman_isSubFolder": true
+          }
+        ]
 		}
 	]
 }

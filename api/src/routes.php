@@ -109,6 +109,12 @@ $app->group('/v1', function () {
             ->add(new Validation($this->getContainer()['validation']['getRegistrationStateById']))
             ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
             ->add($jwtMiddleware);
+
+        $this->post('', RegistrationStateController::class . ':createRegistrationState')
+            ->add(new ValidationErrorResponseBuilder())
+            ->add(new Validation($this->getContainer()['validation']['createRegistrationState']))
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+            ->add($jwtMiddleware);
     });
 
     // User
