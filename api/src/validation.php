@@ -123,6 +123,10 @@ $container['validation'] = function () {
         'updateEventType' => [
             'title' => v::optional(v::notEmpty()->length(1, 51)),
             'color' => v::optional(v::hexRgbColor())
+        ],
+        'createRegistrationState' => [
+            'name' => v::notEmpty()->length(1, 256),
+            'reasonRequired' => v::boolVal()
         ]
     ];
 };

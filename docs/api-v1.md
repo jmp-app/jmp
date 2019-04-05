@@ -746,17 +746,43 @@ POST /v1/registration-state
 
 Parameters:
 
-| Field          | Description                       | Required |
-| -------------- | --------------------------------- | -------- |
-| name           | The name                          | ✔️        |
-| reasonRequired | If a reason / excuse is mandatory | ✔️        |
+| Field          | Description                       | Required | Type |
+| -------------- | --------------------------------- | -------- | ---- |
+| name           | The name                          | ✔       |varchar(255) |
+| reasonRequired | If a reason / excuse is mandatory | ✔       |boolean(0 or 1)
 
 Example request data:
 
 ```json
 {
     "name": "Accepted",
-    "reasonRequired": false
+    "reasonRequired": 1
+}
+```
+
+Access rights: authentication required, user has to be an admin
+
+Returns: the [Registration State](#Registration State)
+
+### Update Registration State
+
+```http
+PUT /v1/registration-state/{id}
+```
+
+Parameters:
+
+| Field          | Description                       | Required | Type |
+| -------------- | --------------------------------- | -------- | ---- |
+| name           | The name                          | ❌       | varchar(255) |
+| reasonRequired | If a reason / excuse is mandatory | ❌       | boolean(0 or 1)
+
+Example request data:
+
+```json
+{
+    "name": "Accepted",
+    "reasonRequired": 0
 }
 ```
 
@@ -797,6 +823,8 @@ DELETE /v1/registration-state/{id}
 Parameters: none
 
 Access rights: authentication required, user has to be an admin
+
+Returns: 204 or errors
 
 ### Get Registration State from Event
 

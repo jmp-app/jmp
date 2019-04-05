@@ -2,6 +2,7 @@
 
 namespace jmp\Controllers;
 
+use jmp\Models\RegistrationState;
 use jmp\Services\RegistrationStateService;
 use jmp\Utils\Converter;
 use Monolog\Logger;
@@ -28,6 +29,25 @@ class RegistrationStateController
     {
         $this->registrationStateService = $container->get('registrationStateService');
         $this->logger = $container->get('logger');
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function createRegistrationState(Request $request, Response $response): Response
+    {
+        $registrationState = new RegistrationState($request->getParsedBody());
+
+        $optional = $this->registrationStateService->createRegistrationState($registrationState);
+
+        if ($optional->isFailure()) {
+            $this->logger->error('Failed to create registration state with the fields: {' . Converter::convert($registrationState) . '}');
+            return $response->withStatus(500);
+        }
+
+        return $response->withJson(Converter::convert($optional->getData()));
     }
 
     public function getAllRegStates(Request $request, Response $response): Response

@@ -348,7 +348,7 @@ You can run the tests with the postman runner (don't forget to set the jmp-envir
 
 newman:
 ````bash
-make test DIR="$(pwd)"
+make test dir="$(pwd)"
 ````
 
 ### Travis CI and Build Status:  
