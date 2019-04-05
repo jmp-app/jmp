@@ -15,7 +15,7 @@ before_install:
 
 install:
   # Build and start the containers
-  - make build-up
+  - docker-compose up -d --build
   # Install php dependencies
   - cd api/
   - composer install --no-interaction
