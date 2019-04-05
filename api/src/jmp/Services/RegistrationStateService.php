@@ -25,6 +25,53 @@ class RegistrationStateService
     }
 
     /**
+     * @param RegistrationState $registrationState
+     * @return Optional
+     */
+    public function createRegistrationState(RegistrationState $registrationState): Optional
+    {
+        $sql = <<<SQL
+INSERT INTO jmp.registration_state
+(jmp.registration_state.name, jmp.registration_state.reason_required) 
+VALUES (:name, :reasonRequired)
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':name', $registrationState->name);
+        $stmt->bindParam(':reasonRequired', $registrationState->reasonRequired);
+
+        if ($stmt->execute() === false) {
+            return Optional::failure();
+        }
+
+        $registrationStateId = $this->getLastInsertedEventTypeId();
+        if ($registrationStateId === false) {
+            return Optional::failure();
+        }
+
+        $registrationStateId = $registrationStateId['id'];
+
+        return $this->getRegistrationStateById($registrationStateId);
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getLastInsertedEventTypeId()
+    {
+        $sql = <<< SQL
+SELECT LAST_INSERT_ID() as id;
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        // Gets the ID of the inserted event
+        $stmt->execute();
+
+        $eventId = $stmt->fetch();
+        return $eventId;
+    }
+
+    /**
      * @return Optional
      */
     public function getAllRegStates()
