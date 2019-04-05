@@ -1,5 +1,5 @@
 <template>
-    <form>
+    <div>
         <div class="form-group">
             <label for="regState">{{ $t("registration.state") }}</label>
             <select @change="handleChange()" class="form-control" id="regState" v-model="selected">
@@ -18,7 +18,7 @@
             </div>
         </div>
         <v-btn @click="handleSubmit()" color="error" v-show="hasChanges">{{ $t("submit") }}</v-btn>
-    </form>
+    </div>
 </template>
 
 <script>

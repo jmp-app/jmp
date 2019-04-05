@@ -613,16 +613,16 @@
         },
         {
             "name": "respect/validation",
-            "version": "1.1.29",
+          "version": "1.1.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Respect/Validation.git",
-                "reference": "f8c90fa36859ca41c766efcf0c476d58913a7767"
+              "reference": "9bafee191d9c560827105a849e2b29d8446f0f6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Respect/Validation/zipball/f8c90fa36859ca41c766efcf0c476d58913a7767",
-                "reference": "f8c90fa36859ca41c766efcf0c476d58913a7767",
+              "url": "https://api.github.com/repos/Respect/Validation/zipball/9bafee191d9c560827105a849e2b29d8446f0f6f",
+              "reference": "9bafee191d9c560827105a849e2b29d8446f0f6f",
                 "shasum": ""
             },
             "require": {
@@ -632,7 +632,7 @@
             "require-dev": {
                 "egulias/email-validator": "~1.2 || ~2.1",
                 "mikey179/vfsstream": "^1.5",
-                "phpunit/phpunit": "~4.0",
+              "phpunit/phpunit": "~4.0 || ~5.0",
                 "symfony/validator": "~2.6.9",
                 "zendframework/zend-validator": "~2.3"
             },
@@ -672,20 +672,20 @@
                 "validation",
                 "validator"
             ],
-            "time": "2018-11-04T21:58:45+00:00"
+          "time": "2019-03-31T13:27:49+00:00"
         },
         {
             "name": "slim/slim",
-            "version": "3.11.0",
+          "version": "3.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "d378e70431e78ee92ee32ddde61ecc72edf5dc0a"
+              "reference": "f4947cc900b6e51cbfda58b9f1247bca2f76f9f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/d378e70431e78ee92ee32ddde61ecc72edf5dc0a",
-                "reference": "d378e70431e78ee92ee32ddde61ecc72edf5dc0a",
+              "url": "https://api.github.com/repos/slimphp/Slim/zipball/f4947cc900b6e51cbfda58b9f1247bca2f76f9f0",
+              "reference": "f4947cc900b6e51cbfda58b9f1247bca2f76f9f0",
                 "shasum": ""
             },
             "require": {
@@ -743,20 +743,78 @@
                 "micro",
                 "router"
             ],
-            "time": "2018-09-16T10:54:21+00:00"
+          "time": "2019-01-15T13:21:25+00:00"
+        },
+      {
+        "name": "symfony/polyfill-ctype",
+        "version": "v1.11.0",
+        "source": {
+          "type": "git",
+          "url": "https://github.com/symfony/polyfill-ctype.git",
+          "reference": "82ebae02209c21113908c229e9883c419720738a"
+        },
+        "dist": {
+          "type": "zip",
+          "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/82ebae02209c21113908c229e9883c419720738a",
+          "reference": "82ebae02209c21113908c229e9883c419720738a",
+          "shasum": ""
+        },
+        "require": {
+          "php": ">=5.3.3"
+        },
+        "suggest": {
+          "ext-ctype": "For best performance"
+        },
+        "type": "library",
+        "extra": {
+          "branch-alias": {
+            "dev-master": "1.11-dev"
+          }
+        },
+        "autoload": {
+          "psr-4": {
+            "Symfony\\Polyfill\\Ctype\\": ""
+          },
+          "files": [
+            "bootstrap.php"
+          ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+          "MIT"
+        ],
+        "authors": [
+          {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+          },
+          {
+            "name": "Gert de Pagter",
+            "email": "backendtea@gmail.com"
+          }
+        ],
+        "description": "Symfony polyfill for ctype functions",
+        "homepage": "https://symfony.com",
+        "keywords": [
+          "compatibility",
+          "ctype",
+          "polyfill",
+          "portable"
+        ],
+        "time": "2019-02-06T07:57:58+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.10.0",
+          "version": "v1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "c79c051f5b3a46be09205c73b80b346e4153e494"
+              "reference": "fe5e94c604826c35a32fa832f35bd036b6799609"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/c79c051f5b3a46be09205c73b80b346e4153e494",
-                "reference": "c79c051f5b3a46be09205c73b80b346e4153e494",
+              "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/fe5e94c604826c35a32fa832f35bd036b6799609",
+              "reference": "fe5e94c604826c35a32fa832f35bd036b6799609",
                 "shasum": ""
             },
             "require": {
@@ -768,7 +826,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.9-dev"
+                  "dev-master": "1.11-dev"
                 }
             },
             "autoload": {
@@ -802,7 +860,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2018-09-21T13:07:52+00:00"
+          "time": "2019-02-06T07:57:58+00:00"
         },
         {
             "name": "tuupola/callable-handler",
@@ -859,16 +917,16 @@
         },
         {
             "name": "tuupola/http-factory",
-          "version": "1.0.2",
+          "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tuupola/http-factory.git",
-              "reference": "60f44b13e5363fbe6876b5b5edc03af5e4cb6294"
+              "reference": "1fd4eaafe3a6e0c26d288e3b3e17d777ea1991bf"
             },
             "dist": {
                 "type": "zip",
-              "url": "https://api.github.com/repos/tuupola/http-factory/zipball/60f44b13e5363fbe6876b5b5edc03af5e4cb6294",
-              "reference": "60f44b13e5363fbe6876b5b5edc03af5e4cb6294",
+              "url": "https://api.github.com/repos/tuupola/http-factory/zipball/1fd4eaafe3a6e0c26d288e3b3e17d777ea1991bf",
+              "reference": "1fd4eaafe3a6e0c26d288e3b3e17d777ea1991bf",
                 "shasum": ""
             },
             "require": {
@@ -912,20 +970,20 @@
                 "psr-17",
                 "psr-7"
             ],
-          "time": "2018-12-22T06:14:23+00:00"
+          "time": "2019-01-11T15:13:01+00:00"
         },
         {
             "name": "tuupola/slim-jwt-auth",
-            "version": "3.1.1",
+          "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tuupola/slim-jwt-auth.git",
-                "reference": "e50fa3cc6135abdc1b03e88c0425258a4955d01b"
+              "reference": "9350eb8c1f9a36c79b6275297aee11f9d7184471"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tuupola/slim-jwt-auth/zipball/e50fa3cc6135abdc1b03e88c0425258a4955d01b",
-                "reference": "e50fa3cc6135abdc1b03e88c0425258a4955d01b",
+              "url": "https://api.github.com/repos/tuupola/slim-jwt-auth/zipball/9350eb8c1f9a36c79b6275297aee11f9d7184471",
+              "reference": "9350eb8c1f9a36c79b6275297aee11f9d7184471",
                 "shasum": ""
             },
             "require": {
@@ -938,12 +996,12 @@
                 "tuupola/http-factory": "^0.4.0|^1.0"
             },
             "require-dev": {
-                "codedungeon/phpunit-result-printer": "^0.5.4",
+              "codedungeon/phpunit-result-printer": "^0.23.4",
                 "equip/dispatch": "^2.0",
-                "overtrue/phplint": "^0.2.4",
+              "overtrue/phplint": "^1.0",
                 "phpstan/phpstan": "^0.9.1",
-                "phpunit/phpunit": "^6.5",
-                "squizlabs/php_codesniffer": "^2.3",
+              "phpunit/phpunit": "^6.0|^7.0",
+              "squizlabs/php_codesniffer": "^3.4",
                 "zendframework/zend-diactoros": "^1.3|^2.0"
             },
             "type": "library",
@@ -965,7 +1023,7 @@
                 {
                     "name": "Mika Tuupola",
                     "email": "tuupola@appelsiini.net",
-                    "homepage": "http://www.appelsiini.net/",
+                  "homepage": "https://appelsiini.net/",
                     "role": "Developer"
                 }
             ],
@@ -979,24 +1037,25 @@
                 "psr-15",
                 "psr-7"
             ],
-            "time": "2018-10-12T11:44:47+00:00"
+          "time": "2019-03-11T09:26:29+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
-          "version": "v2.5.2",
+          "version": "v2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-              "reference": "cfd5dc225767ca154853752abc93aeec040fcf36"
+              "reference": "2a7dcf7e3e02dc5e701004e51a6f304b713107d5"
             },
             "dist": {
                 "type": "zip",
-              "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/cfd5dc225767ca154853752abc93aeec040fcf36",
-              "reference": "cfd5dc225767ca154853752abc93aeec040fcf36",
+              "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/2a7dcf7e3e02dc5e701004e51a6f304b713107d5",
+              "reference": "2a7dcf7e3e02dc5e701004e51a6f304b713107d5",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+              "php": ">=5.3.9",
+              "symfony/polyfill-ctype": "^1.9"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8.35 || ^5.0"
@@ -1004,7 +1063,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                  "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -1029,7 +1088,7 @@
                 "env",
                 "environment"
             ],
-          "time": "2018-10-30T17:29:25+00:00"
+          "time": "2019-01-29T11:11:52+00:00"
         }
     ],
     "packages-dev": [],
