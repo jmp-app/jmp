@@ -14893,6 +14893,58 @@
                       }
                     },
                     "response": []
+                  },
+                  {
+                    "name": "/delete",
+                    "event": [
+                      {
+                        "listen": "prerequest",
+                        "script": {
+                          "id": "121a2e98-00b0-4c39-be9d-ef608b55c0cf",
+                          "exec": [
+                            "vars = pm.variables;",
+                            "",
+                            "registrationStateId = pm.environment.get('created-registration-state-id');",
+                            "vars.set('registrationStateId', registrationStateId);"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      },
+                      {
+                        "listen": "test",
+                        "script": {
+                          "id": "a4396c84-41ae-4fc1-9bed-c7b2156aec18",
+                          "exec": [
+                            "pm.test(\"Status is 204\", function () {",
+                            "    pm.response.to.have.status(204);",
+                            "});"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      }
+                    ],
+                    "request": {
+                      "method": "DELETE",
+                      "header": [],
+                      "body": {
+                        "mode": "raw",
+                        "raw": ""
+                      },
+                      "url": {
+                        "raw": "http://localhost/api/v1/registration-state/{{registrationStateId}}",
+                        "protocol": "http",
+                        "host": [
+                          "localhost"
+                        ],
+                        "path": [
+                          "api",
+                          "v1",
+                          "registration-state",
+                          "{{registrationStateId}}"
+                        ]
+                      }
+                    },
+                    "response": []
                   }
                 ],
                 "auth": {
@@ -15012,6 +15064,403 @@
                     }
                   }
                 ],
+                "_postman_isSubFolder": true
+              }
+            ],
+            "_postman_isSubFolder": true
+          },
+          {
+            "name": "delete",
+            "item": [
+              {
+                "name": "admin",
+                "item": [
+                  {
+                    "name": "/create",
+                    "event": [
+                      {
+                        "listen": "prerequest",
+                        "script": {
+                          "id": "e93da247-3c1c-4c98-9a51-951ba78c756b",
+                          "exec": [
+                            "vars = pm.variables;",
+                            "",
+                            "vars.set('name', 'test-registration-state');",
+                            "vars.set('reasonRequired', 1);"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      },
+                      {
+                        "listen": "test",
+                        "script": {
+                          "id": "7de048fd-65f4-418a-b220-774ceb87b452",
+                          "exec": [
+                            "vars = pm.variables;",
+                            "",
+                            "pm.test(\"Status is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test('Values are correct', function() {",
+                            "    json = pm.response.json();",
+                            "    pm.expect(json.name).to.be.eq(vars.get('name'));",
+                            "    pm.response.to.have.jsonBody('id');",
+                            "    pm.expect(json.id).to.be.a('number');",
+                            "    pm.expect(json.reasonRequired).to.eq(Boolean(vars.get('reasonRequired')));",
+                            "});",
+                            "",
+                            "pm.environment.set(\"created-registration-state-id\", pm.response.json().id);"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      }
+                    ],
+                    "request": {
+                      "method": "POST",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "name": "Content-Type",
+                          "value": "application/x-www-form-urlencoded",
+                          "type": "text"
+                        }
+                      ],
+                      "body": {
+                        "mode": "urlencoded",
+                        "urlencoded": [
+                          {
+                            "key": "name",
+                            "value": "{{name}}",
+                            "type": "text"
+                          },
+                          {
+                            "key": "reasonRequired",
+                            "value": "{{reasonRequired}}",
+                            "type": "text"
+                          }
+                        ]
+                      },
+                      "url": {
+                        "raw": "http://localhost/api/v1/registration-state",
+                        "protocol": "http",
+                        "host": [
+                          "localhost"
+                        ],
+                        "path": [
+                          "api",
+                          "v1",
+                          "registration-state"
+                        ]
+                      }
+                    },
+                    "response": []
+                  },
+                  {
+                    "name": "/delete",
+                    "event": [
+                      {
+                        "listen": "prerequest",
+                        "script": {
+                          "id": "121a2e98-00b0-4c39-be9d-ef608b55c0cf",
+                          "exec": [
+                            "vars = pm.variables;",
+                            "",
+                            "registrationStateId = pm.environment.get('created-registration-state-id');",
+                            "vars.set('registrationStateId', registrationStateId);"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      },
+                      {
+                        "listen": "test",
+                        "script": {
+                          "id": "a4396c84-41ae-4fc1-9bed-c7b2156aec18",
+                          "exec": [
+                            "pm.test(\"Status is 204\", function () {",
+                            "    pm.response.to.have.status(204);",
+                            "});"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      }
+                    ],
+                    "request": {
+                      "method": "DELETE",
+                      "header": [],
+                      "body": {
+                        "mode": "raw",
+                        "raw": ""
+                      },
+                      "url": {
+                        "raw": "http://localhost/api/v1/registration-state/{{registrationStateId}}",
+                        "protocol": "http",
+                        "host": [
+                          "localhost"
+                        ],
+                        "path": [
+                          "api",
+                          "v1",
+                          "registration-state",
+                          "{{registrationStateId}}"
+                        ]
+                      }
+                    },
+                    "response": []
+                  },
+                  {
+                    "name": "/delete-not-found",
+                    "event": [
+                      {
+                        "listen": "prerequest",
+                        "script": {
+                          "id": "121a2e98-00b0-4c39-be9d-ef608b55c0cf",
+                          "exec": [
+                            "vars = pm.variables;",
+                            "",
+                            "vars.set('registrationStateId', -1);"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      },
+                      {
+                        "listen": "test",
+                        "script": {
+                          "id": "a4396c84-41ae-4fc1-9bed-c7b2156aec18",
+                          "exec": [
+                            "pm.test(\"Status is 404\", function () {",
+                            "    pm.response.to.have.status(404);",
+                            "});"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      }
+                    ],
+                    "request": {
+                      "method": "DELETE",
+                      "header": [],
+                      "body": {
+                        "mode": "raw",
+                        "raw": ""
+                      },
+                      "url": {
+                        "raw": "http://localhost/api/v1/registration-state/{{registrationStateId}}",
+                        "protocol": "http",
+                        "host": [
+                          "localhost"
+                        ],
+                        "path": [
+                          "api",
+                          "v1",
+                          "registration-state",
+                          "{{registrationStateId}}"
+                        ]
+                      }
+                    },
+                    "response": []
+                  },
+                  {
+                    "name": "/delete-not-found-invalid-id",
+                    "event": [
+                      {
+                        "listen": "prerequest",
+                        "script": {
+                          "id": "121a2e98-00b0-4c39-be9d-ef608b55c0cf",
+                          "exec": [
+                            "vars = pm.variables;",
+                            "",
+                            "vars.set('registrationStateId', 9999);"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      },
+                      {
+                        "listen": "test",
+                        "script": {
+                          "id": "a4396c84-41ae-4fc1-9bed-c7b2156aec18",
+                          "exec": [
+                            "pm.test(\"Status is 404\", function () {",
+                            "    pm.response.to.have.status(404);",
+                            "});"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      }
+                    ],
+                    "request": {
+                      "method": "DELETE",
+                      "header": [],
+                      "body": {
+                        "mode": "raw",
+                        "raw": ""
+                      },
+                      "url": {
+                        "raw": "http://localhost/api/v1/registration-state/{{registrationStateId}}",
+                        "protocol": "http",
+                        "host": [
+                          "localhost"
+                        ],
+                        "path": [
+                          "api",
+                          "v1",
+                          "registration-state",
+                          "{{registrationStateId}}"
+                        ]
+                      }
+                    },
+                    "response": []
+                  }
+                ],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin-token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "bc6ea852-980b-4c1e-977b-39cf2f57ed2e",
+                      "type": "text/javascript",
+                      "exec": [
+                        ""
+                      ]
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "2f3a855e-92c7-47a9-bc01-ba8bb79e0ebf",
+                      "type": "text/javascript",
+                      "exec": [
+                        ""
+                      ]
+                    }
+                  }
+                ],
+                "_postman_isSubFolder": true
+              },
+              {
+                "name": "nonadmin",
+                "item": [
+                  {
+                    "name": "/delete-forbidden",
+                    "event": [
+                      {
+                        "listen": "prerequest",
+                        "script": {
+                          "id": "121a2e98-00b0-4c39-be9d-ef608b55c0cf",
+                          "exec": [
+                            "vars = pm.variables;",
+                            "",
+                            "vars.set('registrationStateId', 1);"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      },
+                      {
+                        "listen": "test",
+                        "script": {
+                          "id": "a4396c84-41ae-4fc1-9bed-c7b2156aec18",
+                          "exec": [
+                            "pm.test(\"Status is 403\", function () {",
+                            "    pm.response.to.have.status(403);",
+                            "});"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      }
+                    ],
+                    "request": {
+                      "method": "DELETE",
+                      "header": [],
+                      "body": {
+                        "mode": "raw",
+                        "raw": ""
+                      },
+                      "url": {
+                        "raw": "http://localhost/api/v1/registration-state/{{registrationStateId}}",
+                        "protocol": "http",
+                        "host": [
+                          "localhost"
+                        ],
+                        "path": [
+                          "api",
+                          "v1",
+                          "registration-state",
+                          "{{registrationStateId}}"
+                        ]
+                      }
+                    },
+                    "response": []
+                  },
+                  {
+                    "name": "/delete-not-found",
+                    "event": [
+                      {
+                        "listen": "prerequest",
+                        "script": {
+                          "id": "121a2e98-00b0-4c39-be9d-ef608b55c0cf",
+                          "exec": [
+                            "vars = pm.variables;",
+                            "",
+                            "vars.set('registrationStateId', -1);"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      },
+                      {
+                        "listen": "test",
+                        "script": {
+                          "id": "a4396c84-41ae-4fc1-9bed-c7b2156aec18",
+                          "exec": [
+                            "pm.test(\"Status is 404\", function () {",
+                            "    pm.response.to.have.status(404);",
+                            "});"
+                          ],
+                          "type": "text/javascript"
+                        }
+                      }
+                    ],
+                    "request": {
+                      "method": "DELETE",
+                      "header": [],
+                      "body": {
+                        "mode": "raw",
+                        "raw": ""
+                      },
+                      "url": {
+                        "raw": "http://localhost/api/v1/registration-state/{{registrationStateId}}",
+                        "protocol": "http",
+                        "host": [
+                          "localhost"
+                        ],
+                        "path": [
+                          "api",
+                          "v1",
+                          "registration-state",
+                          "{{registrationStateId}}"
+                        ]
+                      }
+                    },
+                    "response": []
+                  }
+                ],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{nonadmin-token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "_postman_isSubFolder": true
               }
             ],

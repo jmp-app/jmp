@@ -25,6 +25,22 @@ class RegistrationStateService
     }
 
     /**
+     * @param int $id
+     * @return bool
+     */
+    public function deleteRegistrationState(int $id): bool
+    {
+        $sql = <<<SQL
+DELETE FROM jmp.registration_state
+WHERE jmp.registration_state.id = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        return $stmt->execute();
+    }
+
+    /**
      * @param RegistrationState $registrationState
      * @return Optional
      */

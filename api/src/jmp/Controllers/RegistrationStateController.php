@@ -31,6 +31,24 @@ class RegistrationStateController
         $this->logger = $container->get('logger');
     }
 
+    public function deleteRegistrationState(Request $request, Response $response, array $args): Response
+    {
+        $id = $args['id'];
+
+        if ($this->registrationStateService->registrationStateExists($id) === false) {
+            return $response->withStatus(404);
+        }
+
+        $success = $this->registrationStateService->deleteRegistrationState($id);
+
+        if ($success === false) {
+            $this->logger->error('Failed to delete registration state with the id ' . $id . '.');
+            return $response->withStatus(500);
+        }
+
+        return $response->withStatus(204);
+    }
+
     /**
      * @param Request $request
      * @param Response $response

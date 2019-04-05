@@ -115,6 +115,10 @@ $app->group('/v1', function () {
             ->add(new Validation($this->getContainer()['validation']['createRegistrationState']))
             ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
             ->add($jwtMiddleware);
+
+        $this->delete('/{id:[0-9]+}', RegistrationStateController::class . ':deleteRegistrationState')
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+            ->add($jwtMiddleware);
     });
 
     // User
