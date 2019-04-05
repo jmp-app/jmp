@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "config": "^3.0.0",
+    "config": "^3.0.1",
     "dateformat": "^3.0.3",
     "font-color-contrast": "^1.0.3",
     "peer": "^0.2.10",
