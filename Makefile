@@ -1,6 +1,6 @@
 n ?= 2
 # Doesn't work in powershell
-dir="$(pwd)"
+dir ?="$(pwd)"
 
 help:
 # Doesn't work in powershell

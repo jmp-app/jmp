@@ -35,3 +35,12 @@
 | `JWT_SECRET` | JWT Signature  | `supersecretkeyyoushouldnotcommittogithub` | | **Generate a new private secret!** Read more at [stackoverflow](https://stackoverflow.com/a/31313582/7130107). You can use openssl to generate a secret. [HS256/HMAC](https://en.wikipedia.org/wiki/HMAC) is used for signing the jwt|
 | `JWT_SECURE` | https only | `false` | true, false |[read more](https://github.com/tuupola/slim-jwt-auth#security)|
 | `JWT_EXPIRATION` | validity in minutes | `7200` | Any integer greater than 0 | |
+
+**CORS Settings [.env](../api/.env):**  
+Read more: [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+
+| Name | Desc | Default Value | Options | Note |
+|------|------|---------------|---------|------|
+| `CORS_ALLOWED_ORIGINS` | Allowed Origins  | "*" | Comma seperated list of URLs as string  |  |
+| `CORS_ALLOWED_HEADERS` | Allowed Headers | "X-Requested-With, Content-Type, Accept, Origin, Authorization" | Comma seperated list of Headers as string |  |
+| `CORS_ALLOWED_METHODS` | Allowed Methods | "GET, POST, PUT, DELETE" | Comma seperated list of Methods as string | |

@@ -2,6 +2,7 @@
 
 // Define root path
 use Dotenv\Dotenv;
+use Monolog\Logger;
 
 defined('DS') ?: define('DS', DIRECTORY_SEPARATOR);
 defined('ROOT') ?: define('ROOT', dirname(__DIR__) . DS);
@@ -20,18 +21,18 @@ if (file_exists(ROOT . $db_dotenv_file)) {
 }
 
 /**Returns the log level int depending on the log level name
- * Default is @see \Monolog\Logger::ERROR
- * @param string $logLevel
+ * Default is @param string $logLevel
  * @return int
+ * @see \Monolog\Logger::ERROR
  */
 function getLogLevel(string $logLevel): int
 {
-    foreach (\Monolog\Logger::getLevels() as $key => $level) {
+    foreach (Logger::getLevels() as $key => $level) {
         if (strcasecmp($logLevel, $level) === 0) {
             return $key;
         }
     }
-    return \Monolog\Logger::ERROR;
+    return Logger::ERROR;
 }
 
 return [
@@ -82,5 +83,10 @@ return [
             'stdout' => getenv('APP_LOG_STDOUT') === "true",
             'level' => getLogLevel(getenv('APP_LOG_LEVEL')),
         ],
+        'cors' => [
+            'origins' => getenv('CORS_ALLOWED_ORIGINS'),
+            'headers' => getenv('CORS_ALLOWED_HEADERS'),
+            'methods' => getenv('CORS_ALLOWED_METHODS')
+        ]
     ]
 ];

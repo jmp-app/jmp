@@ -118,3 +118,26 @@ $container['phpErrorHandler'] = $container['errorHandler'] = function (Container
             ]));
     };
 };
+
+$container['notAllowedHandler'] = function (ContainerInterface $container) {
+    return function (RequestInterface $request, ResponseInterface $response, array $methods) {
+        return $response->withStatus(405)
+            ->withHeader('Allow', implode(', ', $methods))
+            ->withHeader('Content-type', 'application/json')
+            ->write(json_encode([
+                'allowedMethods' => $methods
+            ]));
+    };
+};
+
+$container['notFoundHandler'] = function (ContainerInterface $container) {
+    return function (RequestInterface $request, ResponseInterface $response) {
+        return $response->withStatus(404)
+            ->withHeader('Content-type', 'application/json')
+            ->write(json_encode([
+                'errors' => [
+                    'notFound' => 'Page Not Found'
+                ]
+            ]));
+    };
+};

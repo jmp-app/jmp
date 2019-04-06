@@ -9,21 +9,25 @@ use jmp\Controllers\RegistrationController;
 use jmp\Controllers\RegistrationStateController;
 use jmp\Controllers\UsersController;
 use jmp\Middleware\AuthenticationMiddleware;
+use jmp\Middleware\CORSMiddleware;
 use jmp\Middleware\ValidationErrorResponseBuilder;
 use jmp\Utils\PermissionLevel;
 use Psr\Container\ContainerInterface;
 use Tuupola\Middleware\JwtAuthentication;
 
 /** @var $app Slim\App */
+/** @var ContainerInterface $container */
+/** @var $jwtMiddleware JwtAuthentication */
+
+$container = $app->getContainer();
+$jwtMiddleware = $container['jwt'];
+
+// CORS
+$app->add(new CORSMiddleware($container['settings']['cors']));
 
 // API Routes - version 1
-$app->group('/v1', function () {
+$app->group('/v1', function () use ($container, $jwtMiddleware) {
     /** @var $this Slim\App */
-    /** @var ContainerInterface $container */
-    /** @var $jwtMiddleware JwtAuthentication */
-
-    $container = $this->getContainer();
-    $jwtMiddleware = $container['jwt'];
 
     $this->post('/login', LoginController::class . ':login')
         ->add(new ValidationErrorResponseBuilder())

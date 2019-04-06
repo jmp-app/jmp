@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "788f5f70-587c-4ddf-afb7-856b699a0881",
+      "_postman_id": "9882a2e0-168c-46d9-8a56-6031f58550e1",
 		"name": "jmp",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11629,7 +11629,10 @@
 												"type": "text"
 											}
 										],
-										"body": {},
+                                      "body": {
+                                        "mode": "raw",
+                                        "raw": ""
+                                      },
 										"url": {
 											"raw": "http://localhost/api/v1/groups/{{groupId}}",
 											"protocol": "http",
@@ -12874,7 +12877,10 @@
 												"type": "text"
 											}
 										],
-										"body": {},
+                                      "body": {
+                                        "mode": "raw",
+                                        "raw": ""
+                                      },
 										"url": {
 											"raw": "http://localhost/api/v1/groups/{{groupId}}",
 											"protocol": "http",
@@ -12931,7 +12937,10 @@
 												"value": "application/x-www-form-urlencoded"
 											}
 										],
-										"body": {},
+                                      "body": {
+                                        "mode": "raw",
+                                        "raw": ""
+                                      },
 										"url": {
 											"raw": "http://localhost/api/v1/groups/{{groupId}}",
 											"protocol": "http",
@@ -12988,7 +12997,10 @@
 												"value": "application/x-www-form-urlencoded"
 											}
 										],
-										"body": {},
+                                      "body": {
+                                        "mode": "raw",
+                                        "raw": ""
+                                      },
 										"url": {
 											"raw": "http://localhost/api/v1/groups/{{groupId}}",
 											"protocol": "http",
@@ -13062,7 +13074,10 @@
 												"value": "application/x-www-form-urlencoded"
 											}
 										],
-										"body": {},
+                                      "body": {
+                                        "mode": "raw",
+                                        "raw": ""
+                                      },
 										"url": {
 											"raw": "http://localhost/api/v1/groups/{{groupId}}",
 											"protocol": "http",
@@ -13119,7 +13134,10 @@
 												"value": "application/x-www-form-urlencoded"
 											}
 										],
-										"body": {},
+                                      "body": {
+                                        "mode": "raw",
+                                        "raw": ""
+                                      },
 										"url": {
 											"raw": "http://localhost/api/v1/groups/{{groupId}}",
 											"protocol": "http",
@@ -13728,7 +13746,10 @@
 												"type": "text"
 											}
 										],
-										"body": {},
+                                      "body": {
+                                        "mode": "raw",
+                                        "raw": ""
+                                      },
 										"url": {
 											"raw": "http://localhost/api/v1/groups/{{groupId}}",
 											"protocol": "http",
@@ -14483,7 +14504,10 @@
                               "type": "text"
                             }
                           ],
-                          "body": {},
+                          "body": {
+                            "mode": "raw",
+                            "raw": ""
+                          },
                           "url": {
                             "raw": "http://localhost/api/v1/groups/{{groupId}}",
                             "protocol": "http",
@@ -15465,6 +15489,131 @@
               }
             ],
             "_postman_isSubFolder": true
+          }
+        ]
+      },
+      {
+        "name": "customHandlers",
+        "item": [
+          {
+            "name": "methodNotAllowed",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "eaf57f0f-ab39-46c4-b4a4-cadf15b2509e",
+                  "exec": [
+                    "pm.test(\"Status is 405\", function () {",
+                    "    pm.response.to.have.status(405);",
+                    "});",
+                    "",
+                    "pm.test(\"Error is correct\", function() {",
+                    "    json = pm.response.json();",
+                    "    pm.response.to.have.jsonBody(\"allowedMethods\");",
+                    "    pm.expect(json.allowedMethods).to.be.an('array').that.includes('POST');",
+                    "})"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "GET",
+              "header": [],
+              "body": {
+                "mode": "raw",
+                "raw": ""
+              },
+              "url": {
+                "raw": "http://localhost/api/v1/login",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "path": [
+                  "api",
+                  "v1",
+                  "login"
+                ]
+              }
+            },
+            "response": []
+          },
+          {
+            "name": "notFound",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "eaf57f0f-ab39-46c4-b4a4-cadf15b2509e",
+                  "exec": [
+                    "pm.test(\"Status is 404\", function () {",
+                    "    pm.response.to.have.status(404);",
+                    "});",
+                    "",
+                    "pm.test(\"Error is correct\", function() {",
+                    "    json = pm.response.json();",
+                    "    pm.response.to.have.jsonBody(\"errors\");",
+                    "    pm.response.to.have.jsonBody(\"errors.notFound\");",
+                    "})"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "GET",
+              "header": [],
+              "body": {
+                "mode": "raw",
+                "raw": ""
+              },
+              "url": {
+                "raw": "http://localhost/api/v1/blablabla",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "path": [
+                  "api",
+                  "v1",
+                  "blablabla"
+                ]
+              }
+            },
+            "response": []
+          }
+        ],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{admin-token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "event": [
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "a8162aa0-5508-4eec-a703-98ac797748cd",
+              "type": "text/javascript",
+              "exec": [
+                ""
+              ]
+            }
+          },
+          {
+            "listen": "test",
+            "script": {
+              "id": "59f4c113-e0f2-4832-b073-6b33fd8e1b89",
+              "type": "text/javascript",
+              "exec": [
+                ""
+              ]
+            }
           }
         ]
 		}
