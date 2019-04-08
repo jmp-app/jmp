@@ -1,3 +1,4 @@
 docker/log/
 .idea/
 db.env
+cache/slim-cache.php
