@@ -53,13 +53,6 @@ $container['validation'] = function () {
                     v::noWhitespace()->numeric()->min(0)
                 )
             )],
-        'getEventById' => [
-            'id' => v::notEmpty()->noWhitespace()->numeric()
-        ],
-        'getRegistrationByEventIdAndUserId' => [
-            'eventId' => v::notEmpty()->noWhitespace()->numeric(),
-            'userId' => v::notEmpty()->noWhitespace()->numeric()
-        ],
         'createUser' => [
             'username' => v::notEmpty()->noWhitespace()->length(1, 101),
             'lastname' => v::optional(v::notEmpty()->noWhitespace()->length(1, 51)),
@@ -84,9 +77,6 @@ $container['validation'] = function () {
         'createGroup' => [
             'name' => v::notEmpty()->length(1, 45)
         ],
-        'getGroupById' => [
-            'id' => v::notEmpty()->noWhitespace()->numeric()
-        ],
         'updateGroup' => [
             'name' => v::optional(v::notEmpty()->length(1, 45))
         ],
@@ -108,13 +98,6 @@ $container['validation'] = function () {
             'userId' => v::notEmpty()->noWhitespace()->numeric()->min(0),
             'reason' => v::optional(v::notEmpty()->length(1, 80)),
             'registrationState' => v::optional(v::notEmpty()->noWhitespace()->numeric()->min(0))
-        ],
-        'getRegistrationStateById' => [
-            'registrationStateId' => v::notEmpty()->noWhitespace()->numeric()->min(0)
-        ],
-        'deleteRegistration' => [
-            'eventId' => v::notEmpty()->noWhitespace()->numeric()->min(0),
-            'userId' => v::notEmpty()->noWhitespace()->numeric()->min(0),
         ],
         'createEventType' => [
             'title' => v::notEmpty()->length(1, 51),

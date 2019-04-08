@@ -86,7 +86,7 @@ class RegistrationStateController
      */
     public function getRegistrationStateById(Request $request, Response $response, array $args): Response
     {
-        $id = $args['registrationStateId'];
+        $id = $args['id'];
         $optional = $this->registrationStateService->getRegistrationStateById($id);
 
         if ($optional->isFailure()) {
