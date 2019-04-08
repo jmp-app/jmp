@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 
 count=0
-while test "$(docker inspect --format='{{json .State.Health.Status}}' db)" = "\"healthy\"" && test ${count} -lt 10; do
-    echo "waiting for db to complete startup"
+while test "$(docker inspect --format='{{json .State.Health.Status}}' db)" != "\"healthy\"" && test ${count} -lt 10; do
+    echo "Waiting for db to complete startup"
     sleep 2s
     count=$((count+1))
 done

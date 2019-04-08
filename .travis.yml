@@ -20,6 +20,7 @@ install:
   - cd api/
   - composer install --no-interaction
   - cd ..
+  - sudo chmod u+x wait-for-db.sh
   - ./wait-for-db.sh
 
 script:
