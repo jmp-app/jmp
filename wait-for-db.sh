@@ -7,5 +7,6 @@ while test "$(docker inspect --format='{{json .State.Health.Status}}' db)" = "\"
     count=$((count+1))
 done
 if test ${count} -eq 10; then
-    exit 1 "Waited too long for db to start"
+    echo "Waited too long for db to start. Exit now"
+    exit 1
 fi
