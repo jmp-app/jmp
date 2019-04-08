@@ -39,7 +39,6 @@ return [
     'settings' => [
 
         'displayErrorDetails' => getenv('APP_DEBUG') === 'true' ? true : false, // set to false in production
-        'routerCacheFile' => getenv('APP_ROUTER_CACHE_FILE') === 'false' ? false : ROOT . getenv('APP_ROUTER_CACHE_FILE'),
 
         // App settings
         'app' => [
