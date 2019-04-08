@@ -49,6 +49,10 @@ services:
     env_file:
       - api/db.env
       - db.env
+    healthcheck:
+      test: mysql --protocol=socket -hlocalhost -u$$DB_USERNAME -p$$DB_PASSWORD -e 'SELECT 1'
+      interval: 1s
+      timeout: 1s
     volumes:
       - dbdata:/var/lib/mysql/
       - ./docker/db/:/docker-entrypoint-initdb.d/
