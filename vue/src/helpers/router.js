@@ -68,13 +68,6 @@ export const router = new Router({
             component: function () {
                 return import('../views/group/AddMembers.vue');
             }
-        },
-        {
-            path: '/events/:id',
-            name: 'events',
-            component: function () {
-                return import('../views/event/Bla.vue');
-            }
         }
     ]
 });
