@@ -13,12 +13,23 @@ help:
 	cat Makefile
 
 create-test-collection:
+# Don't use this script for local tests
 # make create-test-collection host="example.com" protocol="https" path="test/api"
 # Params:
 #   1. host: Name of the host or ip-address. E.g. example.com
 #	2. protocol: Protocol to query the api endpoints. Default is https
 #   3. path: Path to the api. Default is none. E.g. api or backend/jmp
 	./docker/newman/collections/create_test_collection.sh $(host) $(protocol) $(path)
+
+test-deployment:
+# Don't use this script for local tests
+# make test-deployment host="example.com" protocol="https" path="test/api"
+# Params:
+#   1. host: Name of the host or ip-address. E.g. example.com
+#   2. dir: project base directory. Default "$(pwd)"
+#   3. n: number of test iterations. Default 2
+	make test collection="${host}.postman_collection.json"
+
 
 test:
 # make test dir="$(pwd)" n=5

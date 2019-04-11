@@ -392,18 +392,14 @@ Replace **example.com** by your own domain.
 ## Test your deployed backend
 To run the newman test collection you have to do some search/replace with the [collection](../docker/newman/collections/jmp.postman_collection.json).
 
-The script [create_test_collection.sh](../create_test_collection.sh) or the Makefile task `create-test-collection` will do the work for you.
+The Makefile targets `create-test-collection` and `test-deployment` will do the work for you.
 Use it as described in [Create and run customized test script](#create-and-run-customized-test-script)
 
 ### Create and run customized test script
 Makefile
 ```bash
-make create-test-collection host="example.com" protocol="https" path="test/api"
-```
+make create-test-collection test-deployment dir="$(pwd)" host="example.com" protocol="https" path="test/api"
 
-Bash script
-```bash
-./docker/newman/collections/create_test_collection.sh example.com https example/api
 ```
 
 This script will make a customized copy in the [docker/newman/collections](../docker/newman/collections) directory with the given host, protocol and path.

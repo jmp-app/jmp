@@ -39,5 +39,3 @@ sed -i -- "s|\"http\"|\"${protocol}\"|g" "${host}.postman_collection.json"
 sed -i -- "s|\"api\",||g" "${host}.postman_collection.json"
 sed -i -- "s/\"protocol\": \"${protocol}\",//g" "${host}.postman_collection.json"
 sed -i -- "s/\"host\"/\"protocol\": \"${protocol}\",\n\"host\"/g" "${host}.postman_collection.json"
-cd ../../../
-make test dir="$(pwd)" collection="${host}.postman_collection.json"
