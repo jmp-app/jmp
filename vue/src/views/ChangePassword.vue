@@ -92,7 +92,7 @@
                 if (!this.formHasErrors) {
                     try {
                         const response = await passwordService.changePassword(this.currentPassword, this.newPassword);
-                        if (response.success) {
+                        if (response) {
                             if (window.history.length > 1) {
                                 this.$router.go(-1);
                             } else {
