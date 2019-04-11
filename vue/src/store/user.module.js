@@ -55,9 +55,6 @@ export const user = {
                 user.passwordChange = '0';
             }
 
-            console.log(user.isAdmin);
-            console.log(user.passwordChange);
-
             userService.createUser(user)
                 .then(user => commit('createUserSuccess', user))
                 .catch(

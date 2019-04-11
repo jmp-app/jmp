@@ -1,10 +1,35 @@
 n ?= 2
 # Doesn't work in powershell
 dir ?="$(pwd)"
+environment="jmp.postman_environment.json"
+collection="jmp.postman_collection.json"
+
+host="localhost"
+protocol="http"
+path="api"
 
 help:
 # Doesn't work in powershell
 	cat Makefile
+
+create-test-collection:
+# Don't use this script for local tests
+# make create-test-collection host="example.com" protocol="https" path="test/api"
+# Params:
+#   1. host: Name of the host or ip-address. E.g. example.com
+#	2. protocol: Protocol to query the api endpoints. Default is https
+#   3. path: Path to the api. Default is none. E.g. api or backend/jmp
+	bash docker/newman/collections/create_test_collection.sh $(host) $(protocol) $(path)
+
+test-deployment:
+# Don't use this script for local tests
+# make test-deployment host="example.com" protocol="https" path="test/api"
+# Params:
+#   1. host: Name of the host or ip-address. E.g. example.com
+#   2. dir: project base directory. Default "$(pwd)"
+#   3. n: number of test iterations. Default 2
+	make test collection="${host}.postman_collection.json"
+
 
 test:
 # make test dir="$(pwd)" n=5
@@ -12,7 +37,7 @@ test:
 #   1. dir: project base directory. Default "$(pwd)"
 #   2. n: number of test iterations. Default 2
 	docker pull postman/newman
-	docker run --network='host' -v "$(dir)/docker/newman/collections":/etc/newman -t  postman/newman run -e jmp.postman_environment.json -n $(n)  jmp.postman_collection.json
+	docker run --network='host' -v "$(dir)/docker/newman/collections":/etc/newman -t  postman/newman run -e $(environment) -n $(n)  $(collection)
 
 build-up:
 	docker-compose up -d --build

@@ -1,5 +1,5 @@
 {
-    "name": "jmp/jmp",
+  "name": "jmp/jmp",
     "homepage": "https://github.com/jmp-app/jmp#readme",
     "license": "MIT",
     "authors": [
@@ -8,17 +8,17 @@
         {"name": "Kay Mattern"}
     ],
     "require": {
-        "slim/slim": "^3.12",
+      "slim/slim": "^3.12",
         "davidepastore/slim-validation": "^0.5.1",
         "ext-pdo": "*",
-        "monolog/monolog": "^1.24",
-        "tuupola/slim-jwt-auth": "^3.2",
-        "vlucas/phpdotenv": "^3.3.3",
+      "monolog/monolog": "^1.24",
+      "tuupola/slim-jwt-auth": "^3.2",
+      "vlucas/phpdotenv": "^3.3.3",
         "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
-            "jmp\\": "src/jmp"
+          "jmp\\": "src/jmp"
         }
     },
     "scripts": {

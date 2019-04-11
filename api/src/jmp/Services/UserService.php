@@ -72,10 +72,10 @@ SQL;
     }
 
     /**
-     * Creates a new user and returns the created one by @uses UserService::getUserByUsername()
-     * The given user is saved as is. E.g password hashing must be done in advance
-     * @param User $user
+     * Creates a new user and returns the created one by @param User $user
      * @return Optional
+     * @uses UserService::getUserByUsername()
+     * The given user is saved as is. E.g password hashing must be done in advance
      */
     public function createUser(User $user): Optional
     {

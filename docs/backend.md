@@ -35,6 +35,10 @@ Make sure everything is running as explained in [README.md](../README.md).
     * [Create a new test](#create-a-new-test)
     * [Running Tests](#running-tests)
     * [Travis CI Build Status](#travis-ci-and-build-status)
+- [Deployment](#deployment)
+    * [Apache](#apache)
+        + [Test your deployed backend](#test-your-deployed-backend)
+        + [Create and run customized test script](#create-and-run-customized-test-script)
 
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
@@ -366,4 +370,40 @@ Everytime you push your changes, a Travis CI job is triggered and all tests are 
 Build Status:  
 [![Build Status](https://travis-ci.com/jmp-app/jmp.svg?branch=master)](https://travis-ci.com/jmp-app/jmp)
 
+# Deployment
+## Apache
+If you want to use the [Apache Web Server](https://httpd.apache.org/) isntead of nginx, you have to do some additional configuration.
+
+**Note:**  
+Replace **example.com** by your own domain.
+
+1. Create a separate local branch for your changes: `git checkout -b example.com`
+2. Install/Update php dependencies (a running app container or a local php composer installation is required):  
+`docker exec app composer install`  
+`docker exec app composer update`
+1. Configure your web hosting as described:
+    * At least php 7.1
+    * mysql or mariadb with:
+        * This scheme: [jmp](../docker/db/01_setup.sql)
+        * A database user with restricted privileges (SELECT, INSERT, UPDATE, DELETE on all tables of the jmp scheme) and a password
+2. Configure all environment variables as described in [dotenv](dotenv.md) and [Get Started](../README.md#installation).
+3. Rename the folder [api/public](../api/public) to [api/example.com](../api/example.com)
+4. Configure [.htaccess](../api/.htaccess):
+    * Change **example.com** to your own domain
+5. Copy [api](../api) to the webroot of your server
+6. [Test the api](#test-your-deployed-backend)
  
+### Test your deployed backend
+To run the newman test collection you have to do some search/replace with the [collection](../docker/newman/collections/jmp.postman_collection.json).
+
+The Makefile targets `create-test-collection` and `test-deployment` will do the work for you.
+Use it as described in [Create and run customized test script](#create-and-run-customized-test-script)
+
+#### Create and run customized test script
+Makefile
+```bash
+make create-test-collection test-deployment dir="$(pwd)" host="example.com" protocol="https" path="test/api"
+```
+
+This script will make a customized copy in the [docker/newman/collections](../docker/newman/collections) directory with the given host, protocol and path.
+So you can instantly test your deployment.

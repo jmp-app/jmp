@@ -88,6 +88,29 @@ SQL;
     }
 
     /**
+     * @param int $registrationStateId
+     * @return Optional
+     */
+    public function getRegistrationStateById(int $registrationStateId)
+    {
+        $sql = <<< SQL
+SELECT id, name, reason_required as reasonRequired
+FROM registration_state
+WHERE id = :registrationStateId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':registrationStateId', $registrationStateId);
+        $stmt->execute();
+        $registrationState = $stmt->fetch();
+        if ($registrationState === false) {
+            return Optional::failure();
+        } else {
+            return Optional::success(new RegistrationState($registrationState));
+        }
+    }
+
+    /**
      * @return Optional
      */
     public function getAllRegStates()
@@ -111,30 +134,6 @@ SQL;
 
         return Optional::success($registrationStates);
     }
-
-    /**
-     * @param int $registrationStateId
-     * @return Optional
-     */
-    public function getRegistrationStateById(int $registrationStateId)
-    {
-        $sql = <<< SQL
-SELECT id, name, reason_required as reasonRequired
-FROM registration_state
-WHERE id = :registrationStateId
-SQL;
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':registrationStateId', $registrationStateId);
-        $stmt->execute();
-        $registrationState = $stmt->fetch();
-        if ($registrationState === false) {
-            return Optional::failure();
-        } else {
-            return Optional::success(new RegistrationState($registrationState));
-        }
-    }
-
 
     /**
      * Checks whether a registration state with the given id already exists
