@@ -20,7 +20,7 @@ install:
   - cd api/
   - composer install --no-interaction
   - cd ..
-  - sudo ./wait-for-db.sh
+  - ./wait-for-db.sh
 
 script:
   - make test dir="$(pwd)"
