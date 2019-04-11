@@ -403,7 +403,6 @@ Use it as described in [Create and run customized test script](#create-and-run-c
 Makefile
 ```bash
 make create-test-collection test-deployment dir="$(pwd)" host="example.com" protocol="https" path="test/api"
-
 ```
 
 This script will make a customized copy in the [docker/newman/collections](../docker/newman/collections) directory with the given host, protocol and path.
