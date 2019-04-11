@@ -9,6 +9,11 @@ function changePassword(currentPassword, newPassword) {
         password: currentPassword,
         newPassword: newPassword
     }).then(response => {
-        return response.data;
+        // eslint-disable-next-line
+        if (response.status == 204) {
+            return true;
+        } else {
+            return response.data;
+        }
     });
 }
