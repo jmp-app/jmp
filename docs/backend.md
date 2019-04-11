@@ -35,6 +35,10 @@ Make sure everything is running as explained in [README.md](../README.md).
     * [Create a new test](#create-a-new-test)
     * [Running Tests](#running-tests)
     * [Travis CI Build Status](#travis-ci-and-build-status)
+- [Deployment](#deployment)
+    * [Apache](#apache)
+        + [Test your deployed backend](#test-your-deployed-backend)
+        + [Create and run customized test script](#create-and-run-customized-test-script)
 
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
@@ -389,13 +393,13 @@ Replace **example.com** by your own domain.
 5. Copy [api](../api) to the webroot of your server
 6. [Test the api](#test-your-deployed-backend)
  
-## Test your deployed backend
+### Test your deployed backend
 To run the newman test collection you have to do some search/replace with the [collection](../docker/newman/collections/jmp.postman_collection.json).
 
 The Makefile targets `create-test-collection` and `test-deployment` will do the work for you.
 Use it as described in [Create and run customized test script](#create-and-run-customized-test-script)
 
-### Create and run customized test script
+#### Create and run customized test script
 Makefile
 ```bash
 make create-test-collection test-deployment dir="$(pwd)" host="example.com" protocol="https" path="test/api"
