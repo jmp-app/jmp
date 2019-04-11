@@ -1,6 +1,6 @@
 {
 	"info": {
-      "_postman_id": "9882a2e0-168c-46d9-8a56-6031f58550e1",
+      "_postman_id": "af7a41ba-84ca-4576-8acf-dca676bcb63b",
 		"name": "jmp",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -140,6 +140,60 @@
 						}
 					},
 					"response": []
+                },
+              {
+                "name": "options",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "http://localhost/api/v1/login",
+                    "protocol": "http",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "login"
+                    ]
+                  }
+                },
+                "response": []
 				}
 			]
 		},
@@ -3003,66 +3057,6 @@
 									"response": []
 								},
 								{
-									"name": "/registration-bad-request",
-									"event": [
-										{
-											"listen": "prerequest",
-											"script": {
-												"id": "c0f6c653-0191-496d-bcdf-00231f656c12",
-												"exec": [
-													"vars = pm.variables;",
-													"",
-													"vars.set('eventId', -1);",
-													"vars.set('userId', 'dfdsf');"
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "test",
-											"script": {
-												"id": "27425c1a-fb6b-4ebd-ad3a-4bb502e55dc6",
-												"exec": [
-													"vars = pm.variables;",
-													"",
-													"pm.test(\"Status is 400\", function () {",
-													"    pm.response.to.have.status(400)",
-													"});",
-													"",
-													"pm.test(\"All errors are returned\", function () {",
-													"    pm.response.to.have.jsonBody(\"errors\");",
-													"    pm.response.to.have.jsonBody(\"errors.eventId\");",
-													"    pm.response.to.have.jsonBody(\"errors.userId\");",
-													"});"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "DELETE",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
-										"url": {
-											"raw": "localhost/api/v1/registration/{{eventId}}/{{userId}}",
-											"host": [
-												"localhost"
-											],
-											"path": [
-												"api",
-												"v1",
-												"registration",
-												"{{eventId}}",
-												"{{userId}}"
-											]
-										}
-									},
-									"response": []
-								},
-								{
 									"name": "/registration",
 									"event": [
 										{
@@ -3468,73 +3462,6 @@
 									"response": []
 								},
 								{
-									"name": "/registration-bad-request",
-									"event": [
-										{
-											"listen": "prerequest",
-											"script": {
-												"id": "c0f6c653-0191-496d-bcdf-00231f656c12",
-												"exec": [
-													"vars = pm.variables;",
-													"",
-													"vars.set('eventId', -1);",
-													"vars.set('userId', '1 1');"
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "test",
-											"script": {
-												"id": "27425c1a-fb6b-4ebd-ad3a-4bb502e55dc6",
-												"exec": [
-													"vars = pm.variables;",
-													"",
-													"pm.test(\"Status is 400\", function () {",
-													"    pm.response.to.have.status(400)",
-													"});",
-													"",
-													"pm.test(\"All errors are returned\", function () {",
-													"    pm.response.to.have.jsonBody(\"errors\");",
-													"    pm.response.to.have.jsonBody(\"errors.eventId\");",
-													"    pm.response.to.have.jsonBody(\"errors.userId\");",
-													"});"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "DELETE",
-										"header": [
-											{
-												"key": "Content-Type",
-												"name": "Content-Type",
-												"type": "text",
-												"value": "application/x-www-form-urlencoded"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
-										"url": {
-											"raw": "localhost/api/v1/registration/{{eventId}}/{{userId}}",
-											"host": [
-												"localhost"
-											],
-											"path": [
-												"api",
-												"v1",
-												"registration",
-												"{{eventId}}",
-												"{{userId}}"
-											]
-										}
-									},
-									"response": []
-								},
-								{
 									"name": "/registration",
 									"event": [
 										{
@@ -3734,6 +3661,114 @@
 						}
 					],
 					"_postman_isSubFolder": true
+                },
+              {
+                "name": "options-eventId-userId",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "localhost/api/v1/registration/1/1",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "registration",
+                      "1",
+                      "1"
+                    ]
+                  }
+                },
+                "response": []
+              },
+              {
+                "name": "options",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "localhost/api/v1/registration",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "registration"
+                    ]
+                  }
+                },
+                "response": []
 				}
 			],
 			"event": [
@@ -6197,6 +6232,115 @@
 						}
 					],
 					"_postman_isSubFolder": true
+                },
+              {
+                "name": "options",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "http://localhost/api/v1/events",
+                    "protocol": "http",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "events"
+                    ]
+                  }
+                },
+                "response": []
+              },
+              {
+                "name": "options-id",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "http://localhost/api/v1/events/1",
+                    "protocol": "http",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "events",
+                      "1"
+                    ]
+                  }
+                },
+                "response": []
 				}
 			],
 			"event": [
@@ -6872,6 +7016,115 @@
 						}
 					],
 					"_postman_isSubFolder": true
+                },
+              {
+                "name": "options",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "http://localhost/api/v1/user",
+                    "protocol": "http",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "user"
+                    ]
+                  }
+                },
+                "response": []
+              },
+              {
+                "name": "options-change-password",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "http://localhost/api/v1/user/change-password",
+                    "protocol": "http",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "user",
+                      "change-password"
+                    ]
+                  }
+                },
+                "response": []
 				}
 			],
 			"auth": {
@@ -9483,6 +9736,115 @@
 						}
 					],
 					"_postman_isSubFolder": true
+                },
+              {
+                "name": "options",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "http://localhost/api/v1/users",
+                    "protocol": "http",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "users"
+                    ]
+                  }
+                },
+                "response": []
+              },
+              {
+                "name": "options-id",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "http://localhost/api/v1/users/1",
+                    "protocol": "http",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "users",
+                      "1"
+                    ]
+                  }
+                },
+                "response": []
 				}
 			]
 		},
@@ -11359,6 +11721,114 @@
 						}
 					],
 					"_postman_isSubFolder": true
+                },
+              {
+                "name": "options",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "http://localhost/api/v1/event-types",
+                    "protocol": "http",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "event-types"
+                    ]
+                  }
+                },
+                "response": []
+              },
+              {
+                "name": "options-id",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "http://localhost/api/v1/event-types",
+                    "protocol": "http",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "event-types"
+                    ]
+                  }
+                },
+                "response": []
 				}
 			]
 		},
@@ -14750,6 +15220,227 @@
 						}
 					],
 					"_postman_isSubFolder": true
+              },
+              {
+                "name": "options",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "http://localhost/api/v1/groups",
+                    "protocol": "http",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "groups"
+                    ]
+                  }
+                },
+                "response": []
+              },
+              {
+                "name": "options-id",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "http://localhost/api/v1/groups/1",
+                    "protocol": "http",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "groups",
+                      "1"
+                    ]
+                  }
+                },
+                "response": []
+              },
+              {
+                "name": "options-id-leave",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "http://localhost/api/v1/groups/1/leave",
+                    "protocol": "http",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "groups",
+                      "1",
+                      "leave"
+                    ]
+                  }
+                },
+                "response": []
+              },
+              {
+                "name": "options-id-join",
+                "event": [
+                  {
+                    "listen": "prerequest",
+                    "script": {
+                      "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                      "exec": [
+                        ""
+                      ],
+                      "type": "text/javascript"
+                    }
+                  },
+                  {
+                    "listen": "test",
+                    "script": {
+                      "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                      "exec": [
+                        "pm.test(\"Status is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test(\"CORS Headers are set\", function() {",
+                        "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                        "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ],
+                "request": {
+                  "method": "OPTIONS",
+                  "header": [],
+                  "body": {
+                    "mode": "raw",
+                    "raw": ""
+                  },
+                  "url": {
+                    "raw": "http://localhost/api/v1/groups/1/join",
+                    "protocol": "http",
+                    "host": [
+                      "localhost"
+                    ],
+                    "path": [
+                      "api",
+                      "v1",
+                      "groups",
+                      "1",
+                      "join"
+                    ]
+                  }
+                },
+                "response": []
 				}
 			]
         },
@@ -15489,6 +16180,115 @@
               }
             ],
             "_postman_isSubFolder": true
+          },
+          {
+            "name": "options",
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                  "exec": [
+                    ""
+                  ],
+                  "type": "text/javascript"
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                  "exec": [
+                    "pm.test(\"Status is 200\", function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "",
+                    "pm.test(\"CORS Headers are set\", function() {",
+                    "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                    "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                    "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                    "});"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "OPTIONS",
+              "header": [],
+              "body": {
+                "mode": "raw",
+                "raw": ""
+              },
+              "url": {
+                "raw": "http://localhost/api/v1/registration-state",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "path": [
+                  "api",
+                  "v1",
+                  "registration-state"
+                ]
+              }
+            },
+            "response": []
+          },
+          {
+            "name": "options-id",
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "78116a04-f49b-4136-b0db-8fed6def2bc8",
+                  "exec": [
+                    ""
+                  ],
+                  "type": "text/javascript"
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "id": "6d064c8d-345a-4022-8069-64be859aebd2",
+                  "exec": [
+                    "pm.test(\"Status is 200\", function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "",
+                    "pm.test(\"CORS Headers are set\", function() {",
+                    "    pm.response.to.have.header('Access-Control-Allow-Origin');",
+                    "    pm.response.to.have.header('Access-Control-Allow-Headers');",
+                    "    pm.response.to.have.header('Access-Control-Allow-Methods');",
+                    "});"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "OPTIONS",
+              "header": [],
+              "body": {
+                "mode": "raw",
+                "raw": ""
+              },
+              "url": {
+                "raw": "http://localhost/api/v1/registration-state/1",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "path": [
+                  "api",
+                  "v1",
+                  "registration-state",
+                  "1"
+                ]
+              }
+            },
+            "response": []
           }
         ]
       },

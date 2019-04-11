@@ -24,7 +24,7 @@ up:
 rm-volume:
 	docker-compose down
 	docker volume rm jmp_dbdata
-	docker-compose up -d --build
+	docker-compose up -d
 
 down:
 	docker-compose down

@@ -203,6 +203,16 @@ SELECT user_id AS userId ...
 ```
 * A specific service doesn't query tables to which the service doesn't belong unless it's a join
 * Always use **[prepared statements](https://secure.php.net/manual/de/pdo.prepared-statements.php)**
+* Use `COALESCE` for updating an entry with optional parameters (Example from [EventService.php](../api/src/jmp/Services/EventService.php)):
+````sql
+UPDATE `jmp`.`event` e
+SET e.`title` = COALESCE(:title, e.`title`)
+WHERE e.`id` = :id
+````
+and use the `bindValue` method to set the parameters:
+````php
+$stmt->bindValue(':title', $params['title'], PDO::PARAM_STR);
+````
 
 
 # Developing a new route

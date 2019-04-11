@@ -32,7 +32,9 @@ class CORSMiddleware
      */
     public function __invoke(Request $request, Response $response, callable $next): Response
     {
-        $response = $next($request, $response);
+        if ($request->isOptions() === false) {
+            $response = $next($request, $response);
+        }
         return $response
             ->withHeader('Access-Control-Allow-Origin', $this->corsSettings['origins'])
             ->withHeader('Access-Control-Allow-Headers', $this->corsSettings['headers'])
