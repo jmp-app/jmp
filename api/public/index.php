@@ -1,5 +1,8 @@
 <?php
 
+// Required for jwt with apache web servers
+$_SERVER['HTTP_AUTHORIZATION'] = $_GET['Authorization'];
+
 require __DIR__ . '/../vendor/autoload.php';
 
 session_start();
