@@ -96,7 +96,7 @@
             },
             isAdmin: function () {
                 const user = JSON.parse(localStorage.getItem('user'));
-                return !!(user && user.isAdmin === 1);
+                return !!(user && user.isAdmin);
             },
             init: function () {
                 let showAll = this.showAll;

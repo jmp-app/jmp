@@ -1,5 +1,7 @@
 # ![JMP](logo.png)
 
+[![Build Status](https://travis-ci.com/jmp-app/jmp.svg?branch=master)](https://travis-ci.com/jmp-app/jmp)
+
 # Table of Contents:
 - [JMP](#jmplogopng)
 - [Getting Started](#getting-started)
@@ -20,6 +22,9 @@
 Make sure you have [docker](https://www.docker.com/) and [npm](https://www.npmjs.com/) installed on your machine.
 
 ## Installation
+
+There is also a Makefile accessible for the most common tasks: [Makefile](Makefile)  
+Run `make help` for more information.
 
 Clone the repository
 ```bash

@@ -1,35 +1,38 @@
 <?php
 
 // Define root path
+use Dotenv\Dotenv;
+use Monolog\Logger;
+
 defined('DS') ?: define('DS', DIRECTORY_SEPARATOR);
 defined('ROOT') ?: define('ROOT', dirname(__DIR__) . DS);
 
 // Load .env file
 if (file_exists(ROOT . '.env')) {
-    $dotenv = new Dotenv\Dotenv(ROOT);
+    $dotenv = Dotenv::create(ROOT);
     $dotenv->load();
 }
 
 // Load db.env file
 $db_dotenv_file = 'db.env';
 if (file_exists(ROOT . $db_dotenv_file)) {
-    $db_dotenv = new Dotenv\Dotenv(ROOT, $db_dotenv_file);
+    $db_dotenv = Dotenv::create(ROOT, $db_dotenv_file);
     $db_dotenv->load();
 }
 
 /**Returns the log level int depending on the log level name
- * Default is @see \Monolog\Logger::ERROR
- * @param string $logLevel
+ * Default is @param string $logLevel
  * @return int
+ * @see \Monolog\Logger::ERROR
  */
 function getLogLevel(string $logLevel): int
 {
-    foreach (\Monolog\Logger::getLevels() as $key => $level) {
+    foreach (Logger::getLevels() as $key => $level) {
         if (strcasecmp($logLevel, $level) === 0) {
             return $key;
         }
     }
-    return \Monolog\Logger::ERROR;
+    return Logger::ERROR;
 }
 
 return [
@@ -70,7 +73,7 @@ return [
 
         // Auth settings
         'auth' => [
-            'subjectIdentifier' => 'username'
+            'subjectIdentifier' => 'id'
         ],
 
         // Monolog settings
@@ -80,5 +83,10 @@ return [
             'stdout' => getenv('APP_LOG_STDOUT') === "true",
             'level' => getLogLevel(getenv('APP_LOG_LEVEL')),
         ],
+        'cors' => [
+            'origins' => getenv('CORS_ALLOWED_ORIGINS'),
+            'headers' => getenv('CORS_ALLOWED_HEADERS'),
+            'methods' => getenv('CORS_ALLOWED_METHODS')
+        ]
     ]
 ];
