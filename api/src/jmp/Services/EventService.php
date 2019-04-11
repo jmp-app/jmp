@@ -284,8 +284,8 @@ SQL;
     public function deleteEvent(int $id): bool
     {
         $sql = <<< SQL
-DELETE FROM jmp.event
-WHERE jmp.event.id = :id
+DELETE FROM event
+WHERE event.id = :id
 SQL;
 
         $stmt = $this->db->prepare($sql);
@@ -302,7 +302,7 @@ SQL;
     {
         $sql = <<< SQL
 SELECT *
-FROM jmp.event
+FROM event
 WHERE id = :eventId
 SQL;
         $stmt = $this->db->prepare($sql);
@@ -359,7 +359,7 @@ SQL;
     private function insertEvent(array $params): bool
     {
         $sql = <<< SQL
-INSERT INTO `jmp`.`event` (`title`, `from`, `to`, `place`, `description`, `event_type_id`,
+INSERT INTO `event` (`title`, `from`, `to`, `place`, `description`, `event_type_id`,
            `default_registration_state_id`)
 VALUES (:title, :from, :to, :place, :description, :eventType, :defaultRegistrationState);
 SQL;
@@ -419,7 +419,7 @@ SQL;
     private function updateEventFields(int $id, array $params)
     {
         $sql = <<< SQL
-UPDATE `jmp`.`event` e
+UPDATE `event` e
 SET e.`title`                         = COALESCE(:title, e.`title`),
     e.`from`                          = COALESCE(:from, e.`from`),
     e.`to`                            = COALESCE(:to, e.`to`),
