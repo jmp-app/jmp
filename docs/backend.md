@@ -389,7 +389,7 @@ Replace **example.com** by your own domain.
 2. Configure all environment variables as described in [dotenv](dotenv.md) and [Get Started](../README.md#installation).
 3. Rename the folder [api/public](../api/public) to [api/example.com](../api/example.com)
 4. Configure [.htaccess](../api/.htaccess):
-    * Change **example.com** to your own domain
+    * Change **public** to your own domain
 5. Copy [api](../api) to the webroot of your server
 6. [Test the api](#test-your-deployed-backend)
  
