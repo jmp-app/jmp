@@ -249,6 +249,9 @@
             },
             registrationStates() {
                 return this.$store.state.registrationStates.all.registrationStates;
+            },
+            eventTypes() {
+                return this.$store.state.eventTypes.all.eventTypes;
             }
         },
         methods: {
@@ -326,6 +329,7 @@
         mounted() {
             this.getEvent();
             this.$store.dispatch('registrationStates/getAll');
+            this.$store.dispatch('eventTypes/getAll');
         },
         watch: {
             event() {
