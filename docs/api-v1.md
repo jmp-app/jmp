@@ -365,10 +365,10 @@ PUT /v1/user/change-password
 
 Parameters:
 
-| Field       | Description                 | Required || Type |
-| ----------- | --------------------------- | -------- || ---- |
-| password    | The user's current password | ✔️        | varchar(255) |
-| newPassword | The new password to set     | ✔️        | varchar(255) |
+| Field       | Description                 | Required | Type |
+| ----------- | --------------------------- | -------- | ---- |
+| password    | The user's current password | ✔        | varchar(255) |
+| newPassword | The new password to set     | ✔        | varchar(255) |
 
 Access rights: authentication required
 
@@ -867,6 +867,10 @@ Example request data:
     }
 }
 ```
+
+**Note:**  
+When no registration state is delivered, the default registration state of the event is used.
+When the default registration state of the event requires a reason, but no reason is delivered, then it will create a default reason which equals the registration state name.
 
 Access rights: authentication required
 
