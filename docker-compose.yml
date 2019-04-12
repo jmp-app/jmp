@@ -10,14 +10,16 @@ services:
   app:
     build:
       context: .
-      dockerfile: docker/app/Dockerfile
+      dockerfile: api/Dockerfile
     container_name: app
     restart: unless-stopped
     tty: true
     environment:
       SERVICE_NAME: app
-      SERVICE_TAGS: dev
     working_dir: /var/www
+    env_file:
+      - api/db.env
+      - api/.env
     volumes:
       - ./api/:/var/www
 

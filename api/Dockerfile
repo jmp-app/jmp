@@ -24,7 +24,8 @@ RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
 # Copy composer files
-COPY api/composer*.json /var/www/
+COPY . /var/www/
+RUN rm -rf .env db.env *.htaccess
 
 # Set permissions for user www
 RUN chown www:www .
@@ -33,7 +34,11 @@ RUN chown www:www .
 USER www
 
 # Install dependecies form composer
-RUN composer install
+# --classmap-authoritative increases performance (for productive environments only
+RUN if [[ "$APP_ENV" == "prod" ]]; \
+    then composer install --classmap-authoritative
+    else composer install
+    fi
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
