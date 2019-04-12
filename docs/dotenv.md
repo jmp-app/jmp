@@ -27,7 +27,7 @@
 | `APP_LOG_LEVEL` | Logging level | `debug` | [Monolog Log Levels (case insensitive)](https://github.com/Seldaek/monolog/blob/master/doc/01-usage.md#log-levels) ||
 | `APP_LOG_STDOUT` | Logging to stdout | `true` | true, false |If set to true, you can use `docker logs app`|
 | `APP_LOG_FILE` | Log file | `log/app.log` | |File must be located in `api/` or a subdirectory, else php won't have the necessary permissions and will throw an exception |
-| `APP_ROUTER_CACHE_FILE` | Cache file | `cache/routes.cache.php` | Filepath or false |File must be located in `api/` or a already existing subdirectory, else php won't have the necessary permissions and will throw an exception [Read more about slim's cache file](https://akrabat.com/slims-route-cache-file/) |
+| `APP_ROUTER_CACHE_FILE` | Cache file | `false` | `cache/routes.cache.php` or `false` |File must be located in `api/` or a already existing subdirectory, else php won't have the necessary permissions and will throw an exception [Read more about slim's cache file](https://akrabat.com/slims-route-cache-file/) |
 
 
 **JWT Settings [.env](../api/.env):**
