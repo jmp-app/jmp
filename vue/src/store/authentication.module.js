@@ -22,7 +22,11 @@ export const authentication = {
                             // if password change is true then redirect user to change password
                             router.push('/change-password');
                         } else {
-                            router.push('/');
+                            if (window.history.length > 1) {
+                                this.$router.go(-1);
+                            } else {
+                                this.$router.push('/');
+                            }
                         }
                     },
                     error => {

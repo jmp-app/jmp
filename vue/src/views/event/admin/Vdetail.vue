@@ -158,12 +158,24 @@
             ></v-text-field><!-- Place -->
 
             <v-select
+                    :items="eventTypes"
+                    :label="$t('eventType.title')"
+                    :readonly="display()"
+                    :rules="rules.eventType"
+                    item-text="title"
+                    required
+                    return-object
+                    v-model="event.eventType"
+            ></v-select><!-- Event Type -->
+
+            <v-select
                     :items="registrationStates"
                     :label="$t('registration.state')"
                     :rules="rules.defaultRegistrationState"
                     item-text="name"
                     required
                     return-object
+                    :readonly="display()"
                     v-model="event.defaultRegistrationState"
             ></v-select><!-- Default Registration State -->
 
@@ -237,8 +249,11 @@
                     to: [
                         v => !!v || `${this.$t('fieldIsRequired', {fieldname: this.$t('event.to')})}`
                     ],
+                    eventType: [
+                        v => (!!v && !!v.id) || `${this.$t('fieldIsRequired', {fieldname: this.$t('eventType.title')})}`
+                    ],
                     defaultRegistrationState: [
-                        v => !!v || `${this.$t('fieldIsRequired', {fieldname: this.$t('registration.state')})}`
+                        v => (!!v && !!v.id) || `${this.$t('fieldIsRequired', {fieldname: this.$t('registration.state')})}`
                     ]
                 }
             };
@@ -297,15 +312,6 @@
                     this.$store.dispatch('events/getEventById', {eventId});
                 }
             },
-            formatDate: function (date) {
-                if (!date) return null;
-
-                const [year, month, dayTime] = date.split('-');
-                const [day] = dayTime.split('T');
-
-                console.log(`${month}/${day}/${year}`);
-                return `${month}/${day}/${year}`;
-            },
             parseDate: function (date) {
                 if (!date) return null;
 
@@ -316,6 +322,11 @@
                 const [year, month, dayTime] = dateTime.split('-');
                 const [day] = dayTime.split('T');
                 return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            },
+            cutTime: function (dateTime) {
+                // eslint-disable-next-line
+                const [date, time] = dateTime.split('T');
+                return time;
             },
             handleInputMenu1: function () {
                 this.menu1 = false;
@@ -336,10 +347,12 @@
                 if (this.event && this.event.from) {
                     this.from.date = this.cutDate(this.event.from);
                     this.from.parsedDate = this.parseDate(this.from.date);
+                    this.from.time = this.cutTime(this.event.from);
                 }
                 if (this.event && this.event.to) {
                     this.to.date = this.cutDate(this.event.to);
                     this.to.parsedDate = this.parseDate(this.to.date);
+                    this.to.time = this.cutTime(this.event.to);
                 }
             }
         }
