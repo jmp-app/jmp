@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "af7a41ba-84ca-4576-8acf-dca676bcb63b",
+    "_postman_id": "a1193843-308e-464b-b2d0-934ffee73607",
     "name": "jmp",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
@@ -299,6 +299,67 @@
                   "response": []
                 },
                 {
+                  "name": "/registration",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "c0f6c653-0191-496d-bcdf-00231f656c12",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 30);",
+                          "vars.set('userId', 163);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "27425c1a-fb6b-4ebd-ad3a-4bb502e55dc6",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 204\", function () {",
+                          "    pm.response.to.have.status(204);",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration/{{eventId}}/{{userId}}",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration",
+                        "{{eventId}}",
+                        "{{userId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
                   "name": "/registration-bad-request",
                   "event": [
                     {
@@ -581,7 +642,7 @@
                           "",
                           "vars.set('eventId', 33);",
                           "vars.set('userId', 162);",
-                          "vars.set('registrationState', 2);"
+                          "vars.set('registrationState', 3);"
                         ],
                         "type": "text/javascript"
                       }
@@ -742,6 +803,317 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "/registration-default-no-reason",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "b68e5378-d393-45d8-bb0c-0e595ccdfdaa",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 30);",
+                          "vars.set('userId', 163);",
+                          "vars.set('reason', 'On vacation');",
+                          "vars.set('registrationState', 2);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "21e3c9a9-2e07-4e77-a8ca-fa25812bb815",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"Values are correct\", function() {",
+                          "    json = pm.response.json();",
+                          "    pm.expect(json.eventId).to.eq(vars.get('eventId'));",
+                          "    pm.expect(json.userId).to.eq(vars.get('userId'));",
+                          "    if(json.registrationState.reasonRequired) {",
+                          "        pm.expect(json.reason).to.exist;",
+                          "        pm.expect(json.registrationState.id).to.exist;",
+                          "        pm.expect(json.reason).to.eq(json.registrationState.name);",
+                          "    }",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "key": "eventId",
+                          "value": "{{eventId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "userId",
+                          "value": "{{userId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "reason",
+                          "value": "{{reason}}",
+                          "type": "text",
+                          "disabled": true
+                        },
+                        {
+                          "key": "registrationState",
+                          "value": "{{registrationState}}",
+                          "type": "text",
+                          "disabled": true
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "/registration",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "c0f6c653-0191-496d-bcdf-00231f656c12",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 30);",
+                          "vars.set('userId', 163);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "27425c1a-fb6b-4ebd-ad3a-4bb502e55dc6",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 204\", function () {",
+                          "    pm.response.to.have.status(204);",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration/{{eventId}}/{{userId}}",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration",
+                        "{{eventId}}",
+                        "{{userId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "/registration-default-with-reason",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "b68e5378-d393-45d8-bb0c-0e595ccdfdaa",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 30);",
+                          "vars.set('userId', 163);",
+                          "vars.set('reason', 'On vacation');",
+                          "vars.set('registrationState', 2);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "21e3c9a9-2e07-4e77-a8ca-fa25812bb815",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"Values are correct\", function() {",
+                          "    json = pm.response.json();",
+                          "    pm.expect(json.eventId).to.eq(vars.get('eventId'));",
+                          "    pm.expect(json.userId).to.eq(vars.get('userId'));",
+                          "    if(json.registrationState.reasonRequired) {",
+                          "        pm.expect(json.reason).to.exist;",
+                          "        pm.expect(json.registrationState.id).to.exist;",
+                          "    }",
+                          "    pm.expect(json.reason).to.eq(vars.get('reason'));",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "type": "text",
+                        "value": "application/x-www-form-urlencoded"
+                      }
+                    ],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "key": "eventId",
+                          "value": "{{eventId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "userId",
+                          "value": "{{userId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "reason",
+                          "value": "{{reason}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "registrationState",
+                          "value": "{{registrationState}}",
+                          "type": "text",
+                          "disabled": true
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "/registration",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "c0f6c653-0191-496d-bcdf-00231f656c12",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 30);",
+                          "vars.set('userId', 163);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "27425c1a-fb6b-4ebd-ad3a-4bb502e55dc6",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 204\", function () {",
+                          "    pm.response.to.have.status(204);",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration/{{eventId}}/{{userId}}",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration",
+                        "{{eventId}}",
+                        "{{userId}}"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ],
               "auth": {
@@ -868,6 +1240,67 @@
                         "api",
                         "v1",
                         "registration"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "/registration",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "c0f6c653-0191-496d-bcdf-00231f656c12",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 32);",
+                          "vars.set('userId', 161);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "27425c1a-fb6b-4ebd-ad3a-4bb502e55dc6",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 204\", function () {",
+                          "    pm.response.to.have.status(204);",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration/{{eventId}}/{{userId}}",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration",
+                        "{{eventId}}",
+                        "{{userId}}"
                       ]
                     }
                   },
@@ -1156,7 +1589,7 @@
                           "",
                           "vars.set('eventId', 32);",
                           "vars.set('userId', 162);",
-                          "vars.set('registrationState', 1);"
+                          "vars.set('registrationState', 3);"
                         ],
                         "type": "text/javascript"
                       }
@@ -1317,6 +1750,317 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "/registration-default-no-reason",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "b68e5378-d393-45d8-bb0c-0e595ccdfdaa",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 32);",
+                          "vars.set('userId', 161);",
+                          "vars.set('reason', 'On vacation');",
+                          "vars.set('registrationState', 2);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "21e3c9a9-2e07-4e77-a8ca-fa25812bb815",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"Values are correct\", function() {",
+                          "    json = pm.response.json();",
+                          "    pm.expect(json.eventId).to.eq(vars.get('eventId'));",
+                          "    pm.expect(json.userId).to.eq(vars.get('userId'));",
+                          "    if(json.registrationState.reasonRequired) {",
+                          "        pm.expect(json.reason).to.exist;",
+                          "        pm.expect(json.registrationState.id).to.exist;",
+                          "        pm.expect(json.reason).to.eq(json.registrationState.name);",
+                          "    }",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "key": "eventId",
+                          "value": "{{eventId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "userId",
+                          "value": "{{userId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "reason",
+                          "value": "{{reason}}",
+                          "type": "text",
+                          "disabled": true
+                        },
+                        {
+                          "key": "registrationState",
+                          "value": "{{registrationState}}",
+                          "type": "text",
+                          "disabled": true
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "/registration",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "c0f6c653-0191-496d-bcdf-00231f656c12",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 32);",
+                          "vars.set('userId', 161);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "27425c1a-fb6b-4ebd-ad3a-4bb502e55dc6",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 204\", function () {",
+                          "    pm.response.to.have.status(204);",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration/{{eventId}}/{{userId}}",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration",
+                        "{{eventId}}",
+                        "{{userId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "/registration-default-with-reason",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "b68e5378-d393-45d8-bb0c-0e595ccdfdaa",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 32);",
+                          "vars.set('userId', 161);",
+                          "vars.set('reason', 'On vacation');",
+                          "vars.set('registrationState', 2);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "21e3c9a9-2e07-4e77-a8ca-fa25812bb815",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"Values are correct\", function() {",
+                          "    json = pm.response.json();",
+                          "    pm.expect(json.eventId).to.eq(vars.get('eventId'));",
+                          "    pm.expect(json.userId).to.eq(vars.get('userId'));",
+                          "    if(json.registrationState.reasonRequired) {",
+                          "        pm.expect(json.reason).to.exist;",
+                          "        pm.expect(json.registrationState.id).to.exist;",
+                          "    }",
+                          "    pm.expect(json.reason).to.eq(vars.get('reason'));",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "type": "text",
+                        "value": "application/x-www-form-urlencoded"
+                      }
+                    ],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "key": "eventId",
+                          "value": "{{eventId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "userId",
+                          "value": "{{userId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "reason",
+                          "value": "{{reason}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "registrationState",
+                          "value": "{{registrationState}}",
+                          "type": "text",
+                          "disabled": true
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "/registration",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "c0f6c653-0191-496d-bcdf-00231f656c12",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 32);",
+                          "vars.set('userId', 161);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "27425c1a-fb6b-4ebd-ad3a-4bb502e55dc6",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 204\", function () {",
+                          "    pm.response.to.have.status(204);",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration/{{eventId}}/{{userId}}",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration",
+                        "{{eventId}}",
+                        "{{userId}}"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ],
               "auth": {
@@ -1363,6 +2107,98 @@
               "name": "admin",
               "item": [
                 {
+                  "name": "/registration",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "b68e5378-d393-45d8-bb0c-0e595ccdfdaa",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 30);",
+                          "vars.set('userId', 163);",
+                          "vars.set('reason', 'On vacation');",
+                          "vars.set('registrationState', 1);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "21e3c9a9-2e07-4e77-a8ca-fa25812bb815",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"Values are correct\", function() {",
+                          "    json = pm.response.json();",
+                          "    pm.expect(json.eventId).to.eq(vars.get('eventId'));",
+                          "    pm.expect(json.userId).to.eq(vars.get('userId'));",
+                          "    if(json.registrationState.reasonRequired) {",
+                          "        pm.expect(json.reason).to.exist;",
+                          "        pm.expect(json.registrationState.id).to.exist;",
+                          "    }",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "key": "eventId",
+                          "value": "{{eventId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "userId",
+                          "value": "{{userId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "reason",
+                          "value": "{{reason}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "registrationState",
+                          "value": "{{registrationState}}",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
                   "name": "get",
                   "event": [
                     {
@@ -1406,6 +2242,67 @@
                   "request": {
                     "method": "GET",
                     "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration/{{eventId}}/{{userId}}",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration",
+                        "{{eventId}}",
+                        "{{userId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "/registration",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "c0f6c653-0191-496d-bcdf-00231f656c12",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 30);",
+                          "vars.set('userId', 163);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "27425c1a-fb6b-4ebd-ad3a-4bb502e55dc6",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 204\", function () {",
+                          "    pm.response.to.have.status(204);",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
                     "body": {
                       "mode": "raw",
                       "raw": ""
@@ -1481,6 +2378,108 @@
                   "response": []
                 },
                 {
+                  "name": "/registration-as-nonadmin",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "b68e5378-d393-45d8-bb0c-0e595ccdfdaa",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 32);",
+                          "vars.set('userId', 161);",
+                          "vars.set('reason', 'On vacation');",
+                          "vars.set('registrationState', 1);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "21e3c9a9-2e07-4e77-a8ca-fa25812bb815",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"Values are correct\", function() {",
+                          "    json = pm.response.json();",
+                          "    pm.expect(json.eventId).to.eq(vars.get('eventId'));",
+                          "    pm.expect(json.userId).to.eq(vars.get('userId'));",
+                          "    if(json.registrationState.reasonRequired) {",
+                          "        pm.expect(json.reason).to.exist;",
+                          "        pm.expect(json.registrationState.id).to.exist;",
+                          "    }",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{nonadmin-token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "type": "text",
+                        "value": "application/x-www-form-urlencoded"
+                      }
+                    ],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "key": "eventId",
+                          "value": "{{eventId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "userId",
+                          "value": "{{userId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "reason",
+                          "value": "{{reason}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "registrationState",
+                          "value": "{{registrationState}}",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
                   "name": "get-as-admin",
                   "event": [
                     {
@@ -1543,6 +2542,77 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "/registration-from-nonadmin",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "c0f6c653-0191-496d-bcdf-00231f656c12",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 32);",
+                          "vars.set('userId', 161);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "27425c1a-fb6b-4ebd-ad3a-4bb502e55dc6",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 204\", function () {",
+                          "    pm.response.to.have.status(204);",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{nonadmin-token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "type": "text",
+                        "value": "application/x-www-form-urlencoded"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration/{{eventId}}/{{userId}}",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration",
+                        "{{eventId}}",
+                        "{{userId}}"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ],
               "auth": {
@@ -1582,6 +2652,98 @@
             {
               "name": "nonadmin",
               "item": [
+                {
+                  "name": "/registration",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "b68e5378-d393-45d8-bb0c-0e595ccdfdaa",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 32);",
+                          "vars.set('userId', 161);",
+                          "vars.set('reason', 'On vacation');",
+                          "vars.set('registrationState', 1);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "21e3c9a9-2e07-4e77-a8ca-fa25812bb815",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"Values are correct\", function() {",
+                          "    json = pm.response.json();",
+                          "    pm.expect(json.eventId).to.eq(vars.get('eventId'));",
+                          "    pm.expect(json.userId).to.eq(vars.get('userId'));",
+                          "    if(json.registrationState.reasonRequired) {",
+                          "        pm.expect(json.reason).to.exist;",
+                          "        pm.expect(json.registrationState.id).to.exist;",
+                          "    }",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "key": "eventId",
+                          "value": "{{eventId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "userId",
+                          "value": "{{userId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "reason",
+                          "value": "{{reason}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "registrationState",
+                          "value": "{{registrationState}}",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
                 {
                   "name": "get",
                   "event": [
@@ -1753,6 +2915,67 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "/registration",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "c0f6c653-0191-496d-bcdf-00231f656c12",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 32);",
+                          "vars.set('userId', 161);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "27425c1a-fb6b-4ebd-ad3a-4bb502e55dc6",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 204\", function () {",
+                          "    pm.response.to.have.status(204);",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration/{{eventId}}/{{userId}}",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration",
+                        "{{eventId}}",
+                        "{{userId}}"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ],
               "auth": {
@@ -1798,6 +3021,98 @@
             {
               "name": "admin",
               "item": [
+                {
+                  "name": "/registration",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "b68e5378-d393-45d8-bb0c-0e595ccdfdaa",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 30);",
+                          "vars.set('userId', 163);",
+                          "vars.set('reason', 'On vacation');",
+                          "vars.set('registrationState', 1);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "21e3c9a9-2e07-4e77-a8ca-fa25812bb815",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"Values are correct\", function() {",
+                          "    json = pm.response.json();",
+                          "    pm.expect(json.eventId).to.eq(vars.get('eventId'));",
+                          "    pm.expect(json.userId).to.eq(vars.get('userId'));",
+                          "    if(json.registrationState.reasonRequired) {",
+                          "        pm.expect(json.reason).to.exist;",
+                          "        pm.expect(json.registrationState.id).to.exist;",
+                          "    }",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "key": "eventId",
+                          "value": "{{eventId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "userId",
+                          "value": "{{userId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "reason",
+                          "value": "{{reason}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "registrationState",
+                          "value": "{{registrationState}}",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
                 {
                   "name": "/registration",
                   "event": [
@@ -2278,6 +3593,67 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "/registration",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "c0f6c653-0191-496d-bcdf-00231f656c12",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 30);",
+                          "vars.set('userId', 163);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "27425c1a-fb6b-4ebd-ad3a-4bb502e55dc6",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 204\", function () {",
+                          "    pm.response.to.have.status(204);",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration/{{eventId}}/{{userId}}",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration",
+                        "{{eventId}}",
+                        "{{userId}}"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ],
               "auth": {
@@ -2317,6 +3693,98 @@
             {
               "name": "nonadmin",
               "item": [
+                {
+                  "name": "/registration",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "b68e5378-d393-45d8-bb0c-0e595ccdfdaa",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 32);",
+                          "vars.set('userId', 161);",
+                          "vars.set('reason', 'On vacation');",
+                          "vars.set('registrationState', 1);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "21e3c9a9-2e07-4e77-a8ca-fa25812bb815",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"Values are correct\", function() {",
+                          "    json = pm.response.json();",
+                          "    pm.expect(json.eventId).to.eq(vars.get('eventId'));",
+                          "    pm.expect(json.userId).to.eq(vars.get('userId'));",
+                          "    if(json.registrationState.reasonRequired) {",
+                          "        pm.expect(json.reason).to.exist;",
+                          "        pm.expect(json.registrationState.id).to.exist;",
+                          "    }",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "key": "eventId",
+                          "value": "{{eventId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "userId",
+                          "value": "{{userId}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "reason",
+                          "value": "{{reason}}",
+                          "type": "text"
+                        },
+                        {
+                          "key": "registrationState",
+                          "value": "{{registrationState}}",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
                 {
                   "name": "/registration",
                   "event": [
@@ -2781,6 +4249,67 @@
                           "type": "text"
                         }
                       ]
+                    },
+                    "url": {
+                      "raw": "localhost/api/v1/registration/{{eventId}}/{{userId}}",
+                      "host": [
+                        "localhost"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "registration",
+                        "{{eventId}}",
+                        "{{userId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "/registration",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "c0f6c653-0191-496d-bcdf-00231f656c12",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "vars.set('eventId', 32);",
+                          "vars.set('userId', 161);"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "27425c1a-fb6b-4ebd-ad3a-4bb502e55dc6",
+                        "exec": [
+                          "vars = pm.variables;",
+                          "",
+                          "pm.test(\"Status is 204\", function () {",
+                          "    pm.response.to.have.status(204);",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
                     },
                     "url": {
                       "raw": "localhost/api/v1/registration/{{eventId}}/{{userId}}",

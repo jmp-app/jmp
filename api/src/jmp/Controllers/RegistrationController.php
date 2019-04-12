@@ -131,8 +131,11 @@ class RegistrationController
             return $this->getBadRequestResponseWithKey($response, 'registration', $message);
         }
 
+        /** @var Event $event */
+        $event = $optional->getData();
+
         // Have to check if the id is falsy, because default value of an int is 0 and not null
-        if (isset($registration->registrationState->id) == false) {
+        if ($registration->registrationState->id === 0) {
             /** @var Event $event */
             $event = $optional->getData();
             $registration->registrationState = $event->defaultRegistrationState;
@@ -148,9 +151,16 @@ class RegistrationController
         }
 
         // Validate reason if required
-        if ($registration->registrationState->reasonRequired == true && isset($registration->reason) == false) {
-            $message = 'A reason is required but not delivered';
-            return $this->getBadRequestResponseWithKey($response, 'reason', $message);
+        if ($registration->registrationState->reasonRequired == true &&
+            $registration->reason == false) {
+
+            // No reason given, but defaultRegistrationState requires one => set the name as reason
+            if ($registration->registrationState->id === $event->defaultRegistrationState->id) {
+                $registration->reason = $registration->registrationState->name;
+            } else {
+                $message = 'A reason is required but not delivered';
+                return $this->getBadRequestResponseWithKey($response, 'reason', $message);
+            }
         }
 
         // Create registration
