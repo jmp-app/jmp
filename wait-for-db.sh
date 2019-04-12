@@ -1,4 +1,9 @@
-#!/usr/bin/env sh
+# Filename:	wait-for-db.sh
+# Description: Checks the docker mariadb database availability for a maximum of 10 times waiting 2s between until the database is available
+# Call:	bash wait-for-db.sh
+# Author:	Dominik Strässle
+# Version:	1.0
+# Date:	04/11/2019
 
 count=0
 while test "$(docker inspect --format='{{json .State.Health.Status}}' db)" != "\"healthy\"" && test ${count} -lt 10; do

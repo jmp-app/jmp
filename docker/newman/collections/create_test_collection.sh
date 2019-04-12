@@ -1,17 +1,17 @@
 # Filename:	create_test_collection.sh
 # Description: Create a customized test collection based on the project's default collection
 # Note: The script has to be executed in the project root
-# Call:	./create_test_collection.sh host protocol path
+# Call:	bash create_test_collection.sh host protocol path
 #		host: Name of the host or ip-address. E.g. example.com
 #		protocol: Protocol to query the api endpoints. Default is https
 #       path: Path to the api. Default is none. E.g. api or backend/jmp
-# Autor:	Dominik Strässle
+# Author:	Dominik Strässle
 # Version:	1.0
 # Date:	04/11/2019
 #
 if [[ -z "$1" ]]; then
     echo "Host is required as first argument"
-    echo "Call:	./create_test_collection.sh host protocol path"
+    echo "Call:	bash create_test_collection.sh host protocol path"
     exit 1
 fi
 host="$1"
