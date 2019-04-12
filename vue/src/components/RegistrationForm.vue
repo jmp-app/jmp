@@ -8,7 +8,7 @@
                 </option>
             </select>
         </div>
-        <div class="form-group" v-if="selected.reasonRequired">
+        <div class="form-group" v-if="reasonRequired()">
             <label for="reason">{{ $t("registration.reason") }}</label>
             <input :class="{ 'is-invalid': submitted && !reason.replace(/\s/g, '').length > 0 }" class="form-control"
                    id="reason" type="text"
@@ -24,6 +24,9 @@
 <script>
     export default {
         name: 'RegistrationForm',
+        props: {
+            defaultRegistrationState: {}
+        },
         data: function () {
             return {
                 selected: this.$store.state.registration.detail.registration.registrationState,
@@ -57,7 +60,7 @@
                 let userId = JSON.parse(window.localStorage.getItem('user')).id;
                 let registrationStateId = this.selected.id;
                 let reason = this.reason.trim();
-                if (this.selected.reasonRequired) {
+                if (this.reasonRequired()) {
                     if (this.reason.replace(/\s/g, '').length > 0) {
                         this.$store.dispatch('registration/updateRegistration', {
                             eventId,
@@ -67,12 +70,22 @@
                         });
                     }
                 } else {
+                    if (this.selected.reasonRequired) {
+                        reason = this.selected.name;
+                    }
                     this.$store.dispatch('registration/updateRegistration', {
                         eventId,
                         userId,
                         registrationStateId,
                         reason
                     });
+                }
+            },
+            reasonRequired: function () {
+                if (this.defaultRegistrationState.id === this.selected.id) {
+                    return false;
+                } else {
+                    return this.selected.reasonRequired;
                 }
             }
         },
