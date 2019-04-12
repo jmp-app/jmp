@@ -379,8 +379,8 @@ Replace **example.com** by your own domain.
 
 1. Create a separate local branch for your changes: `git checkout -b example.com`
 2. Install/Update php dependencies (a running app container or a local php composer installation is required):  
-`docker exec app composer install`  
-`docker exec app composer update`
+`docker exec app composer install --classmap-authoritative`  
+`docker exec app composer update --classmap-authoritative`
 1. Configure your web hosting as described:
     * At least php 7.1
     * mysql or mariadb with:
