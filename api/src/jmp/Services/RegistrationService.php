@@ -162,9 +162,9 @@ SQL;
     public function deleteRegistration(int $userId, int $eventId): bool
     {
         $sql = <<< SQL
-DELETE FROM jmp.registration
-WHERE jmp.registration.event_id = :eventId
-  AND jmp.registration.user_id = :userId
+DELETE FROM registration
+WHERE registration.event_id = :eventId
+  AND registration.user_id = :userId
 SQL;
 
         $stmt = $this->db->prepare($sql);

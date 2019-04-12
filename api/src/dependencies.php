@@ -23,8 +23,24 @@ use Tuupola\Middleware\JwtAuthentication;
  */
 $container = $app->getContainer();
 
-// Database
+// Logger
+$container['logger'] = function (ContainerInterface $container) {
+    $settings = $container->get('settings')['logger'];
+    $logger = new Logger($settings['name']);
 
+    $logger->pushProcessor(new WebProcessor());
+    $logger->pushProcessor(new IntrospectionProcessor());
+
+    $logger->pushHandler(new StreamHandler($settings['path'], $settings['level']));
+
+    if ($settings['stdout']) {
+        $logger->pushHandler(new StreamHandler('php://stdout', $settings['level']));
+    }
+
+    return $logger;
+};
+
+// Database
 $container['database'] = function (ContainerInterface $container) {
     $config = $container->get('settings')['database'];
 
@@ -35,9 +51,21 @@ $container['database'] = function (ContainerInterface $container) {
 
 // Middlewares
 
+// jwt
 $container['jwt'] = function (ContainerInterface $container) {
 
     $jwt_settings = $container->get('settings')['jwt'];
+    $jwt_settings['error'] = function (ResponseInterface $response, array $arguments) use ($container) {
+        $debug = $container->get('settings')['displayErrorDetails'];
+
+        return $response
+            ->withHeader('Content-Type', 'application/json;charset=utf-8')
+            ->write(json_encode([
+                'errors' => [
+                    'authenticationError' => 'jwt: ' . $debug ? $arguments['message'] : 'Authentication Error',
+                ]
+            ]));
+    };
 
     return new JwtAuthentication($jwt_settings);
 };
@@ -80,24 +108,9 @@ $container['validationService'] = function (ContainerInterface $container) {
     return new ValidationService($container);
 };
 
-// Logger
-$container['logger'] = function (ContainerInterface $container) {
-    $settings = $container->get('settings')['logger'];
-    $logger = new Logger($settings['name']);
 
-    $logger->pushProcessor(new WebProcessor());
-    $logger->pushProcessor(new IntrospectionProcessor());
+// Custom Error Handlers
 
-    $logger->pushHandler(new StreamHandler($settings['path'], $settings['level']));
-
-    if ($settings['stdout']) {
-        $logger->pushHandler(new StreamHandler('php://stdout', $settings['level']));
-    }
-
-    return $logger;
-};
-
-// Custom Error Handler
 $container['phpErrorHandler'] = $container['errorHandler'] = function (ContainerInterface $container) {
     return function (RequestInterface $request, ResponseInterface $response, $exception) use ($container): ResponseInterface {
 
@@ -123,7 +136,7 @@ $container['notAllowedHandler'] = function (ContainerInterface $container) {
     return function (RequestInterface $request, ResponseInterface $response, array $methods) {
         return $response->withStatus(405)
             ->withHeader('Allow', implode(', ', $methods))
-            ->withHeader('Content-type', 'application/json')
+            ->withHeader('Content-type', 'application/json;charset=utf-8')
             ->write(json_encode([
                 'allowedMethods' => $methods
             ]));
@@ -133,7 +146,7 @@ $container['notAllowedHandler'] = function (ContainerInterface $container) {
 $container['notFoundHandler'] = function (ContainerInterface $container) {
     return function (RequestInterface $request, ResponseInterface $response) {
         return $response->withStatus(404)
-            ->withHeader('Content-type', 'application/json')
+            ->withHeader('Content-type', 'application/json;charset=utf-8')
             ->write(json_encode([
                 'errors' => [
                     'notFound' => 'Page Not Found'

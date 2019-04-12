@@ -1,3 +1,3 @@
 module.exports = {
-    api: 'localhost/api'
+    api: 'http://localhost/api'
 };

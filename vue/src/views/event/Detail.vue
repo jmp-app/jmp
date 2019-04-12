@@ -5,7 +5,8 @@
         <div v-if="event">
             <EventDetail :event="event"></EventDetail>
             <hr class="mt-4 mb-4"/>
-            <RegistrationForm v-if="registration"></RegistrationForm>
+            <RegistrationForm :defaultRegistrationState="event.defaultRegistrationState"
+                              v-if="registration"></RegistrationForm>
             <BottomNavigation v-if="isAdmin"></BottomNavigation>
         </div>
     </div>

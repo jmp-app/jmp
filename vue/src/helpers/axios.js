@@ -3,7 +3,7 @@ import {userService} from '../services';
 import * as config from '../../jmp.config.js';
 
 export const http = axios.create({
-    baseURL: `http://${config.api}/v1`
+    baseURL: `${config.api}/v1`
 });
 
 http.interceptors.request.use(function (request) {

@@ -31,8 +31,8 @@ class RegistrationStateService
     public function deleteRegistrationState(int $id): bool
     {
         $sql = <<<SQL
-DELETE FROM jmp.registration_state
-WHERE jmp.registration_state.id = :id
+DELETE FROM registration_state
+WHERE registration_state.id = :id
 SQL;
 
         $stmt = $this->db->prepare($sql);
@@ -47,8 +47,8 @@ SQL;
     public function createRegistrationState(RegistrationState $registrationState): Optional
     {
         $sql = <<<SQL
-INSERT INTO jmp.registration_state
-(jmp.registration_state.name, jmp.registration_state.reason_required) 
+INSERT INTO registration_state
+(registration_state.name, registration_state.reason_required) 
 VALUES (:name, :reasonRequired)
 SQL;
 
@@ -144,7 +144,7 @@ SQL;
     {
         $sql = <<<SQL
             SELECT id
-            FROM jmp.`registration_state`
+            FROM `registration_state`
             WHERE id = :id
 SQL;
 
