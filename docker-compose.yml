@@ -12,7 +12,7 @@ services:
       context: .
       dockerfile: docker/app/Dockerfile
       args:
-        APP_ENV: "prod"
+        APP_ENV: "dev"
     container_name: app
     restart: unless-stopped
     tty: true
