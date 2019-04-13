@@ -10,7 +10,9 @@ services:
   app:
     build:
       context: .
-      dockerfile: api/Dockerfile
+      dockerfile: docker/app/Dockerfile
+      args:
+        APP_ENV: "prod"
     container_name: app
     restart: unless-stopped
     tty: true

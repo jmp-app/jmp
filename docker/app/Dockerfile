@@ -1,5 +1,7 @@
 FROM php:7.2-fpm
 
+ARG APP_ENV
+
 WORKDIR /var/www
 
 # Install dependencies
@@ -24,8 +26,7 @@ RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
 # Copy composer files
-COPY . /var/www/
-RUN rm -rf .env db.env *.htaccess
+COPY api/composer*.json /var/www/
 
 # Set permissions for user www
 RUN chown www:www .
@@ -34,10 +35,10 @@ RUN chown www:www .
 USER www
 
 # Install dependecies form composer
-# --classmap-authoritative increases performance (for productive environments only
-RUN if [[ "$APP_ENV" == "prod" ]]; \
-    then composer install --classmap-authoritative
-    else composer install
+# --classmap-authoritative increases performance (for productive environments only)
+RUN if [ "$APP_ENV" = "prod" ]; \
+    then echo "classmap"; composer install --classmap-authoritative; \
+    else echo "dev"; composer install; \
     fi
 
 # Expose port 9000 and start php-fpm server
