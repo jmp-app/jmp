@@ -30,6 +30,7 @@
   "submit": "Senden",
   "required": "Pflichtfeld",
   "noDataFound": "Keine Daten gefunden",
+  "event": "Event | Events",
   "eventType.title": "Art",
   "event.description": "Beschreibung",
   "event.fromTo": "Von - Bis",

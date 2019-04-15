@@ -1,142 +1,280 @@
-<template>
-    <div v-if="event">
-        <form @submit.prevent="handleSubmit()">
-            <!--Title-->
-            <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="title">{{$t('event.title')}}</label>
-                <div class="col-sm-9">
-                    <input :class="{ 'is-invalid': isTitleValid()}"
-                           :readonly="display()"
-                           class="form-control"
-                           id="title"
-                           type="text"
-                           v-model="event.title">
-                    <div class="invalid-feedback" v-show="isTitleValid()">
-                        {{ $t("required") }}
-                    </div>
-                </div>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+    <div>
+        <v-form
+                lazy-validation
+                ref="form"
+                v-if="event"
+                v-model="valid"
+        >
+            <v-text-field
+                    :counter="50"
+                    :label="$t('event.title')"
+                    :readonly="display()"
+                    :rules="rules.title"
+                    required
+                    v-model="event.title"
+            ></v-text-field><!-- Title -->
+
+            <v-textarea
+                    :label="$t('event.description')"
+                    :readonly="display()"
+                    v-model="event.description"
+            ></v-textarea><!-- Description -->
+
+            <v-layout justify-space-between row wrap>
+                <v-flex class="input-with-icon" md5 xs12>
+                    <v-menu
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            full-width
+                            lazy
+                            min-width="290px"
+                            offset-y
+                            transition="scale-transition"
+                            v-model="menu1">
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                    :label="$t('event.from')"
+                                    :rules="rules.from"
+                                    @blur="from.parsedDate = parseDate(from.date)"
+                                    prepend-icon="event"
+                                    readonly
+                                    required
+                                    v-model="from.parsedDate"
+                                    v-on="on"
+                            ></v-text-field>
+                        </template>
+                        <v-date-picker
+                                @input="handleInputMenu1()"
+                                v-if="menu1 && !display()"
+                                v-model="from.date"
+                        ></v-date-picker>
+                    </v-menu>
+                </v-flex><!-- From Date -->
+                <v-flex class="input-with-icon" md5 xs12>
+                    <v-menu
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            :return-value.sync="from.time"
+                            full-width
+                            lazy
+                            min-width="290px"
+                            offset-y
+                            ref="menu2"
+                            transition="scale-transition"
+                            v-model="menu2">
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                    :label="$t('event.from')"
+                                    :rules="rules.from"
+                                    prepend-icon="access_time"
+                                    readonly
+                                    required
+                                    v-model="from.time"
+                                    v-on="on"
+                            ></v-text-field>
+                        </template>
+                        <v-time-picker
+                                @click:minute="$refs.menu2.save(from.time)"
+                                format="24hr"
+                                full-width
+                                v-if="menu2 && !display()"
+                                v-model="from.time"
+                        ></v-time-picker>
+                    </v-menu>
+                </v-flex><!-- From Time -->
+            </v-layout><!-- From -->
+
+            <v-layout justify-space-between row wrap>
+                <v-flex class="input-with-icon" md5 xs12>
+                    <v-menu
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            full-width
+                            lazy
+                            min-width="290px"
+                            offset-y
+                            transition="scale-transition"
+                            v-model="menu3">
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                    :label="$t('event.to')"
+                                    :rules="rules.to"
+                                    @blur="to.parsedDate = parseDate(to.date)"
+                                    prepend-icon="event"
+                                    readonly
+                                    required
+                                    v-model="to.parsedDate"
+                                    v-on="on"
+                            ></v-text-field>
+                        </template>
+                        <v-date-picker
+                                @input="handleInputMenu3()"
+                                v-if="menu3  && !display()"
+                                v-model="to.date"
+                        ></v-date-picker>
+                    </v-menu>
+                </v-flex><!-- To Date -->
+                <v-flex class="input-with-icon" md5 xs12>
+                    <v-menu
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            :return-value.sync="to.time"
+                            full-width
+                            lazy
+                            min-width="290px"
+                            offset-y
+                            ref="menu4"
+                            transition="scale-transition"
+                            v-model="menu4">
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                    :label="$t('event.to')"
+                                    :rules="rules.to"
+                                    prepend-icon="access_time"
+                                    readonly
+                                    required
+                                    v-model="to.time"
+                                    v-on="on"
+                            ></v-text-field>
+                        </template>
+                        <v-time-picker
+                                @click:minute="$refs.menu4.save(to.time)"
+                                format="24hr"
+                                full-width
+                                v-if="menu4 && !display()"
+                                v-model="to.time"
+                        ></v-time-picker>
+                    </v-menu>
+                </v-flex><!-- To Time -->
+            </v-layout><!-- To -->
+
+            <v-text-field
+                    :counter="50"
+                    :label="$t('event.place')"
+                    :readonly="display()"
+                    :rules="rules.place"
+                    v-model="event.place"
+            ></v-text-field><!-- Place -->
+
+            <v-select
+                    :items="eventTypes"
+                    :label="$t('eventType.title')"
+                    :readonly="display()"
+                    :rules="rules.eventType"
+                    item-text="title"
+                    required
+                    return-object
+                    v-model="event.eventType"
+            ></v-select><!-- Event Type -->
+
+            <v-select
+                    :items="registrationStates"
+                    :label="$t('registration.state')"
+                    :readonly="display()"
+                    :rules="rules.defaultRegistrationState"
+                    item-text="name"
+                    required
+                    return-object
+                    v-model="event.defaultRegistrationState"
+            ></v-select><!-- Default Registration State -->
+
+            <v-select
+                    :items="groups"
+                    :label="$t('event.groups')"
+                    :readonly="display()"
+                    :rules="rules.groups"
+                    attach
+                    chips
+                    item-text="name"
+                    multiple
+                    return-object
+                    v-model="event.groups"
+            ></v-select><!-- Groups -->
+
+            <!-- Buttons -->
+            <div>
+                <v-btn
+                        :disabled="!valid"
+                        @click="validate"
+                        color="success"
+                        v-if="create() || edit()"
+                >
+                    {{$t('submit')}}
+                </v-btn>
+                <v-btn
+                        @click="prepareForEdit()"
+                        color="primary"
+                        v-if="display()"
+                >
+                    {{$t('edit')}}
+                </v-btn>
+                <v-btn
+                        @click="reset"
+                        color="error"
+                        v-if="create() || edit()"
+                >
+                    {{$t('cancel')}}
+                </v-btn>
             </div>
-            <!--Description-->
-            <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="description">{{$t('event.description')}}</label>
-                <div class="col-sm-9">
-                    <textarea :readonly="display()"
-                              class="form-control"
-                              id="description"
-                              v-model="event.description">
-                    </textarea>
-                </div>
-            </div>
-            <!--From-->
-            <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="from">{{$t('event.from')}}</label>
-                <div class="col-sm-9">
-                    <input :class="{ 'is-invalid': submitted && !event.from }"
-                           :readonly="display()"
-                           class="form-control"
-                           id="from"
-                           type="datetime-local"
-                           v-model="event.from">
-                    <div class="invalid-feedback" v-show="submitted && !event.from">
-                        {{ $t("required") }}
-                    </div>
-                </div>
-            </div>
-            <!--To-->
-            <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="to">{{$t('event.to')}}</label>
-                <div class="col-sm-9">
-                    <input :class="{ 'is-invalid': submitted && !event.to }"
-                           :readonly="display()"
-                           class="form-control"
-                           id="to"
-                           type="datetime-local"
-                           v-model="event.to">
-                    <div class="invalid-feedback" v-show="submitted && !event.to">
-                        {{ $t("required") }}
-                    </div>
-                </div>
-            </div>
-            <!--Place-->
-            <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="place">{{$t('event.place')}}</label>
-                <div class="col-sm-9">
-                    <input :readonly="display()"
-                           class="form-control"
-                           id="place"
-                           type="text"
-                           v-model="event.place">
-                </div>
-            </div>
-            <!--EventType-->
-            <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="eventType">{{$t('eventType.title')}}</label>
-                <div class="col-sm-9">
-                    <select :class="{ 'is-invalid': submitted && !event.eventType.id }"
-                            :disabled="display()"
-                            class="form-control"
-                            id="eventType"
-                            v-model="event.eventType.title">
-                        <option :id="event.eventType.id">{{event.eventType.title}}</option>
-                    </select>
-                    <div class="invalid-feedback" v-show="submitted && !event.eventType.id">
-                        {{ $t("required") }}
-                    </div>
-                </div>
-            </div>
-            <!--DefaultRegistrationState-->
-            <div class="form-group row" v-if="!isIntegrated">
-                <label class="col-sm-3 col-form-label"
-                       for="defaultRegistrationState">{{$t('registration.state')}}</label>
-                <div class="col-sm-9">
-                    <select :class="{ 'is-invalid': submitted && !event.defaultRegistrationState.id }"
-                            :disabled="display()"
-                            class="form-control"
-                            id="defaultRegistrationState"
-                            v-model="event.defaultRegistrationState">
-                        <option :key="regState.id" v-bind:value="regState" v-for="regState in registrationStates">
-                            {{regState.name}}
-                        </option>
-                    </select>
-                    <div class="invalid-feedback" v-show="submitted && !event.defaultRegistrationState.id">
-                        {{ $t("required") }}
-                    </div>
-                </div>
-            </div>
-            <!--Buttons-->
-            <div v-if="isAdmin()">
-                <!--Cancel-->
-                <div class="form-group row" v-if="create() || edit()">
-                    <div class="col-sm-9">
-                        <button @click="handleCancel()" class="btn mr-2" type="button" v-if="edit()">{{$t('cancel')}}
-                        </button>
-                        <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
-                    </div>
-                </div>
-                <!--Edit-->
-                <div class="form-group row" v-if="display()">
-                    <div class="col-sm-9">
-                        <button @click="mode = 'edit'" class="btn mr-2" type="button">{{$t('edit')}}</button>
-                    </div>
-                </div>
-            </div>
-        </form>
+
+        </v-form>
+        <div class="text-xs-center">
+            <v-progress-circular
+                    color="primary"
+                    indeterminate
+                    v-if="!event && !errors"
+            ></v-progress-circular>
+        </div>
     </div>
 </template>
 
 <script>
     export default {
         name: 'AdminEventDetail',
-        props: {
-            isIntegrated: {
-                default: false,
-                type: Boolean
-            }
-        },
         data: function () {
             return {
                 mode: 'display', // display, edit, create
-                submitted: false
+                unsubscribe() {
+                },
+                valid: true,
+                errors: false,
+                menu1: false,
+                menu2: false,
+                menu3: false,
+                menu4: false,
+                from: {},
+                to: {},
+                rules: {
+                    title: [
+                        v => !!v || `${this.$t('fieldIsRequired', {fieldname: this.$t('event.title')})}`,
+                        v => (v && v.length <= 50) || `${this.$t('fieldValueLength', {
+                            fieldname: this.$t('event.title'),
+                            lenght: 50
+                        })}`
+                    ],
+                    place: [
+                        v => (!v || v.length <= 50) || `${this.$t('fieldValueLength', {
+                            fieldname: this.$t('event.place'),
+                            lenght: 50
+                        })}`
+                    ],
+                    from: [
+                        v => !!v || `${this.$t('fieldIsRequired', {fieldname: this.$t('event.from')})}`
+                    ],
+                    to: [
+                        v => !!v || `${this.$t('fieldIsRequired', {fieldname: this.$t('event.to')})}`
+                    ],
+                    eventType: [
+                        v => (!!v && !!v.id) || `${this.$t('fieldIsRequired', {fieldname: this.$t('eventType.title')})}`
+                    ],
+                    defaultRegistrationState: [
+                        v => (!!v && !!v.id) || `${this.$t('fieldIsRequired', {fieldname: this.$t('registration.state')})}`
+                    ],
+                    groups: [
+                        v => (!!v && v.length >= 1) || `${this.$t('fieldIsRequired', {fieldname: this.$t('event.groups')})}`
+                    ]
+                }
             };
         },
         computed: {
@@ -145,6 +283,12 @@
             },
             registrationStates() {
                 return this.$store.state.registrationStates.all.registrationStates;
+            },
+            eventTypes() {
+                return this.$store.state.eventTypes.all.eventTypes;
+            },
+            groups() {
+                return this.$store.state.groups.all.items;
             }
         },
         methods: {
@@ -157,33 +301,52 @@
             display: function () {
                 return (this.create() === false && this.edit() === false);
             },
-            handleSubmit: function () {
-                console.log('Submit');
+            prepareForEdit: function () {
+                this.mode = 'edit';
+                this.closeAllMenus();
             },
-            handleCancel: function () {
-                if (this.create()) {
-                    this.$store.state.events.detail.event = {};
-                } else {
-                    this.renewUserFromDb();
+            closeAllMenus: function () {
+                this.menu1 = false;
+                this.menu2 = false;
+                this.menu3 = false;
+                this.menu4 = false;
+            },
+            validate: function () {
+                if (this.$refs.form.validate()) {
+                    let event = Object.assign({}, this.event);
+                    event.from = `${this.from.date}T${this.from.time}`;
+                    event.to = `${this.to.date}T${this.to.time}`;
+                    event.defaultRegistrationState = this.event.defaultRegistrationState.id;
+                    event.eventType = this.event.eventType.id;
+                    event.groups = [];
+                    this.event.groups.forEach(function (group) {
+                        event.groups.push(group.id);
+                    });
+                    if (this.edit()) {
+                        this.updateEvent(event);
+                    } else if (this.create()) {
+                        this.createEvent(event);
+                    }
+                }
+            },
+            updateEvent: function (event) {
+                this.$store.dispatch('events/update', {event});
+            },
+            createEvent: function (event) {
+                this.$store.dispatch('events/create', {event});
+            },
+            reset() {
+                this.$refs.form.reset();
+                this.getEvent();
+                if (this.edit()) {
                     this.mode = 'display';
                 }
-                this.submitted = false;
+                this.closeAllMenus();
             },
-            renewUserFromDb: function () {
-                const eventId = this.$route.params.id;
-                this.$store.dispatch('events/getEventById', {eventId});
-            },
-            isAdmin: function () {
-                const user = JSON.parse(localStorage.getItem('user'));
-                return !!(user && user.isAdmin);
-            },
-            isTitleValid: function () {
-                return this.submitted && !this.event.title;
-            }
-        },
-        mounted() {
-            if (!this.isIntegrated) {
-                const eventId = this.$route.params.id;
+            getEvent: function (eventId) {
+                if (!eventId) {
+                    eventId = this.$route.params.id;
+                }
                 // eslint-disable-next-line
                 if (eventId == 0) {
                     this.mode = 'create';
@@ -191,11 +354,85 @@
                 } else {
                     this.$store.dispatch('events/getEventById', {eventId});
                 }
-                this.$store.dispatch('registrationStates/getAll');
+            },
+            parseDate: function (date) {
+                if (!date) return null;
+
+                const [year, month, day] = date.split('-');
+                return `${day}.${month}.${year}`;
+            },
+            cutDate: function (dateTime) {
+                const [year, month, dayTime] = dateTime.split('-');
+                const [day] = dayTime.split('T');
+                return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            },
+            cutTime: function (dateTime) {
+                // eslint-disable-next-line
+                const [date, time] = dateTime.split('T');
+                return time;
+            },
+            handleInputMenu1: function () {
+                this.menu1 = false;
+                this.from.parsedDate = this.parseDate(this.from.date);
+            },
+            handleInputMenu3: function () {
+                this.menu3 = false;
+                this.to.parsedDate = this.parseDate(this.to.date);
+            },
+            handleMutation: function (mutation) {
+                switch (mutation.type) {
+                    case 'events/getEventByIdFailure':
+                        this.errors = true;
+                        this.$store.dispatch('alert/error', 'Not Found', {root: true});
+                        break;
+                    case 'events/updateEventFailure':
+                        this.errors = true;
+                        break;
+                    case 'events/updateEventSuccess':
+                        this.errors = false;
+                        this.mode = 'display';
+                        this.getEvent();
+                        break;
+                    case 'events/createEventSuccess':
+                        this.$router.push('/');
+                        break;
+                }
+            }
+        },
+        created() {
+            this.unsubscribe = this.$store.subscribe(mutation => {
+                this.handleMutation(mutation);
+            });
+        },
+        mounted() {
+            this.getEvent();
+            this.$store.dispatch('registrationStates/getAll');
+            this.$store.dispatch('eventTypes/getAll');
+            this.$store.dispatch('groups/getAll');
+        },
+        beforeDestroy() {
+            this.unsubscribe();
+        },
+        watch: {
+            event() {
+                if (this.event && this.event.from) {
+                    this.from.date = this.cutDate(this.event.from);
+                    this.from.parsedDate = this.parseDate(this.from.date);
+                    this.from.time = this.cutTime(this.event.from);
+                }
+                if (this.event && this.event.to) {
+                    this.to.date = this.cutDate(this.event.to);
+                    this.to.parsedDate = this.parseDate(this.to.date);
+                    this.to.time = this.cutTime(this.event.to);
+                }
             }
         }
     };
 </script>
 
 <style scoped>
+    .input-with-icon {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
 </style>

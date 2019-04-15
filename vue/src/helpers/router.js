@@ -70,10 +70,17 @@ export const router = new Router({
             }
         },
         {
-            path: '/events/:id',
-            name: 'events',
+            path: '/events',
+            name: 'adminEventOverview',
             component: function () {
-                return import('../views/event/admin/Vdetail.vue');
+                return import('../views/event/admin/Overview.vue');
+            }
+        },
+        {
+            path: '/events/:id',
+            name: 'adminEventDetail',
+            component: function () {
+                return import('../views/event/admin/Detail.vue');
             }
         }
     ]
