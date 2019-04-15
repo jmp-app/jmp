@@ -75,7 +75,7 @@ export const events = {
             state.all = {loading: true};
         },
         getAllSuccess(state, events) {
-            state.all = {items: events};
+            state.all = {events};
             state.all.loading = false;
         },
         getAllFailure(state, error) {

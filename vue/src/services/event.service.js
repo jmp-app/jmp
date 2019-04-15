@@ -12,7 +12,7 @@ export const eventService = {
 function getAll() {
     return Vue.axios.get('/events?all=1')
         .then(response => {
-            return response.data.json();
+            return response.data;
         });
 }
 
