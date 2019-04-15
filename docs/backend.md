@@ -379,8 +379,8 @@ Replace **example.com** by your own domain.
 
 1. Create a separate local branch for your changes: `git checkout -b example.com`
 2. Install/Update php dependencies (a running app container or a local php composer installation is required):  
-`docker exec app composer install`  
-`docker exec app composer update`
+`docker exec app composer install --classmap-authoritative`  
+`docker exec app composer update --classmap-authoritative`
 1. Configure your web hosting as described:
     * At least php 7.1
     * mysql or mariadb with:
@@ -389,7 +389,7 @@ Replace **example.com** by your own domain.
 2. Configure all environment variables as described in [dotenv](dotenv.md) and [Get Started](../README.md#installation).
 3. Rename the folder [api/public](../api/public) to [api/example.com](../api/example.com)
 4. Configure [.htaccess](../api/.htaccess):
-    * Change **example.com** to your own domain
+    * Change **public** to your own domain
 5. Copy [api](../api) to the webroot of your server
 6. [Test the api](#test-your-deployed-backend)
  
