@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuetify, {VApp, VBtn, VDataTable} from 'vuetify/lib';
+import Vuetify, {VApp, VBtn, VDataTable, VSelect, VTextarea, VTextField} from 'vuetify/lib';
 // Helpers
 import de from 'vuetify/es5/locale/de';
 import en from 'vuetify/es5/locale/en';
@@ -14,6 +14,9 @@ Vue.use(Vuetify, {
     components: {
         VApp,
         VBtn,
-        VDataTable
+        VDataTable,
+        VTextField,
+        VTextarea,
+        VSelect
     }
 });

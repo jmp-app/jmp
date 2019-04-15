@@ -48,6 +48,26 @@ export const events = {
             commit('getEmptyEventRequest');
 
             commit('getEmptyEvent', {'eventType': {}});
+        },
+        update({dispatch, commit}, {event}) {
+            commit('updateEventRequest');
+
+            eventService.update(event)
+                .then(event => commit('updateEventSuccess', event))
+                .catch(error => {
+                    commit('updateEventFailure');
+                    dispatch('alert/error', error.response.data.errors, {root: true});
+                });
+        },
+        create({dispatch, commit}, {event}) {
+            commit('createEventRequest');
+
+            eventService.create(event)
+                .then(event => commit('createEventSuccess', event))
+                .catch(error => {
+                    commit('createEventFailure');
+                    dispatch('alert/error', error.response.data.errors, {root: true});
+                });
         }
     },
     mutations: {
@@ -105,6 +125,26 @@ export const events = {
         getEventByIdFailure(state, error) {
             state.detail = {error};
             state.detail.loading = false;
+        },
+        updateEventRequest(state) {
+            state.detail = {loading: true};
+        },
+        updateEventSuccess(state, event) {
+            state.detail = {event};
+            state.detail.loading = false;
+        },
+        updateEventFailure(state) {
+            state.overview.loading = false;
+        },
+        createEventRequest(state) {
+            state.detail = {loading: true};
+        },
+        createEventSuccess(state, event) {
+            state.detail = {event};
+            state.detail.loading = false;
+        },
+        createEventFailure(state) {
+            state.overview.loading = false;
         }
     }
 };
