@@ -5,7 +5,8 @@ export const eventService = {
     getInitialOverview,
     getNextEvents,
     getEventById,
-    update
+    update,
+    create
 };
 
 function getAll() {
@@ -43,6 +44,12 @@ function getEventById(eventId) {
 
 function update(event) {
     return Vue.axios.put(`/events/${event.id}`, event).then(response => {
+        return response.data;
+    });
+}
+
+function create(event) {
+    return Vue.axios.post('/events', event).then(response => {
         return response.data;
     });
 }

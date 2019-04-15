@@ -324,11 +324,16 @@
                     });
                     if (this.edit()) {
                         this.updateEvent(event);
+                    } else if (this.create()) {
+                        this.createEvent(event);
                     }
                 }
             },
             updateEvent: function (event) {
                 this.$store.dispatch('events/update', {event});
+            },
+            createEvent: function (event) {
+                this.$store.dispatch('events/create', {event});
             },
             reset() {
                 this.$refs.form.reset();
@@ -338,8 +343,10 @@
                 }
                 this.closeAllMenus();
             },
-            getEvent: function () {
-                const eventId = this.$route.params.id;
+            getEvent: function (eventId) {
+                if (!eventId) {
+                    eventId = this.$route.params.id;
+                }
                 // eslint-disable-next-line
                 if (eventId == 0) {
                     this.mode = 'create';
@@ -385,6 +392,9 @@
                         this.errors = false;
                         this.mode = 'display';
                         this.getEvent();
+                        break;
+                    case 'events/createEventSuccess':
+                        this.$router.push('/');
                         break;
                 }
             }
