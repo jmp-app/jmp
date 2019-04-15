@@ -48,6 +48,16 @@ export const events = {
             commit('getEmptyEventRequest');
 
             commit('getEmptyEvent', {'eventType': {}});
+        },
+        update({dispatch, commit}, {event}) {
+            commit('updateEventRequest');
+
+            eventService.update(event)
+                .then(event => commit('updateEventSuccess', event))
+                .catch(error => {
+                    commit('updateEventFailure');
+                    dispatch('alert/error', error.response.data.errors, {root: true});
+                });
         }
     },
     mutations: {
@@ -105,6 +115,16 @@ export const events = {
         getEventByIdFailure(state, error) {
             state.detail = {error};
             state.detail.loading = false;
+        },
+        updateEventRequest(state) {
+            state.detail = {loading: true};
+        },
+        updateEventSuccess(state, event) {
+            state.detail = {event};
+            state.detail.loading = false;
+        },
+        updateEventFailure(state) {
+            state.overview.loading = false;
         }
     }
 };

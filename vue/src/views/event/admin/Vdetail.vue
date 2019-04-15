@@ -179,6 +179,19 @@
                     v-model="event.defaultRegistrationState"
             ></v-select><!-- Default Registration State -->
 
+            <v-select
+                    :items="groups"
+                    :label="$t('event.groups')"
+                    :readonly="display()"
+                    :rules="rules.groups"
+                    attach
+                    chips
+                    item-text="name"
+                    multiple
+                    return-object
+                    v-model="event.groups"
+            ></v-select><!-- Groups -->
+
             <!-- Buttons -->
             <div>
                 <v-btn
@@ -210,7 +223,7 @@
             <v-progress-circular
                     color="primary"
                     indeterminate
-                    v-if="!event"
+                    v-if="!event && !errors"
             ></v-progress-circular>
         </div>
     </div>
@@ -222,7 +235,10 @@
         data: function () {
             return {
                 mode: 'display', // display, edit, create
+                unsubscribe() {
+                },
                 valid: true,
+                errors: false,
                 menu1: false,
                 menu2: false,
                 menu3: false,
@@ -254,6 +270,9 @@
                     ],
                     defaultRegistrationState: [
                         v => (!!v && !!v.id) || `${this.$t('fieldIsRequired', {fieldname: this.$t('registration.state')})}`
+                    ],
+                    groups: [
+                        v => (!!v && v.length >= 1) || `${this.$t('fieldIsRequired', {fieldname: this.$t('event.groups')})}`
                     ]
                 }
             };
@@ -267,6 +286,9 @@
             },
             eventTypes() {
                 return this.$store.state.eventTypes.all.eventTypes;
+            },
+            groups() {
+                return this.$store.state.groups.all.items;
             }
         },
         methods: {
@@ -291,8 +313,22 @@
             },
             validate: function () {
                 if (this.$refs.form.validate()) {
-                    console.log('Submit');
+                    let event = Object.assign({}, this.event);
+                    event.from = `${this.from.date}T${this.from.time}`;
+                    event.to = `${this.to.date}T${this.to.time}`;
+                    event.defaultRegistrationState = this.event.defaultRegistrationState.id;
+                    event.eventType = this.event.eventType.id;
+                    event.groups = [];
+                    this.event.groups.forEach(function (group) {
+                        event.groups.push(group.id);
+                    });
+                    if (this.edit()) {
+                        this.updateEvent(event);
+                    }
                 }
+            },
+            updateEvent: function (event) {
+                this.$store.dispatch('events/update', {event});
             },
             reset() {
                 this.$refs.form.reset();
@@ -335,12 +371,37 @@
             handleInputMenu3: function () {
                 this.menu3 = false;
                 this.to.parsedDate = this.parseDate(this.to.date);
+            },
+            handleMutation: function (mutation) {
+                switch (mutation.type) {
+                    case 'events/getEventByIdFailure':
+                        this.errors = true;
+                        this.$store.dispatch('alert/error', 'Not Found', {root: true});
+                        break;
+                    case 'events/updateEventFailure':
+                        this.errors = true;
+                        break;
+                    case 'events/updateEventSuccess':
+                        this.errors = false;
+                        this.mode = 'display';
+                        this.getEvent();
+                        break;
+                }
             }
+        },
+        created() {
+            this.unsubscribe = this.$store.subscribe(mutation => {
+                this.handleMutation(mutation);
+            });
         },
         mounted() {
             this.getEvent();
             this.$store.dispatch('registrationStates/getAll');
             this.$store.dispatch('eventTypes/getAll');
+            this.$store.dispatch('groups/getAll');
+        },
+        beforeDestroy() {
+            this.unsubscribe();
         },
         watch: {
             event() {
