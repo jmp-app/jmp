@@ -23,9 +23,9 @@ export const authentication = {
                             router.push('/change-password');
                         } else {
                             if (window.history.length > 1) {
-                                this.$router.go(-1);
+                                router.go(-1);
                             } else {
-                                this.$router.push('/');
+                                router.push('/');
                             }
                         }
                     },
