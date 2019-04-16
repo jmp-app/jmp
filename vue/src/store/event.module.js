@@ -27,13 +27,15 @@ export const events = {
                 );
         },
         getNextEvents({commit}, {offset, showAll}) {
-            commit('getNextEventsRequest');
+            if (offset !== 0) {
+                commit('getNextEventsRequest');
 
-            eventService.getNextEvents(offset, showAll)
-                .then(
-                    events => commit('getNextEventsSuccess', events),
-                    error => commit('getNextEventsFailure', error)
-                );
+                eventService.getNextEvents(offset, showAll)
+                    .then(
+                        events => commit('getNextEventsSuccess', events),
+                        error => commit('getNextEventsFailure', error)
+                    );
+            }
         },
         getEventById({commit}, {eventId}) {
             commit('getEventByIdRequest');
@@ -75,7 +77,7 @@ export const events = {
             state.all = {loading: true};
         },
         getAllSuccess(state, events) {
-            state.all = {items: events};
+            state.all = {events};
             state.all.loading = false;
         },
         getAllFailure(state, error) {

@@ -7,19 +7,17 @@
             <hr class="mt-4 mb-4"/>
             <RegistrationForm :defaultRegistrationState="event.defaultRegistrationState"
                               v-if="registration"></RegistrationForm>
-            <BottomNavigation v-if="isAdmin"></BottomNavigation>
         </div>
     </div>
 </template>
 
 <script>
     import EventDetail from '@/components/EventDetail';
-    import BottomNavigation from '@/components/BottomNavigation';
     import RegistrationForm from '@/components/RegistrationForm';
 
     export default {
         name: 'Detail',
-        components: {RegistrationForm, BottomNavigation, EventDetail},
+        components: {RegistrationForm, EventDetail},
         data: function () {
             return {
                 user: {},

@@ -24,6 +24,7 @@
   "required": "Required",
   "submit": "Submit",
   "noDataFound": "No data found",
+  "event": "Event | Events",
   "eventType.title": "Event type",
   "event.description": "Description",
   "event.fromTo": "From - To",

@@ -52,18 +52,12 @@
                 </template>
             </v-data-table>
         </div>
-        <BottomNavigation v-bind:groupId="$route.params.id"/>
     </div>
 </template>
 
 <script>
-    import BottomNavigation from '@/components/BottomNavigation';
-
     export default {
         name: 'GroupDetail',
-        components: {
-            BottomNavigation
-        },
         data: function () {
             return {
                 mode: 'display', // display, edit, create
