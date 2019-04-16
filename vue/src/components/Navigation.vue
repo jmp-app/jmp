@@ -13,6 +13,9 @@
                 </template>
                 <v-list>
                     <v-list-tile>
+                        <v-btn flat to="/events">{{ $tc('event', 2) }}</v-btn>
+                    </v-list-tile>
+                    <v-list-tile>
                         <v-btn flat to="/users">{{ $tc('user', 2) }}</v-btn>
                     </v-list-tile>
                     <v-list-tile>

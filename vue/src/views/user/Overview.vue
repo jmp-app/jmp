@@ -21,18 +21,13 @@
                 </tr>
             </template>
         </v-data-table>
-        <BottomNavigation v-if="isAdmin"></BottomNavigation>
     </div>
 </template>
 
 <script>
-    import BottomNavigation from '@/components/BottomNavigation';
 
     export default {
         name: 'Overview',
-        components: {
-            BottomNavigation
-        },
         data: function () {
             return {
                 searchQuery: '',

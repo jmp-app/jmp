@@ -1,5 +1,7 @@
 FROM php:7.2-fpm
 
+ARG APP_ENV
+
 WORKDIR /var/www
 
 # Install dependencies
@@ -33,7 +35,11 @@ RUN chown www:www .
 USER www
 
 # Install dependecies form composer
-RUN composer install
+# --classmap-authoritative increases performance (for productive environments only)
+RUN if [ "$APP_ENV" = "prod" ]; \
+    then echo "classmap"; composer install --classmap-authoritative; \
+    else echo "dev"; composer install; \
+    fi
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000

@@ -4,13 +4,15 @@ export const eventService = {
     getAll,
     getInitialOverview,
     getNextEvents,
-    getEventById
+    getEventById,
+    update,
+    create
 };
 
 function getAll() {
-    return Vue.axios.get('/events?all=1')
+    return Vue.axios.get('/events?all=1&elapsed=1')
         .then(response => {
-            return response.data.json();
+            return response.data;
         });
 }
 
@@ -36,6 +38,18 @@ function getNextEvents(offset, showAll) {
 
 function getEventById(eventId) {
     return Vue.axios.get(`/events/${eventId}`).then(response => {
+        return response.data;
+    });
+}
+
+function update(event) {
+    return Vue.axios.put(`/events/${event.id}`, event).then(response => {
+        return response.data;
+    });
+}
+
+function create(event) {
+    return Vue.axios.post('/events', event).then(response => {
         return response.data;
     });
 }

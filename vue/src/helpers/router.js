@@ -68,6 +68,20 @@ export const router = new Router({
             component: function () {
                 return import('../views/group/AddMembers.vue');
             }
+        },
+        {
+            path: '/events',
+            name: 'adminEventOverview',
+            component: function () {
+                return import('../views/event/admin/Overview.vue');
+            }
+        },
+        {
+            path: '/events/:id',
+            name: 'adminEventDetail',
+            component: function () {
+                return import('../views/event/admin/Detail.vue');
+            }
         }
     ]
 });
