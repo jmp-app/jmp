@@ -394,7 +394,7 @@
                         this.getEvent();
                         break;
                     case 'events/createEventSuccess':
-                        this.$router.push('/');
+                        this.$router.push('/events');
                         break;
                 }
             }

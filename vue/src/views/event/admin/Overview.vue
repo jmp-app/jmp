@@ -13,6 +13,7 @@
                 :headers="headers"
                 :items="events"
                 :search="searchQuery"
+                :pagination.sync="pagination"
                 v-if="events"
                 :rows-per-page-items="[10,20,50,{'text':'$vuetify.dataIterator.rowsPerPageAll','value':-1}]"
         >
@@ -32,10 +33,14 @@
     import dateFormat from 'dateformat';
 
     export default {
-        name: 'AdminEventOverview',
+        name: 'adminEventOverview',
         data: function () {
             return {
                 searchQuery: '',
+                pagination: {
+                    sortBy: 'from',
+                    rowsPerPage: 10
+                },
                 headers: [
                     {
                         text: this.$t('event.title'),
