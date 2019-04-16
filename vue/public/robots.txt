@@ -1,3 +1,3 @@
-# Ganze Site für alle Robots sperren
+# Don't allow any robots
 User-agent: *
 Disallow: /
