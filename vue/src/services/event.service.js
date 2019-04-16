@@ -10,7 +10,7 @@ export const eventService = {
 };
 
 function getAll() {
-    return Vue.axios.get('/events?all=1')
+    return Vue.axios.get('/events?all=1&elapsed=1')
         .then(response => {
             return response.data;
         });
