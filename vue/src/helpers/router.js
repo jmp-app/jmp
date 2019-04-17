@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import EventOverview from '../views/event/Overview.vue';
+import {store} from '../store';
 
 Vue.use(Router);
 
@@ -89,11 +90,18 @@ export const router = new Router({
 router.beforeEach((to, from, next) => {
     // redirect to login page if not logged in and trying to access a restricted page
     const publicPages = ['/login'];
+    const userPages = ['eventOverview', 'eventDetail', 'changePassword'];
     const authRequired = !publicPages.includes(to.path);
-    const loggedIn = localStorage.getItem('user');
+    const adminRightsRequired = !userPages.includes(to.name);
+    const loggedIn = localStorage.getItem('token');
+    const isAdmin = store.state.authentication.user.isAdmin;
 
     if (authRequired && !loggedIn) {
         return next('/login');
+    }
+
+    if (adminRightsRequired && !isAdmin) {
+        next(from); // TODO: Navigate to a "Not Allowed" page
     }
 
     next();
