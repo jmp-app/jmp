@@ -94,15 +94,16 @@ router.beforeEach((to, from, next) => {
     const authRequired = !publicPages.includes(to.path);
     const adminRightsRequired = !userPages.includes(to.name);
     const loggedIn = localStorage.getItem('token');
-    const isAdmin = store.state.authentication.user.isAdmin;
 
     if (authRequired && !loggedIn) {
         return next('/login');
     }
 
-    if (adminRightsRequired && !isAdmin) {
-        next(from); // TODO: Navigate to a "Not Allowed" page
+    if (loggedIn) {
+        const isAdmin = store.state.authentication.user.isAdmin;
+        if (adminRightsRequired && !isAdmin) {
+            next(from); // TODO: Navigate to a "Not Allowed" page
+        }
     }
-
     next();
 });
