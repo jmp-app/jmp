@@ -236,7 +236,7 @@ SQL;
     public function addGroupToEvent(int $groupId, int $eventId): bool
     {
         $sql = <<< SQL
-INSERT INTO jmp.event_has_group (event_id, group_id) VALUES (:eventId, :groupId);
+INSERT INTO event_has_group (event_id, group_id) VALUES (:eventId, :groupId);
 SQL;
         $stmt = $this->db->prepare($sql);
 

@@ -31,10 +31,10 @@ class EventTypeService
     public function updateEventType(EventType $eventType): Optional
     {
         $sql = <<<SQL
-UPDATE jmp.event_type
-SET jmp.event_type.title = COALESCE(:title, event_type.title),
-    jmp.event_type.color = COALESCE(:color, jmp.event_type.color)
-WHERE jmp.event_type.id = :id
+UPDATE event_type
+SET event_type.title = COALESCE(:title, event_type.title),
+    event_type.color = COALESCE(:color, event_type.color)
+WHERE event_type.id = :id
 SQL;
 
         $stmt = $this->db->prepare($sql);
@@ -59,8 +59,8 @@ SQL;
     public function deleteEventType(int $id): bool
     {
         $sql = <<<SQL
-DELETE FROM jmp.event_type
-WHERE jmp.event_type.id = :id
+DELETE FROM event_type
+WHERE event_type.id = :id
 SQL;
 
         $stmt = $this->db->prepare($sql);
@@ -102,7 +102,7 @@ SQL;
     {
         $sql = <<< SQL
 SELECT *
-FROM jmp.event_type
+FROM event_type
 SQL;
 
         $stmt = $this->db->prepare($sql);
@@ -128,8 +128,8 @@ SQL;
     public function createEventType(EventType $eventType): Optional
     {
         $sql = <<< SQL
-INSERT INTO jmp.event_type
-(jmp.event_type.title, jmp.event_type.color) 
+INSERT INTO event_type
+(event_type.title, event_type.color) 
 VALUES (:title, :color)
 SQL;
 
@@ -198,7 +198,7 @@ SQL;
     {
         $sql = <<<SQL
             SELECT id
-            FROM jmp.`event_type`
+            FROM `event_type`
             WHERE id = :id
 SQL;
 
@@ -217,7 +217,7 @@ SQL;
     {
         $sql = <<<SQL
 SELECT *
-FROM jmp.event_type
+FROM event_type
 WHERE id = :id
 LIMIT 1
 SQL;
