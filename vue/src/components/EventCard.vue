@@ -1,18 +1,23 @@
 <template>
-    <router-link :to="{ name: 'eventDetail', params:{ id: event.id, title: event.title } }" class="eventCard">
-        <div :style="{ backgroundColor: event.eventType.color, color: getColor() }" class="card mb-3">
-            <div class="card-header">
-                <h5>{{event.title}}</h5>
-            </div>
-            <div class="card-body">
-                <p class="card-text">
+    <v-card
+            :color="event.eventType.color"
+            :hover="true"
+            :style="{ color: getColor() }"
+            :to="{ name: 'eventDetail', params:{ id: event.id, title: event.title } }"
+            style="text-decoration: none"
+    >
+        <v-card-title>
+            <span class="title">{{event.title}}</span>
+        </v-card-title>
+        <v-divider style="margin: 0;"></v-divider>
+        <v-card-text>
+                <span class="text">
                     {{getDateTime()}} <br>
                     {{event.place}} <br>
                     {{event.description}}
-                </p>
-            </div>
-        </div>
-    </router-link>
+                </span>
+        </v-card-text>
+    </v-card>
 </template>
 
 <script>
@@ -33,12 +38,12 @@
                 const to = this.event.to;
                 let string = '';
                 if (dateFormat(from, 'shortDate') === dateFormat(to, 'shortDate')) {
-                    string = dateFormat(this.event.from, 'dd.mm.yyyy hh:MM "- "');
-                    string += dateFormat(this.event.to, 'hh:MM "Uhr"');
+                    string = dateFormat(this.event.from, 'dd.mm.yyyy HH:MM "- "');
+                    string += dateFormat(this.event.to, 'HH:MM "Uhr"');
                     return string;
                 }
-                string = dateFormat(this.event.from, 'dd.mm.yyyy hh:MM "Uhr - "');
-                string += dateFormat(this.event.to, 'dd.mm.yyyy hh:MM "Uhr"');
+                string = dateFormat(this.event.from, 'dd.mm.yyyy HH:MM "Uhr - "');
+                string += dateFormat(this.event.to, 'dd.mm.yyyy HH:MM "Uhr"');
                 return string;
             }
         }
@@ -46,7 +51,7 @@
 </script>
 
 <style scoped>
-.eventCard {
-    text-decoration: none;
-}
+    .eventCard {
+        text-decoration: none;
+    }
 </style>

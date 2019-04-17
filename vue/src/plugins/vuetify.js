@@ -1,5 +1,16 @@
 import Vue from 'vue';
-import Vuetify, {VApp, VBtn, VDataTable, VSelect, VTextarea, VTextField} from 'vuetify/lib';
+import Vuetify, {
+    VApp,
+    VBtn,
+    VCard,
+    VCardText,
+    VCardTitle,
+    VContainer,
+    VDataTable,
+    VSelect,
+    VTextarea,
+    VTextField
+} from 'vuetify/lib';
 // Helpers
 import de from 'vuetify/es5/locale/de';
 import en from 'vuetify/es5/locale/en';
@@ -17,6 +28,10 @@ Vue.use(Vuetify, {
         VDataTable,
         VTextField,
         VTextarea,
-        VSelect
+        VSelect,
+        VCard,
+        VCardText,
+        VCardTitle,
+        VContainer
     }
 });

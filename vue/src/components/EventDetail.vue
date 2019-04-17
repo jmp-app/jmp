@@ -46,12 +46,12 @@
                 const to = this.event.to;
                 let string = '';
                 if (dateFormat(from, 'shortDate') === dateFormat(to, 'shortDate')) {
-                    string = dateFormat(this.event.from, 'dd.mm.yyyy hh:MM "- "');
-                    string += dateFormat(this.event.to, 'hh:MM "Uhr"');
+                    string = dateFormat(this.event.from, 'dd.mm.yyyy HH:MM "- "');
+                    string += dateFormat(this.event.to, 'HH:MM "Uhr"');
                     return string;
                 }
-                string = dateFormat(this.event.from, 'dd.mm.yyyy hh:MM "Uhr - "');
-                string += dateFormat(this.event.to, 'dd.mm.yyyy hh:MM "Uhr"');
+                string = dateFormat(this.event.from, 'dd.mm.yyyy HH:MM "Uhr - "');
+                string += dateFormat(this.event.to, 'dd.mm.yyyy HH:MM "Uhr"');
                 return string;
             }
         }

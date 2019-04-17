@@ -3,11 +3,13 @@
         <div v-if="isAdmin() && events">
             <v-switch :label="$t('event.overview.showAll')" v-model="showAll"></v-switch>
         </div>
-        <div id="eventCards">
-            <div :key="event.id" v-for="event in events">
-                <EventCard :event="event"/>
-            </div>
-        </div>
+        <v-container fluid grid-list-md>
+            <v-layout id="eventCards" row wrap>
+                <v-flex :key="event.id" v-for="event in events" xs12>
+                    <EventCard :event="event"/>
+                </v-flex>
+            </v-layout>
+        </v-container>
         <div class="text-xs-center" v-if="loading">
             <v-progress-circular
                     color="primary"
