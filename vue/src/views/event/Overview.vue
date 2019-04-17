@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="isAdmin()">
+        <div v-if="isAdmin() && events">
             <v-switch :label="$t('event.overview.showAll')" v-model="showAll"></v-switch>
         </div>
         <div id="eventCards">
@@ -8,7 +8,12 @@
                 <EventCard :event="event"/>
             </div>
         </div>
-        <div v-if="loading">Loading...</div>
+        <div class="text-xs-center" v-if="loading">
+            <v-progress-circular
+                    color="primary"
+                    indeterminate
+            ></v-progress-circular>
+        </div>
     </div>
 </template>
 

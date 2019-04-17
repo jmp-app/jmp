@@ -1,12 +1,23 @@
 <template>
     <div>
-        <p v-if="loading">Loading...</p>
+        <div class="text-xs-center" v-if="loading">
+            <v-progress-circular
+                    color="primary"
+                    indeterminate
+            ></v-progress-circular>
+        </div>
         <p v-if="!event && !loading">{{ $t("noDataFound") }}</p>
         <div v-if="event">
             <EventDetail :event="event"></EventDetail>
             <hr class="mt-4 mb-4"/>
             <RegistrationForm :defaultRegistrationState="event.defaultRegistrationState"
                               v-if="registration"></RegistrationForm>
+            <div class="text-xs-center" v-if="!registration">
+                <v-progress-circular
+                        color="primary"
+                        indeterminate
+                ></v-progress-circular>
+            </div>
         </div>
     </div>
 </template>

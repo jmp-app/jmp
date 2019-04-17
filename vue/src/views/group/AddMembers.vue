@@ -72,7 +72,12 @@
                 <button @click="submit()" class="btn mt-3 btn-primary">{{$t('save')}}</button>
             </div>
         </div>
-        <div v-else>Loading...</div>
+        <div class="text-xs-center" v-else>
+            <v-progress-circular
+                    color="primary"
+                    indeterminate
+            ></v-progress-circular>
+        </div>
     </div>
 </template>
 

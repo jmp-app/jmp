@@ -1,31 +1,38 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-        <v-layout mb-4>
-            <v-text-field
-                    :label="$t('search')"
-                    append-icon="search"
-                    hide-details
-                    single-line
-                    v-model="searchQuery"
-            ></v-text-field>
-        </v-layout>
-        <v-data-table
-                :headers="headers"
-                :items="events"
-                :search="searchQuery"
-                :pagination.sync="pagination"
-                v-if="events"
-                :rows-per-page-items="[10,20,50,{'text':'$vuetify.dataIterator.rowsPerPageAll','value':-1}]"
-        >
-            <template v-slot:items="props">
-                <tr @click="$router.push(`/events/${props.item.id}`)">
-                    <td>{{ props.item.title }}</td>
-                    <td>{{ formatDateTime(props.item.from) }}</td>
-                    <td>{{ formatDateTime(props.item.to) }}</td>
-                    <td>{{ props.item.eventType.title }}</td>
-                </tr>
-            </template>
-        </v-data-table>
+        <div v-if="events">
+            <v-layout mb-4>
+                <v-text-field
+                        :label="$t('search')"
+                        append-icon="search"
+                        hide-details
+                        single-line
+                        v-model="searchQuery"
+                ></v-text-field>
+            </v-layout>
+            <v-data-table
+                    :headers="headers"
+                    :items="events"
+                    :pagination.sync="pagination"
+                    :rows-per-page-items="[10,20,50,{'text':'$vuetify.dataIterator.rowsPerPageAll','value':-1}]"
+                    :search="searchQuery"
+            >
+                <template v-slot:items="props">
+                    <tr @click="$router.push(`/events/${props.item.id}`)">
+                        <td>{{ props.item.title }}</td>
+                        <td>{{ formatDateTime(props.item.from) }}</td>
+                        <td>{{ formatDateTime(props.item.to) }}</td>
+                        <td>{{ props.item.eventType.title }}</td>
+                    </tr>
+                </template>
+            </v-data-table>
+        </div>
+        <div class="text-xs-center" v-if="!events">
+            <v-progress-circular
+                    color="primary"
+                    indeterminate
+            ></v-progress-circular>
+        </div>
     </div>
 </template>
 
