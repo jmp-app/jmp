@@ -1,24 +1,29 @@
 <template>
-    <div>
-        <div class="form-group">
-            <label for="regState">{{ $t("registration.state") }}</label>
-            <select @change="handleChange()" class="form-control" id="regState" v-model="selected">
-                <option :key="regState.id" v-bind:value="regState" v-for="regState in registrationStates">
-                    {{regState.name}}
-                </option>
-            </select>
-        </div>
-        <div class="form-group" v-if="reasonRequired()">
-            <label for="reason">{{ $t("registration.reason") }}</label>
-            <input :class="{ 'is-invalid': submitted && !reason.replace(/\s/g, '').length > 0 }" class="form-control"
-                   id="reason" type="text"
-                   v-bind:placeholder="$t('registration.reasonPlaceholder')" v-model="reason">
-            <div class="invalid-feedback" v-show="submitted && !reason.replace(/\s/g, '').length > 0">{{
-                $t('registration.reasonRequired') }}
-            </div>
-        </div>
-        <v-btn @click="handleSubmit()" color="error" v-show="hasChanges">{{ $t("submit") }}</v-btn>
-    </div>
+    <v-form
+            lazy-validation
+            ref="form"
+            v-if="registrationStates"
+            v-model="valid"
+    >
+        <v-select
+                :items="registrationStates"
+                :label="$t('registration.state')"
+                :rules="rules.registrationState"
+                @change="handleChange()"
+                item-text="name"
+                return-object
+                v-model="selected"
+        ></v-select>
+        <v-text-field
+                :label="$t('registration.reason')"
+                :rules="rules.reason"
+                v-if="reasonRequired()"
+                v-model="reason"
+        ></v-text-field>
+        <v-btn :disabled="!valid" @click="validate()" color="error" v-show="hasChanges">
+            {{ $t("submit") }}
+        </v-btn>
+    </v-form>
 </template>
 
 <script>
@@ -32,7 +37,15 @@
                 selected: this.$store.state.registration.detail.registration.registrationState,
                 reason: this.$store.state.registration.detail.registration.reason,
                 hasChanges: false,
-                submitted: false
+                valid: true,
+                rules: {
+                    registrationState: [
+                        v => (!!v && !!v.id) || `${this.$t('fieldIsRequired', {fieldname: this.$t('registration.state')})}`
+                    ],
+                    reason: [
+                        v => !!v || `${this.$t('fieldIsRequired', {fieldname: this.$t('registration.reason')})}`
+                    ]
+                }
             };
         },
         computed: {
@@ -54,8 +67,12 @@
                     this.reason = this.registration.reason;
                 }
             },
+            validate: function () {
+                if (this.$refs.form.validate()) {
+                    this.handleSubmit();
+                }
+            },
             handleSubmit: function () {
-                this.submitted = true;
                 let eventId = this.$store.state.events.detail.event.id;
                 let userId = JSON.parse(window.localStorage.getItem('user')).id;
                 let registrationStateId = this.selected.id;
