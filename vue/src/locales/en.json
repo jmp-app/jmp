@@ -17,6 +17,7 @@
   "toShort": "To short",
   "fieldIsRequired": "{fieldname} is required",
   "fieldValueLength": "{fieldname} must be less than {lenght} characters",
+  "fieldValueToShort": "{fieldname} must be at least {lenght} characters long",
   "cancel": "Cancel",
   "create": "Create",
   "edit": "Edit",

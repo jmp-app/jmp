@@ -1,9 +1,10 @@
 <template>
-    <div class="locale-changer">
-        <select class="custom-select" v-model="$i18n.locale" v-on:change="handleChange()">
-            <option :key="`Lang${i}`" :value="lang" v-for="(lang, i) in langs">{{ lang }}</option>
-        </select>
-    </div>
+    <v-select
+            :items="langs"
+            class="localChanger"
+            v-model="$i18n.locale"
+            v-on:change="handleChange()"
+    ></v-select>
 </template>
 
 <script>
@@ -29,5 +30,7 @@
 </script>
 
 <style scoped>
-
+    .localChanger {
+        max-width: 55px;
+    }
 </style>
