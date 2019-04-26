@@ -26,8 +26,8 @@
             initGameArea() {
                 this.gameArea.canvas = this.$refs.canvas;
                 this.gameArea.start = function () {
-                    // this.canvas.width = 1920;
-                    // this.canvas.height = 1080;
+                    this.canvas.width = this.canvas.width * 10;
+                    this.canvas.height = this.canvas.height * 10;
                     this.context = this.canvas.getContext('2d');
                 };
                 this.gameArea.clear = function () {
@@ -42,7 +42,7 @@
                 }.bind(this), 20);
                 window.addEventListener('keydown', this.handleKeyDown);
                 window.addEventListener('keyup', this.handleKeyUp);
-                this.initGamePiece(15, 30, '#a32014', 20, this.gameArea.canvas.height / 2);
+                this.initGamePiece(200, 300, '#a32014', 2, this.gameArea.canvas.height / 2);
             },
             stopGame() {
                 this.gameArea.clear();
@@ -57,8 +57,9 @@
                 let gameArea = this.gameArea;
                 gamePiece.width = width;
                 gamePiece.height = height;
-                gamePiece.speedX = 0;
-                gamePiece.speedY = 0;
+                gamePiece.speed = 0;
+                gamePiece.angle = 0;
+                gamePiece.moveAngle = 0;
                 gamePiece.x = x;
                 gamePiece.y = y;
                 gameArea.context.fillStyle = color;
@@ -66,47 +67,44 @@
 
                 gamePiece.update = function () {
                     let context = gameArea.context;
+                    context.save();
+                    context.translate(gamePiece.x, gamePiece.y);
+                    context.rotate(gamePiece.angle);
                     context.fillStyle = color;
-                    gameArea.context.fillRect(gamePiece.x, gamePiece.y, gamePiece.width, gamePiece.height);
+                    gameArea.context.fillRect(gamePiece.width / -2, gamePiece.height / -2, gamePiece.width, gamePiece.height);
+                    context.restore();
                 };
 
                 gamePiece.newPos = function () {
-                    if (((gamePiece.x + gamePiece.speedX) < this.gameArea.canvas.width - gamePiece.width) && (gamePiece.x + gamePiece.speedX) > 0) {
-                        gamePiece.x += gamePiece.speedX;
-                    }
-                    if (((gamePiece.y + gamePiece.speedY) < this.gameArea.canvas.height - gamePiece.height) && (gamePiece.y + gamePiece.speedY) > 0) {
-                        gamePiece.y += gamePiece.speedY;
-                    }
-                }.bind(this);
-            },
-            initImage() {
-                let imageObj = new Image();
-                imageObj.onload = function () {
-                    // let wRatio = this.gameArea.canvas.width / imageObj.width;
-                    // let hRatio = this.gameArea.canvas.height / imageObj.height;
-                    // let ratio = Math.min(wRatio, hRatio);
-                    this.gameArea.context.drawImage(imageObj, 0, 0, this.gameArea.canvas.width, this.gameArea.canvas.height);
-                }.bind(this);
-                // imageObj.src = '//placehold.it/500';
-                imageObj.src = '//localhost:8080/img/logo.271da85f.png';
+                    gamePiece.angle += gamePiece.moveAngle * Math.PI / 180;
+                    gamePiece.x += gamePiece.speed * Math.sin(gamePiece.angle);
+                    gamePiece.y -= gamePiece.speed * Math.cos(gamePiece.angle);
+                };
             },
             updateGameArea() {
                 let gameArea = this.gameArea;
                 let gamePiece = this.gamePiece;
+                let angleSteps = 2.5;
                 gameArea.clear();
-                gamePiece.speedX = 0;
-                gamePiece.speedY = 0;
-                if (gameArea.keys && gameArea.keys[37]) {
-                    gamePiece.speedX = -1;
+                gamePiece.moveAngle = 0;
+                gamePiece.speed = 0;
+                if (gameArea.keys && gameArea.keys[37] && gameArea.keys[38]) {
+                    gamePiece.moveAngle = -angleSteps;
                 }
-                if (gameArea.keys && gameArea.keys[39]) {
-                    gamePiece.speedX = 1;
+                if (gameArea.keys && gameArea.keys[37] && gameArea.keys[40]) {
+                    gamePiece.moveAngle = angleSteps;
+                }
+                if (gameArea.keys && gameArea.keys[39] && gameArea.keys[38]) {
+                    gamePiece.moveAngle = angleSteps;
+                }
+                if (gameArea.keys && gameArea.keys[39] && gameArea.keys[40]) {
+                    gamePiece.moveAngle = -angleSteps;
                 }
                 if (gameArea.keys && gameArea.keys[38]) {
-                    gamePiece.speedY = -1;
+                    gamePiece.speed = 20;
                 }
                 if (gameArea.keys && gameArea.keys[40]) {
-                    gamePiece.speedY = 1;
+                    gamePiece.speed = -20;
                 }
                 gamePiece.newPos();
                 gamePiece.update();
