@@ -83,6 +83,13 @@ export const router = new Router({
             component: function () {
                 return import('../views/event/admin/Detail.vue');
             }
+        },
+        {
+            path: '/events/:id/registrations',
+            name: 'adminEventRegistrations',
+            component: function () {
+                return import('../views/event/admin/Registrations.vue');
+            }
         }
     ]
 });

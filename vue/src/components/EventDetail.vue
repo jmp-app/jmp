@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="text-truncate">
         <h1>{{event.title}}</h1>
         <table class="table table-responsive">
             <tbody>
