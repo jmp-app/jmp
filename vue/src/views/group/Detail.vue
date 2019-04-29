@@ -44,7 +44,7 @@
                     :search="searchQuery"
             >
                 <template v-slot:items="props">
-                    <tr @click="$router.push(`/users/${props.item.id}`)">
+                    <tr @click="$router.push(`/users/${props.item.id}`)" class="clickable">
                         <td>{{ props.item.username }}</td>
                         <td>{{ props.item.firstname }}</td>
                         <td>{{ props.item.lastname }}</td>

@@ -15,7 +15,7 @@
                 v-if="groups"
         >
             <template v-slot:items="props">
-                <tr @click="$router.push(`/groups/${props.item.id}`)">
+                <tr @click="$router.push(`/groups/${props.item.id}`)" class="clickable">
                     <td>{{ props.item.name }}</td>
                 </tr>
             </template>

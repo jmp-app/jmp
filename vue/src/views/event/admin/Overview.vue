@@ -18,7 +18,7 @@
                     :search="searchQuery"
             >
                 <template v-slot:items="props">
-                    <tr @click="$router.push(`/events/${props.item.id}`)">
+                    <tr @click="$router.push(`/events/${props.item.id}`)" class="clickable">
                         <td>{{ props.item.title }}</td>
                         <td>{{ formatDateTime(props.item.from) }}</td>
                         <td>{{ formatDateTime(props.item.to) }}</td>
