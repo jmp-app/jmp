@@ -3,7 +3,9 @@
         <v-layout align-center justify-center>
             <v-flex class="login-form text-xs-center">
                 <v-card>
-                    <v-img :src="require('@/assets/jmp.svg')" alt="Logo" aspect-ratio="1.7"></v-img>
+                    <v-img :src="require('@/assets/jmp.svg')" @click="eggCounter++" alt="Logo" aspect-ratio="1.7"
+                           v-if="!showEgg"></v-img>
+                    <EggBoard v-if="showEgg"></EggBoard>
                     <v-card-text>
                         <v-form
                                 lazy-validation
@@ -40,7 +42,6 @@
                         <LocalChanger></LocalChanger>
                     </v-card-actions>
                 </v-card>
-                <Board style="margin-top: 10px"></Board>
             </v-flex>
         </v-layout>
     </v-container>
@@ -48,17 +49,19 @@
 
 <script>
     import LocalChanger from '@/components/LocalChanger';
-    import Board from '../components/Board';
+    import EggBoard from '@/components/EggBoard';
 
     export default {
         name: 'Login',
-        components: {Board, LocalChanger},
+        components: {EggBoard, LocalChanger},
         data() {
             return {
                 valid: true,
                 username: '',
                 password: '',
                 showPassword: false,
+                showEgg: false,
+                eggCounter: 0,
                 rules: {
                     username: [
                         v => !!v || `${this.$t('fieldIsRequired', {fieldname: this.$t('user.username')})}`
@@ -91,6 +94,13 @@
             validate: function () {
                 if (this.$refs.form.validate()) {
                     this.handleSubmit();
+                }
+            }
+        },
+        watch: {
+            eggCounter() {
+                if (this.eggCounter >= 10) {
+                    this.showEgg = true;
                 }
             }
         }

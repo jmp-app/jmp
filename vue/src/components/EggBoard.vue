@@ -1,19 +1,19 @@
 <template>
-    <v-card>
+    <v-card flat>
         <canvas
                 ref="canvas"
                 style="width: 100%"
         ></canvas>
         <v-card-actions>
             <v-btn @click="startGame()" color="success" v-if="startBtn">Start</v-btn>
-            <v-btn @click="stopGame()" color="error" v-if="stopBtn">Stop</v-btn>
+            <v-btn @click="resetGame()" v-if="stopBtn">Reset</v-btn>
         </v-card-actions>
     </v-card>
 </template>
 
 <script>
     export default {
-        name: 'Board',
+        name: 'EggBoard',
         data() {
             return {
                 gameArea: Object,
@@ -42,7 +42,11 @@
                 }.bind(this), 20);
                 window.addEventListener('keydown', this.handleKeyDown);
                 window.addEventListener('keyup', this.handleKeyUp);
-                this.initGamePiece(200, 300, '#a32014', 2, this.gameArea.canvas.height / 2);
+                this.initGamePiece(200, 300, '#a32014', this.gameArea.canvas.width / 2, this.gameArea.canvas.height / 2);
+            },
+            resetGame() {
+                this.stopGame();
+                this.startGame();
             },
             stopGame() {
                 this.gameArea.clear();
@@ -121,6 +125,7 @@
             this.initGameArea();
             // this.initImage();
             this.gameArea.start();
+            this.startGame();
         },
         beforeDestroy() {
             this.stopGame();
