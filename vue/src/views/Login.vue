@@ -26,6 +26,7 @@
                                     @click:append="showPassword = !showPassword"
                                     required
                                     v-model="password"
+                                    v-on:keyup.enter="validate"
                             ></v-text-field>
                         </v-form>
                     </v-card-text>
