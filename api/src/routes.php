@@ -141,6 +141,12 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
             $this->options('', function () {
             });
 
+            $this->put('', RegistrationStateController::class . ':updateRegistrationState')
+                ->add(new ValidationErrorResponseBuilder())
+                ->add(new Validation($this->getContainer()['validation']['updateRegistrationState']))
+                ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+                ->add($jwtMiddleware);
+
             $this->get('', RegistrationStateController::class . ':getRegistrationStateById')
                 ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
                 ->add($jwtMiddleware);

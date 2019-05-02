@@ -31,6 +31,33 @@ class RegistrationStateController
         $this->logger = $container->get('logger');
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function updateRegistrationState(Request $request, Response $response, array $args): Response
+    {
+        $id = $args['id'];
+
+        if ($this->registrationStateService->registrationStateExists($id) === false) {
+            return $response->withStatus(404);
+        }
+
+        $registrationState = new RegistrationState($request->getParsedBody());
+        $registrationState->id = $id;
+
+        $optional = $this->registrationStateService->updateRegistrationState($registrationState);
+
+        if ($optional->isSuccess()) {
+            return $response->withJson(Converter::convert($optional->getData()));
+        } else {
+            $this->logger->error('Failed to update registration state with the id ' . $id . ' and the following fields: {' . Converter::convert($registrationState) . '}');
+            return $response->withStatus(500);
+        }
+    }
+
     public function deleteRegistrationState(Request $request, Response $response, array $args): Response
     {
         $id = $args['id'];

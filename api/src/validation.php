@@ -110,6 +110,10 @@ $container['validation'] = function () {
         'createRegistrationState' => [
             'name' => v::notEmpty()->length(1, 256),
             'reasonRequired' => v::boolVal()
+        ],
+        'updateRegistrationState' => [
+            'name' => v::optional(v::notEmpty()->length(1, 256)),
+            'reasonRequired' => v::optional(v::boolVal())
         ]
     ];
 };

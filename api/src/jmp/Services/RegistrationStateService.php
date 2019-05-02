@@ -25,6 +25,31 @@ class RegistrationStateService
     }
 
     /**
+     * @param RegistrationState $registrationState
+     * @return Optional
+     */
+    public function updateRegistrationState(RegistrationState $registrationState): Optional
+    {
+        $sql = <<<SQL
+UPDATE registration_state
+SET name = COALESCE(:name, name),
+    reason_required = COALESCE(:reasonRequired, reason_required)
+WHERE id = :id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':name', $registrationState->name);
+        $stmt->bindValue(':reasonRequired', $registrationState->reasonRequired, PDO::PARAM_BOOL);
+        $stmt->bindParam(':id', $registrationState->id);
+
+        if ($stmt->execute() === false) {
+            return Optional::failure();
+        }
+
+        return $this->getRegistrationStateById($registrationState->id);
+    }
+
+    /**
      * @param int $id
      * @return bool
      */
