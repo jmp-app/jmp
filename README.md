@@ -32,6 +32,11 @@ git clone https://github.com/jmp-app/jmp.git
 cd jmp
 ```
 
+Create the configuration file for vue:
+* [`vue/jmp.config.js`](vue/jmp.config.js)
+
+> It exists a .example file for it with the default values in it
+
 Build vue
 ```bash
 cd vue
