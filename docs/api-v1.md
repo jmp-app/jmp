@@ -158,6 +158,28 @@
 }
 ```
 
+### Extended Registration
+This is an extended version of the registration object. It contains both information about the user and the registration.
+```json
+{
+  "id": 162,
+  "username": "walter",
+  "lastname": "White",
+  "firstname": "Walter",
+  "email": "walter@white.me",
+  "passwordChange": false,
+  "isAdmin": false,
+  "registration": {
+    "reason": "Sick",
+    "registrationState": {
+      "id": 1,
+      "name": "Deregistered",
+      "reasonRequired": true
+    }
+  }
+}
+```
+
 **Note** [Registration](#Registration) includes a [Registration State](#registration-state)
 
 ## Error Handling
@@ -930,12 +952,29 @@ Parameters:
 
 | Field     | Description                                                  | Required | Type |
 | --------- | ------------------------------------------------------------ | -------- | ---- |
-| eventId   | The event's id                                               | ✔️     | varchar(80) |
+| eventId   | The event's id                                               | ✔️     |numeric|
 | userId    | The user's id                                                | ✔        | numeric |
 
 
 Access rights: authentication required
 
 Returns: HTTP 204 status code when successful
+
+### Get Registrations 
+
+```http
+GET /v1/registrations/{eventId}
+```
+
+Parameters:
+
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| eventId   | The event's id                                               | ✔️     |numeric|
+
+
+Access rights: admin
+
+Returns: [Event](#event) and list of [Extended Registrations](#extended-registration)
 
 ___TODO:___ Presence and User Meta
