@@ -158,6 +158,8 @@
 }
 ```
 
+**Note** [Registration](#Registration) includes a [Registration State](#registration-state)
+
 ### Extended Registration
 This is an extended version of the registration object. It contains both information about the user and the registration.
 ```json
@@ -180,7 +182,16 @@ This is an extended version of the registration object. It contains both informa
 }
 ```
 
-**Note** [Registration](#Registration) includes a [Registration State](#registration-state)
+### Presence
+
+```json
+{
+  "eventId": 29,
+  "userId": 160,
+  "revisorId": 160,
+  "hasAttended": false
+}
+```
 
 ## Error Handling
 
@@ -976,5 +987,23 @@ Parameters:
 Access rights: admin
 
 Returns: [Event](#event) and list of [Extended Registrations](#extended-registration)
+
+### Create Presence
+
+```http request
+POST /v1/presence
+```
+
+Parameters:
+
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| eventId   | The event's id                                               | ✔️     | numeric |
+| userId    | The user's id                                                | ✔        | numeric |
+| hasAttended    | True if the user as attended at the event               | ✔        | boolean(0 or 1) |
+
+Access rights: admin
+
+Returns: [Presence](#presence)
 
 ___TODO:___ Presence and User Meta
