@@ -197,22 +197,22 @@ CREATE TABLE IF NOT EXISTS `jmp`.`registration`
 
 CREATE TABLE IF NOT EXISTS `jmp`.`presence`
 (
-  `event_id`     INT(11) NOT NULL,
-  `user_id`      INT(11) NOT NULL,
-  `revisor_id`   INT(11) NOT NULL,
-  `has_attended` TINYINT NOT NULL,
-  PRIMARY KEY (`event_id`, `user_id`, `revisor_id`),
-  CONSTRAINT `presence_actually_ibfk_1`
+    `event_id`     INT(11) NOT NULL,
+    `user_id`      INT(11) NOT NULL,
+    `auditor_id`   INT(11) NOT NULL,
+    `has_attended` TINYINT NOT NULL,
+    PRIMARY KEY (`event_id`, `user_id`, `auditor_id`),
+    CONSTRAINT `presence_actually_ibfk_1`
     FOREIGN KEY (`event_id`)
         REFERENCES `jmp`.`event` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION,
-  CONSTRAINT `presence_actually_ibfk_2`
+    CONSTRAINT `presence_actually_ibfk_2`
     FOREIGN KEY (`user_id`)
       REFERENCES `jmp`.`user` (`id`)
       ON DELETE CASCADE,
-  CONSTRAINT `presence_actually_ibfk_3`
-    FOREIGN KEY (`revisor_id`)
+    CONSTRAINT `presence_actually_ibfk_3`
+        FOREIGN KEY (`auditor_id`)
       REFERENCES `jmp`.`user` (`id`)
       ON DELETE CASCADE
 )

@@ -43,6 +43,7 @@
   * [List Registration States](#list-registration-states)
   * [Get Registration State](#get-registration-state)
   * [Delete Registration State](#delete-registration-state)
+  * [Create Presence](#create-presence)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -186,9 +187,9 @@ This is an extended version of the registration object. It contains both informa
 
 ```json
 {
-  "eventId": 29,
-  "userId": 160,
-  "revisorId": 160,
+  "event": 29,
+  "user": 160,
+  "auditor": 160,
   "hasAttended": false
 }
 ```
@@ -998,8 +999,8 @@ Parameters:
 
 | Field     | Description                                                  | Required | Type |
 | --------- | ------------------------------------------------------------ | -------- | ---- |
-| eventId   | The event's id                                               | ✔️     | numeric |
-| userId    | The user's id                                                | ✔        | numeric |
+| event   | The event's id                                               | ✔️     | numeric |
+| user    | The user's id                                                | ✔        | numeric |
 | hasAttended    | True if the user as attended at the event               | ✔        | boolean(0 or 1) |
 
 Access rights: admin

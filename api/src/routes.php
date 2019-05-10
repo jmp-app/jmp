@@ -5,6 +5,7 @@ use jmp\Controllers\EventsController;
 use jmp\Controllers\EventTypesController;
 use jmp\Controllers\GroupsController;
 use jmp\Controllers\LoginController;
+use jmp\Controllers\PresenceController;
 use jmp\Controllers\RegistrationController;
 use jmp\Controllers\RegistrationStateController;
 use jmp\Controllers\UsersController;
@@ -309,5 +310,19 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
                 ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
                 ->add($jwtMiddleware);
         });
+    });
+
+    $this->group('/presence', function () use ($container, $jwtMiddleware) {
+        /** @var $this Slim\App */
+        $this->options('', function () {
+        });
+
+
+        $this->post('', PresenceController::class . ':createPresence')
+            ->add(new ValidationErrorResponseBuilder())
+            ->add(new Validation($container['validation']['createPresence']))
+            ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+            ->add($jwtMiddleware);
+
     });
 });

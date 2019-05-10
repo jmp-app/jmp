@@ -5,6 +5,7 @@ use jmp\Services\EventService;
 use jmp\Services\EventTypeService;
 use jmp\Services\GroupService;
 use jmp\Services\MembershipService;
+use jmp\Services\PresenceService;
 use jmp\Services\RegistrationService;
 use jmp\Services\RegistrationStateService;
 use jmp\Services\UserService;
@@ -106,6 +107,10 @@ $container['userService'] = function (ContainerInterface $container) {
 
 $container['validationService'] = function (ContainerInterface $container) {
     return new ValidationService($container);
+};
+
+$container['presenceService'] = function (ContainerInterface $container) {
+    return new PresenceService($container);
 };
 
 

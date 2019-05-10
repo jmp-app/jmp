@@ -34,12 +34,12 @@ SELECT DISTINCT u.id
 FROM `group` g
        LEFT JOIN membership m on g.id = m.group_id
        LEFT JOIN user u on m.user_id = u.id
-WHERE g.id IN (:groupIds)
+WHERE FIND_IN_SET(g.id, :groupIds)
 AND u.id = :userId;
 SQL;
 
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':groupIds', implode(',', $groupIds));
+        $stmt->bindValue(':groupIds', implode(',', $groupIds));
         $stmt->bindParam(':userId', $userId);
         $stmt->execute();
 
