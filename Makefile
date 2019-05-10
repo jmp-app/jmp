@@ -43,6 +43,9 @@ build-up:
 	docker-compose up -d --build
 	docker exec app composer install
 
+wait-for-db:
+	bash wait-for-db.sh
+
 up:
 	docker-compose up -d
 
