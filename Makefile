@@ -19,7 +19,7 @@ create-test-collection:
 #   1. host: Name of the host or ip-address. E.g. example.com
 #	2. protocol: Protocol to query the api endpoints. Default is https
 #   3. path: Path to the api. Default is none. E.g. api or backend/jmp
-	bash docker/newman/collections/create_test_collection.sh $(host) $(protocol) $(path)
+	bash docker/scripts/create_test_collection.sh $(host) $(protocol) $(path)
 
 test-deployment:
 # Don't use this script for local tests
@@ -44,7 +44,7 @@ build-up:
 	docker exec app composer install
 
 wait-for-db:
-	bash wait-for-db.sh
+	bash docker/scripts/wait-for-db.sh
 
 up:
 	docker-compose up -d
