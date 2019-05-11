@@ -11,19 +11,14 @@ services:
     build:
       context: .
       dockerfile: docker/app/Dockerfile.dev
-      args:
-        APP_ENV: "dev"
     container_name: app
     restart: unless-stopped
     tty: true
     environment:
       SERVICE_NAME: app
-    working_dir: /var/www
     env_file:
       - api/db.env
       - api/.env
-    volumes:
-      - ./api/:/var/www
 
   # Nginx
   webserver:

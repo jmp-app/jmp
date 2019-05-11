@@ -1,4 +1,4 @@
-FROM php:7.3-fpm as builder
+FROM php:7-fpm as builder
 
 WORKDIR /var/www
 
@@ -22,7 +22,7 @@ RUN composer self-update
 
 RUN composer install --classmap-authoritative
 
-FROM php:7.3-fpm-alpine
+FROM php:7-fpm-alpine
 
 WORKDIR /var/www
 
