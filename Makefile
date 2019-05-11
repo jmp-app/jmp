@@ -43,7 +43,6 @@ test:
 
 build-up:
 	docker-compose up -d --build
-	docker exec app composer install
 
 build:
 	cd api \

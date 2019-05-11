@@ -9,8 +9,8 @@ services:
   # PHP
   app:
     build:
-      context: .
-      dockerfile: docker/app/Dockerfile.dev
+      context: api
+      dockerfile: Dockerfile
     container_name: app
     restart: unless-stopped
     tty: true
