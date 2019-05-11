@@ -10,7 +10,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: docker/app/Dockerfile
+      dockerfile: docker/app/Dockerfile.dev
       args:
         APP_ENV: "dev"
     container_name: app

@@ -1,7 +1,5 @@
 FROM php:7.2-fpm
 
-ARG APP_ENV
-
 WORKDIR /var/www
 
 # Install dependencies
@@ -25,21 +23,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
-# Copy composer files
-COPY api/composer*.json /var/www/
-
 # Set permissions for user www
 RUN chown www:www .
 
 # Change current user to www
 USER www
-
-# Install dependecies form composer
-# --classmap-authoritative increases performance (for productive environments only)
-RUN if [ "$APP_ENV" = "prod" ]; \
-    then echo "classmap"; composer install --classmap-authoritative; \
-    else echo "dev"; composer install; \
-    fi
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
