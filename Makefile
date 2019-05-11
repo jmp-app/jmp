@@ -8,6 +8,8 @@ host="localhost"
 protocol="http"
 path="api"
 
+target="jmp_prod"
+
 help:
 # Doesn't work in powershell
 	cat Makefile
@@ -42,6 +44,17 @@ test:
 build-up:
 	docker-compose up -d --build
 	docker exec app composer install
+
+build:
+	cd api \
+	docker build -t $(target) .
+
+create-container:
+	docker create $(target)
+
+run-container-local:
+	cd api \
+	docker run --network jmp_default --env-file=db.env --env-file=.env -d $(target)
 
 wait-for-db:
 	bash docker/scripts/wait-for-db.sh
