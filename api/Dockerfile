@@ -16,9 +16,8 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 COPY src src
 COPY composer.json composer.json
 COPY cache cache
-COPY log log
+#COPY log log
 COPY public/index.php public/index.php
-RUN ls -alrt
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -32,11 +31,10 @@ WORKDIR /var/www
 
 # Install extensions
 RUN docker-php-ext-install pdo_mysql
-RUN ls -alrt
 
 COPY --from=builder /var/www .
 COPY --from=builder /var/www/cache cache
-COPY --from=builder /var/www/log log
+#COPY --from=builder /var/www/log log
 COPY --from=builder /var/www/public/index.php public/index.php
 
 # Expose port 9000 and start php-fpm server
