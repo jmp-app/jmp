@@ -13,12 +13,12 @@ RUN apt-get update && apt-get install -y \
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN ls -alrt
 COPY src src
 COPY composer.json composer.json
 COPY cache cache
 COPY log log
 COPY public/index.php public/index.php
+RUN ls -alrt
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
