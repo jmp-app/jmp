@@ -34,7 +34,7 @@ RUN docker-php-ext-install pdo_mysql
 
 COPY --from=builder /var/www .
 COPY --from=builder /var/www/cache cache
-COPY  --from=builder /var/www/log log
+COPY --from=builder /var/www/log log
 COPY --from=builder /var/www/public/index.php public/index.php
 
 # Expose port 9000 and start php-fpm server
