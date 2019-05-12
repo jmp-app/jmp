@@ -1,17 +1,17 @@
-FROM php:7-fpm as builder
+FROM php:7-fpm-alpine as builder
 
 WORKDIR /var/www
 
 # Install dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    zip \
-    unzip \
-    git \
-    curl
-
+#RUN apt-get update && apt-get install -y \
+#    build-essential \
+#    zip \
+#    unzip \
+#    git \
+#    curl
+#
 # Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+#RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY src src
 COPY composer.json composer.json
