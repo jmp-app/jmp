@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN ls -alrt
 COPY src src
 COPY composer.json composer.json
 COPY cache cache
@@ -31,6 +32,7 @@ WORKDIR /var/www
 
 # Install extensions
 RUN docker-php-ext-install pdo_mysql
+RUN ls -alrt
 
 COPY --from=builder /var/www .
 COPY --from=builder /var/www/cache cache
