@@ -1,22 +1,16 @@
-FROM php:7-fpm-alpine as builder
+FROM composer:latest as builder
 
 WORKDIR /var/www
-
-# Install dependencies
-#RUN apt-get update && apt-get install -y \
-#    build-essential \
-#    zip \
-#    unzip \
-#    git \
-#    curl
-#
-# Clear cache
-#RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY src src
 COPY composer.json composer.json
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Copy certificates
+COPY certs.pem .
+# Make certificates read-only
+RUN chmod 444 /var/www/certs.pem
+# Set cafile
+ENV COMPOSER_CAFILE /var/www/certs.pem
 
 RUN composer self-update
 
@@ -33,6 +27,8 @@ COPY --from=builder /var/www .
 COPY cache cache
 #COPY log log
 COPY public/index.php public/index.php
+
+RUN chmod a+w cache -R
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
