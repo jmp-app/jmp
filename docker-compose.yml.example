@@ -1,0 +1,60 @@
+version: '3'
+
+volumes:
+  dbdata:
+    driver: local
+
+services:
+
+  # PHP
+  app:
+    build:
+      context: api
+      dockerfile: Dockerfile.proxy
+      args:
+        - HTTP_PROXY=$HTTP_PROXY
+        - HTTPS_PROXY=$HTTP_PROXY
+    container_name: app
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+    env_file:
+      - api/db.env
+      - api/.env
+
+  # Nginx
+  webserver:
+    image: nginx:alpine
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/log/nginx/:/var/log/nginx/
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./vue/dist/:/var/www/public
+
+  # MariaDB
+  db:
+    image: mariadb:10.3
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    env_file:
+      - api/db.env
+      - db.env
+    healthcheck:
+      test: mysql --protocol=socket -hlocalhost -u$$DB_USERNAME -p$$DB_PASSWORD -e 'SELECT 1'
+      interval: 1s
+      timeout: 1s
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./docker/db/:/docker-entrypoint-initdb.d/
