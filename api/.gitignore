@@ -4,3 +4,5 @@ composer.phar
 .env
 db.env
 /log/
+cache/routes.cache.php
+certs.pem

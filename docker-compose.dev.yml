@@ -11,6 +11,9 @@ services:
     build:
       context: .
       dockerfile: docker/app/Dockerfile.dev
+      args:
+        - HTTP_PROXY=$HTTP_PROXY
+        - HTTPS_PROXY=$HTTP_PROXY
     container_name: app
     restart: unless-stopped
     tty: true

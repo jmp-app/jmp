@@ -1,4 +1,6 @@
 docker/log/
 .idea/
 db.env
+.env
 cache/slim-cache.php
+docker/newman/collections/*.postman_collection.json
