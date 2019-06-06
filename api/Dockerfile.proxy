@@ -6,15 +6,15 @@ COPY src src
 COPY composer.json composer.json
 
 # Copy certificates
-COPY certs.pem* .
+COPY certs.pem .
 # Make certificates read-only
 RUN chmod 444 /var/www/certs.pem
 # Set cafile
 ENV COMPOSER_CAFILE /var/www/certs.pem
 
-RUN composer install --classmap-authoritative
+RUN composer install --classmap-authoritative --no-suggest --no-dev --no-progress --no-interaction
 
-FROM php:7-fpm-alpine
+FROM php:7.3-fpm-alpine
 
 WORKDIR /var/www
 
@@ -23,7 +23,6 @@ RUN docker-php-ext-install pdo_mysql
 
 COPY --from=builder /var/www .
 COPY cache cache
-#COPY log log
 COPY public/index.php public/index.php
 
 RUN chmod a+w cache -R

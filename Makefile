@@ -32,6 +32,13 @@ test-deployment: create-test-collection ## Test a specific deployment (host)
         ##   3. n: number of test iterations. Default 2
 	make test collection="${host}.postman_collection.json"
 
+test: ## Test the local development application
+        ## make test dir="$(pwd)" n=5
+        ## Params:
+        ##   1. dir: project base directory. Default "$(pwd)"
+        ##   2. n: number of test iterations. Default 2
+	docker pull postman/newman
+	docker run --network='host' -v "$(dir)/docker/newman/collections":/etc/newman -t  postman/newman run -e $(environment) -n $(n)  $(collection)
 
 test-local: rm-volume wait-for-db ## Test the local development application
         ## make test dir="$(pwd)" n=5
