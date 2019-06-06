@@ -40,7 +40,7 @@ services:
 
   # MariaDB
   db:
-    image: mariadb:10.3
+    image: mariadb:10.4
     container_name: db
     restart: unless-stopped
     tty: true

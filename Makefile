@@ -69,8 +69,7 @@ up:
 	docker-compose up -d
 
 rm-volume: down
-	docker-compose down
-	docker volume rm jmp_dbdata
+	docker-compose down -v
 	docker-compose up -d
 
 down:
