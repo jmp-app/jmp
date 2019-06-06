@@ -5,8 +5,12 @@
 # Version:	1.0
 # Date:	04/11/2019
 
+if [[ -z $(command -v docker.exe) ]]; then
+alias docker="docker.exe"
+fi
+
 count=0
-while test "$(docker inspect --format='{{json .State.Health.Status}}' db)" != "\"healthy\"" && test ${count} -lt 10; do
+while test "$(docker.exe inspect --format='{{json .State.Health.Status}}' db)" != "\"healthy\"" && test ${count} -lt 10; do
     echo "Waiting for db to complete startup"
     sleep 2s
     count=$((count+1))
