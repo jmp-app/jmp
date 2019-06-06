@@ -15,8 +15,8 @@ before_install:
 
 install:
   # Build and start the containers
-  - make build-up
+  - make build-up-prod
   - make wait-for-db
 
 script:
-  - make test dir="$(pwd)"
+  - make test-local dir="$(pwd)"
