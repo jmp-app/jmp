@@ -17,8 +17,6 @@ target="jmp_prod"
 .PHONY: create-test-collection test-deployment test-local
 
 create-test-collection: ## Create a test collection for a specific host
-## Don't use this script for local tests
-## make create-test-collection host="example.com" protocol="https" path="test/api"
 ## Params:
 ##	1. host: Name of the host or ip-address. E.g. example.com
 ##	2. protocol: Protocol to query the api endpoints. Default is https
@@ -26,8 +24,6 @@ create-test-collection: ## Create a test collection for a specific host
 	bash docker/scripts/create_test_collection.sh $(host) $(protocol) $(path)
 
 test-deployment: create-test-collection ## Test a specific deployment (host)
-## Don't use this script for local tests
-## make test-deployment host="example.com" protocol="https" path="test/api"
 ## Params:
 ##   1. host: Name of the host or ip-address. E.g. example.com
 ##   2. dir: project base directory. Default "$(pwd)"
@@ -35,7 +31,6 @@ test-deployment: create-test-collection ## Test a specific deployment (host)
 	make test collection="${host}.postman_collection.json"
 
 test-local: ## Test the local development application
-## make test dir="$(pwd)" n=5
 ## Params:
 ##   1. dir: project base directory. Default "$(pwd)"
 ##   2. n: number of test iterations. Default 2
