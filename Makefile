@@ -80,11 +80,6 @@ create-container-prod: ## Create a new container from the jmp image
 ##   1. target: Name of the image
 	docker create $(target)
 
-start-container-prod: ## Start a container
-## Params:
-##	1. target: Name of the image
-	docker start $(target)
-
 run-container-prod: ## Run the prod container
 	cd api && \
 	docker run --network jmp_default --env-file=db.env --env-file=.env -d $(target)
