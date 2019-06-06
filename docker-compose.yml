@@ -10,7 +10,7 @@ services:
   app:
     build:
       context: api
-      dockerfile: Dockerfile.proxy
+      dockerfile: Dockerfile
       args:
         - http_proxy
         - https_proxy
@@ -20,9 +20,12 @@ services:
     tty: true
     environment:
       SERVICE_NAME: app
+    working_dir: /var/www
     env_file:
       - api/db.env
       - api/.env
+    volumes:
+      - ./api/:/var/www
 
   # Nginx
   webserver:
