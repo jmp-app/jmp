@@ -37,6 +37,11 @@ test-local: ## Test the local development application
 	docker pull postman/newman
 	docker run --network='host' -v "$(dir)/docker/newman/collections":/etc/newman -t  postman/newman run -e $(environment) -n $(n)  $(collection)
 
+##@ Dependencies
+
+composer-install-dev: ## Install php dependencies for development
+	docker exec app composer install
+
 ##@ docker-compose
 
 .PHONY: build-up-dev build-up-prod up-dev up-prod rm-volume-prod down-dev down-dev down-prod

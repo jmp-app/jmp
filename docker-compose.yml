@@ -10,7 +10,7 @@ services:
   app:
     build:
       context: api
-      dockerfile: Dockerfile
+      dockerfile: proxy.Dockerfile
       args:
         - http_proxy
         - https_proxy
@@ -24,6 +24,7 @@ services:
     env_file:
       - api/db.env
       - api/.env
+      - .env
     volumes:
       - ./api/:/var/www
 

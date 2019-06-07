@@ -10,7 +10,7 @@ services:
   app:
     build:
       context: api
-      dockerfile: api/prod.Dockerfile
+      dockerfile: proxy.prod.Dockerfile
       args:
         - http_proxy
         - https_proxy
