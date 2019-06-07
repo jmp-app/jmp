@@ -6,7 +6,7 @@
 # Date:	04/11/2019
 
 count=0
-while test "$(docker.exe inspect --format='{{json .State.Health.Status}}' db)" != "\"healthy\"" && test ${count} -lt 30; do
+while test "$(docker inspect --format='{{json .State.Health.Status}}' db)" != "\"healthy\"" && test ${count} -lt 30; do
     echo "Waiting for db to complete startup"
     sleep 2s
     count=$((count+1))
