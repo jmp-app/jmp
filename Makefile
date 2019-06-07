@@ -97,6 +97,7 @@ cp-env: ## Copy environment variables
 	cp db.env.example db.env
 	cp api/.env.example api/.env
 	cp api/db.env.example api/db.env
+	cp .env.example .env
 
 ##@ Vue
 
