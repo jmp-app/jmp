@@ -15,8 +15,9 @@ before_install:
 
 script:
   - make build-up-prod
+  - make wait-for-db
   - make test-local dir="$(pwd)"
-  - make down-prod
   - make rm-volume-prod
   - make build-up-dev
+  - make wait-for-db
   - make test-local dir="$(pwd)"
