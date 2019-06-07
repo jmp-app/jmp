@@ -25,6 +25,7 @@ jobs:
     - stage: test
       install:
         - make build-up-dev
+        - make composer-install-dev
         - make wait-for-db
 
       script:
