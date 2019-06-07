@@ -5,12 +5,12 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# Copy certificates
-COPY certs.pem .
-# Make certificates read-only
-RUN chmod 444 /var/www/certs.pem
-# Set cafile
-ENV COMPOSER_CAFILE /var/www/certs.pem
+# Copy certificates and set environment variable
+COPY Dockerfile certs.pem* ./
+RUN if [[ -f /var/www/certs.pem ]]; then \
+        export COMPOSER_CAFILE=/var/www/certs.pem; \
+    fi;
+ENV COMPOSER_CAFILE $COMPOSER_CAFILE
 
 # Install extensions
 RUN docker-php-ext-install pdo_mysql

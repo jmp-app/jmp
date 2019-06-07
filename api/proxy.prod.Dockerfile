@@ -5,12 +5,12 @@ WORKDIR /var/www
 COPY src src
 COPY composer.json composer.json
 
-# Copy certificates
-COPY certs.pem .
-# Make certificates read-only
-RUN chmod 444 /var/www/certs.pem
-# Set cafile
-ENV COMPOSER_CAFILE /var/www/certs.pem
+# Copy certificates and set environment variable
+COPY Dockerfile certs.pem* ./
+RUN if [[ -f /var/www/certs.pem ]]; then \
+        export COMPOSER_CAFILE=/var/www/certs.pem; \
+    fi;
+ENV COMPOSER_CAFILE $COMPOSER_CAFILE
 
 RUN composer install --classmap-authoritative --no-suggest --no-dev --no-progress --no-interaction
 
