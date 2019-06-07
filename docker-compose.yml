@@ -18,6 +18,8 @@ services:
     container_name: app
     restart: unless-stopped
     tty: true
+    depends_on:
+      - db
     environment:
       SERVICE_NAME: app
     working_dir: /var/www
