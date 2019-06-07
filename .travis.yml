@@ -13,11 +13,19 @@ before_install:
   - sudo /etc/init.d/mysql stop
   - sudo /etc/init.d/postgresql stop
 
-script:
-  - make build-up-prod
-  - make wait-for-db
-  - make test-local dir="$(pwd)"
-  - make down-prod
-  - make build-up-dev
-  - make wait-for-db
-  - make test-local dir="$(pwd)"
+jobs:
+  include:
+    - stage: test
+      install:
+        - make build-up-prod
+        - make wait-for-db
+
+      script:
+        - make test-local dir="$(pwd)"
+    - stage: test
+      install:
+        - make build-up-dev
+        - make wait-for-db
+
+      script:
+        - make test-local dir="$(pwd)"
