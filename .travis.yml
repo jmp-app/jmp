@@ -13,12 +13,8 @@ before_install:
   - sudo /etc/init.d/mysql stop
   - sudo /etc/init.d/postgresql stop
 
-install:
-  # Build and start the containers
-  - make build-up-prod
-  - make wait-for-db
-
 script:
+  - make build-up-prod
   - make test-local dir="$(pwd)"
   - make down-prod
   - make rm-volume-prod
