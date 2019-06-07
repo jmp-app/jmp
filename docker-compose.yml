@@ -59,7 +59,7 @@ services:
       - api/db.env
       - db.env
     healthcheck:
-      test: mysql --protocol=socket -hlocalhost -u$$DB_USERNAME -p$$DB_PASSWORD -e 'SELECT 1'
+      test: mysql --protocol=TCP -hlocalhost -u$$DB_USERNAME -p$$DB_PASSWORD -e 'SELECT 1'
       interval: 1s
       timeout: 1s
     volumes:

@@ -17,7 +17,7 @@ script:
   - make build-up-prod
   - make wait-for-db
   - make test-local dir="$(pwd)"
-  - make rm-volume-prod
+  - make down-prod
   - make build-up-dev
   - make wait-for-db
   - make test-local dir="$(pwd)"
