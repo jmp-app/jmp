@@ -19,7 +19,7 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 COPY --from=builder /var/www .
 COPY cache cache
-COPY public/* public/*
+COPY public/* public/
 COPY .htaccess .
 
 RUN chmod a+w cache -R
