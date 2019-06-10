@@ -14,8 +14,6 @@
     }
   ],
   "scripts": {
-    "post-install-cmd": [
-      "cd api;composer install;composer update"
-    ]
+    "post-install-cmd": "cd api;composer install;composer update"
   }
 }
