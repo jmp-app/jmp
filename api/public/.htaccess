@@ -1,4 +1,4 @@
-Action php /cgi-php71/php
+#Action php /cgi-php71/php
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f

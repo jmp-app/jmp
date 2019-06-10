@@ -28,7 +28,7 @@ test-deployment: create-test-collection ## Test a specific deployment (host)
 ##   1. host: Name of the host or ip-address. E.g. example.com
 ##   2. dir: project base directory. Default "$(pwd)"
 ##   3. n: number of test iterations. Default 2
-	make test collection="${host}.postman_collection.json"
+	make test-local collection="${host}.postman_collection.json"
 
 test-local: ## Test the local development application
 ## Params:

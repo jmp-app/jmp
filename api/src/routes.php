@@ -114,8 +114,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
         /** @var $this Slim\App */
 
         $this->get('', RegistrationStateController::class . ':getAllRegStates')
-            ->add(new ValidationErrorResponseBuilder())
-            ->add(new Validation($this->getContainer()['validation']['getAllRegStates']))
             ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
             ->add($jwtMiddleware);
 

@@ -1,0 +1,55 @@
+version: '3'
+
+volumes:
+  dbdata:
+    driver: local
+
+services:
+
+  # PHP
+  app:
+    build:
+      context: .
+      dockerfile: api/apache.Dockerfile
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
+    container_name: app
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - db
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SERVICE_NAME: app
+    volumes:
+      - ./docker/apache/vhost.conf:/etc/apache2/sites-available/000-default.conf
+    env_file:
+      - api/db.env
+      - api/.env
+
+
+  # MariaDB
+  db:
+    image: mariadb:10.4
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    env_file:
+      - api/db.env
+      - db.env
+    healthcheck:
+      test: mysql --protocol=TCP -hlocalhost -u$$DB_USERNAME -p$$DB_PASSWORD -e 'SELECT 1'
+      interval: 1s
+      timeout: 1s
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./docker/db/:/docker-entrypoint-initdb.d/
