@@ -34,8 +34,9 @@ cd docker/newman/collections
 cp jmp.postman_collection.json "${host}.postman_collection.json"
 sed -i -- "s|jmp|${host}|g" "${host}.postman_collection.json"
 sed -i -- "s/\"localhost\"/\"${host}\"/g" "${host}.postman_collection.json"
-sed -i -- "s|http://localhost/api/|${protocol}://${host}/${path_raw}|g" "${host}.postman_collection.json";sed -i -- "s|localhost/api/|${protocol}://${host}/${path_raw}|g" "${host}.postman_collection.json"
+sed -i -- "s|http://localhost/api/|${protocol}://${host}/${path_raw}|g" "${host}.postman_collection.json";
+sed -i -- "s|localhost/api/|${protocol}://${host}/${path_raw}|g" "${host}.postman_collection.json"
 sed -i -- "s|\"http\"|\"${protocol}\"|g" "${host}.postman_collection.json"
-sed -i -- "s|\"api\",||g" "${host}.postman_collection.json"
+sed -i -- "s|\"api\",|${path}|g" "${host}.postman_collection.json"
 sed -i -- "s/\"protocol\": \"${protocol}\",//g" "${host}.postman_collection.json"
 sed -i -- "s/\"host\"/\"protocol\": \"${protocol}\",\n\"host\"/g" "${host}.postman_collection.json"
