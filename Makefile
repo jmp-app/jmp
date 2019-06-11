@@ -112,6 +112,9 @@ vue-watch: ## Run vue development server with hot reloads
 	cd vue && \
 	npm run watch
 
+vue-build-docker:
+	docker-compose -f build.yml run npm
+
 wait-for-db:
 	bash docker/scripts/wait-for-db.sh
 
