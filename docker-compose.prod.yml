@@ -33,8 +33,19 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./docker/nginx/conf.d.prod/:/etc/nginx/conf.d/
       - ./vue/dist/:/var/www/public
+
+  frontend:
+    build:
+      context: vue
+      dockerfile: Dockerfile
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
+        - API=http://localhost/api
+    container_name: frontend
 
   # MariaDB
   db:
