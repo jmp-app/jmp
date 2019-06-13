@@ -1,6 +1,10 @@
-FROM composer:latest as builder
+FROM composer:1.8.6 as builder
 
 WORKDIR /var/www
+
+COPY certs.pem .
+
+ENV COMPOSER_CAFILE /var/www/certs.pem
 
 COPY composer.json composer.json
 COPY src src

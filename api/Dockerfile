@@ -1,7 +1,7 @@
 FROM php:7.3-fpm-alpine
 
 # Install composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:1.8.6 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
