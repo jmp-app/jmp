@@ -3,24 +3,24 @@ FROM composer:latest as builder
 WORKDIR /var/www
 
 COPY composer.json composer.json
+COPY src src
 
 RUN composer install --classmap-authoritative --no-suggest --no-dev --no-progress --no-interaction
 
-COPY src src
-
 FROM php:7.3-fpm-alpine
-
-WORKDIR /var/www
 
 # Install extensions
 RUN docker-php-ext-install pdo_mysql
 
+WORKDIR /var/www
+
 # Use the default production configuration
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
+# Copy source
 COPY --from=builder /var/www .
-COPY cache cache
 COPY public/index.php public/index.php
+COPY cache cache
 
 RUN chmod a+w cache -R
 
