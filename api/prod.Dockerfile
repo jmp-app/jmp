@@ -2,10 +2,11 @@ FROM composer:latest as builder
 
 WORKDIR /var/www
 
-COPY src src
 COPY composer.json composer.json
 
 RUN composer install --classmap-authoritative --no-suggest --no-dev --no-progress --no-interaction
+
+COPY src src
 
 FROM php:7.3-fpm-alpine
 
