@@ -12,6 +12,17 @@ path="api"
 # Docker
 target="jmp_prod"
 
+##@ Setup
+
+.PHONY: setup-dev setup-prod
+
+setup-dev: rm-volume-dev rm-volume-prod cp-env vue-build-docker build-up-dev composer-install-dev ## Setup development environment
+	@echo "Completed startup of the jmp development environment"
+
+setup-prod: rm-volume-dev rm-volume-prod cp-env build-up-prod ## Setup production environment
+	@echo "Completed startup of the jmp development environment"
+	@echo "Make sure you change all dotenv files to the production values"
+
 ##@ Tests
 
 .PHONY: create-test-collection test-deployment test-local
