@@ -91,17 +91,21 @@ run-container-prod: ## Run the prod container
 
 ##@ Miscellaneous
 
-.PHONY: cp-env$
+.PHONY: cp-env wait-for-db
 
-cp-env: ## Copy environment variables
+cp-env: ## Set default/example environment variables & config files
 	cp db.env.example db.env
 	cp api/.env.example api/.env
 	cp api/db.env.example api/db.env
 	cp .env.example .env
+	cp vue/jmp.config.js.example vue/jmp.config.js
+
+wait-for-db: ## Waits until the database is available
+	bash docker/scripts/wait-for-db.sh
 
 ##@ Vue
 
-.PHONY: vue-build vue-watch
+.PHONY: vue-build vue-watch vue-build-docker
 
 vue-build: ## Build vue for deployment
 	cd vue && \
@@ -112,11 +116,8 @@ vue-watch: ## Run vue development server with hot reloads
 	cd vue && \
 	npm run watch
 
-vue-build-docker:
-	docker-compose -f build.yml run npm
-
-wait-for-db:
-	bash docker/scripts/wait-for-db.sh
+vue-build-docker: ## Build vue inside node-container
+	docker-compose -f vue-build.yml run npm
 
 ##@ Help
 
