@@ -4,6 +4,8 @@ services:
   npm:
     image: node:8-alpine
     working_dir: /vue
+    env_file:
+      - .env
     volumes:
       - ./docker/npm/build.sh:/scripts/build.sh
       - ./vue/:/vue/
