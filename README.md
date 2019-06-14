@@ -7,21 +7,49 @@
 - [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
-  * [Development](#development)
+  * [Manual Installation](#manual-installation)
+    + [Development environment](#development-environment)
+    + [Production environment](#production-environment)
+  * [Development](#documentation--development)
     + [Frontend](#frontend)
     + [Backend](#backend)
 - [Authors](#authors)
 - [License](#license)
 
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
 # Getting Started
 
 ## Prerequisites
 
-Make sure you have [docker](https://www.docker.com/) and [npm](https://www.npmjs.com/) installed on your machine.
+**Required:**
+ * [docker](https://www.docker.com/)
+
+**Recommended:**
+ * [GNU Make](https://www.gnu.org/software/make/)
 
 ## Installation
+
+Clone the repository
+```bash
+git clone https://github.com/jmp-app/jmp.git
+cd jmp
+```
+
+To run the development environment you only need run the following Make target:
+
+````bash
+make setup-dev
+````
+
+or for the production environment:
+
+````bash
+make setup-prod
+````
+
+**Note:**
+* For a real production environment you need to adjust all the environment variables properly. See [dotenv](docs/dotenv.md).
+
+## Manual Installation
 
 There is also a Makefile accessible for the most common tasks: [Makefile](Makefile)  
 Run `make help` for more information.
@@ -32,43 +60,43 @@ git clone https://github.com/jmp-app/jmp.git
 cd jmp
 ```
 
-Create the configuration file for vue:
-* [`vue/jmp.config.js`](vue/jmp.config.js)
+Create the following `.env` and configuration files from its corresponding example files:
+* [vue/jmp.config.js](vue/jmp.config.js)
+* [db.env](db.env)
+* [api/db.env](api/db.env)
+* [api/.env](api/.env)
 
-> It exists a .example file for it with the default values in it
+Read more about all variables at [dotenv](docs/dotenv.md)
+
+### Development environment
 
 Build vue
 ```bash
-cd vue
-npm install
-npm run build
+docker-compose -f vue-build.yml run npm
 ```
-> To run vue at development, read this [doc](vue/README.md)
-
-Create the following `.env` files:
-* [`db.env`](db.env)
-* [`api/db.env`](api/db.env)
-    * Auto generated with default values at `composer install`
-* [`api/.env`](api/.env)
-    * Auto generated with default values at `composer install`
-
-> Read more about all variables at [dotenv](docs/dotenv.md)
-
-> For every dotenv file, a dotenv.example file with the default values exists
+**Note:**
+* To run vue at development with a local installation of npm, read this [documentation](vue/README.md)
 
 Build and start the docker containers
 ```bash
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 Install all the dependencies using the composer of the app container
 ````bash
-docker exec -it app composer install
+docker exec app composer install
+````
+
+### Production environment
+
+Build and start the docker containers
+````bash
+docker-compose -f docker-compose.prod.yml up -d --build
 ````
 
 You can now access the frontend at [http://localhost](http://localhost) and the api at [http://localhost/api](http://localhost/api)
 
-## Development
+## Documentation & Development
 
 **Check the [documentation](docs/README.md) for further information.**
 
