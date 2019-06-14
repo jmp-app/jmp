@@ -20,13 +20,10 @@ services:
     tty: true
     depends_on:
       - db
-    environment:
-      SERVICE_NAME: app
     working_dir: /var/www
     env_file:
       - api/db.env
       - api/.env
-      - .env
     volumes:
       - ./api/:/var/www
 

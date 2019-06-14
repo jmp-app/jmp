@@ -7,6 +7,6 @@ services:
     env_file:
       - .env
     volumes:
-      - ./docker/scripts/build.sh:/scripts/build.sh
+      - ./docker/scripts/vue-build.sh:/scripts/vue-build.sh
       - ./vue/:/vue/
-    command: /scripts/build.sh
+    command: /scripts/vue-build.sh

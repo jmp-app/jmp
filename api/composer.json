@@ -20,11 +20,5 @@
         "psr-4": {
           "jmp\\": "src/jmp"
         }
-    },
-    "scripts": {
-        "post-install-cmd": [
-          "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-          "@php -r \"file_exists('db.env') || copy('db.env.example', 'db.env');\""
-        ]
     }
 }
