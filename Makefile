@@ -105,11 +105,12 @@ run-container-prod: ## Run the prod container
 .PHONY: cp-env wait-for-db
 
 cp-env: ## Set default/example environment variables & config files
-	cp db.env.example db.env
-	cp api/.env.example api/.env
-	cp api/db.env.example api/db.env
-	cp .env.example .env
-	cp vue/jmp.config.js.example vue/jmp.config.js
+## bash -c is required as otherwise windows may can't find the command cp
+	bash -c "cp db.env.example db.env"
+	bash -c "cp api/.env.example api/.env"
+	bash -c "cp api/db.env.example api/db.env"
+	bash -c "cp .env.example .env"
+	bash -c "cp vue/jmp.config.js.example vue/jmp.config.js"
 
 wait-for-db: ## Waits until the database is available
 	bash docker/scripts/wait-for-db.sh
@@ -136,3 +137,6 @@ vue-build-docker: ## Build vue inside node-container
 
 help:  ## Display this help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m \033[35m<ARGUMENTS>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+
+bla:
+	@echo %PATH%
