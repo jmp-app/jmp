@@ -30,6 +30,9 @@ services:
     container_name: webserver
     restart: unless-stopped
     tty: true
+    depends_on:
+      - app
+      - frontend
     ports:
       - "80:80"
     volumes:
@@ -46,6 +49,8 @@ services:
         - no_proxy
         - API=http://localhost/api
     container_name: frontend
+    depends_on:
+      - app
 
   # MariaDB
   db:
