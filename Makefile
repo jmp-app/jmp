@@ -109,7 +109,6 @@ cp-env: ## Set default/example environment variables & config files
 	bash -c "cp -n db.env.example db.env"
 	bash -c "cp -n api/.env.example api/.env"
 	bash -c "cp -n api/db.env.example api/db.env"
-	bash -c "cp -n .env.example .env"
 	bash -c "cp -n vue/jmp.config.js.example vue/jmp.config.js"
 
 wait-for-db: ## Waits until the database is available
