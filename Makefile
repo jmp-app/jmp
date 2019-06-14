@@ -20,7 +20,7 @@ setup-dev: rm-volume-dev rm-volume-prod cp-env vue-build-docker build-up-dev com
 	@echo "Completed startup of the jmp development environment"
 
 setup-prod: rm-volume-dev rm-volume-prod cp-env build-up-prod ## Setup production environment
-	@echo "Completed startup of the jmp development environment"
+	@echo "Completed startup of the jmp production environment"
 	@echo "Make sure you change all dotenv files to the production values"
 
 ##@ Tests
@@ -105,12 +105,12 @@ run-container-prod: ## Run the prod container
 .PHONY: cp-env wait-for-db
 
 cp-env: ## Set default/example environment variables & config files
-## bash -c is required as otherwise windows may can't find the command cp
-	bash -c "cp db.env.example db.env"
-	bash -c "cp api/.env.example api/.env"
-	bash -c "cp api/db.env.example api/db.env"
-	bash -c "cp .env.example .env"
-	bash -c "cp vue/jmp.config.js.example vue/jmp.config.js"
+## bash -c is required as otherwise windows may can't find the command cp. See https://stackoverflow.com/a/33675146/7130107
+	bash -c "cp -n db.env.example db.env"
+	bash -c "cp -n api/.env.example api/.env"
+	bash -c "cp -n api/db.env.example api/db.env"
+	bash -c "cp -n .env.example .env"
+	bash -c "cp -n vue/jmp.config.js.example vue/jmp.config.js"
 
 wait-for-db: ## Waits until the database is available
 	bash docker/scripts/wait-for-db.sh
