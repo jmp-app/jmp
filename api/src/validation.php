@@ -101,7 +101,7 @@ $container['validation'] = function () {
         ],
         'createEventType' => [
             'title' => v::notEmpty()->length(1, 51),
-            'color' => v::hexRgbColor()
+            'color' => v::notEmpty()->hexRgbColor()
         ],
         'updateEventType' => [
             'title' => v::optional(v::notEmpty()->length(1, 51)),
