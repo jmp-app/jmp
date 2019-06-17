@@ -362,7 +362,7 @@ You can run the tests with the postman runner (don't forget to set the jmp-envir
 
 newman:
 ````bash
-make test dir="$(pwd)"
+make test-local dir="$(pwd)"
 ````
 
 ### Travis CI and Build Status:  
@@ -387,9 +387,6 @@ Replace **example.com** by your own domain.
         * This scheme: [jmp](../docker/db/01_setup.sql)
         * A database user with restricted privileges (SELECT, INSERT, UPDATE, DELETE on all tables of the jmp scheme) and a password
 2. Configure all environment variables as described in [dotenv](dotenv.md) and [Get Started](../README.md#installation).
-3. Rename the folder [api/public](../api/public) to [api/example.com](../api/example.com)
-4. Configure [.htaccess](../api/.htaccess):
-    * Change **public** to your own domain
 5. Copy [api](../api) to the webroot of your server
 6. [Test the api](#test-your-deployed-backend)
  
@@ -402,7 +399,7 @@ Use it as described in [Create and run customized test script](#create-and-run-c
 #### Create and run customized test script
 Makefile
 ```bash
-make create-test-collection test-deployment dir="$(pwd)" host="example.com" protocol="https" path="test/api"
+make test-deployment dir="$(pwd)" host="example.com" protocol="https" path="test/api"
 ```
 
 This script will make a customized copy in the [docker/newman/collections](../docker/newman/collections) directory with the given host, protocol and path.

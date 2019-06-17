@@ -10,7 +10,7 @@ services:
   app:
     build:
       context: api
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
       args:
         - http_proxy
         - https_proxy
@@ -20,12 +20,9 @@ services:
     tty: true
     depends_on:
       - db
-    working_dir: /var/www
     env_file:
       - api/db.env
       - api/.env
-    volumes:
-      - ./api/:/var/www
 
   # Nginx
   webserver:
@@ -33,25 +30,35 @@ services:
     container_name: webserver
     restart: unless-stopped
     tty: true
+    depends_on:
+      - app
+      - frontend
     ports:
       - "80:80"
-      - "443:443"
     volumes:
-      - ./docker/log/nginx/:/var/log/nginx/
-      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./docker/nginx/conf.d.prod/:/etc/nginx/conf.d/
       - ./vue/dist/:/var/www/public
+
+  frontend:
+    build:
+      context: vue
+      dockerfile: Dockerfile
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
+        - API=http://localhost/api
+    container_name: frontend
+    depends_on:
+      - app
 
   # MariaDB
   db:
     image: mariadb:10.4
     container_name: db
     restart: unless-stopped
-    tty: true
     ports:
       - "3306:3306"
-    environment:
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
     env_file:
       - api/db.env
       - db.env

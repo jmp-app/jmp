@@ -1,22 +1,38 @@
-**Database settings [api/db.env](../api/db.env):**  
+# Table of Contents:
+
+- [Database settings](#database-settings)
+- [App settings](#app-settings)
+    - [App specific](#app-specific)
+    - [JWT](#jwt)
+    - [CORS](#cors)
+
+# Database settings
+
+* [api/db.env](../api/db.env)
+* [api/db.env.example](../api/db.env.example)
 
 | Name | Desc | Default Value | Options | Note |
 |------|------|---------------|---------|------|
 | `DB_ENGINE` | PDO Engine           | `mysql` | |The app depends on mariadb/mysql|  
 | `DB_HOST`   | Host of the database | `db`    | ip-address, hostname, docker-container |When using docker on the same host as the app, you have to use the docker-container-name as host|
-| `DB_PORT`   | Port                 | `3306`  | |As in [docker-compose.yml](../docker-compose.yml)|
-| `DB_DATABASE` | Schema/database | `jmp` | **If you change this, you also have to update all [db init files](../docker/db)** |As in [docker-compose.yml](../docker-compose.yml)|
-| `DB_USERNAME` | Username | `jmp_user` | |As in [docker-compose.yml](../docker-compose.yml)|
+| `DB_PORT`   | Port                 | `3306`  | ||
+| `DB_DATABASE` | Schema/database | `jmp` | **If you change this, you also have to update all [db init files](../docker/db)** ||
+| `DB_USERNAME` | Username | `jmp_user` | ||
 | `DB_PASSWORD` | Password | `pass4dev` | | |
 
-
-**Database settings [db.env](../db.env):**
+* [db.env](../db.env)
+* [db.env.example](../db.env.example)
 
 | Name | Desc | Default Value | Options | Note |
 |------|------|---------------|---------|------|
 | `MYSQL_ROOT_PASSWORD` | Mysql root password | `jmp_docker_local` | | See: [mariadb docker documentation](https://docs.docker.com/samples/library/mariadb/#mysql_root_password). **Change in production!**|  
 
-**App Settings [.env](../api/.env):**
+# App settings
+
+* [.env](../api/.env)
+* [.env.example](../api/.env.example)
+
+## App specific
 
 | Name | Desc | Default Value | Options | Note |
 |------|------|---------------|---------|------|
@@ -30,7 +46,7 @@
 | `APP_ROUTER_CACHE_FILE` | Cache file | `false` | `cache/routes.cache.php` or `false` |File must be located in `api/` or a already existing subdirectory, else php won't have the necessary permissions and will throw an exception [Read more about slim's cache file](https://akrabat.com/slims-route-cache-file/) |
 
 
-**JWT Settings [.env](../api/.env):**
+## JWT
 
 | Name | Desc | Default Value | Options | Note |
 |------|------|---------------|---------|------|
@@ -38,11 +54,12 @@
 | `JWT_SECURE` | https only | `false` | true, false |[read more](https://github.com/tuupola/slim-jwt-auth#security)|
 | `JWT_EXPIRATION` | validity in minutes | `7200` | Any integer greater than 0 | |
 
-**CORS Settings [.env](../api/.env):**  
+
+## CORS
 Read more: [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
 
 | Name | Desc | Default Value | Options | Note |
 |------|------|---------------|---------|------|
 | `CORS_ALLOWED_ORIGINS` | Allowed Origins  | "*" | Comma seperated list of URLs as string  |  |
 | `CORS_ALLOWED_HEADERS` | Allowed Headers | "X-Requested-With, Content-Type, Accept, Origin, Authorization" | Comma seperated list of Headers as string |  |
-| `CORS_ALLOWED_METHODS` | Allowed Methods | "GET, POST, PUT, DELETE" | Comma seperated list of Methods as string | |
+| `CORS_ALLOWED_METHODS` | Allowed Methods | "GET, POST, PUT, DELETE" | Comma separated list of Methods as string | |

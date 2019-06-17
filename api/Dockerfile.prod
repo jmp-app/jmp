@@ -1,0 +1,47 @@
+FROM composer:1.8.6 as builder
+
+WORKDIR /var/www
+
+COPY composer.json composer.json
+COPY src src
+
+# Add group and user for application. Read more at https://stackoverflow.com/a/49955098/7130107
+# Set permissions for user www
+RUN addgroup -g 1000 www && \
+    adduser -u 1000 -D -G www www && \
+    chown www:www .
+
+# Change current user to www
+USER www
+
+# Run a composer install with the classmap-authoritative optimization. Read more at https://getcomposer.org/doc/articles/autoloader-optimization.md
+RUN composer install --classmap-authoritative --no-suggest --no-dev --no-progress --no-interaction
+
+FROM php:7.3-fpm-alpine
+
+# Install extensions
+RUN docker-php-ext-install pdo_mysql
+
+WORKDIR /var/www
+
+# Add group and user for application. Read more at https://stackoverflow.com/a/49955098/7130107
+RUN addgroup -g 1000 www && \
+    adduser -u 1000 -D -G www www
+
+# Use the default production configuration for php ini
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+# Copy all sources
+COPY --from=builder /var/www .
+COPY public/index.php public/index.php
+COPY cache cache
+
+# Set permissions for user www
+RUN chown www:www .
+
+# Change current user to www
+USER www
+
+# Expose port 9000 and start php-fpm server
+EXPOSE 9000
+CMD ["php-fpm"]

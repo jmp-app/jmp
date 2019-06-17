@@ -3,7 +3,7 @@
 // Required for jwt with apache web servers
 use Slim\App;
 
-$_SERVER['HTTP_AUTHORIZATION'] = isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] : $_GET['Authorization'];
+$_SERVER['HTTP_AUTHORIZATION'] = isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] : array_key_exists('Authorization', $_GET) ? $_GET['Authorization'] : '';
 
 require __DIR__ . '/../vendor/autoload.php';
 

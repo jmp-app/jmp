@@ -3,6 +3,7 @@
 - [Api specification (v1)](api-v1.md)
 - [Error codes](error-codes.md)
 - [Database Schema](database.md)
+- [Known issues](known-issues.md)
 - [Backend](backend.md)
     * [Environment Variables](dotenv.md)
     * [README](../api/README.md)

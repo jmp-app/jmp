@@ -13,14 +13,20 @@ before_install:
   - sudo /etc/init.d/mysql stop
   - sudo /etc/init.d/postgresql stop
 
-install:
-  # Build and start the containers
-  - docker-compose up -d --build
-  # Install php dependencies
-  - cd api/
-  - composer install --no-interaction
-  - cd ..
-  - bash docker/scripts/wait-for-db.sh
+jobs:
+  include:
+    - stage: test
+      install:
+        - make build-up-prod
+        - make wait-for-db
 
-script:
-  - make test dir="$(pwd)"
+      script:
+        - make test-local dir="$(pwd)"
+    - stage: test
+      install:
+        - make build-up-dev
+        - make composer-install-dev
+        - make wait-for-db
+
+      script:
+        - make test-local dir="$(pwd)"
