@@ -69,5 +69,6 @@
   "eventType.color.preview": "Preview",
   "eventType.color": "Color",
   "eventType.detail.titleRequired": "Type is required",
-  "eventType.detail.colorRequired": "Color is required"
+  "eventType.detail.colorRequired": "Color is required",
+  "delete": "Delete"
 }

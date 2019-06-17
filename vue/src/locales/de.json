@@ -69,5 +69,6 @@
   "eventType.color.preview": "Vorschau",
   "eventType.color": "Farbe",
   "eventType.detail.titleRequired": "Die Art ist ein Pflichtfeld",
-  "eventType.detail.colorRequired": "Die Farbe ist ein Pflichtfeld"
+  "eventType.detail.colorRequired": "Die Farbe ist ein Pflichtfeld",
+  "delete": "Löschen"
 }
