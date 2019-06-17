@@ -1,6 +1,7 @@
 # ![JMP](logo.png)
 
 [![Build Status](https://travis-ci.com/jmp-app/jmp.svg?branch=master)](https://travis-ci.com/jmp-app/jmp)
+[![CodeFactor](https://www.codefactor.io/repository/github/jmp-app/jmp/badge)](https://www.codefactor.io/repository/github/jmp-app/jmp)
 
 # Table of Contents:
 - [JMP](#jmplogopng)
