@@ -63,5 +63,11 @@
   "group.addMembers.allUsers": "All Users",
   "group.addMembers.addSelected": "Add selected",
   "group.addMembers.removeSelected": "Remove selected",
-  "group.overview.title": "Overview of all groups"
+  "group.overview.title": "Overview of all groups",
+  "eventType.overview.title": "Overview of all event types",
+  "eventType": "Event Type | Event Types",
+  "eventType.color.preview": "Preview",
+  "eventType.color": "Color",
+  "eventType.detail.titleRequired": "Type is required",
+  "eventType.detail.colorRequired": "Color is required"
 }

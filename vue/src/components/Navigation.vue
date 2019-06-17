@@ -21,6 +21,9 @@
                     <v-list-tile>
                         <v-btn flat to="/groups">{{ $tc('group', 2) }}</v-btn>
                     </v-list-tile>
+                    <v-list-tile>
+                        <v-btn flat to="/eventTypes">{{ $tc('eventType', 2) }}</v-btn>
+                    </v-list-tile>
                 </v-list>
             </v-menu>
             <v-btn class="hidden-xs-only" flat to="/change-password">{{ $t('password.change') }}</v-btn>

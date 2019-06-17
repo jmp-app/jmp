@@ -63,5 +63,11 @@
   "group.addMembers.allUsers": "Alle Benutzer",
   "group.addMembers.addSelected": "Hinzufügen",
   "group.addMembers.removeSelected": "Entfernen",
-  "group.overview.title": "Übersicht über alle Gruppen"
+  "group.overview.title": "Übersicht über alle Gruppen",
+  "eventType.overview.title": "Übersicht über alle Event Arten",
+  "eventType": "Event Art | Event Arten",
+  "eventType.color.preview": "Vorschau",
+  "eventType.color": "Farbe",
+  "eventType.detail.titleRequired": "Die Art ist ein Pflichtfeld",
+  "eventType.detail.colorRequired": "Die Farbe ist ein Pflichtfeld"
 }

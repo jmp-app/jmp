@@ -33,6 +33,15 @@
         <v-btn
                 active-class
                 style="text-decoration: none; color: black !important;"
+                to="/eventTypes/0"
+                v-if="isView('adminEventTypeOverview')"
+        >
+            <span>{{$t('create')}}</span>
+            <v-icon>add</v-icon>
+        </v-btn><!-- Create Event Type -->
+        <v-btn
+                active-class
+                style="text-decoration: none; color: black !important;"
                 to="/groups/0"
                 v-if="isView('groupOverview')"
         >

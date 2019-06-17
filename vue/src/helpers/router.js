@@ -90,6 +90,20 @@ export const router = new Router({
             component: function () {
                 return import('../views/event/admin/Registrations.vue');
             }
+        },
+        {
+            path: '/eventTypes',
+            name: 'adminEventTypeOverview',
+            component: function () {
+                return import('../views/eventType/admin/Overview');
+            }
+        },
+        {
+            path: '/eventTypes/:id',
+            name: 'adminEventTypeDetail',
+            component: function () {
+                return import('../views/eventType/admin/Detail');
+            }
         }
     ]
 });
