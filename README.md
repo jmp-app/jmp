@@ -7,8 +7,8 @@
 **Link:** [jmp-app.tk](https://jmp-app.tk)  
 **Username:** adam  
 **Password:** pass4dev  
-**Backend Pipeline:** [![buddy pipeline](https://app.buddy.works/gibmit-1/jmp/pipelines/pipeline/194289/badge.svg?token=6bd59aa34bff9f4e1d737ff122a7e7de480a96ff8cae2aba8d80988edf61806f "buddy pipeline")](https://app.buddy.works/gibmit-1/jmp/pipelines/pipeline/194289)  
-**Frontend Pipeline:** [![buddy pipeline](https://app.buddy.works/gibmit-1/jmp/pipelines/pipeline/195159/badge.svg?token=6bd59aa34bff9f4e1d737ff122a7e7de480a96ff8cae2aba8d80988edf61806f "buddy pipeline")](https://app.buddy.works/gibmit-1/jmp/pipelines/pipeline/195159)
+**Backend Pipeline:** [![buddy pipeline](https://app.buddy.works/jmp-app/jmp/pipelines/pipeline/194289/badge.svg?token=8487ee3804e9492d87e9404caa89b3daedc7abd96362150550ba04dc521f0d89 "buddy pipeline")](https://app.buddy.works/jmp-app/jmp/pipelines/pipeline/194289)  
+**Frontend Pipeline:** [![buddy pipeline](https://app.buddy.works/jmp-app/jmp/pipelines/pipeline/195159/badge.svg?token=8487ee3804e9492d87e9404caa89b3daedc7abd96362150550ba04dc521f0d89 "buddy pipeline")](https://app.buddy.works/jmp-app/jmp/pipelines/pipeline/195159)
 
 # Table of Contents:
 - [JMP](#jmplogopng)
