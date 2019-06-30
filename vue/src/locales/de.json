@@ -41,6 +41,7 @@
   "event.place": "Ort",
   "event.groups": "Gruppen",
   "event.overview.showAll": "Events von allen Gruppen anzeigen",
+  "event.overview.showElapsed": "Vergangene Events anzeigen",
   "registration.reason": "Grund",
   "registration.reasonRequired": "Grund ist ein Pflichtfeld",
   "registration.reasonPlaceholder": "Grund eingeben",
