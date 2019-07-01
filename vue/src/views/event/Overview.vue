@@ -1,8 +1,19 @@
 <template>
-    <div>
-        <div v-if="isAdmin() && events">
-            <v-switch :label="$t('event.overview.showAll')" v-model="showAll"></v-switch>
-        </div>
+    <v-container fluid>
+        <v-layout row v-if="isAdmin() && events" wrap>
+            <v-flex md6 sm6 xs12>
+                <v-checkbox
+                        :label="$t('event.overview.showAll')"
+                        v-model="showAll"
+                ></v-checkbox>
+            </v-flex>
+            <v-flex md6 sm6 xs12>
+                <v-checkbox
+                        :label="$t('event.overview.showElapsed')"
+                        v-model="showElapsed"
+                ></v-checkbox>
+            </v-flex>
+        </v-layout>
         <v-container fluid grid-list-md>
             <v-layout id="eventCards" row wrap>
                 <v-flex :key="event.id" v-for="event in events" xs12>
@@ -16,7 +27,7 @@
                     indeterminate
             ></v-progress-circular>
         </div>
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -37,6 +48,7 @@
             return {
                 windowHeight: window.innerHeight,
                 showAll: false,
+                showElapsed: false,
                 unsubscribe() {
                 }
             };
@@ -59,7 +71,8 @@
                     if (rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)) {
                         let offset = this.getOffset();
                         let showAll = this.showAll;
-                        this.$store.dispatch('events/getNextEvents', {offset, showAll});
+                        let showElapsed = this.showElapsed;
+                        this.$store.dispatch('events/getNextEvents', {offset, showAll, showElapsed});
                     }
                 }
             },
@@ -89,7 +102,8 @@
                 if (bottomOfWindow) {
                     let offset = this.getOffset();
                     let showAll = this.showAll;
-                    this.$store.dispatch('events/getNextEvents', {offset, showAll});
+                    let showElapsed = this.showElapsed;
+                    this.$store.dispatch('events/getNextEvents', {offset, showAll, showElapsed});
                 }
             },
             /**
@@ -107,7 +121,8 @@
             },
             init: function () {
                 let showAll = this.showAll;
-                this.$store.dispatch('events/getInitialOverview', {showAll});
+                let showElapsed = this.showElapsed;
+                this.$store.dispatch('events/getInitialOverview', {showAll, showElapsed});
             }
         },
         created() {
@@ -123,6 +138,9 @@
                 this.loadDataUntilScreenIsFull();
             },
             showAll: function () {
+                this.init();
+            },
+            showElapsed: function () {
                 this.init();
             }
         },

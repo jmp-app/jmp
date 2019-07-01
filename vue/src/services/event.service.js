@@ -16,20 +16,26 @@ function getAll() {
         });
 }
 
-function getInitialOverview(showAll) {
+function getInitialOverview(showAll, showElapsed) {
     let url = '/events?limit=5';
     if (showAll) {
         url += '&all=1';
+    }
+    if (showElapsed) {
+        url += '&elapsed=1';
     }
     return Vue.axios.get(url).then(response => {
         return response.data;
     });
 }
 
-function getNextEvents(offset, showAll) {
+function getNextEvents(offset, showAll, showElapsed) {
     let url = `/events?limit=5&offset=${offset}`;
     if (showAll) {
         url += '&all=1';
+    }
+    if (showElapsed) {
+        url += '&elapsed=1';
     }
     return Vue.axios.get(url).then(response => {
         return response.data;

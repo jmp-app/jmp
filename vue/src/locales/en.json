@@ -35,6 +35,7 @@
   "event.place": "Place",
   "event.groups": "Groups",
   "event.overview.showAll": "Show events from all groups",
+  "event.overview.showElapsed": "Show elapsed events",
   "registration.reason": "Reason",
   "registration.reasonRequired": "Reason is required",
   "registration.reasonPlaceholder": "Enter reason",
@@ -69,5 +70,6 @@
   "eventType.color.preview": "Preview",
   "eventType.color": "Color",
   "eventType.detail.titleRequired": "Type is required",
-  "eventType.detail.colorRequired": "Color is required"
+  "eventType.detail.colorRequired": "Color is required",
+  "delete": "Delete"
 }

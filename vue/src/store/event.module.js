@@ -17,20 +17,20 @@ export const events = {
                     error => commit('getAllFailure', error)
                 );
         },
-        getInitialOverview({commit}, {showAll}) {
+        getInitialOverview({commit}, {showAll, showElapsed}) {
             commit('getInitialOverviewRequest');
 
-            eventService.getInitialOverview(showAll)
+            eventService.getInitialOverview(showAll, showElapsed)
                 .then(
                     events => commit('getInitialOverviewSuccess', events),
                     error => commit('getInitialOverviewFailure', error)
                 );
         },
-        getNextEvents({commit}, {offset, showAll}) {
+        getNextEvents({commit}, {offset, showAll, showElapsed}) {
             if (offset !== 0) {
                 commit('getNextEventsRequest');
 
-                eventService.getNextEvents(offset, showAll)
+                eventService.getNextEvents(offset, showAll, showElapsed)
                     .then(
                         events => commit('getNextEventsSuccess', events),
                         error => commit('getNextEventsFailure', error)

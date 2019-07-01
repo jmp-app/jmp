@@ -1,39 +1,58 @@
 <template>
-    <form @submit.prevent="handleSubmit" v-if="eventType">
-        <div class="form-group row">
-            <label class="col-sm-3 col-form-label" for="title">{{$t('eventType.title')}}</label>
-            <div class="col-sm-9">
-                <input :class="{ 'is-invalid': submitted && !eventType.title }" :readonly="display()"
-                       class="form-control"
-                       id="title" type="text"
-                       v-model="eventType.title">
-                <div class="invalid-feedback" v-show="submitted && !eventType.title">
-                    {{ $t("eventType.detail.titleRequired") }}
-                </div>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-3 col-form-label" for="color">{{$t('eventType.color')}}</label>
-            <div class="col-sm-9">
-                <input :class="{ 'is-invalid': submitted && !eventType.color }" :readonly="display()"
-                       class="form-control" id="color" type="text"
-                       v-model="eventType.color">
-                <div class="invalid-feedback" v-show="submitted && !eventType.color">
-                    {{ $t("eventType.detail.colorRequired") }}
-                </div>
-                <chrome-picker v-model="eventType.color"></chrome-picker>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-sm-9">
-                <v-btn @click="handleCancel()" type="button" v-if="edit()">{{$t('cancel')}}</v-btn>
-                <v-btn @click="handleEdit()" type="button" v-if="display()">{{$t('edit')}}</v-btn>
-                <v-btn color="info" type="submit" v-if="edit() || create()">{{$t('save')}}</v-btn>
-                <v-btn @click="handleDelete()" color="error" type="button" v-if="edit() || display()">{{$t('delete')}}
+    <div>
+        <v-form
+                ref="form"
+                v-if="eventType"
+                v-model="valid"
+        >
+            <v-text-field
+                    :counter="titleRules.counter"
+                    :label="$t('eventType.title')"
+                    :readonly="display()"
+                    :rules="titleRules.rules"
+                    required
+                    v-model="eventType.title"
+            ></v-text-field>
+
+            <v-text-field
+                    :label="$t('eventType.color')"
+                    :readonly="display()"
+                    :rules="colorRules.rules"
+                    required
+                    v-model="eventType.color"
+            ></v-text-field>
+            <div>
+                <v-btn
+                        :disabled="!valid"
+                        @click="handleSubmit()"
+                        color="success"
+                        v-if="create() || edit()"
+                >
+                    {{$t('submit')}}
+                </v-btn>
+                <v-btn
+                        @click="handleEdit()"
+                        color="primary"
+                        v-if="display()"
+                >
+                    {{$t('edit')}}
+                </v-btn>
+                <v-btn
+                        @click="handleCancel()"
+                        v-if="create() || edit()"
+                >
+                    {{$t('cancel')}}
+                </v-btn>
+                <v-btn
+                        @click="handleDelete()"
+                        color="error"
+                        v-if="edit() || display()"
+                >
+                    {{$t('delete')}}
                 </v-btn>
             </div>
-        </div>
-    </form>
+        </v-form>
+    </div>
 </template>
 
 <script>
@@ -43,8 +62,26 @@
             return {
                 mode: 'display', // display, edit, create
                 submitted: false,
-                eventTypeOnSubmit: {}
-            };
+                valid: true,
+                titleRules: {
+                    counter: 50,
+                    rules:
+                        [
+                            v => !!v || `${this.$t('fieldIsRequired', {fieldname: this.$t('eventType.title')})}`,
+                            v => (v && v.length <= 50) || `${this.$t('fieldValueLength', {
+                                fieldname: this.$t('eventType.title'),
+                                lenght: 50
+                            })}`
+                        ]
+                },
+                colorRules: {
+                    rules:
+                        [
+                            v => !!v || `${this.$t('fieldIsRequired', {fieldname: this.$t('eventType.color')})}`
+                        ]
+                }
+            }
+                ;
         },
         computed: {
             eventType() {
@@ -63,7 +100,6 @@
             },
             handleSubmit: function () {
                 this.submitted = true;
-                this.eventTypeOnSubmit = this.eventType;
                 if (this.mode === 'create') {
                     this.createNewEventType();
                 } else if (this.mode === 'edit') {
