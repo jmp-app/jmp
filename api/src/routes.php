@@ -33,8 +33,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
     // Login
     $this->group('/login', function () use ($container, $jwtMiddleware) {
         /** @var $this Slim\App */
-        $this->options('', function () {
-        });
 
         $this->post('', LoginController::class . ':login')
             ->add(new ValidationErrorResponseBuilder())
@@ -48,8 +46,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
     // Events
     $this->group('/events', function () use ($container, $jwtMiddleware) {
         /** @var $this Slim\App */
-        $this->options('', function () {
-        });
 
         $this->get('', EventsController::class . ':listEvents')
             ->add(new ValidationErrorResponseBuilder())
@@ -65,8 +61,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
 
         $this->group('/{id:[0-9]+}', function () use ($container, $jwtMiddleware) {
             /** @var $this Slim\App */
-            $this->options('', function () {
-            });
 
             $this->get('', EventsController::class . ':getEventById')
                 ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
@@ -88,8 +82,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
     // Registration
     $this->group('/registration', function () use ($container, $jwtMiddleware) {
         /** @var $this Slim\App */
-        $this->options('', function () {
-        });
 
         $this->post('', RegistrationController::class . ':createRegistration')
             ->add(new ValidationErrorResponseBuilder())
@@ -99,8 +91,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
 
         $this->group('/{eventId:[0-9]+}/{userId:[0-9]+}', function () use ($container, $jwtMiddleware) {
             /** @var $this Slim\App */
-            $this->options('', function () {
-            });
 
             $this->get('', RegistrationController::class . ':getRegistrationByEventIdAndUserId')
                 ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
@@ -122,8 +112,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
     // Registration-State
     $this->group('/registration-state', function () use ($container, $jwtMiddleware) {
         /** @var $this Slim\App */
-        $this->options('', function () {
-        });
 
         $this->get('', RegistrationStateController::class . ':getAllRegStates')
             ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
@@ -137,8 +125,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
 
         $this->group('/{id:[0-9]+}', function () use ($container, $jwtMiddleware) {
             /** @var $this Slim\App */
-            $this->options('', function () {
-            });
 
             $this->put('', RegistrationStateController::class . ':updateRegistrationState')
                 ->add(new ValidationErrorResponseBuilder())
@@ -160,16 +146,10 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
     // User
     $this->group('/user', function () use ($container, $jwtMiddleware) {
         /** @var $this Slim\App */
-        $this->options('', function () {
-        });
-
 
         $this->get('', UsersController::class . ':getCurrentUser')
             ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
             ->add($jwtMiddleware);
-
-        $this->options('/change-password', function () {
-        });
 
         $this->put('/change-password', UsersController::class . ':changePassword')
             ->add(new ValidationErrorResponseBuilder())
@@ -183,8 +163,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
     // Users
     $this->group('/users', function () use ($container, $jwtMiddleware) {
         /** @var $this Slim\App */
-        $this->options('', function () {
-        });
 
         $this->post('', UsersController::class . ':createUser')
             ->add(new ValidationErrorResponseBuilder())
@@ -200,8 +178,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
 
         $this->group('/{id:[0-9]+}', function () use ($container, $jwtMiddleware) {
             /** @var $this Slim\App */
-            $this->options('', function () {
-            });
 
             $this->put('', UsersController::class . ':updateUser')
                 ->add(new ValidationErrorResponseBuilder())
@@ -222,8 +198,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
     // Groups
     $this->group('/groups', function () use ($container, $jwtMiddleware) {
         /** @var $this Slim\App */
-        $this->options('', function () {
-        });
 
         $this->post('', GroupsController::class . ':createGroup')
             ->add(new ValidationErrorResponseBuilder())
@@ -237,8 +211,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
 
         $this->group('/{id:[0-9]+}', function () use ($container, $jwtMiddleware) {
             /** @var $this Slim\App */
-            $this->options('', function () {
-            });
 
             $this->get('', GroupsController::class . ':getGroupById')
                 ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
@@ -254,17 +226,11 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
                 ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
                 ->add($jwtMiddleware);
 
-            $this->options('/join', function () {
-            });
-
             $this->post('/join', GroupsController::class . ':joinGroup')
                 ->add(new ValidationErrorResponseBuilder())
                 ->add(new Validation($container['validation']['userIdsArray']))
                 ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
                 ->add($jwtMiddleware);
-
-            $this->options('/leave', function () {
-            });
 
             $this->delete('/leave', GroupsController::class . ':leaveGroup')
                 ->add(new ValidationErrorResponseBuilder())
@@ -276,8 +242,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
 
     $this->group('/event-types', function () use ($container, $jwtMiddleware) {
         /** @var $this Slim\App */
-        $this->options('', function () {
-        });
 
         $this->post('', EventTypesController::class . ':createEventType')
             ->add(new ValidationErrorResponseBuilder())
@@ -291,8 +255,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
 
         $this->group('/{id:[0-9]+}', function () use ($container, $jwtMiddleware) {
             /** @var $this Slim\App */
-            $this->options('', function () {
-            });
 
             $this->get('', EventTypesController::class . ':getEventTypeById')
                 ->add(new AuthenticationMiddleware($container, PermissionLevel::USER))
@@ -312,9 +274,6 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
 
     $this->group('/presence', function () use ($container, $jwtMiddleware) {
         /** @var $this Slim\App */
-        $this->options('', function () {
-        });
-
 
         $this->post('', PresenceController::class . ':createPresence')
             ->add(new ValidationErrorResponseBuilder())
