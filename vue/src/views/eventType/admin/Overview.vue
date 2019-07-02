@@ -1,13 +1,14 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div>
-        <h3>{{$t('eventType.overview.title')}}</h3>
-        <input
-                :placeholder="$t('search')"
-                class="search my-3 form-control"
-                name="query"
-                type="search"
-                v-model="searchQuery"
-        >
+    <v-container>
+        <v-layout mb-4>
+            <v-text-field
+                    :label="$t('search')"
+                    append-icon="search"
+                    hide-details
+                    single-line
+                    v-model="searchQuery"
+            ></v-text-field>
+        </v-layout>
         <v-data-table
                 :headers="headers"
                 :items="eventTypes"
@@ -23,7 +24,7 @@
                 </tr>
             </template>
         </v-data-table>
-    </div>
+    </v-container>
 </template>
 
 <script>

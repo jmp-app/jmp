@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-container>
         <v-form
                 ref="form"
                 v-if="eventType"
@@ -21,7 +21,7 @@
                     required
                     v-model="eventType.color"
             ></v-text-field>
-            <div>
+            <v-layout>
                 <v-btn
                         :disabled="!valid"
                         @click="handleSubmit()"
@@ -50,9 +50,9 @@
                 >
                     {{$t('delete')}}
                 </v-btn>
-            </div>
+            </v-layout>
         </v-form>
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -63,7 +63,7 @@
                 mode: 'display', // display, edit, create
                 submitted: false,
                 valid: true,
-                titleRules: {
+                nameRules: {
                     counter: 50,
                     rules:
                         [
@@ -74,7 +74,7 @@
                             })}`
                         ]
                 },
-                colorRules: {
+                reasonRequiredRules: {
                     rules:
                         [
                             v => !!v || `${this.$t('fieldIsRequired', {fieldname: this.$t('eventType.color')})}`
