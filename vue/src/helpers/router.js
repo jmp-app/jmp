@@ -104,6 +104,20 @@ export const router = new Router({
             component: function () {
                 return import('../views/eventType/admin/Detail');
             }
+        },
+        {
+            path: '/registrationStates',
+            name: 'adminEventTypeOverview',
+            component: function () {
+                return import('../views/registrationState/admin/Overview');
+            }
+        },
+        {
+            path: '/registrationStates/:id',
+            name: 'adminEventTypeDetail',
+            component: function () {
+                return import('../views/registrationState/admin/Detail');
+            }
         }
     ]
 });

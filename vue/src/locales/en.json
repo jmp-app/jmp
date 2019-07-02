@@ -71,5 +71,9 @@
   "eventType.color": "Color",
   "eventType.detail.titleRequired": "Type is required",
   "eventType.detail.colorRequired": "Color is required",
-  "delete": "Delete"
+  "delete": "Delete",
+  "registrationState.name": "Name",
+  "registrationState": "Registrationstate | Registrationstates",
+  "registrationState.reasonRequired": "Reason required",
+  "registrationState.detail.nameRequired": "Name is required"
 }

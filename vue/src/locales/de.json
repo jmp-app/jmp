@@ -32,7 +32,6 @@
   "required": "Pflichtfeld",
   "noDataFound": "Keine Daten gefunden",
   "event": "Event | Events",
-  "eventType.title": "Art",
   "event.description": "Beschreibung",
   "event.fromTo": "Von - Bis",
   "event.from": "Von",
@@ -65,11 +64,16 @@
   "group.addMembers.addSelected": "Hinzufügen",
   "group.addMembers.removeSelected": "Entfernen",
   "group.overview.title": "Übersicht über alle Gruppen",
+  "eventType.title": "Art",
   "eventType.overview.title": "Übersicht über alle Event Arten",
   "eventType": "Event Art | Event Arten",
   "eventType.color.preview": "Vorschau",
   "eventType.color": "Farbe",
   "eventType.detail.titleRequired": "Die Art ist ein Pflichtfeld",
   "eventType.detail.colorRequired": "Die Farbe ist ein Pflichtfeld",
-  "delete": "Löschen"
+  "delete": "Löschen",
+  "registrationState.name": "Name",
+  "registrationState": "Registrierungsstatus | Registrierungsstatus",
+  "registrationState.reasonRequired": "Grund benötigt",
+  "registrationState.detail.nameRequired": "Der Name ist ein Pflichtfeld"
 }

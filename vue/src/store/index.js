@@ -6,7 +6,8 @@ import {authentication} from './authentication.module';
 import {users} from './users.module';
 import {user} from './user.module';
 import {events} from './event.module';
-import {registrationStates} from './registrationState.module';
+import {registrationStates} from './registrationStates.module';
+import {registrationState} from './registrationState.module';
 import {eventTypes} from './eventTypes.module';
 import {eventType} from './eventType.module';
 import {registration} from './registration.module';
@@ -23,6 +24,7 @@ export const store = new Vuex.Store({
         users,
         events,
         registrationStates,
+        registrationState,
         eventTypes,
         eventType,
         registration,
