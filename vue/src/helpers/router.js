@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import EventOverview from '../views/event/Overview.vue';
 import {store} from '../store';
 
 Vue.use(Router);
@@ -12,7 +11,16 @@ export const router = new Router({
         {
             path: '/',
             name: 'eventOverview',
-            component: EventOverview
+            component: function () {
+                return import('@/views/event/Overview.vue');
+            }
+        },
+        {
+            path: '/calendar',
+            name: 'eventCalendar',
+            component: function () {
+                return import('@/views/event/EventCalendar.vue');
+            }
         },
         {
             path: '/event/:id',
@@ -107,14 +115,14 @@ export const router = new Router({
         },
         {
             path: '/registrationStates',
-            name: 'adminEventTypeOverview',
+            name: 'adminRegistrationStateOverview',
             component: function () {
                 return import('../views/registrationState/admin/Overview');
             }
         },
         {
             path: '/registrationStates/:id',
-            name: 'adminEventTypeDetail',
+            name: 'adminRegistrationStateDetail',
             component: function () {
                 return import('../views/registrationState/admin/Detail');
             }

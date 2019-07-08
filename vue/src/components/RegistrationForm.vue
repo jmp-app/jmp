@@ -21,7 +21,7 @@
                 v-model="reason"
         ></v-text-field>
         <v-btn :disabled="!valid" @click="validate()" color="error" v-show="hasChanges">
-            {{ $t("submit") }}
+            {{ $t('submit') }}
         </v-btn>
     </v-form>
 </template>
@@ -30,7 +30,9 @@
     export default {
         name: 'RegistrationForm',
         props: {
-            defaultRegistrationState: {}
+            defaultRegistrationState: {},
+            event: {},
+            user: {}
         },
         data: function () {
             return {
@@ -73,8 +75,8 @@
                 }
             },
             handleSubmit: function () {
-                let eventId = this.$store.state.events.detail.event.id;
-                let userId = JSON.parse(window.localStorage.getItem('user')).id;
+                let eventId = this.event ? this.event.id : this.$store.state.events.detail.event.id;
+                let userId = this.user ? this.user.id : JSON.parse(window.localStorage.getItem('user')).id;
                 let registrationStateId = this.selected.id;
                 let reason = this.reason.trim();
                 if (this.reasonRequired()) {

@@ -5,6 +5,10 @@
             <v-btn class="hidden-sm-and-up" icon to="/">
                 <v-icon>view_day</v-icon>
             </v-btn>
+            <v-btn class="hidden-xs-only" flat to="/calendar">{{ $t('nav.overview') }}</v-btn>
+            <v-btn class="hidden-sm-and-up" icon to="/calendar">
+                <v-icon>view_day</v-icon>
+            </v-btn>
             <v-menu offset-y open-on-hover v-if="showAdmin()">
                 <template v-slot:activator="{ on }">
                     <v-btn flat v-on="on">

@@ -9,11 +9,18 @@ export const eventService = {
     create
 };
 
-function getAll() {
-    return Vue.axios.get('/events?all=1&elapsed=1')
-        .then(response => {
-            return response.data;
-        });
+function getAll(showAll, showElapsed) {
+    let url = '/events?';
+    if (showAll) {
+        url += '&all=1';
+    }
+    if (showElapsed) {
+        url += '&elapsed=1';
+    }
+    return Vue.axios.get(url).then(response => {
+        return response.data;
+    });
+
 }
 
 function getInitialOverview(showAll, showElapsed) {

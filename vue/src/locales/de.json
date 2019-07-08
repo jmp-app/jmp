@@ -23,6 +23,7 @@
   "fieldIsRequired": "{fieldname} ist ein Pflichtfeld",
   "fieldValueLength": "{fieldname} darf nicht länger als {lenght} Zeichen sein",
   "fieldValueToShort": "{fieldname} muss mindestens {lenght} Zeichen lang sein",
+  "close": "Schliessen",
   "cancel": "Abbrechen",
   "create": "Erstellen",
   "save": "Speichern",

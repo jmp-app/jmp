@@ -8,10 +8,10 @@ export const events = {
         detail: {}
     },
     actions: {
-        getAll({commit}) {
+        getAll({commit}, {showAll, showElapsed}) {
             commit('getAllRequest');
 
-            eventService.getAll()
+            eventService.getAll(showAll, showElapsed)
                 .then(
                     events => commit('getAllSuccess', events),
                     error => commit('getAllFailure', error)

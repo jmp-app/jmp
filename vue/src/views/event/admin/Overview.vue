@@ -87,7 +87,9 @@
             }
         },
         mounted() {
-            this.$store.dispatch('events/getAll');
+            let all = true;
+            let elapsed = true;
+            this.$store.dispatch('events/getAll', {all, elapsed});
         }
     };
 </script>

@@ -18,6 +18,7 @@
   "fieldIsRequired": "{fieldname} is required",
   "fieldValueLength": "{fieldname} must be less than {lenght} characters",
   "fieldValueToShort": "{fieldname} must be at least {lenght} characters long",
+  "close": "Close",
   "cancel": "Cancel",
   "create": "Create",
   "edit": "Edit",
