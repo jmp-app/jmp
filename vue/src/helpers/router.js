@@ -107,14 +107,14 @@ export const router = new Router({
         },
         {
             path: '/registrationStates',
-            name: 'adminEventTypeOverview',
+            name: 'adminRegistrationStateOverview',
             component: function () {
                 return import('../views/registrationState/admin/Overview');
             }
         },
         {
             path: '/registrationStates/:id',
-            name: 'adminEventTypeDetail',
+            name: 'adminRegistrationStateDetail',
             component: function () {
                 return import('../views/registrationState/admin/Detail');
             }

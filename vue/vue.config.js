@@ -10,5 +10,8 @@ module.exports = {
             name: 'JMP',
             themeColor: '#a32014'
         }
+    },
+    chainWebpack: (config) => {
+        config.resolve.symlinks(false);
     }
 };
