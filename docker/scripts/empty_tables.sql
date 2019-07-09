@@ -1,0 +1,13 @@
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE `event`;
+TRUNCATE `event_has_group`;
+TRUNCATE `event_type`;
+TRUNCATE `group`;
+TRUNCATE `membership`;
+TRUNCATE `presence`;
+TRUNCATE `registration`;
+TRUNCATE `registration_state`;
+TRUNCATE `user`;
+TRUNCATE `user_meta`;
+TRUNCATE `user_meta_type`;
+SET FOREIGN_KEY_CHECKS = 1;
