@@ -33,6 +33,15 @@
         <v-btn
                 active-class
                 style="text-decoration: none; color: black !important;"
+                to="/registrationStates/0"
+                v-if="isView('adminRegistrationStateOverview')"
+        >
+            <span>{{$t('create')}}</span>
+            <v-icon>add</v-icon>
+        </v-btn>
+        <v-btn
+                active-class
+                style="text-decoration: none; color: black !important;"
                 to="/eventTypes/0"
                 v-if="isView('adminEventTypeOverview')"
         >
