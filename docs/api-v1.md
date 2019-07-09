@@ -44,6 +44,10 @@
   * [Get Registration State](#get-registration-state)
   * [Delete Registration State](#delete-registration-state)
   * [Create Presence](#create-presence)
+  * [Get Presence](#get-presence)
+  * [Update Presence](#update-presence)
+  * [Delete Presence](#delete-presence)
+  * [Get Presences](#get-presences)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -193,7 +197,23 @@ This is an extended version of the registration object. It contains both informa
   "hasAttended": false
 }
 ```
-
+### Extended Presence
+This is an extended version of the registration object. It contains both information about the user and the registration.
+```json
+{
+  "id": 162,
+  "username": "walter",
+  "lastname": "White",
+  "firstname": "Walter",
+  "email": "walter@white.me",
+  "passwordChange": false,
+  "isAdmin": false,
+  "presence": {
+    "auditor": 160,
+    "hasAttended": false
+  }
+}
+```
 ## Error Handling
 
 ### HTTP Status Codes
@@ -975,7 +995,7 @@ Returns: HTTP 204 status code when successful
 ### Get Registrations 
 
 ```http
-GET /v1/registrations/{eventId}
+GET /v1/events/{eventId}/registrations
 ```
 
 Parameters:
@@ -1006,5 +1026,94 @@ Parameters:
 Access rights: admin
 
 Returns: [Presence](#presence)
+
+### Get Presence 
+
+```http
+GET /v1/presence/{eventId}/{userId}/{auditorId}
+```
+
+Parameters:
+
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| eventId   | The event's id                                               | ✔️      | numeric |
+| userId    | The user's id                                                | ✔        | numeric |
+| auditorId    | The auditor's id                                                | ✔        | numeric |
+
+
+**Note:**  
+For different auditors there can exists different presence entrys as may more than one is performing attendance checks.
+
+Access rights: admin
+
+Returns: [Presence](#presence)
+
+### Update Presence 
+
+```http
+PUT /v1/presence/{eventId}/{userId}/{auditorId}
+```
+
+Parameters:
+
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| event   | The event's id                                               | ✔️     | numeric |
+| user    | The user's id                                                | ✔        | numeric |
+| auditorId    | The auditor's id                                                | ✔        | numeric |
+| hasAttended    | True if the user as attended at the event               | ✔        | boolean(0 or 1) |
+
+
+Example request data:
+
+```json
+{
+    "hasAttended": 0
+}
+```
+
+**Note:**  
+For different auditors there can exists different presence entrys as may more than one is performing attendance checks.
+
+Access rights: admin
+
+Returns: [Presence](#presence)
+
+### Delete Presence 
+
+```http
+DELETE /v1/presence/{eventId}/{userId}/{auditorId}
+```
+
+Parameters:
+
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| event   | The event's id                                               | ✔️     | numeric |
+| auditorId    | The auditor's id                                                | ✔        | numeric |
+| user    | The user's id                                                | ✔        | numeric |
+
+
+Access rights: admin
+
+Returns: HTTP 204 status code when successful
+
+### Get Presences 
+
+```http
+GET /v1/events/{eventId}/presences
+```
+
+Parameters:
+
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| eventId   | The event's id                                               | ✔️     |numeric|
+
+
+Access rights: admin
+
+Returns: [Event](#event) and list of [Extended Presences](#extended-registration)
 
 ___TODO:___ Presence and User Meta

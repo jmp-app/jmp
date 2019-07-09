@@ -119,6 +119,9 @@ $container['validation'] = function () {
             'event' => v::notEmpty()->noWhitespace()->numeric(),
             'user' => v::notEmpty()->noWhitespace()->numeric(),
             'hasAttended' => v::boolVal(),
+        ],
+        'updatePresence' => [
+            'hasAttended' => v::boolVal(),
         ]
     ];
 };
