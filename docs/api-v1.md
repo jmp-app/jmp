@@ -880,10 +880,10 @@ Access rights: authentication required, user has to be an admin
 
 Returns: 204 or errors
 
-### Get Registration State from Event
+### Get Registration States
 
 ```http
-GET /v1/registration/{eventId}/{userId}
+GET /v1/registration-state/{id}
 ```
 
 Parameters: none
@@ -995,7 +995,7 @@ Returns: HTTP 204 status code when successful
 ### Get Registrations 
 
 ```http
-GET /v1/events/{eventId}/registrations
+GET /v1/registration/{eventId}
 ```
 
 Parameters:
@@ -1099,10 +1099,46 @@ Access rights: admin
 
 Returns: HTTP 204 status code when successful
 
+### Create Presences
+
+````http request
+POST /v1/presence/{eventId}
+````
+
+Parameters:
+
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| eventId   | The event's id                                               | ✔️      | numeric |
+| presences    | An array where each object contains an userId and hasAttended | ✔        | array |
+
+Example request data:
+
+````json
+[
+  {
+    "user": 12,
+    "hasAttended": 1
+  },
+  {
+    "user": 13,
+    "hasAttended": 0
+  }
+]
+````
+
+**Note:**  
+For different auditors there can exists different presence entrys as may more than one is performing attendance checks.
+
+Access rights: admin
+
+Returns: [Event](#event) and list of [Extended Presences](#extended-presence)
+
+
 ### Get Presences 
 
 ```http
-GET /v1/events/{eventId}/presences
+GET /v1/presence/{eventId}
 ```
 
 Parameters:
@@ -1114,6 +1150,6 @@ Parameters:
 
 Access rights: admin
 
-Returns: [Event](#event) and list of [Extended Presences](#extended-registration)
+Returns: [Event](#event) and list of [Extended Presences](#extended-presence)
 
 ___TODO:___ Presence and User Meta
