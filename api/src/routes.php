@@ -293,6 +293,10 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
             $this->delete('', PresenceController::class . ':deletePresence')
                 ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
                 ->add($jwtMiddleware);
+
+            $this->get('', PresenceController::class . ':getPresence')
+                ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+                ->add($jwtMiddleware);
         });
     });
 });

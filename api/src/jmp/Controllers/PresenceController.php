@@ -75,6 +75,28 @@ class PresenceController
      * @param array $args
      * @return Response
      */
+    public function getPresence(Request $request, Response $response, array $args): Response
+    {
+        $presence = new Presence([
+            'event' => $args['eventId'],
+            'user' => $args['userId'],
+            'auditor' => $args['auditorId'],
+        ]);
+
+        $optional = $this->presenceService->getPresenceByIds($presence->event, $presence->user, $presence->auditor);
+        if ($optional->isFailure()) {
+            return $response->withStatus(404);
+        }
+
+        return $response->withJson(Converter::convert($optional->getData()));
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function deletePresence(Request $request, Response $response, array $args): Response
     {
         $presence = new Presence([
