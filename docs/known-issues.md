@@ -4,6 +4,7 @@
 * reset volume when not mounted
 * make through scoop.sh
 * proxy and certificates
+* delete php route cache when a new route returns 404 
 
 # Known Issues
 
