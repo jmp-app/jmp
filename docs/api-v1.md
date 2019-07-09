@@ -1030,7 +1030,7 @@ Returns: [Presence](#presence)
 ### Get Presence 
 
 ```http
-PUT /v1/presence/{eventId}/{userId}/{auditorId}
+GET /v1/presence/{eventId}/{userId}/{auditorId}
 ```
 
 Parameters:
