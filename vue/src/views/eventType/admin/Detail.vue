@@ -63,7 +63,7 @@
                 mode: 'display', // display, edit, create
                 submitted: false,
                 valid: true,
-                nameRules: {
+                titleRules: {
                     counter: 50,
                     rules:
                         [
@@ -74,7 +74,7 @@
                             })}`
                         ]
                 },
-                reasonRequiredRules: {
+                colorRules: {
                     rules:
                         [
                             v => !!v || `${this.$t('fieldIsRequired', {fieldname: this.$t('eventType.color')})}`
