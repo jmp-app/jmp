@@ -1,7 +1,7 @@
 # ![JMP](logo.png)
 
 [![Build Status](https://travis-ci.com/jmp-app/jmp.svg?branch=master)](https://travis-ci.com/jmp-app/jmp)
-[![CodeFactor](https://www.codefactor.io/repository/github/jmp-app/jmp/badge)](https://www.codefactor.io/repository/github/jmp-app/jmp)
+[![Maintainability](https://api.codeclimate.com/v1/badges/600b1583b9c1bb08a7f5/maintainability)](https://codeclimate.com/github/jmp-app/jmp/maintainability)
 
 # Demo
 **Link:** [jmp-app.tk](https://jmp-app.tk)  
