@@ -69,6 +69,37 @@ class PresenceController
         $this->logger = $container->get('logger');
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function updatePresence(Request $request, Response $response, array $args): Response
+    {
+        $presence = new Presence([
+            'event' => $args['eventId'],
+            'user' => $args['userId'],
+            'auditor' => $args['auditorId'],
+            'hasAttended' => $request->getParsedBodyParam('hasAttended')
+        ]);
+
+        $optional = $this->presenceService->getPresenceByIds($presence->event, $presence->user, $presence->auditor);
+        if ($optional->isFailure()) {
+            return $response->withStatus(404);
+        }
+
+        $optional = $this->presenceService->updatePresence($presence);
+
+        if ($optional->isFailure()) {
+            $this->logger->error('Failed to update presence with the user ' . $presence->user .
+                ', at the event ' . $presence->event . ' from the auditor ' . $presence->auditor);
+            return $response->withStatus(500);
+        }
+
+        return $response->withJson(Converter::convert($optional->getData()));
+
+    }
 
     /**
      * @param Request $request

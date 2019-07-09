@@ -281,5 +281,14 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
             ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
             ->add($jwtMiddleware);
 
+        $this->group('/{eventId:[0-9]+}/{userId:[0-9]+}/{auditorId:[0-9]+}', function () use ($container, $jwtMiddleware) {
+            /** @var $this Slim\App */
+
+            $this->put('', PresenceController::class . ':updatePresence')
+                ->add(new ValidationErrorResponseBuilder())
+                ->add(new Validation($container['validation']['updatePresence']))
+                ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+                ->add($jwtMiddleware);
+        });
     });
 });

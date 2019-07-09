@@ -27,6 +27,34 @@ class PresenceService
      * @param Presence $presence
      * @return Optional
      */
+    public function updatePresence(Presence $presence): Optional
+    {
+        $sql = <<< SQL
+UPDATE presence
+SET has_attended = :hasAttended
+WHERE event_id = :eventId
+  AND user_id = :userId
+  AND auditor_id = :auditorId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':hasAttended', $presence->hasAttended, PDO::PARAM_BOOL);
+        $stmt->bindParam(':eventId', $presence->event);
+        $stmt->bindParam('userId', $presence->user);
+        $stmt->bindParam('auditorId', $presence->auditor);
+
+        if ($stmt->execute() === false) {
+            return Optional::failure();
+        }
+
+        return $this->getPresenceByIds($presence->event, $presence->user, $presence->auditor);
+    }
+
+    /**
+     * @param Presence $presence
+     * @return Optional
+     */
     public function createPresence(Presence $presence): Optional
     {
         $sql = <<<SQL
