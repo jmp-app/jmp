@@ -1,3 +1,4 @@
+USE `jmp`;
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE `event`;
 TRUNCATE `event_has_group`;
