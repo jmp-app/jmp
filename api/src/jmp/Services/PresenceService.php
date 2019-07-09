@@ -25,6 +25,28 @@ class PresenceService
 
     /**
      * @param Presence $presence
+     * @return bool
+     */
+    public function deletePresence(Presence $presence): bool
+    {
+        $sql = <<< SQL
+DELETE FROM presence
+WHERE event_id = :eventId
+  AND user_id = :userId
+  AND auditor_id = :auditorId
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':eventId', $presence->event);
+        $stmt->bindParam('userId', $presence->user);
+        $stmt->bindParam('auditorId', $presence->auditor);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * @param Presence $presence
      * @return Optional
      */
     public function updatePresence(Presence $presence): Optional

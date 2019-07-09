@@ -1,6 +1,6 @@
 {
 	"info": {
-      "_postman_id": "9d733e97-fc0e-4da2-9149-18a362e686ea",
+		"_postman_id": "9d733e97-fc0e-4da2-9149-18a362e686ea",
 		"name": "jmp",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -16000,7 +16000,7 @@
 													"vars = pm.variables;",
 													"",
 													"vars.set('event', 35);",
-													"vars.set('user', 161);",
+													"vars.set('user', 162);",
 													"vars.set('hasAttended', 1);",
 													""
 												],
@@ -16024,7 +16024,11 @@
 													"    pm.expect(json.user).to.eq(vars.get('user'));",
 													"    pm.expect(json.auditor).to.eq(163);",
 													"    pm.expect(json.hasAttended).to.eq(Boolean(vars.get('hasAttended')));",
-													"});"
+													"});",
+													"",
+													"pm.environment.set(\"created-presence-event-id\", pm.response.json().event);",
+													"pm.environment.set(\"created-presence-user-id\", pm.response.json().user);",
+													"pm.environment.set(\"created-presence-auditor-id\", pm.response.json().auditor);"
 												],
 												"type": "text/javascript"
 											}
@@ -16408,6 +16412,43 @@
 										}
 									},
 									"response": []
+								},
+								{
+									"name": "/presence",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "3d1a32e3-a066-4bf4-bb18-fd0f7f340942",
+												"exec": [
+													"pm.test(\"Status is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/api/v1/presence/{{created-presence-event-id}}/{{created-presence-user-id}}/{{created-presence-auditor-id}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"presence",
+												"{{created-presence-event-id}}",
+												"{{created-presence-user-id}}",
+												"{{created-presence-auditor-id}}"
+											]
+										}
+									},
+									"response": []
 								}
 							],
 							"auth": {
@@ -16515,486 +16556,891 @@
 						}
 					],
 					"_postman_isSubFolder": true
-                },
-              {
-                "name": "update",
-                "item": [
-                  {
-                    "name": "admin",
-                    "item": [
-                      {
-                        "name": "/presence",
-                        "event": [
-                          {
-                            "listen": "prerequest",
-                            "script": {
-                              "id": "c56ccd36-672e-45d7-bcf0-24d703a61442",
-                              "exec": [
-                                "vars = pm.variables;",
-                                "",
-                                "vars.set('event', 35);",
-                                "vars.set('user', 162);",
-                                "vars.set('hasAttended', 1);",
-                                ""
-                              ],
-                              "type": "text/javascript"
-                            }
-                          },
-                          {
-                            "listen": "test",
-                            "script": {
-                              "id": "db84c630-4711-4693-a5f9-6643aa0d5a2a",
-                              "exec": [
-                                "vars = pm.variables;",
-                                "",
-                                "pm.test(\"Status is 200\", function () {",
-                                "    pm.response.to.have.status(200)",
-                                "});",
-                                "",
-                                "pm.test(\"All fields are returned\", function () {",
-                                "    json = pm.response.json();",
-                                "    pm.expect(json.event).to.eq(vars.get('event'));",
-                                "    pm.expect(json.user).to.eq(vars.get('user'));",
-                                "    pm.expect(json.auditor).to.eq(163);",
-                                "    pm.expect(json.hasAttended).to.eq(Boolean(vars.get('hasAttended')));",
-                                "});",
-                                "",
-                                "pm.environment.set(\"created-presence-event-id\", pm.response.json().event);",
-                                "pm.environment.set(\"created-presence-user-id\", pm.response.json().user);",
-                                "pm.environment.set(\"created-presence-auditor-id\", pm.response.json().auditor);"
-                              ],
-                              "type": "text/javascript"
-                            }
-                          }
-                        ],
-                        "request": {
-                          "method": "POST",
-                          "header": [
-                            {
-                              "key": "Content-Type",
-                              "name": "Content-Type",
-                              "value": "application/x-www-form-urlencoded",
-                              "type": "text"
-                            }
-                          ],
-                          "body": {
-                            "mode": "urlencoded",
-                            "urlencoded": [
-                              {
-                                "key": "event",
-                                "value": "{{event}}",
-                                "type": "text"
-                              },
-                              {
-                                "key": "user",
-                                "value": "{{user}}",
-                                "type": "text"
-                              },
-                              {
-                                "key": "hasAttended",
-                                "value": "{{hasAttended}}",
-                                "type": "text"
-                              }
-                            ]
-                          },
-                          "url": {
-                            "raw": "http://localhost/api/v1/presence",
-                            "protocol": "http",
-                            "host": [
-                              "localhost"
-                            ],
-                            "path": [
-                              "api",
-                              "v1",
-                              "presence"
-                            ]
-                          }
-                        },
-                        "response": []
-                      },
-                      {
-                        "name": "/update",
-                        "event": [
-                          {
-                            "listen": "prerequest",
-                            "script": {
-                              "id": "e93da247-3c1c-4c98-9a51-951ba78c756b",
-                              "exec": [
-                                "vars = pm.variables;",
-                                "",
-                                "vars.set('hasAttended', 0);",
-                                ""
-                              ],
-                              "type": "text/javascript"
-                            }
-                          },
-                          {
-                            "listen": "test",
-                            "script": {
-                              "id": "7de048fd-65f4-418a-b220-774ceb87b452",
-                              "exec": [
-                                "vars = pm.variables;",
-                                "",
-                                "pm.test(\"Status is 200\", function () {",
-                                "    pm.response.to.have.status(200)",
-                                "});",
-                                "",
-                                "pm.test(\"All fields are returned and correctly changed\", function () {",
-                                "    json = pm.response.json();",
-                                "    pm.expect(json.event).to.eq(pm.environment.get('created-presence-event-id'));",
-                                "    pm.expect(json.user).to.eq(pm.environment.get('created-presence-user-id'));",
-                                "    pm.expect(json.auditor).to.eq(163);",
-                                "    pm.expect(json.hasAttended).to.eq(Boolean(vars.get('hasAttended')));",
-                                "});"
-                              ],
-                              "type": "text/javascript"
-                            }
-                          }
-                        ],
-                        "request": {
-                          "method": "PUT",
-                          "header": [
-                            {
-                              "key": "Content-Type",
-                              "name": "Content-Type",
-                              "value": "application/x-www-form-urlencoded",
-                              "type": "text"
-                            }
-                          ],
-                          "body": {
-                            "mode": "urlencoded",
-                            "urlencoded": [
-                              {
-                                "key": "hasAttended",
-                                "value": "{{hasAttended}}",
-                                "type": "text"
-                              }
-                            ]
-                          },
-                          "url": {
-                            "raw": "http://localhost/api/v1/presence/{{created-presence-event-id}}/{{created-presence-user-id}}/{{created-presence-auditor-id}}",
-                            "protocol": "http",
-                            "host": [
-                              "localhost"
-                            ],
-                            "path": [
-                              "api",
-                              "v1",
-                              "presence",
-                              "{{created-presence-event-id}}",
-                              "{{created-presence-user-id}}",
-                              "{{created-presence-auditor-id}}"
-                            ]
-                          }
-                        },
-                        "response": []
-                      },
-                      {
-                        "name": "/update-bad-reqeust",
-                        "event": [
-                          {
-                            "listen": "prerequest",
-                            "script": {
-                              "id": "e93da247-3c1c-4c98-9a51-951ba78c756b",
-                              "exec": [
-                                "vars = pm.variables;",
-                                "",
-                                "vars.set('hasAttended', 'fdsfsdaf');",
-                                ""
-                              ],
-                              "type": "text/javascript"
-                            }
-                          },
-                          {
-                            "listen": "test",
-                            "script": {
-                              "id": "7de048fd-65f4-418a-b220-774ceb87b452",
-                              "exec": [
-                                "pm.test(\"Status is 400\", function () {",
-                                "    pm.response.to.have.status(400);",
-                                "});",
-                                "",
-                                "pm.test(\"All errors are returned\", function () {",
-                                "    pm.response.to.have.jsonBody(\"errors\");",
-                                "    pm.response.to.have.jsonBody(\"errors.hasAttended\");",
-                                "});"
-                              ],
-                              "type": "text/javascript"
-                            }
-                          }
-                        ],
-                        "request": {
-                          "method": "PUT",
-                          "header": [
-                            {
-                              "key": "Content-Type",
-                              "name": "Content-Type",
-                              "type": "text",
-                              "value": "application/x-www-form-urlencoded"
-                            }
-                          ],
-                          "body": {
-                            "mode": "urlencoded",
-                            "urlencoded": [
-                              {
-                                "key": "hasAttended",
-                                "value": "{{hasAttended}}",
-                                "type": "text"
-                              }
-                            ]
-                          },
-                          "url": {
-                            "raw": "http://localhost/api/v1/presence/{{created-presence-event-id}}/{{created-presence-user-id}}/{{created-presence-auditor-id}}",
-                            "protocol": "http",
-                            "host": [
-                              "localhost"
-                            ],
-                            "path": [
-                              "api",
-                              "v1",
-                              "presence",
-                              "{{created-presence-event-id}}",
-                              "{{created-presence-user-id}}",
-                              "{{created-presence-auditor-id}}"
-                            ]
-                          }
-                        },
-                        "response": []
-                      },
-                      {
-                        "name": "/registration-state/{id:[0-9]+}-not-found",
-                        "event": [
-                          {
-                            "listen": "prerequest",
-                            "script": {
-                              "id": "433710cf-9db0-4311-ab35-cc2ae315ce39",
-                              "exec": [
-                                "vars = pm.variables;",
-                                "",
-                                "vars.set('eventId', 99999999);",
-                                "vars.set('userId', 99999999);",
-                                "vars.set('auditorId', 99999999);"
-                              ],
-                              "type": "text/javascript"
-                            }
-                          },
-                          {
-                            "listen": "test",
-                            "script": {
-                              "id": "864c0395-8e69-449c-bbfa-3381a49862fb",
-                              "exec": [
-                                "vars = pm.variables;",
-                                "",
-                                "pm.test(\"Status is 404\", function () {",
-                                "    pm.response.to.have.status(404);",
-                                "});"
-                              ],
-                              "type": "text/javascript"
-                            }
-                          }
-                        ],
-                        "request": {
-                          "method": "PUT",
-                          "header": [],
-                          "body": {
-                            "mode": "raw",
-                            "raw": ""
-                          },
-                          "url": {
-                            "raw": "http://localhost/api/v1/presence/{{eventId}}/{{userId}}/{{auditorId}}",
-                            "protocol": "http",
-                            "host": [
-                              "localhost"
-                            ],
-                            "path": [
-                              "api",
-                              "v1",
-                              "presence",
-                              "{{eventId}}",
-                              "{{userId}}",
-                              "{{auditorId}}"
-                            ]
-                          }
-                        },
-                        "response": []
-                      },
-                      {
-                        "name": "/registration-state/{id:[0-9]+}-not-found-invalid-id",
-                        "event": [
-                          {
-                            "listen": "prerequest",
-                            "script": {
-                              "id": "433710cf-9db0-4311-ab35-cc2ae315ce39",
-                              "exec": [
-                                "vars = pm.variables;",
-                                "",
-                                "vars.set('eventId', -1);",
-                                "vars.set('userId', -1);",
-                                "vars.set('auditorId', -1);"
-                              ],
-                              "type": "text/javascript"
-                            }
-                          },
-                          {
-                            "listen": "test",
-                            "script": {
-                              "id": "864c0395-8e69-449c-bbfa-3381a49862fb",
-                              "exec": [
-                                "vars = pm.variables;",
-                                "",
-                                "pm.test(\"Status is 404\", function () {",
-                                "    pm.response.to.have.status(404);",
-                                "});"
-                              ],
-                              "type": "text/javascript"
-                            }
-                          }
-                        ],
-                        "request": {
-                          "method": "PUT",
-                          "header": [],
-                          "body": {
-                            "mode": "raw",
-                            "raw": ""
-                          },
-                          "url": {
-                            "raw": "http://localhost/api/v1/presence/{{eventId}}/{{userId}}/{{auditorId}}",
-                            "protocol": "http",
-                            "host": [
-                              "localhost"
-                            ],
-                            "path": [
-                              "api",
-                              "v1",
-                              "presence",
-                              "{{eventId}}",
-                              "{{userId}}",
-                              "{{auditorId}}"
-                            ]
-                          }
-                        },
-                        "response": []
-                      }
-                    ],
-                    "auth": {
-                      "type": "bearer",
-                      "bearer": [
-                        {
-                          "key": "token",
-                          "value": "{{admin-token}}",
-                          "type": "string"
-                        }
-                      ]
-                    },
-                    "_postman_isSubFolder": true
-                  },
-                  {
-                    "name": "nonadmin",
-                    "item": [
-                      {
-                        "name": "/update-forbidden",
-                        "event": [
-                          {
-                            "listen": "prerequest",
-                            "script": {
-                              "id": "e93da247-3c1c-4c98-9a51-951ba78c756b",
-                              "exec": [
-                                "vars = pm.variables;",
-                                "",
-                                "vars.set('hasAttended', 0);",
-                                ""
-                              ],
-                              "type": "text/javascript"
-                            }
-                          },
-                          {
-                            "listen": "test",
-                            "script": {
-                              "id": "7de048fd-65f4-418a-b220-774ceb87b452",
-                              "exec": [
-                                "pm.test(\"Status is 403\", function () {",
-                                "    pm.response.to.have.status(403);",
-                                "});"
-                              ],
-                              "type": "text/javascript"
-                            }
-                          }
-                        ],
-                        "request": {
-                          "method": "PUT",
-                          "header": [
-                            {
-                              "key": "Content-Type",
-                              "name": "Content-Type",
-                              "type": "text",
-                              "value": "application/x-www-form-urlencoded"
-                            }
-                          ],
-                          "body": {
-                            "mode": "urlencoded",
-                            "urlencoded": [
-                              {
-                                "key": "hasAttended",
-                                "value": "{{hasAttended}}",
-                                "type": "text"
-                              }
-                            ]
-                          },
-                          "url": {
-                            "raw": "http://localhost/api/v1/presence/{{created-presence-event-id}}/{{created-presence-user-id}}/{{created-presence-auditor-id}}",
-                            "protocol": "http",
-                            "host": [
-                              "localhost"
-                            ],
-                            "path": [
-                              "api",
-                              "v1",
-                              "presence",
-                              "{{created-presence-event-id}}",
-                              "{{created-presence-user-id}}",
-                              "{{created-presence-auditor-id}}"
-                            ]
-                          }
-                        },
-                        "response": []
-                      }
-                    ],
-                    "auth": {
-                      "type": "bearer",
-                      "bearer": [
-                        {
-                          "key": "token",
-                          "value": "{{nonadmin-token}}",
-                          "type": "string"
-                        }
-                      ]
-                    },
-                    "event": [
-                      {
-                        "listen": "prerequest",
-                        "script": {
-                          "id": "0e148c74-038f-453d-8365-94dadd455ab2",
-                          "type": "text/javascript",
-                          "exec": [
-                            ""
-                          ]
-                        }
-                      },
-                      {
-                        "listen": "test",
-                        "script": {
-                          "id": "01c5b5b2-820c-48db-86fe-336fd476d8ca",
-                          "type": "text/javascript",
-                          "exec": [
-                            ""
-                          ]
-                        }
-                      }
-                    ],
-                    "_postman_isSubFolder": true
-                  }
-                ],
-                "_postman_isSubFolder": true
+				},
+				{
+					"name": "update",
+					"item": [
+						{
+							"name": "admin",
+							"item": [
+								{
+									"name": "/presence",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c56ccd36-672e-45d7-bcf0-24d703a61442",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('event', 35);",
+													"vars.set('user', 162);",
+													"vars.set('hasAttended', 1);",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "db84c630-4711-4693-a5f9-6643aa0d5a2a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200)",
+													"});",
+													"",
+													"pm.test(\"All fields are returned\", function () {",
+													"    json = pm.response.json();",
+													"    pm.expect(json.event).to.eq(vars.get('event'));",
+													"    pm.expect(json.user).to.eq(vars.get('user'));",
+													"    pm.expect(json.auditor).to.eq(163);",
+													"    pm.expect(json.hasAttended).to.eq(Boolean(vars.get('hasAttended')));",
+													"});",
+													"",
+													"pm.environment.set(\"created-presence-event-id\", pm.response.json().event);",
+													"pm.environment.set(\"created-presence-user-id\", pm.response.json().user);",
+													"pm.environment.set(\"created-presence-auditor-id\", pm.response.json().auditor);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "event",
+													"value": "{{event}}",
+													"type": "text"
+												},
+												{
+													"key": "user",
+													"value": "{{user}}",
+													"type": "text"
+												},
+												{
+													"key": "hasAttended",
+													"value": "{{hasAttended}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/presence",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"presence"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/update",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "e93da247-3c1c-4c98-9a51-951ba78c756b",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('hasAttended', 0);",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "7de048fd-65f4-418a-b220-774ceb87b452",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200)",
+													"});",
+													"",
+													"pm.test(\"All fields are returned and correctly changed\", function () {",
+													"    json = pm.response.json();",
+													"    pm.expect(json.event).to.eq(pm.environment.get('created-presence-event-id'));",
+													"    pm.expect(json.user).to.eq(pm.environment.get('created-presence-user-id'));",
+													"    pm.expect(json.auditor).to.eq(163);",
+													"    pm.expect(json.hasAttended).to.eq(Boolean(vars.get('hasAttended')));",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "hasAttended",
+													"value": "{{hasAttended}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/presence/{{created-presence-event-id}}/{{created-presence-user-id}}/{{created-presence-auditor-id}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"presence",
+												"{{created-presence-event-id}}",
+												"{{created-presence-user-id}}",
+												"{{created-presence-auditor-id}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/update-bad-reqeust",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "e93da247-3c1c-4c98-9a51-951ba78c756b",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('hasAttended', 'fdsfsdaf');",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "7de048fd-65f4-418a-b220-774ceb87b452",
+												"exec": [
+													"pm.test(\"Status is 400\", function () {",
+													"    pm.response.to.have.status(400);",
+													"});",
+													"",
+													"pm.test(\"All errors are returned\", function () {",
+													"    pm.response.to.have.jsonBody(\"errors\");",
+													"    pm.response.to.have.jsonBody(\"errors.hasAttended\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "hasAttended",
+													"value": "{{hasAttended}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/presence/{{created-presence-event-id}}/{{created-presence-user-id}}/{{created-presence-auditor-id}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"presence",
+												"{{created-presence-event-id}}",
+												"{{created-presence-user-id}}",
+												"{{created-presence-auditor-id}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/registration-state/{id:[0-9]+}-not-found",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "433710cf-9db0-4311-ab35-cc2ae315ce39",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('eventId', 99999999);",
+													"vars.set('userId', 99999999);",
+													"vars.set('auditorId', 99999999);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "864c0395-8e69-449c-bbfa-3381a49862fb",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/presence/{{eventId}}/{{userId}}/{{auditorId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"presence",
+												"{{eventId}}",
+												"{{userId}}",
+												"{{auditorId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/registration-state/{id:[0-9]+}-not-found-invalid-id",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "433710cf-9db0-4311-ab35-cc2ae315ce39",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('eventId', -1);",
+													"vars.set('userId', -1);",
+													"vars.set('auditorId', -1);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "864c0395-8e69-449c-bbfa-3381a49862fb",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/presence/{{eventId}}/{{userId}}/{{auditorId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"presence",
+												"{{eventId}}",
+												"{{userId}}",
+												"{{auditorId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/presence",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "3d1a32e3-a066-4bf4-bb18-fd0f7f340942",
+												"exec": [
+													"pm.test(\"Status is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/api/v1/presence/{{created-presence-event-id}}/{{created-presence-user-id}}/{{created-presence-auditor-id}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"presence",
+												"{{created-presence-event-id}}",
+												"{{created-presence-user-id}}",
+												"{{created-presence-auditor-id}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{admin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "nonadmin",
+							"item": [
+								{
+									"name": "/update-forbidden",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "e93da247-3c1c-4c98-9a51-951ba78c756b",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('hasAttended', 0);",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "7de048fd-65f4-418a-b220-774ceb87b452",
+												"exec": [
+													"pm.test(\"Status is 403\", function () {",
+													"    pm.response.to.have.status(403);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "hasAttended",
+													"value": "{{hasAttended}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/presence/{{created-presence-event-id}}/{{created-presence-user-id}}/{{created-presence-auditor-id}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"presence",
+												"{{created-presence-event-id}}",
+												"{{created-presence-user-id}}",
+												"{{created-presence-auditor-id}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{nonadmin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "0e148c74-038f-453d-8365-94dadd455ab2",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "01c5b5b2-820c-48db-86fe-336fd476d8ca",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							],
+							"_postman_isSubFolder": true
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "delete",
+					"item": [
+						{
+							"name": "admin",
+							"item": [
+								{
+									"name": "/presence",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c56ccd36-672e-45d7-bcf0-24d703a61442",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('event', 35);",
+													"vars.set('user', 162);",
+													"vars.set('hasAttended', 1);",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "db84c630-4711-4693-a5f9-6643aa0d5a2a",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.response.to.have.status(200)",
+													"});",
+													"",
+													"pm.test(\"All fields are returned\", function () {",
+													"    json = pm.response.json();",
+													"    pm.expect(json.event).to.eq(vars.get('event'));",
+													"    pm.expect(json.user).to.eq(vars.get('user'));",
+													"    pm.expect(json.auditor).to.eq(163);",
+													"    pm.expect(json.hasAttended).to.eq(Boolean(vars.get('hasAttended')));",
+													"});",
+													"",
+													"pm.environment.set(\"created-presence-event-id\", pm.response.json().event);",
+													"pm.environment.set(\"created-presence-user-id\", pm.response.json().user);",
+													"pm.environment.set(\"created-presence-auditor-id\", pm.response.json().auditor);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "event",
+													"value": "{{event}}",
+													"type": "text"
+												},
+												{
+													"key": "user",
+													"value": "{{user}}",
+													"type": "text"
+												},
+												{
+													"key": "hasAttended",
+													"value": "{{hasAttended}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/presence",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"presence"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/presence",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "3d1a32e3-a066-4bf4-bb18-fd0f7f340942",
+												"exec": [
+													"pm.test(\"Status is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/api/v1/presence/{{created-presence-event-id}}/{{created-presence-user-id}}/{{created-presence-auditor-id}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"presence",
+												"{{created-presence-event-id}}",
+												"{{created-presence-user-id}}",
+												"{{created-presence-auditor-id}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/registration-state/{id:[0-9]+}-not-found",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "433710cf-9db0-4311-ab35-cc2ae315ce39",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('eventId', 99999999);",
+													"vars.set('userId', 99999999);",
+													"vars.set('auditorId', 99999999);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "864c0395-8e69-449c-bbfa-3381a49862fb",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/presence/{{eventId}}/{{userId}}/{{auditorId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"presence",
+												"{{eventId}}",
+												"{{userId}}",
+												"{{auditorId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "/registration-state/{id:[0-9]+}-not-found-invalid-id",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "433710cf-9db0-4311-ab35-cc2ae315ce39",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('eventId', -1);",
+													"vars.set('userId', -1);",
+													"vars.set('auditorId', -1);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "864c0395-8e69-449c-bbfa-3381a49862fb",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"pm.test(\"Status is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/presence/{{eventId}}/{{userId}}/{{auditorId}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"presence",
+												"{{eventId}}",
+												"{{userId}}",
+												"{{auditorId}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{admin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "eba2d502-def2-43f2-bd34-f748720373f7",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "99674cf4-4599-4345-a8fd-ce1b78b81022",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "nonadmin",
+							"item": [
+								{
+									"name": "/update-forbidden",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "e93da247-3c1c-4c98-9a51-951ba78c756b",
+												"exec": [
+													"vars = pm.variables;",
+													"",
+													"vars.set('hasAttended', 0);",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "7de048fd-65f4-418a-b220-774ceb87b452",
+												"exec": [
+													"pm.test(\"Status is 403\", function () {",
+													"    pm.response.to.have.status(403);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "hasAttended",
+													"value": "{{hasAttended}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/api/v1/presence/{{created-presence-event-id}}/{{created-presence-user-id}}/{{created-presence-auditor-id}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"api",
+												"v1",
+												"presence",
+												"{{created-presence-event-id}}",
+												"{{created-presence-user-id}}",
+												"{{created-presence-auditor-id}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{nonadmin-token}}",
+										"type": "string"
+									}
+								]
+							},
+							"_postman_isSubFolder": true
+						}
+					],
+					"_postman_isSubFolder": true
 				}
 			]
 		},

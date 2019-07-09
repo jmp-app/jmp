@@ -289,6 +289,10 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
                 ->add(new Validation($container['validation']['updatePresence']))
                 ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
                 ->add($jwtMiddleware);
+
+            $this->delete('', PresenceController::class . ':deletePresence')
+                ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+                ->add($jwtMiddleware);
         });
     });
 });
