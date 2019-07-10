@@ -7,6 +7,7 @@ use jmp\Models\User;
 use jmp\Utils\Optional;
 use Monolog\Logger;
 use PDO;
+use PDOStatement;
 use Psr\Container\ContainerInterface;
 
 class RegistrationService
@@ -62,19 +63,11 @@ WHERE r.event_id = :eventId
 SQL;
 
         $stmt = $this->db->prepare($sql);
-
         $stmt->bindParam(':eventId', $eventId);
         $stmt->execute();
 
         $data = $stmt->fetchAll();
-        if ($data === false) {
-            if ($stmt->rowCount() === 0) {
-                return Optional::success([]);
-            }
-            return Optional::failure();
-        }
-
-        return $this->fetchRegistrationsToExtendedRegistrations($data);
+        return $this->fetchAndTransformRegistrations($data, $stmt);
     }
 
     /**
@@ -259,6 +252,21 @@ SQL;
         unset($registration->userId);
         $user->registration = $registration;
         return $user;
+    }
+
+    /**
+     * @param array $data
+     * @param $stmt
+     * @return Optional
+     */
+    private function fetchAndTransformRegistrations(array $data, PDOStatement $stmt): Optional
+    {
+        if ($data === false) {
+            # Return an empty array if there are no registrations for an event
+            return $stmt->rowCount() === 0 ? Optional::success([]) : Optional::failure();
+        }
+
+        return $this->fetchRegistrationsToExtendedRegistrations($data);
     }
 
 }
