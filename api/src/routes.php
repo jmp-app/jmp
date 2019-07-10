@@ -7,6 +7,7 @@ use jmp\Controllers\GroupsController;
 use jmp\Controllers\LoginController;
 use jmp\Controllers\PresenceController;
 use jmp\Controllers\RegistrationController;
+use jmp\Controllers\RegistrationsController;
 use jmp\Controllers\RegistrationStateController;
 use jmp\Controllers\UsersController;
 use jmp\Middleware\AuthenticationMiddleware;
@@ -73,6 +74,10 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
                 ->add($jwtMiddleware);
 
             $this->delete('', EventsController::class . ':deleteEvent')
+                ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+                ->add($jwtMiddleware);
+
+            $this->get('/registrations', RegistrationsController::class . ':getRegistrations')
                 ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
                 ->add($jwtMiddleware);
 

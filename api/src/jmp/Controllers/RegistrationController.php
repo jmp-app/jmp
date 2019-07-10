@@ -250,6 +250,10 @@ class RegistrationController
         // Check if the user is allowed to delete this registration
         $allowed = $userId == $this->user->id || $this->user->isAdmin ? true : false;
 
+        if ($allowed === false) {
+            return $response->withStatus(403);
+        }
+
         if ($optional->isSuccess() && $allowed) {
             $success = $this->registrationService->deleteRegistration($userId, $eventId);
             if ($success) {
