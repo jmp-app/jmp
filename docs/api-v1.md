@@ -13,41 +13,49 @@
 - [Authentication](#authentication)
 - [Endpoints](#endpoints)
   * [Login](#login)
-  * [Create User](#create-user)
-  * [List Users](#list-users)
-  * [Get Current User](#get-current-user)
-  * [Get User](#get-user)
-  * [Update User](#update-user)
-  * [Delete User](#delete-user)
-  * [Create Event](#create-event)
-  * [List Events](#list-events)
-  * [Get Event](#get-event)
-  * [Update Event](#update-event)
-  * [Delete Event](#delete-event)
-  * [Create Event Type](#create-event-type)
-  * [List Event Types](#list-event-types)
-  * [Get Event Type](#get-event-type)
-  * [Delete Event Type](#delete-event-type)
-  * [Create Group](#create-group)
-  * [List Groups](#list-groups)
-  * [Get Group](#get-group)
-  * [Update Group](#update-group)
-  * [Delete Group](#delete-group)
-  * [Join Group](#join-group)
-  * [Leave Group](#leave-group)
-  * [Create Registration](#create-registration)
-  * [Update Registration](#update-registration)
-  * [Get Registration](#get-registration)
-  * [Delete Registration](#delete-registration)
-  * [Create Registration State](#create-registration-state)
-  * [List Registration States](#list-registration-states)
-  * [Get Registration State](#get-registration-state)
-  * [Delete Registration State](#delete-registration-state)
-  * [Create Presence](#create-presence)
-  * [Get Presence](#get-presence)
-  * [Update Presence](#update-presence)
-  * [Delete Presence](#delete-presence)
-  * [Get Presences](#get-presences)
+  * [User](#user-routes)
+    * [Create User](#create-user)
+    * [List Users](#list-users)
+    * [Get Current User](#get-current-user)
+    * [Get User](#get-user)
+    * [Update User](#update-user)
+    * [Delete User](#delete-user)
+    * [Change Password](#change-password)
+  * [Event](#event-routes)
+    * [Create Event](#create-event)
+    * [List Events](#list-events)
+    * [Get Event](#get-event)
+    * [Update Event](#update-event)
+    * [Delete Event](#delete-event)
+  * [Event Type](#event-type-routes)
+    * [Create Event Type](#create-event-type)
+    * [List Event Types](#list-event-types)
+    * [Get Event Type](#get-event-type)
+    * [Delete Event Type](#delete-event-type)
+  * [Group](#group-routes)
+    * [Create Group](#create-group)
+    * [List Groups](#list-groups)
+    * [Get Group](#get-group)
+    * [Update Group](#update-group)
+    * [Delete Group](#delete-group)
+    * [Join Group](#join-group)
+    * [Leave Group](#leave-group)
+  * [Registration State](#registration-state-routes)
+    * [Create Registration State](#create-registration-state)
+    * [List Registration States](#list-registration-states)
+    * [Get Registration State](#get-registration-state)
+    * [Delete Registration State](#delete-registration-state)
+  * [Registration](#registration-routes)
+    * [Create Registration](#create-registration)
+    * [Update Registration](#update-registration)
+    * [Get Registration](#get-registration)
+    * [Delete Registration](#delete-registration)
+  * [Presence](#presence-routes)
+    * [Create Presence](#create-presence)
+    * [Get Presence](#get-presence)
+    * [Update Presence](#update-presence)
+    * [Delete Presence](#delete-presence)
+    * [Get Presences](#get-presences)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -292,7 +300,9 @@ Access rights: no authentication required
 
 **Note:** token is a jwt token used for authorization. See more: https://jwt.io/
 
-### Create User
+### User Routes
+
+#### Create User
 
 ```http
 POST /v1/users
@@ -327,7 +337,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: the [User](#User)
 
-### List Users
+#### List Users
 
 ```http
 GET /v1/users
@@ -343,7 +353,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: List of queried [Users](#User)
 
-### Get Current User
+#### Get Current User
 
 ```http
 GET /v1/user
@@ -355,7 +365,7 @@ Access rights: authentication required
 
 Returns: the [User](#User)
 
-### Get User
+#### Get User
 
 ```http
 GET /v1/users/{id}
@@ -367,7 +377,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: the [User](#User)
 
-### Update User 
+#### Update User 
 
 ```http
 PUT /v1/users/{id}
@@ -399,7 +409,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: the [User](#User)
 
-### Delete User 
+#### Delete User 
 
 ```http
 DELETE /v1/users/{id}
@@ -411,7 +421,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: Status 204 or errors
 
-### Change Password
+#### Change Password
 
 ```http
 PUT /v1/user/change-password
@@ -428,7 +438,9 @@ Access rights: authentication required
 
 Returns: Success or errors
 
-### Create Event
+### Event Routes
+
+#### Create Event
 
 ```http
 POST /v1/events
@@ -465,7 +477,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: the [Event](#Event)
 
-### List Events
+#### List Events
 
 ```http
 GET /v1/events/
@@ -494,7 +506,7 @@ Returns:
 List of queried [Events](#event) of all groups in which the user has a membership, sorted __ascending__ by their __start date__ (The near-time events are listed first).  
 By default (without the elapsed parameter set), only current and upcoming events are selected.
 
-### Get Event
+#### Get Event
 
 ```http
 GET /v1/events/{id:[0-9]+}
@@ -507,7 +519,7 @@ Access rights: authentication required
 
 Returns: the [Event](#Event)
 
-### Update Event 
+#### Update Event 
 
 ```http
 PUT /v1/events/{id}
@@ -542,7 +554,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: the [Event](#Event)
 
-### Delete Event 
+#### Delete Event 
 
 ```http
 DELETE /v1/events/{id}
@@ -556,7 +568,9 @@ Access rights: authentication required, user has to be an admin
 When an Event is deleted, all associated registrations and presences are also deleted.  
 So be careful and ask the user twice if he really wants to delete an Event.
 
-### Create Event Type
+### Event Type Routes
+
+#### Create Event Type
 
 ```http
 POST /v1/event-types
@@ -582,7 +596,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: the [Event Type](#event-type)
 
-### List Event Types
+#### List Event Types
 
 ```http
 GET /v1/event-types
@@ -594,7 +608,7 @@ Access rights: authentication required
 
 Returns: List of all event types
 
-### Get Event Type
+#### Get Event Type
 
 ```http
 GET /v1/event-types/{id}
@@ -606,7 +620,7 @@ Access rights: authentication required
 
 Returns: the [Event Type](#event-type)
 
-### Update Event Type
+#### Update Event Type
 
 ```http
 PUT /v1/event-types/{id}
@@ -632,7 +646,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: the [Event Type](#event-type)
 
-### Delete Event Type
+#### Delete Event Type
 
 ```http
 DELETE /v1/event-types/{id}
@@ -646,7 +660,9 @@ Access rights: authentication required, user has to be an admin
 
 Returns: Status 204 or errors
 
-### Create Group
+### Group Routes
+
+#### Create Group
 
 ```http
 POST /v1/groups
@@ -670,7 +686,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: the [Group](#Group)
 
-### List Groups
+#### List Groups
 
 ```http
 GET /v1/groups/
@@ -682,7 +698,7 @@ Access rights: authentication required
 
 Returns: List of all groups
 
-### Get Group
+#### Get Group
 
 ```http
 GET /v1/groups/{id}
@@ -694,7 +710,7 @@ Access rights: authentication required
 
 Returns: the [Group](#Group)
 
-### Update Group 
+#### Update Group 
 
 ```http
 PUT /v1/groups/{id}
@@ -718,7 +734,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: the [Group](#Group)
 
-### Delete Group 
+#### Delete Group 
 
 ```http
 DELETE /v1/groups/{id}
@@ -730,7 +746,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: 204 or errors
 
-### Join Group
+#### Join Group
 
 ```http
 POST /v1/groups/{id}/join
@@ -766,7 +782,7 @@ Returns: A [group](#Group) and [errors](#json-error-objects) with all invalid us
 }
 ````
 
-### Leave Group
+#### Leave Group
 
 ```http
 DELETE /v1/groups/{id}/leave
@@ -792,7 +808,9 @@ Access rights: authentication required, user has to be an admin
 
 Returns: the [Group](#Group)
 
-### Create Registration State
+### Registration State Routes
+
+#### Create Registration State
 
 ```http
 POST /v1/registration-state
@@ -818,7 +836,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: the [Registration State](#Registration State)
 
-### Update Registration State
+#### Update Registration State
 
 ```http
 PUT /v1/registration-state/{id}
@@ -844,7 +862,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: the [Registration State](#Registration State)
 
-### List Registration States
+#### List Registration States
 
 ```http
 GET /v1/registration-state/
@@ -856,7 +874,7 @@ Access rights: authentication required
 
 Returns: List of all event types
 
-### Get Registration State
+#### Get Registration State
 
 ```http
 GET /v1/registration-state/{id}
@@ -868,7 +886,7 @@ Access rights: authentication required
 
 Returns: the [Registration State](#registration-state)
 
-### Delete Registration State
+#### Delete Registration State
 
 ```http
 DELETE /v1/registration-state/{id}
@@ -880,7 +898,7 @@ Access rights: authentication required, user has to be an admin
 
 Returns: 204 or errors
 
-### Get Registration State from Event
+#### Get Registration State from Event
 
 ```http
 GET /v1/registration/{eventId}/{userId}
@@ -892,7 +910,9 @@ Access rights: authentication required
 
 Returns: the [Registration](#registration)
 
-### Create Registration
+### Registration Routes
+
+#### Create Registration
 
 ```http
 POST /v1/registration
@@ -930,7 +950,7 @@ Access rights: authentication required
 
 Returns: the [Registration](#registration)
 
-### Get Registration 
+#### Get Registration 
 
 ```http
 GET /v1/registration/{{eventId}}/{{userId}}
@@ -948,7 +968,7 @@ Access rights: authentication required
 
 Returns: the [Registration](#registration)
 
-### Update Registration 
+#### Update Registration 
 
 ```http
 PUT /v1/registration/{eventId}/{userId}
@@ -974,7 +994,7 @@ Access rights: authentication required
 
 Returns: the [Registration](#registration)
 
-### Delete Registration 
+#### Delete Registration 
 
 ```http
 DELETE /v1/registration/{eventId}/{userId}
@@ -992,7 +1012,7 @@ Access rights: authentication required
 
 Returns: HTTP 204 status code when successful
 
-### Get Registrations 
+#### Get Registrations 
 
 ```http
 GET /v1/events/{eventId}/registrations
@@ -1009,7 +1029,59 @@ Access rights: admin
 
 Returns: [Event](#event) and list of [Extended Registrations](#extended-registration)
 
-### Create Presence
+Example:
+
+```json
+{
+  "event": {
+    "id": 31,
+    "title": "green event",
+    "from": "2019-01-15T12:12",
+    "to": "2019-01-15T13:13",
+    "place": "GibmIT, Pratteln",
+    "description": "1",
+    "eventType": {
+      "id": 1,
+      "title": "foo",
+      "color": "#FF0000"
+    },
+    "defaultRegistrationState": {
+      "id": 2,
+      "name": "subscribed",
+      "reasonRequired": true
+    },
+    "groups": [
+      {
+        "id": 6,
+        "name": "green"
+      }
+    ]
+  },
+  "registrations": [
+    {
+      "id": 162,
+      "username": "walter",
+      "lastname": "White",
+      "firstname": "Walter",
+      "email": "walter@white.me",
+      "passwordChange": false,
+      "isAdmin": false,
+      "registration": {
+        "reason": "Sick",
+        "registrationState": {
+          "id": 1,
+          "name": "Deregistered",
+          "reasonRequired": true
+        }
+      }
+    }
+  ]
+}
+```
+
+### Presence Routes
+
+#### Create Presence
 
 ```http request
 POST /v1/presence
@@ -1027,7 +1099,7 @@ Access rights: admin
 
 Returns: [Presence](#presence)
 
-### Get Presence 
+#### Get Presence 
 
 ```http
 GET /v1/presence/{eventId}/{userId}/{auditorId}
@@ -1049,7 +1121,7 @@ Access rights: admin
 
 Returns: [Presence](#presence)
 
-### Update Presence 
+#### Update Presence 
 
 ```http
 PUT /v1/presence/{eventId}/{userId}/{auditorId}
@@ -1080,7 +1152,7 @@ Access rights: admin
 
 Returns: [Presence](#presence)
 
-### Delete Presence 
+#### Delete Presence 
 
 ```http
 DELETE /v1/presence/{eventId}/{userId}/{auditorId}
@@ -1099,7 +1171,7 @@ Access rights: admin
 
 Returns: HTTP 204 status code when successful
 
-### Get Presences 
+#### Get Presences 
 
 ```http
 GET /v1/events/{eventId}/presences
