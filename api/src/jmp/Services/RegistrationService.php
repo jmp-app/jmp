@@ -5,6 +5,7 @@ namespace jmp\Services;
 use jmp\Models\Registration;
 use jmp\Models\User;
 use jmp\Utils\Optional;
+use Monolog\Logger;
 use PDO;
 use Psr\Container\ContainerInterface;
 
@@ -19,13 +20,13 @@ class RegistrationService
      */
     protected $registrationStateService;
     /**
-     * @var EventService
-     */
-    protected $eventService;
-    /**
      * @var User $user
      */
     private $user;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     /**
      * RegistrationService constructor.
@@ -35,8 +36,45 @@ class RegistrationService
     {
         $this->db = $container->get('database');
         $this->registrationStateService = $container->get('registrationStateService');
-        $this->eventService = $container->get('eventService');
         $this->user = $container->get('user');
+        $this->logger = $container->get('logger');
+    }
+
+    public function getExtendedRegistrationByEventId(int $eventId): Optional
+    {
+        $sql = <<< SQL
+SELECT DISTINCT u.id,
+                u.username,
+                u.lastname,
+                u.firstname,
+                u.email,
+                u.is_admin as isAdmin,
+                r.reason,
+                r.registration_state_id as registrationStateId
+FROM registration r
+       LEFT JOIN event e on r.event_id = e.id
+       LEFT JOIN event_has_group ehg on e.id = ehg.event_id
+       LEFT JOIN `group` g on ehg.group_id = g.id
+       LEFT JOIN membership m on g.id = m.group_id
+       LEFT JOIN user u on m.user_id = u.id
+WHERE r.event_id = :eventId
+  AND u.id = r.user_id
+SQL;
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':eventId', $eventId);
+        $stmt->execute();
+
+        $data = $stmt->fetchAll();
+        if ($data === false) {
+            if ($stmt->rowCount() === 0) {
+                return Optional::success([]);
+            }
+            return Optional::failure();
+        }
+
+        return $this->fetchRegistrationsToExtendedRegistrations($data);
     }
 
     /**
@@ -190,6 +228,37 @@ SQL;
             $registration->registrationState = $optional->getData();
             return Optional::success($registration);
         }
+    }
+
+    /**
+     * @param array $data
+     * @return Optional
+     */
+    private function fetchRegistrationsToExtendedRegistrations(array $data): Optional
+    {
+        foreach ($data as $key => $registrationData) {
+            $optional = $this->fetchRegistration($registrationData);
+            if ($optional->isFailure()) {
+                $this->logger->error('Failed to fetch registration with the id ' . $registrationData->registrationStateId);
+                return Optional::failure();
+            }
+            $data[$key] = $this->transformRegistration($optional->getData(), $registrationData);
+        }
+        return Optional::success($data);
+    }
+
+    /**
+     * @param Registration $registration
+     * @param array $registrationData
+     * @return User
+     */
+    private function transformRegistration(Registration $registration, array $registrationData): User
+    {
+        $user = new User($registrationData);
+        unset($registration->eventId);
+        unset($registration->userId);
+        $user->registration = $registration;
+        return $user;
     }
 
 }
