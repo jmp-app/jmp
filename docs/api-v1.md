@@ -50,11 +50,13 @@
     * [Update Registration](#update-registration)
     * [Get Registration](#get-registration)
     * [Delete Registration](#delete-registration)
+    * [Get Registrations](#get-registrations)
   * [Presence](#presence-routes)
     * [Create Presence](#create-presence)
     * [Get Presence](#get-presence)
     * [Update Presence](#update-presence)
     * [Delete Presence](#delete-presence)
+    * [Create Presences](#create-presences)
     * [Get Presences](#get-presences)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
@@ -898,7 +900,9 @@ Access rights: authentication required, user has to be an admin
 
 Returns: 204 or errors
 
-#### Get Registration State from Event
+### Registration Routes
+
+#### Get Registration from Event
 
 ```http
 GET /v1/registration/{eventId}/{userId}
@@ -910,9 +914,7 @@ Access rights: authentication required
 
 Returns: the [Registration](#registration)
 
-### Registration Routes
-
-#### Create Registration
+### Create Registration
 
 ```http
 POST /v1/registration
@@ -1171,6 +1173,42 @@ Access rights: admin
 
 Returns: HTTP 204 status code when successful
 
+#### Create Presences
+
+````http request
+POST /v1/events/{eventId}/presences
+````
+
+Parameters:
+
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| eventId   | The event's id                                               | ✔️      | numeric |
+| presences    | An array where each object contains an userId and hasAttended | ✔        | array |
+
+Example request data:
+
+````json
+[
+  {
+    "user": 12,
+    "hasAttended": 1
+  },
+  {
+    "user": 13,
+    "hasAttended": 0
+  }
+]
+````
+
+**Note:**  
+For different auditors there can exists different presence entrys as may more than one is performing attendance checks.
+
+Access rights: admin
+
+Returns: [Event](#event) and list of [Extended Presences](#extended-presence)
+
+
 #### Get Presences 
 
 ```http
@@ -1186,6 +1224,6 @@ Parameters:
 
 Access rights: admin
 
-Returns: [Event](#event) and list of [Extended Presences](#extended-registration)
+Returns: [Event](#event) and list of [Extended Presences](#extended-presence)
 
 ___TODO:___ Presence and User Meta
