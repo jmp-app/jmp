@@ -1226,4 +1226,65 @@ Access rights: admin
 
 Returns: [Event](#event) and list of [Extended Presences](#extended-presence)
 
-___TODO:___ Presence and User Meta
+#### Update Presences
+
+````http request
+PUT /v1/events/{eventId}/presences
+````
+
+Parameters:
+
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| eventId   | The event's id                                               | ✔️      | numeric |
+| presences    | An array where each object contains an userId and hasAttended | ✔        | array |
+
+Example request data:
+
+````json
+[
+  {
+    "user": 12,
+    "hasAttended": 1
+  },
+  {
+    "user": 13,
+    "hasAttended": 0
+  }
+]
+````
+
+**Note:**  
+For different auditors there can exists different presence entrys as may more than one is performing attendance checks.
+
+Access rights: admin
+
+Returns: [Event](#event) and list of [Extended Presences](#extended-presence)
+
+#### Delete Presences
+
+````http request
+DELETE /v1/events/{eventId}/presences
+````
+
+Parameters:
+
+| Field     | Description                                                  | Required | Type |
+| --------- | ------------------------------------------------------------ | -------- | ---- |
+| eventId   | The event's id                                               | ✔️      | numeric |
+| users    | An array of user id's | ✔        | array |
+
+Example request data:
+
+````json
+[1, 2, 3]
+````
+
+**Note:**  
+For different auditors there can exists different presence entrys as may more than one is performing attendance checks.
+
+Access rights: admin
+
+Returns: 204 if successful
+
+___TODO:___ User Meta

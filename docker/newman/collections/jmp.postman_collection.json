@@ -18585,6 +18585,85 @@
 							"name": "admin",
 							"item": [
 								{
+                                  "name": "/delete",
+                                  "event": [
+                                    {
+                                      "listen": "prerequest",
+                                      "script": {
+                                        "id": "4c0ebc1a-1c22-42bb-8c78-f286df55a6ca",
+                                        "exec": [
+                                          "vars = pm.variables;",
+                                          "",
+                                          "pm.variables.set('eventId', 35);",
+                                          "",
+                                          "users = [",
+                                          "    161,",
+                                          "    162",
+                                          "];",
+                                          "",
+                                          "pm.variables.set('users[0]', users[0]);",
+                                          "pm.variables.set('users[1]', users[1]);",
+                                          ""
+                                        ],
+                                        "type": "text/javascript"
+                                      }
+                                    },
+                                    {
+                                      "listen": "test",
+                                      "script": {
+                                        "id": "ee03d056-c570-4720-80dd-53fed9dec545",
+                                        "exec": [
+                                          "pm.test(\"Status is 204\", function () {",
+                                          "    pm.response.to.have.status(204);",
+                                          "});"
+                                        ],
+                                        "type": "text/javascript"
+                                      }
+                                    }
+                                  ],
+                                  "request": {
+                                    "method": "DELETE",
+                                    "header": [
+                                      {
+                                        "key": "Content-Type",
+                                        "name": "Content-Type",
+                                        "type": "text",
+                                        "value": "application/x-www-form-urlencoded"
+                                      }
+                                    ],
+                                    "body": {
+                                      "mode": "urlencoded",
+                                      "urlencoded": [
+                                        {
+                                          "key": "users[0]",
+                                          "value": "{{users[0]}}",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "key": "users[1]",
+                                          "value": "{{users[1]}}",
+                                          "type": "text"
+                                        }
+                                      ]
+                                    },
+                                    "url": {
+                                      "raw": "http://localhost/api/v1/events/{{eventId}}/presences",
+                                      "protocol": "http",
+                                      "host": [
+                                        "localhost"
+                                      ],
+                                      "path": [
+                                        "api",
+                                        "v1",
+                                        "events",
+                                        "{{eventId}}",
+                                        "presences"
+                                      ]
+                                    }
+                                  },
+                                  "response": []
+                                },
+                              {
 									"name": "/create-bad-request-invalid-ids",
 									"event": [
 										{
@@ -18939,8 +19018,8 @@
 													"    return json.presences[0].id === id ? json.presences[0] : json.presences[1];",
 													"}",
 													"",
-													"ext_presence_0 = getPresenceFromUserId(presence_0.user);",
-													"ext_presence_1 = getPresenceFromUserId(presence_1.user);",
+                                                  "ext_presence_1 = getPresenceFromUserId(presence_0.user);",
+                                                  "ext_presence_0 = getPresenceFromUserId(presence_1.user);",
 													"",
 													"pm.test(\"First extended presence is correct\", function() {",
 													"    pm.expect(ext_presence_0.presence.hasAttended).to.eq(Boolean(presence_0.hasAttended));",
@@ -19049,8 +19128,8 @@
 													"    return json.presences[0].id === id ? json.presences[0] : json.presences[1];",
 													"}",
 													"",
-													"ext_presence_0 = getPresenceFromUserId(presence_0.user);",
-													"ext_presence_1 = getPresenceFromUserId(presence_1.user);",
+                                                  "ext_presence_1 = getPresenceFromUserId(presence_0.user);",
+                                                  "ext_presence_0 = getPresenceFromUserId(presence_1.user);",
 													"",
 													"pm.test(\"First extended presence is correct\", function() {",
 													"    pm.expect(ext_presence_0.presence.hasAttended).to.eq(Boolean(presence_0.hasAttended));",
@@ -19149,7 +19228,7 @@
 									"response": []
 								},
 								{
-									"name": "/update",
+                                  "name": "/update-bad-request-invalid-ids",
 									"event": [
 										{
 											"listen": "prerequest",
@@ -19161,17 +19240,20 @@
 													"pm.variables.set('eventId', 35);",
 													"",
 													"presences_0 = {",
-													"    'hasAttended': 1,",
+                                                  "    'hasAttended': 0,",
 													"    'user': 161",
 													"};",
 													"presences_1 = {",
-													"    'hasAttended': 0,",
-													"    'user': 162",
+                                                  "    'hasAttended': 1,",
+                                                  "    'user': 99999",
 													"};",
 													"",
-													"pm.variables.set('presences[0]', presences_0);",
-													"pm.variables.set('presences[1]', presences_1);",
-													"pm.variables.set('presences', [vars.get('presences[0]'), vars.get('presences[1]')]);",
+                                                  "pm.variables.set('presences[0][user]', presences_0.user);",
+                                                  "pm.variables.set('presences[0][hasAttended]', presences_0.hasAttended);",
+                                                  "pm.variables.set('presences[1][user]', presences_1.user);",
+                                                  "pm.variables.set('presences[1][hasAttended]', presences_1.hasAttended);",
+                                                  "",
+                                                  "pm.variables.set('invalidUsers', [presences_1.user]);",
 													"",
 													"pm.environment.set('presence-0', presences_0);",
 													"pm.environment.set('presence-1', presences_1);"
@@ -19184,38 +19266,18 @@
 											"script": {
 												"id": "ee03d056-c570-4720-80dd-53fed9dec545",
 												"exec": [
-													"vars = pm.variables;",
-													"",
-													"pm.test(\"Status is 200\", function () {",
-													"    pm.response.to.have.status(200);",
+                                                  "pm.test(\"Status is 400\", function () {",
+                                                  "    pm.response.to.have.status(400);",
 													"});",
 													"",
-													"presence_0 = pm.environment.get('presence-0');",
-													"presence_1 = pm.environment.get('presence-1');",
-													"json = pm.response.json();",
-													"",
-													"pm.test(\"Event is returned\", function() {",
-													"    pm.expect(json.event.id).to.eq(presence_0.eventId);",
+                                                  "pm.test(\"All errors are returned\", function () {",
+                                                  "    pm.response.to.have.jsonBody(\"errors\");",
+                                                  "    pm.response.to.have.jsonBody(\"errors.invalidUsers\");",
 													"});",
 													"",
-													"pm.test(\"Presences List is returned\", function() {",
-													"    pm.expect(json.presences).to.be.an('array');",
-													"    pm.expect(json.presences).to.have.lengthOf(2);",
-													"});",
-													"",
-													"function getPresenceFromUserId(id) {",
-													"    return json.presences[0].id === id ? json.presences[0] : json.presences[1];",
-													"}",
-													"",
-													"ext_presence_0 = getPresenceFromUserId(presence_0.user);",
-													"ext_presence_1 = getPresenceFromUserId(presence_1.user);",
-													"",
-													"pm.test(\"First extended presence is correct\", function() {",
-													"    pm.expect(ext_presence_0.hasAttended).to.eq(presence_0.hasAttended);",
-													"});",
-													"",
-													"pm.test(\"Second extended presence is correct\", function() {",
-													"    pm.expect(ext_presence_1.hasAttended).to.eq(presence_1.hasAttended);",
+                                                  "pm.test('Invalid users are returned', function(){",
+                                                  "    json = pm.response.json().errors.invalidUsers;",
+                                                  "    pm.expect(json).to.be.an('array').that.have.members(vars.get('invalidUsers'));",
 													"});"
 												],
 												"type": "text/javascript"
@@ -19228,21 +19290,31 @@
 											{
 												"key": "Content-Type",
 												"name": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"type": "text"
+                                              "type": "text",
+                                              "value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
 											"mode": "urlencoded",
 											"urlencoded": [
 												{
-													"key": "presences[0]",
-													"value": "{{presences[0]}}",
+                                                  "key": "presences[0][hasAttended]",
+                                                  "value": "{{presences[0][hasAttended]}}",
+                                                  "type": "text"
+                                                },
+                                              {
+                                                "key": "presences[0][user]",
+                                                "value": "{{presences[0][user]}}",
+                                                "type": "text"
+                                              },
+                                              {
+                                                "key": "presences[1][hasAttended]",
+                                                "value": "{{presences[1][hasAttended]}}",
 													"type": "text"
 												},
 												{
-													"key": "presences[1]",
-													"value": "{{presences[1]}}",
+                                                  "key": "presences[1][user]",
+                                                  "value": "{{presences[1][user]}}",
 													"type": "text"
 												}
 											]
@@ -19265,7 +19337,7 @@
 									"response": []
 								},
 								{
-									"name": "/update-bad-request-invalid-ids",
+                                  "name": "/update-bad-request",
 									"event": [
 										{
 											"listen": "prerequest",
@@ -19277,12 +19349,11 @@
 													"pm.variables.set('eventId', 35);",
 													"",
 													"presences_0 = {",
-													"    'hasAttended': 0,",
-													"    'user': 161",
+                                                  "    'hasAttended': \"fdsf\",",
+                                                  "    'user': -1",
 													"};",
 													"presences_1 = {",
-													"    'hasAttended': 1,",
-													"    'user': 99999",
+                                                  "    'user': \"dsfa\"",
 													"};",
 													"",
 													"pm.variables.set('presences[0]', presences_0);",
@@ -19306,7 +19377,7 @@
 													"",
 													"pm.test(\"All errors are returned\", function () {",
 													"    pm.response.to.have.jsonBody(\"errors\");",
-													"    pm.response.to.have.jsonBody(\"errors.users\");",
+                                                  "    pm.response.to.have.jsonBody(\"errors.presences\");",
 													"});"
 												],
 												"type": "text/javascript"
@@ -19327,13 +19398,23 @@
 											"mode": "urlencoded",
 											"urlencoded": [
 												{
-													"key": "presences[0]",
-													"value": "{{presences[0]}}",
+                                                  "key": "presences[0][hasAttended]",
+                                                  "value": "{{presences[0][hasAttended]}}",
+                                                  "type": "text"
+                                                },
+                                              {
+                                                "key": "presences[0][user]",
+                                                "value": "{{presences[0][user]}}",
+                                                "type": "text"
+                                              },
+                                              {
+                                                "key": "presences[1][hasAttended]",
+                                                "value": "{{presences[1][hasAttended]}}",
 													"type": "text"
 												},
 												{
-													"key": "presences[1]",
-													"value": "{{presences[1]}}",
+                                                  "key": "presences[1][user]",
+                                                  "value": "{{presences[1][user]}}",
 													"type": "text"
 												}
 											]
@@ -19356,31 +19437,30 @@
 									"response": []
 								},
 								{
-									"name": "/update-bad-request",
+                                  "name": "/update-not-found",
 									"event": [
 										{
 											"listen": "prerequest",
 											"script": {
-												"id": "4c0ebc1a-1c22-42bb-8c78-f286df55a6ca",
+                                              "id": "e88b9f75-56be-47a8-9756-0afec218b053",
 												"exec": [
 													"vars = pm.variables;",
 													"",
-													"pm.variables.set('eventId', 35);",
+                                                  "vars.set('eventId', 999999);",
 													"",
 													"presences_0 = {",
-													"    'hasAttended': \"fdsf\",",
-													"    'user': -1",
+                                                  "    'hasAttended': 0,",
+                                                  "    'user': 161",
 													"};",
 													"presences_1 = {",
-													"    'user': \"dsfa\"",
+                                                  "    'hasAttended': 1,",
+                                                  "    'user': 162",
 													"};",
 													"",
-													"pm.variables.set('presences[0]', presences_0);",
-													"pm.variables.set('presences[1]', presences_1);",
-													"pm.variables.set('presences', [vars.get('presences[0]'), vars.get('presences[1]')]);",
-													"",
-													"pm.environment.set('presence-0', presences_0);",
-													"pm.environment.set('presence-1', presences_1);"
+                                                  "pm.variables.set('presences[0][user]', presences_0.user);",
+                                                  "pm.variables.set('presences[0][hasAttended]', presences_0.hasAttended);",
+                                                  "pm.variables.set('presences[1][user]', presences_1.user);",
+                                                  "pm.variables.set('presences[1][hasAttended]', presences_1.hasAttended);"
 												],
 												"type": "text/javascript"
 											}
@@ -19388,14 +19468,12 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "ee03d056-c570-4720-80dd-53fed9dec545",
+                                              "id": "e60d7214-9937-494a-bded-a1ad52338612",
 												"exec": [
-													"pm.test(\"Status is 400\", function () {",
-													"    pm.response.to.have.status(400);",
-													"});",
+                                                  "vars = pm.variables;",
 													"",
-													"pm.test(\"All errors are returned\", function () {",
-													"    pm.response.to.have.jsonBody(\"errors\");",
+                                                  "pm.test(\"Status is 404\", function () {",
+                                                  "    pm.response.to.have.status(404);",
 													"});"
 												],
 												"type": "text/javascript"
@@ -19408,27 +19486,37 @@
 											{
 												"key": "Content-Type",
 												"name": "Content-Type",
-												"type": "text",
-												"value": "application/x-www-form-urlencoded"
+                                              "value": "application/x-www-form-urlencoded",
+                                              "type": "text"
 											}
 										],
 										"body": {
 											"mode": "urlencoded",
 											"urlencoded": [
 												{
-													"key": "presences[0]",
-													"value": "{{presences[0]}}",
+                                                  "key": "presences[0][hasAttended]",
+                                                  "value": "{{presences[0][hasAttended]}}",
+                                                  "type": "text"
+                                                },
+                                              {
+                                                "key": "presences[0][user]",
+                                                "value": "{{presences[0][user]}}",
+                                                "type": "text"
+                                              },
+                                              {
+                                                "key": "presences[1][hasAttended]",
+                                                "value": "{{presences[1][hasAttended]}}",
 													"type": "text"
 												},
 												{
-													"key": "presences[1]",
-													"value": "{{presences[1]}}",
+                                                  "key": "presences[1][user]",
+                                                  "value": "{{presences[1][user]}}",
 													"type": "text"
 												}
 											]
 										},
 										"url": {
-											"raw": "http://localhost/api/v1/events/{{eventId}}/presences",
+                                          "raw": "http://localhost/api/v1/events/{{eventId}}/registrations",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -19438,23 +19526,40 @@
 												"v1",
 												"events",
 												"{{eventId}}",
-												"presences"
+                                              "registrations"
 											]
 										}
 									},
 									"response": []
 								},
 								{
-									"name": "/update-not-found",
+                                  "name": "/update",
 									"event": [
 										{
 											"listen": "prerequest",
 											"script": {
-												"id": "e88b9f75-56be-47a8-9756-0afec218b053",
+                                              "id": "4c0ebc1a-1c22-42bb-8c78-f286df55a6ca",
 												"exec": [
 													"vars = pm.variables;",
 													"",
-													"vars.set('eventId', 999999);"
+                                                  "pm.variables.set('eventId', 35);",
+                                                  "",
+                                                  "presences_0 = {",
+                                                  "    'hasAttended': 1,",
+                                                  "    'user': 161",
+                                                  "};",
+                                                  "presences_1 = {",
+                                                  "    'hasAttended': 0,",
+                                                  "    'user': 162",
+                                                  "};",
+                                                  "",
+                                                  "pm.variables.set('presences[0][user]', presences_0.user);",
+                                                  "pm.variables.set('presences[0][hasAttended]', presences_0.hasAttended);",
+                                                  "pm.variables.set('presences[1][user]', presences_1.user);",
+                                                  "pm.variables.set('presences[1][hasAttended]', presences_1.hasAttended);",
+                                                  "",
+                                                  "pm.environment.set('presence-0', presences_0);",
+                                                  "pm.environment.set('presence-1', presences_1);"
 												],
 												"type": "text/javascript"
 											}
@@ -19462,12 +19567,40 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "e60d7214-9937-494a-bded-a1ad52338612",
+                                              "id": "ee03d056-c570-4720-80dd-53fed9dec545",
 												"exec": [
 													"vars = pm.variables;",
 													"",
-													"pm.test(\"Status is 404\", function () {",
-													"    pm.response.to.have.status(404);",
+                                                  "pm.test(\"Status is 200\", function () {",
+                                                  "    pm.response.to.have.status(200);",
+                                                  "});",
+                                                  "",
+                                                  "presence_0 = pm.environment.get('presence-0');",
+                                                  "presence_1 = pm.environment.get('presence-1');",
+                                                  "json = pm.response.json();",
+                                                  "",
+                                                  "pm.test(\"Event is returned\", function() {",
+                                                  "    pm.expect(json.event.id).to.eq(pm.variables.get('eventId'));",
+                                                  "});",
+                                                  "",
+                                                  "pm.test(\"Presences List is returned\", function() {",
+                                                  "    pm.expect(json.presences).to.be.an('array');",
+                                                  "    pm.expect(json.presences).to.have.lengthOf(2);",
+                                                  "});",
+                                                  "",
+                                                  "function getPresenceFromUserId(id) {",
+                                                  "    return json.presences[0].id === id ? json.presences[0] : json.presences[1];",
+                                                  "}",
+                                                  "",
+                                                  "ext_presence_0 = getPresenceFromUserId(presence_0.user);",
+                                                  "ext_presence_1 = getPresenceFromUserId(presence_1.user);",
+                                                  "",
+                                                  "pm.test(\"First extended presence is correct\", function() {",
+                                                  "    pm.expect(ext_presence_0.presence.hasAttended).to.eq(Boolean(presence_0.hasAttended));",
+                                                  "});",
+                                                  "",
+                                                  "pm.test(\"Second extended presence is correct\", function() {",
+                                                  "    pm.expect(ext_presence_1.presence.hasAttended).to.eq(Boolean(presence_1.hasAttended));",
 													"});"
 												],
 												"type": "text/javascript"
@@ -19476,9 +19609,41 @@
 									],
 									"request": {
 										"method": "PUT",
-										"header": [],
+                                      "header": [
+                                        {
+                                          "key": "Content-Type",
+                                          "name": "Content-Type",
+                                          "value": "application/x-www-form-urlencoded",
+                                          "type": "text"
+                                        }
+                                      ],
+                                      "body": {
+                                        "mode": "urlencoded",
+                                        "urlencoded": [
+                                          {
+                                            "key": "presences[0][hasAttended]",
+                                            "value": "{{presences[0][hasAttended]}}",
+                                            "type": "text"
+                                          },
+                                          {
+                                            "key": "presences[0][user]",
+                                            "value": "{{presences[0][user]}}",
+                                            "type": "text"
+                                          },
+                                          {
+                                            "key": "presences[1][hasAttended]",
+                                            "value": "{{presences[1][hasAttended]}}",
+                                            "type": "text"
+                                          },
+                                          {
+                                            "key": "presences[1][user]",
+                                            "value": "{{presences[1][user]}}",
+                                            "type": "text"
+                                          }
+                                        ]
+                                      },
 										"url": {
-											"raw": "http://localhost/api/v1/events/{{eventId}}/registrations",
+                                          "raw": "http://localhost/api/v1/events/{{eventId}}/presences",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -19488,7 +19653,7 @@
 												"v1",
 												"events",
 												"{{eventId}}",
-												"registrations"
+                                              "presences"
 											]
 										}
 									},
@@ -19586,12 +19751,12 @@
 													"pm.variables.set('eventId', 35);",
 													"",
 													"users = [",
-													"    pm.environment.get('presence-0').user,",
-													"    999999,",
+                                                  "    999999",
 													"];",
 													"",
 													"pm.variables.set('users[0]', users[0]);",
-													"pm.variables.set('users[1]', users[1]);",
+                                                  "",
+                                                  "vars.set('invalidUsers', users);",
 													""
 												],
 												"type": "text/javascript"
@@ -19608,7 +19773,12 @@
 													"",
 													"pm.test(\"All errors are returned\", function () {",
 													"    pm.response.to.have.jsonBody(\"errors\");",
-													"    pm.response.to.have.jsonBody(\"errors.users\");",
+                                                  "    pm.response.to.have.jsonBody(\"errors.invalidUsers\");",
+                                                  "});",
+                                                  "",
+                                                  "pm.test('Invalid users are returned', function(){",
+                                                  "    json = pm.response.json().errors.invalidUsers;",
+                                                  "    pm.expect(json).to.be.an('array').that.have.members(vars.get('invalidUsers'));",
 													"});"
 												],
 												"type": "text/javascript"
@@ -19631,11 +19801,6 @@
 												{
 													"key": "users[0]",
 													"value": "{{users[0]}}",
-													"type": "text"
-												},
-												{
-													"key": "users[1]",
-													"value": "{{users[1]}}",
 													"type": "text"
 												}
 											]
@@ -19667,7 +19832,16 @@
 												"exec": [
 													"vars = pm.variables;",
 													"",
-													"vars.set('eventId', 999999);"
+                                                  "pm.variables.set('eventId', 9999);",
+                                                  "",
+                                                  "users = [",
+                                                  "    pm.environment.get('presence-0').user,",
+                                                  "    pm.environment.get('presence-1').user,",
+                                                  "];",
+                                                  "",
+                                                  "pm.variables.set('users[0]', users[0]);",
+                                                  "pm.variables.set('users[1]', users[1]);",
+                                                  ""
 												],
 												"type": "text/javascript"
 											}
@@ -19689,9 +19863,31 @@
 									],
 									"request": {
 										"method": "DELETE",
-										"header": [],
+                                      "header": [
+                                        {
+                                          "key": "Content-Type",
+                                          "name": "Content-Type",
+                                          "value": "application/x-www-form-urlencoded",
+                                          "type": "text"
+                                        }
+                                      ],
+                                      "body": {
+                                        "mode": "urlencoded",
+                                        "urlencoded": [
+                                          {
+                                            "key": "users[0]",
+                                            "value": "{{users[0]}}",
+                                            "type": "text"
+                                          },
+                                          {
+                                            "key": "users[1]",
+                                            "value": "{{users[1]}}",
+                                            "type": "text"
+                                          }
+                                        ]
+                                      },
 										"url": {
-											"raw": "http://localhost/api/v1/events/{{eventId}}/registrations",
+                                          "raw": "http://localhost/api/v1/events/{{eventId}}/presences",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -19701,7 +19897,7 @@
 												"v1",
 												"events",
 												"{{eventId}}",
-												"registrations"
+                                              "presences"
 											]
 										}
 									},

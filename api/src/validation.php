@@ -130,6 +130,19 @@ $container['validation'] = function () {
                     ->key('hasAttended', v::boolVal()
                     )
             )
+        ],
+        'updatePresences' => [
+            'presences' => v::arrayType()->notEmpty()->each(
+                v::arrayVal()
+                    ->key('user', v::notEmpty()->noWhitespace()->numeric()->min(0))
+                    ->key('hasAttended', v::boolVal()
+                    )
+            )
+        ],
+        'deletePresences' => [
+            'users' => v::arrayType()->length(1, null)->each(
+                v::notEmpty()->noWhitespace()->numeric()->min(0)
+            )
         ]
     ];
 };

@@ -31,6 +31,24 @@ class PresencesService
         $this->presenceService = $container->get('presenceService');
     }
 
+    /**
+     * @param int $eventId
+     * @param array $presences
+     * @return bool
+     */
+    public function deletePresences(array $presences): bool
+    {
+        $this->db->beginTransaction();
+        foreach ($presences as $presence) {
+            $success = $this->presenceService->deletePresence($presence);
+            if ($success === false) {
+                $this->db->rollBack();
+                return false;
+            }
+        }
+        return $this->db->commit();
+    }
+
     public function createPresences(int $eventId, array $presences): Optional
     {
         $sql = <<< SQL
@@ -49,6 +67,26 @@ SQL;
                 return Optional::failure();
             }
         }
+
+        return $this->getExtendedPresencesByEventId($eventId);
+    }
+
+    /**
+     * @param int $eventId
+     * @param array $presences
+     * @return Optional
+     */
+    public function updatePresences(int $eventId, array $presences): Optional
+    {
+        $this->db->beginTransaction();
+        foreach ($presences as $presence) {
+            $optional = $this->presenceService->updatePresence($presence);
+            if ($optional->isFailure()) {
+                $this->db->rollBack();
+                return Optional::failure();
+            }
+        }
+        $this->db->commit();
 
         return $this->getExtendedPresencesByEventId($eventId);
     }

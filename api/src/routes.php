@@ -94,6 +94,18 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
                     ->add(new Validation($container['validation']['createPresences']))
                     ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
                     ->add($jwtMiddleware);
+
+                $this->put('', PresencesController::class . ':updatePresences')
+                    ->add(new ValidationErrorResponseBuilder())
+                    ->add(new Validation($container['validation']['updatePresences']))
+                    ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+                    ->add($jwtMiddleware);
+
+                $this->delete('', PresencesController::class . ':deletePresences')
+                    ->add(new ValidationErrorResponseBuilder())
+                    ->add(new Validation($container['validation']['deletePresences']))
+                    ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+                    ->add($jwtMiddleware);
             });
         });
     });
