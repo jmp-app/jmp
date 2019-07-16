@@ -278,6 +278,30 @@ SQL;
     }
 
     /**
+     * @param $users
+     * @return array
+     */
+    public function groupUsersByValidity(array $users): array
+    {
+        // Remove all duplicates
+        array_unique($users);
+
+        // Check which users are valid to join
+        $existingUsers = [];
+        $notExistingUsers = [];
+        foreach ($users as $user) {
+            if ($this->userExists($user)) {
+                // user exists
+                array_push($existingUsers, $user);
+            } else {
+                // user doesnt exist
+                array_push($notExistingUsers, (int)$user);
+            }
+        }
+        return array($existingUsers, $notExistingUsers);
+    }
+
+    /**
      * Update user with the given updates (key / value pairs)
      * @param array $userUpdates
      * @param User $currentUser

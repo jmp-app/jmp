@@ -122,6 +122,14 @@ $container['validation'] = function () {
         ],
         'updatePresence' => [
             'hasAttended' => v::boolVal(),
+        ],
+        'createPresences' => [
+            'presences' => v::arrayType()->notEmpty()->each(
+                v::arrayVal()
+                    ->key('user', v::notEmpty()->noWhitespace()->numeric()->min(0))
+                    ->key('hasAttended', v::boolVal()
+                    )
+            )
         ]
     ];
 };
