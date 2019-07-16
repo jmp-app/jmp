@@ -16,10 +16,10 @@ target="jmp_prod"
 
 .PHONY: setup-dev setup-prod
 
-setup-dev: cp-env rm-volume-prod rm-volume-dev vue-build-docker build-up-dev composer-install-dev ## Setup development environment
+setup-dev: rm-cache cp-env rm-volume-prod rm-volume-dev vue-build-docker build-up-dev composer-install-dev ## Setup development environment
 	@echo "Completed startup of the jmp development environment"
 
-setup-prod: cp-env rm-volume-prod rm-volume-dev build-up-prod ## Setup production environment
+setup-prod: rm-cache cp-env rm-volume-prod rm-volume-dev build-up-prod ## Setup production environment
 	@echo "Completed startup of the jmp production environment"
 	@echo "Make sure you change all dotenv files to the production values"
 
@@ -113,6 +113,10 @@ cp-env: ## Set default/example environment variables & config files
 
 wait-for-db: ## Waits until the database is available
 	bash docker/scripts/wait-for-db.sh
+
+rm-cache: ## Remove the slim framework routes cache file
+## bash -f is required as it should only delete the file when it exists
+	bash -c "rm -f api/cache/routes.cache.php"
 
 ##@ Vue
 
