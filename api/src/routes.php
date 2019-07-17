@@ -6,6 +6,7 @@ use jmp\Controllers\EventTypesController;
 use jmp\Controllers\GroupsController;
 use jmp\Controllers\LoginController;
 use jmp\Controllers\PresenceController;
+use jmp\Controllers\PresencesController;
 use jmp\Controllers\RegistrationController;
 use jmp\Controllers\RegistrationsController;
 use jmp\Controllers\RegistrationStateController;
@@ -81,6 +82,31 @@ $app->group('/v1', function () use ($container, $jwtMiddleware) {
                 ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
                 ->add($jwtMiddleware);
 
+            $this->group('/presences', function () use ($container, $jwtMiddleware) {
+                /** @var $this Slim\App */
+
+                $this->get('', PresencesController::class . ':getPresences')
+                    ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+                    ->add($jwtMiddleware);
+
+                $this->post('', PresencesController::class . ':createPresences')
+                    ->add(new ValidationErrorResponseBuilder())
+                    ->add(new Validation($container['validation']['createPresences']))
+                    ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+                    ->add($jwtMiddleware);
+
+                $this->put('', PresencesController::class . ':updatePresences')
+                    ->add(new ValidationErrorResponseBuilder())
+                    ->add(new Validation($container['validation']['updatePresences']))
+                    ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+                    ->add($jwtMiddleware);
+
+                $this->delete('', PresencesController::class . ':deletePresences')
+                    ->add(new ValidationErrorResponseBuilder())
+                    ->add(new Validation($container['validation']['deletePresences']))
+                    ->add(new AuthenticationMiddleware($container, PermissionLevel::ADMIN))
+                    ->add($jwtMiddleware);
+            });
         });
     });
 

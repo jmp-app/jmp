@@ -92,8 +92,8 @@ SQL;
         $stmt->bindValue(':firstname', $user->firstname, PDO::PARAM_STR);
         $stmt->bindValue(':email', $user->email, PDO::PARAM_STR);
         $stmt->bindParam(':password', $user->password);
-        $stmt->bindValue(':password_change', $user->passwordChange, PDO::PARAM_BOOL);
-        $stmt->bindValue(':is_admin', $user->isAdmin, PDO::PARAM_BOOL);
+        $stmt->bindParam(':password_change', $user->passwordChange, PDO::PARAM_BOOL);
+        $stmt->bindParam(':is_admin', $user->isAdmin, PDO::PARAM_BOOL);
 
 
         $successful = $stmt->execute();
@@ -275,6 +275,30 @@ SQL;
         }
 
         return $this->getFullUserByUserId($id);
+    }
+
+    /**
+     * @param $users
+     * @return array
+     */
+    public function groupUsersByValidity(array $users): array
+    {
+        // Remove all duplicates
+        array_unique($users);
+
+        // Check which users are valid to join
+        $existingUsers = [];
+        $notExistingUsers = [];
+        foreach ($users as $user) {
+            if ($this->userExists($user)) {
+                // user exists
+                array_push($existingUsers, $user);
+            } else {
+                // user doesnt exist
+                array_push($notExistingUsers, (int)$user);
+            }
+        }
+        return array($existingUsers, $notExistingUsers);
     }
 
     /**

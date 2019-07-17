@@ -89,7 +89,7 @@ SQL;
         $stmt->bindParam(':eventId', $presence->event);
         $stmt->bindParam(':userId', $presence->user);
         $stmt->bindParam(':auditorId', $presence->auditor);
-        $stmt->bindParam(':hasAttended', $presence->hasAttended);
+        $stmt->bindParam(':hasAttended', $presence->hasAttended, PDO::PARAM_BOOL);
 
         if ($stmt->execute() === false) {
             return Optional::failure();

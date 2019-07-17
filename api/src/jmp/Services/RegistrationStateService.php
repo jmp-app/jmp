@@ -79,7 +79,7 @@ SQL;
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':name', $registrationState->name);
-        $stmt->bindParam(':reasonRequired', $registrationState->reasonRequired);
+        $stmt->bindParam(':reasonRequired', $registrationState->reasonRequired, PDO::PARAM_BOOL);
 
         if ($stmt->execute() === false) {
             return Optional::failure();

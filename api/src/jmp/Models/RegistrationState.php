@@ -29,6 +29,6 @@ class RegistrationState implements ArrayConvertable
     {
         $this->id = (int)$args['id'];
         $this->name = $args['name'];
-        $this->reasonRequired = $args['reasonRequired'] ? true : false;
+        $this->reasonRequired = $args['reasonRequired'] === '1' ? true : false;
     }
 }

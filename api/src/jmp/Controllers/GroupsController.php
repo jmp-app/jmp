@@ -179,21 +179,7 @@ class GroupsController
             return $response->withStatus(404);
         }
 
-        // Remove all duplicates
-        array_unique($users);
-
-        // Check which users are valid to join
-        $usersToJoin = [];
-        $usersNotToJoin = [];
-        foreach ($users as $user) {
-            if ($this->userService->userExists($user)) {
-                // user can be added
-                array_push($usersToJoin, $user);
-            } else {
-                // user cant be added
-                array_push($usersNotToJoin, (int)$user);
-            }
-        }
+        list($usersToJoin, $usersNotToJoin) = $this->userService->groupUsersByValidity($users);
 
         // Add users to the group
         $successful = $this->membershipService->addUsersToGroup($id, $usersToJoin);
