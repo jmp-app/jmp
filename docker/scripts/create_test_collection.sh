@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Filename:	create_test_collection.sh
 # Description: Create a customized test collection based on the project's default collection
 # Note: The script has to be executed in the project root

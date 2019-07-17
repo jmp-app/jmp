@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Filename:	wait-for-db.sh
 # Description: Checks the docker mariadb database availability for a maximum of 30 times waiting 2s between until the database is available
 # Call:	bash wait-for-db.sh
