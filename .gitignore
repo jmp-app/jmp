@@ -4,3 +4,4 @@ db.env
 .env
 cache/slim-cache.php
 docker/newman/collections/*.postman_collection.json
+!docker/newman/collections/jmp.postman_collection.json

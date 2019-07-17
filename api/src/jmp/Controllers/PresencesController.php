@@ -81,7 +81,7 @@ class PresencesController
             $presence = [];
             $presence['event'] = $eventId;
             $presence['auditor'] = $this->user->id;
-            $presence['user'] =
+            $presence['user'] = $user;
             $presences[] = new Presence($presence);
         }
 
