@@ -61,15 +61,11 @@ class PresencesController
     {
         list($eventId, $users) = $this->parseParamsWithUsers($request, $args);
 
-        if ($this->eventExists($eventId)) {
-            return $this->getNotFoundErrorResponse($response);
-        }
+        if ($this->eventExists($eventId)) return $this->getNotFoundErrorResponse($response);
 
         $notExistingUsers = $this->getInvalidUsers($users);
 
-        if (!empty($notExistingUsers)) {
-            return $this->getInvalidUsersErrorResponse($response, $notExistingUsers);
-        }
+        if (!empty($notExistingUsers)) return $this->getInvalidUsersErrorResponse($response, $notExistingUsers);
 
         $presences = $this->getPresencesFromUsersArray($users, $eventId);
 
@@ -94,15 +90,11 @@ class PresencesController
     {
         list($eventId, $presences) = $this->parseParamsWithPresences($request, $args);
 
-        if ($this->eventExists($eventId)) {
-            return $this->getNotFoundErrorResponse($response);
-        }
+        if ($this->eventExists($eventId)) return $this->getNotFoundErrorResponse($response);
 
         $notExistingUsers = $this->getInvalidUsersOfPresences($presences);
 
-        if (!empty($notExistingUsers)) {
-            return $this->getInvalidUsersErrorResponse($response, $notExistingUsers);
-        }
+        if (!empty($notExistingUsers)) return $this->getInvalidUsersErrorResponse($response, $notExistingUsers);
 
         $optional = $this->eventService->getEventById($eventId);
         if ($optional->isFailure()) {
@@ -139,9 +131,7 @@ class PresencesController
     {
         $eventId = $args['id'];
 
-        if ($this->eventExists($eventId)) {
-            return $this->getNotFoundErrorResponse($response);
-        }
+        if ($this->eventExists($eventId)) return $this->getNotFoundErrorResponse($response);
 
         $optional = $this->eventService->getEventById($eventId);
         if ($optional->isFailure()) {
@@ -175,15 +165,11 @@ class PresencesController
     {
         list($eventId, $presences) = $this->parseParamsWithPresences($request, $args);
 
-        if ($this->eventExists($eventId)) {
-            return $this->getNotFoundErrorResponse($response);
-        }
+        if ($this->eventExists($eventId)) return $this->getNotFoundErrorResponse($response);
 
         $notExistingUsers = $this->getInvalidUsersOfPresences($presences);
 
-        if (!empty($notExistingUsers)) {
-            return $this->getInvalidUsersErrorResponse($response, $notExistingUsers);
-        }
+        if (!empty($notExistingUsers)) return $this->getInvalidUsersErrorResponse($response, $notExistingUsers);
 
         $optional = $this->eventService->getEventById($eventId);
         if ($optional->isFailure()) {
