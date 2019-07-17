@@ -685,10 +685,13 @@ Returns: the [Group](#Group)
 #### List Groups
 
 ```http
-GET /v1/groups/
+GET /v1/groups?users={{withUsers}}
 ```
 
-Parameters: none
+Parameters:  
+| Field   | Description              | Required | Type |
+| ------- | ------------------------ | -------- | ---- |
+| users | List also elapsed events | ❌       | bool |
 
 Access rights: authentication required
 

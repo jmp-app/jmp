@@ -13771,13 +13771,87 @@
 												],
 												"type": "text/javascript"
 											}
+                                        },
+                                      {
+                                        "listen": "prerequest",
+                                        "script": {
+                                          "id": "35b2c11b-1785-4bf7-9b8f-ce4166aec4fc",
+                                          "exec": [
+                                            "pm.variables.set('withUsers', 1);"
+                                          ],
+                                          "type": "text/javascript"
+                                        }
+                                      }
+                                    ],
+                                  "request": {
+                                    "method": "GET",
+                                    "header": [],
+                                    "url": {
+                                      "raw": "http://localhost/api/v1/groups?users={{withUsers}}",
+                                      "protocol": "http",
+                                      "host": [
+                                        "localhost"
+                                      ],
+                                      "path": [
+                                        "api",
+                                        "v1",
+                                        "groups"
+                                      ],
+                                      "query": [
+                                        {
+                                          "key": "users",
+                                          "value": "{{withUsers}}"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "response": []
+                                },
+                              {
+                                "name": "/groups-no-users",
+                                "event": [
+                                  {
+                                    "listen": "test",
+                                    "script": {
+                                      "id": "df1027fa-8f30-4ef7-b4b6-d9a7910d1f43",
+                                      "exec": [
+                                        "vars = pm.variables;",
+                                        "",
+                                        "pm.test(\"Status is 200\", function () {",
+                                        "    pm.response.to.have.status(200);",
+                                        "});",
+                                        "",
+                                        "pm.test('List is returned', function() {",
+                                        "    json = pm.response.json();",
+                                        "    pm.expect(json).to.be.an('array');",
+                                        "    pm.expect(json).to.have.lengthOf.at.least(3);",
+                                        "});",
+                                        "",
+                                        "pm.test('No users are returned', function() {",
+                                        "    json = pm.response.json();",
+                                        "    json = json[0];",
+                                        "    pm.expect(json.users).to.be.undefined;",
+                                        "});"
+                                      ],
+                                      "type": "text/javascript"
+                                    }
+                                  },
+                                  {
+                                    "listen": "prerequest",
+                                    "script": {
+                                      "id": "35b2c11b-1785-4bf7-9b8f-ce4166aec4fc",
+                                      "exec": [
+                                        "pm.variables.set('withUsers', 0);"
+                                      ],
+                                      "type": "text/javascript"
+                                    }
 										}
 									],
 									"request": {
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "http://localhost/api/v1/groups",
+                                          "raw": "http://localhost/api/v1/groups?users={{withUsers}}",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -13786,6 +13860,12 @@
 												"api",
 												"v1",
 												"groups"
+                                            ],
+                                          "query": [
+                                            {
+                                              "key": "users",
+                                              "value": "{{withUsers}}"
+                                            }
 											]
 										}
 									},
@@ -13991,13 +14071,87 @@
 												],
 												"type": "text/javascript"
 											}
+                                        },
+                                      {
+                                        "listen": "prerequest",
+                                        "script": {
+                                          "id": "518eeded-dbb2-4e02-b059-b63dd5662dc6",
+                                          "exec": [
+                                            "pm.variables.set('withUsers', 1);"
+                                          ],
+                                          "type": "text/javascript"
+                                        }
+                                      }
+                                    ],
+                                  "request": {
+                                    "method": "GET",
+                                    "header": [],
+                                    "url": {
+                                      "raw": "http://localhost/api/v1/groups?users={{withUsers}}",
+                                      "protocol": "http",
+                                      "host": [
+                                        "localhost"
+                                      ],
+                                      "path": [
+                                        "api",
+                                        "v1",
+                                        "groups"
+                                      ],
+                                      "query": [
+                                        {
+                                          "key": "users",
+                                          "value": "{{withUsers}}"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "response": []
+                                },
+                              {
+                                "name": "/groups-no-users",
+                                "event": [
+                                  {
+                                    "listen": "test",
+                                    "script": {
+                                      "id": "df1027fa-8f30-4ef7-b4b6-d9a7910d1f43",
+                                      "exec": [
+                                        "vars = pm.variables;",
+                                        "",
+                                        "pm.test(\"Status is 200\", function () {",
+                                        "    pm.response.to.have.status(200);",
+                                        "});",
+                                        "",
+                                        "pm.test('List is returned', function() {",
+                                        "    json = pm.response.json();",
+                                        "    pm.expect(json).to.be.an('array');",
+                                        "    pm.expect(json).to.have.lengthOf.at.least(3);",
+                                        "});",
+                                        "",
+                                        "pm.test('No users are returned', function() {",
+                                        "    json = pm.response.json();",
+                                        "    json = json[0];",
+                                        "    pm.expect(json.users).to.be.undefined;",
+                                        "});"
+                                      ],
+                                      "type": "text/javascript"
+                                    }
+                                  },
+                                  {
+                                    "listen": "prerequest",
+                                    "script": {
+                                      "id": "35b2c11b-1785-4bf7-9b8f-ce4166aec4fc",
+                                      "exec": [
+                                        "pm.variables.set('withUsers', 0);"
+                                      ],
+                                      "type": "text/javascript"
+                                    }
 										}
 									],
 									"request": {
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "http://localhost/api/v1/groups",
+                                          "raw": "http://localhost/api/v1/groups?users={{withUsers}}",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -14006,6 +14160,12 @@
 												"api",
 												"v1",
 												"groups"
+                                            ],
+                                          "query": [
+                                            {
+                                              "key": "users",
+                                              "value": "{{withUsers}}"
+                                            }
 											]
 										}
 									},
