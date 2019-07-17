@@ -10,25 +10,18 @@
             ></v-text-field>
         </v-layout>
         <v-data-table
-                :expand="expand"
                 :headers="headers"
-                :items="registrations"
+                :items="event"
                 :pagination.sync="pagination"
                 :rows-per-page-items="[10,20,50,{'text':'$vuetify.dataIterator.rowsPerPageAll','value':-1}]"
                 :search="searchQuery"
-                item-key="userId"
         >
             <template v-slot:items="props">
-                <tr :class="{ clickable: props.item.reason }" @click="props.expanded = !props.expanded">
-                    <td>{{ props.item.firstname }}</td>
-                    <td>{{ props.item.lastname }}</td>
-                    <td>{{ props.item.registrationState.name }}</td>
+                <tr>
+                    <td>{{ props.item.registration.firstname }}</td>
+                    <td>{{ props.item.registration.lastname }}</td>
+                    <td>{{ props.item.registration.registrationState.name }}</td>
                 </tr>
-            </template>
-            <template v-slot:expand="props">
-                <v-card flat v-if="props.item.reason">
-                    <v-card-text>{{ props.item.reason }}</v-card-text>
-                </v-card>
             </template>
         </v-data-table>
     </div>
@@ -63,76 +56,24 @@
                         align: 'left',
                         sortable: true,
                         value: 'registrationState.name'
-                    }
-                ],
-                registrations: [
-                    {
-                        userId: 160,
-                        lastname: 'Fritz',
-                        firstname: 'Hans',
-                        registrationState: {
-                            id: 2,
-                            name: 'Angemeldet',
-                            reasonRequired: true
-                        }
                     },
                     {
-                        userId: 162,
-                        lastname: 'White',
-                        firstname: 'Walter',
-                        reason: 'Sick',
-                        registrationState: {
-                            id: 1,
-                            name: 'Deregistered',
-                            reasonRequired: true
-                        }
-                    },
-                    {
-                        userId: 163,
-                        lastname: 'White',
-                        firstname: 'Walter',
-                        reason: 'Sick',
-                        registrationState: {
-                            id: 1,
-                            name: 'Deregistered',
-                            reasonRequired: true
-                        }
-                    },
-                    {
-                        userId: 164,
-                        lastname: 'White',
-                        firstname: 'Walter',
-                        reason: 'Sick',
-                        registrationState: {
-                            id: 1,
-                            name: 'Deregistered',
-                            reasonRequired: true
-                        }
-                    },
-                    {
-                        userId: 165,
-                        lastname: 'White',
-                        firstname: 'Walter',
-                        reason: 'Sick',
-                        registrationState: {
-                            id: 1,
-                            name: 'Deregistered',
-                            reasonRequired: true
-                        }
-                    },
-                    {
-                        userId: 166,
-                        lastname: 'White',
-                        firstname: 'Walter',
-                        reason: 'Sick',
-                        registrationState: {
-                            id: 1,
-                            name: 'Deregistered',
-                            reasonRequired: true
-                        }
+                        text: this.$t('registration.reason'),
+                        align: 'left',
+                        sortable: true,
+                        value: 'reason'
                     }
                 ]
             };
+        },
+        computed: {
+            event() {
+                return this.$store.state.extendedRegistration.all.registration.event;
+            }
+        },
+        mounted() {
+            const id = this.$route.params.id;
+            this.$store.dispatch('extendedRegistration/getRegistrationsFromEvent', {id});
         }
     };
 </script>

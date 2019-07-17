@@ -13,6 +13,7 @@ import {eventType} from './eventType.module';
 import {registration} from './registration.module';
 import {groups} from './groups.module';
 import {group} from './group.module';
+import {extendedRegistration} from './extendedRegistration.module';
 
 Vue.use(Vuex);
 
@@ -29,6 +30,7 @@ export const store = new Vuex.Store({
         eventType,
         registration,
         groups,
-        group
+        group,
+        extendedRegistration
     }
 });
