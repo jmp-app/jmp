@@ -348,7 +348,7 @@ SQL;
         if ($optional->isSuccess()) {
             $event->defaultRegistrationState = $optional->getData();
         }
-        $event->groups = $this->groupService->getGroupsByEventId($val['id']);
+        $event->groups = $this->groupService->getGroupsByEventId($val['id'], false);
         return $event;
     }
 

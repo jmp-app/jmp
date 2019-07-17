@@ -206,7 +206,7 @@ class PresenceController
     private function validateUserBelongsToEvent(Presence $presence): bool
     {
         // Get all groups of the event
-        $groups = $this->groupService->getGroupsByEventId($presence->event);
+        $groups = $this->groupService->getGroupsByEventId($presence->event, true);
         // Map Groups to groupIds
         $groupIds = array_map(function (Group $value) {
             return $value->id;

@@ -119,7 +119,7 @@ SQL;
         if ($group === false) {
             return Optional::failure();
         } else {
-            return $this->fetchGroup($group);
+            return $this->fetchGroup($group, true);
         }
     }
 
@@ -185,15 +185,16 @@ SQL;
             return Optional::failure();
         }
 
-        return $this->fetchGroup($data);
+        return $this->fetchGroup($data, true);
 
     }
 
     /**
      * @param int $eventId
+     * @param bool $withUsers
      * @return Group[]
      */
-    public function getGroupsByEventId(int $eventId): array
+    public function getGroupsByEventId(int $eventId, bool $withUsers): array
     {
         $sql = <<< SQL
             SELECT id, name
@@ -207,13 +208,14 @@ SQL;
         $stmt->execute();
 
 
-        return $this->fetchGroups($stmt);
+        return $this->fetchGroups($stmt, $withUsers);
     }
 
     /**
+     * @param bool $withUsers
      * @return Group[] containing all groups
      */
-    public function getAllGroups(): array
+    public function getAllGroups(bool $withUsers): array
     {
         $sql = <<< SQL
             SELECT id, name
@@ -223,7 +225,7 @@ SQL;
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
 
-        return $this->fetchGroups($stmt);
+        return $this->fetchGroups($stmt, $withUsers);
     }
 
 
@@ -265,9 +267,10 @@ SQL;
 
     /**
      * @param PDOStatement $stmt the statement to use
+     * @param bool $withUsers
      * @return Group[] array of groups
      */
-    private function fetchGroups(PDOStatement $stmt): array
+    private function fetchGroups(PDOStatement $stmt, bool $withUsers): array
     {
         $groups = $stmt->fetchAll();
 
@@ -276,7 +279,7 @@ SQL;
         }
 
         foreach ($groups as $key => $group) {
-            $optional = $this->fetchGroup($group);
+            $optional = $this->fetchGroup($group, $withUsers);
             if ($optional->isSuccess()) {
                 $groups[$key] = $optional->getData();
             }
@@ -285,13 +288,16 @@ SQL;
     }
 
     /**
-     * @param $group
+     * @param array $group
+     * @param bool $withUsers
      * @return Optional
      */
-    private function fetchGroup(array $group): Optional
+    private function fetchGroup(array $group, bool $withUsers): Optional
     {
         $group = new Group($group);
-        $group->users = $this->userService->getUsers($group->id);
+        if ($withUsers) {
+            $group->users = $this->userService->getUsers($group->id);
+        }
         return Optional::success($group);
     }
 

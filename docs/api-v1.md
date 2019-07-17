@@ -56,8 +56,11 @@
     * [Get Presence](#get-presence)
     * [Update Presence](#update-presence)
     * [Delete Presence](#delete-presence)
+  * [Presences](#presences-routes)
     * [Create Presences](#create-presences)
     * [Get Presences](#get-presences)
+    * [Update Presences](#update-presences)
+    * [Delete Presences](#delete-presences)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -118,17 +121,7 @@
   "groups": [
     {
       "id": 6,
-      "name": "green",
-      "users": [
-        {
-          "id": 161,
-          "username": "allen",
-          "lastname": "Burdon",
-          "firstname": "Allen",
-          "passwordChange": false,
-          "isAdmin": false
-        }
-      ]
+      "name": "green"
     }
   ]
 }
@@ -236,6 +229,7 @@ The following errors may occur:
 | 401         | Unauthorized       | Request requires authentication but it isn't provided |
 | 403         | Forbidden          | The user has no rights to access the requested URI    |
 | 404         | Resource Not Found | The requested resource can't be found                 |
+| 500         | Internal Server Error | Something went wrong and should be logged          |
 
 ### JSON Error Objects
 
@@ -1172,6 +1166,8 @@ Parameters:
 Access rights: admin
 
 Returns: HTTP 204 status code when successful
+
+### Presences Routes
 
 #### Create Presences
 

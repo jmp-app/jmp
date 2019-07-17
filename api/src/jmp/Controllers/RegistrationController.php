@@ -331,7 +331,7 @@ class RegistrationController
     {
         $error = [];
         // Get all groups of the event
-        $groups = $this->groupService->getGroupsByEventId($registration->eventId);
+        $groups = $this->groupService->getGroupsByEventId($registration->eventId, true);
         // Map Groups to groupIds
         $groupIds = array_map(function (Group $value) {
             return $value->id;

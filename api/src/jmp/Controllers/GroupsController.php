@@ -53,7 +53,7 @@ class GroupsController
      */
     public function listGroups(Request $request, Response $response): Response
     {
-        $groups = Converter::convertArray($this->groupService->getAllGroups());
+        $groups = Converter::convertArray($this->groupService->getAllGroups(true));
         return $response->withJson($groups);
     }
 
