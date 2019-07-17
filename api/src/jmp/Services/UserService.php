@@ -92,8 +92,8 @@ SQL;
         $stmt->bindValue(':firstname', $user->firstname, PDO::PARAM_STR);
         $stmt->bindValue(':email', $user->email, PDO::PARAM_STR);
         $stmt->bindParam(':password', $user->password);
-        $stmt->bindValue(':password_change', $user->passwordChange, PDO::PARAM_BOOL);
-        $stmt->bindValue(':is_admin', $user->isAdmin, PDO::PARAM_BOOL);
+        $stmt->bindParam(':password_change', $user->passwordChange, PDO::PARAM_BOOL);
+        $stmt->bindParam(':is_admin', $user->isAdmin, PDO::PARAM_BOOL);
 
 
         $successful = $stmt->execute();
