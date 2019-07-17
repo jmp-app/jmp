@@ -59,36 +59,24 @@ class PresencesController
      */
     public function deletePresences(Request $request, Response $response, array $args): Response
     {
-        $eventId = $args['id'];
-        $users = $request->getParsedBodyParam('users');
+        list($eventId, $users) = $this->parseParamsWithUsers($request, $args);
 
-        if ($this->eventService->eventExists($eventId) === false) {
-            return $response->withStatus(404);
+        if ($this->eventExists($eventId)) {
+            return $this->getNotFoundErrorResponse($response);
         }
 
-        list($existingUsers, $notExistingUsers) = $this->userService->groupUsersByValidity($users);
+        $notExistingUsers = $this->getInvalidUsers($users);
 
         if (!empty($notExistingUsers)) {
-            return $response->withJson([
-                'errors' => [
-                    'invalidUsers' => $notExistingUsers
-                ]
-            ], 400);
+            return $this->getInvalidUsersErrorResponse($response, $notExistingUsers);
         }
 
-        $presences = [];
-        foreach ($users as $user) {
-            $presence = [];
-            $presence['event'] = $eventId;
-            $presence['auditor'] = $this->user->id;
-            $presence['user'] = $user;
-            $presences[] = new Presence($presence);
-        }
+        $presences = $this->getPresencesFromUsersArray($users, $eventId);
 
         $success = $this->presencesService->deletePresences($presences);
         if ($success === false) {
-            $this->logger->error('Failed to delete presences of the event ' . $eventId . '.');
-            return $response->withStatus(500);
+            $errorMessage = 'Failed to delete presences of the event ' . $eventId . '.';
+            return $this->getInternalServerErrorResponse($response, $errorMessage);
         }
 
         return $response->withStatus(204);
@@ -104,53 +92,39 @@ class PresencesController
      */
     public function updatePresences(Request $request, Response $response, array $args): Response
     {
-        $eventId = $args['id'];
-        $presences = $request->getParsedBodyParam('presences');
+        list($eventId, $presences) = $this->parseParamsWithPresences($request, $args);
 
-        if ($this->eventService->eventExists($eventId) === false) {
-            return $response->withStatus(404);
+        if ($this->eventExists($eventId)) {
+            return $this->getNotFoundErrorResponse($response);
         }
 
-        $users = [];
-        foreach ($presences as $presence) {
-            $users[] = $presence['user'];
-        }
-
-        list($existingUsers, $notExistingUsers) = $this->userService->groupUsersByValidity($users);
+        $notExistingUsers = $this->getInvalidUsersOfPresences($presences);
 
         if (!empty($notExistingUsers)) {
-            return $response->withJson([
-                'errors' => [
-                    'invalidUsers' => $notExistingUsers
-                ]
-            ], 400);
+            return $this->getInvalidUsersErrorResponse($response, $notExistingUsers);
         }
 
         $optional = $this->eventService->getEventById($eventId);
         if ($optional->isFailure()) {
-            $this->logger->error('Failed to get event with the id ' . $eventId . '.');
-            return $response->withStatus(500);
+            $errorMessage = 'Failed to get event with the id ' . $eventId . '.';
+            return $this->getInternalServerErrorResponse($response, $errorMessage);
         }
 
         $result = [
             'event' => $optional->getData()
         ];
 
-        foreach ($presences as $key => $presence) {
-            $presence['event'] = $eventId;
-            $presence['auditor'] = $this->user->id;
-            $presences[$key] = new Presence($presence);
-        }
+        $presences = $this->getPresencesFromArray($presences, $eventId);
 
         $optional = $this->presencesService->updatePresences($eventId, $presences);
         if ($optional->isFailure()) {
-            $this->logger->error('Failed to update presences of the event ' . $eventId . '.');
-            return $response->withStatus(500);
+            $errorMessage = 'Failed to update presences of the event ' . $eventId . '.';
+            return $this->getInternalServerErrorResponse($response, $errorMessage);
         }
 
         $result['presences'] = $optional->getData();
 
-        return $response->withJson(Converter::convertArray($result));
+        return $this->getResultResponse($response, $result);
     }
 
 
@@ -165,14 +139,14 @@ class PresencesController
     {
         $eventId = $args['id'];
 
-        if ($this->eventService->eventExists($eventId) === false) {
-            return $response->withStatus(404);
+        if ($this->eventExists($eventId)) {
+            return $this->getNotFoundErrorResponse($response);
         }
 
         $optional = $this->eventService->getEventById($eventId);
         if ($optional->isFailure()) {
-            $this->logger->error('Failed to get event with the id ' . $eventId . '.');
-            return $response->withStatus(500);
+            $errorMessage = 'Failed to get event with the id ' . $eventId . '.';
+            return $this->getInternalServerErrorResponse($response, $errorMessage);
         }
 
         $result = [
@@ -181,13 +155,13 @@ class PresencesController
 
         $optional = $this->presencesService->getExtendedPresencesByEventId($eventId);
         if ($optional->isFailure()) {
-            $this->logger->error('Failed to get presences of the event ' . $eventId . '.');
-            return $response->withStatus(500);
+            $errorMessage = 'Failed to get presences of the event ' . $eventId . '.';
+            return $this->getInternalServerErrorResponse($response, $errorMessage);
         }
 
         $result['presences'] = $optional->getData();
 
-        return $response->withJson(Converter::convertArray($result));
+        return $this->getResultResponse($response, $result);
     }
 
     /**
@@ -199,52 +173,172 @@ class PresencesController
      */
     public function createPresences(Request $request, Response $response, array $args): Response
     {
-        $eventId = $args['id'];
-        $presences = $request->getParsedBodyParam('presences');
+        list($eventId, $presences) = $this->parseParamsWithPresences($request, $args);
 
-        if ($this->eventService->eventExists($eventId) === false) {
-            return $response->withStatus(404);
+        if ($this->eventExists($eventId)) {
+            return $this->getNotFoundErrorResponse($response);
         }
 
-        $users = [];
-        foreach ($presences as $presence) {
-            $users[] = $presence['user'];
-        }
-
-        list($existingUsers, $notExistingUsers) = $this->userService->groupUsersByValidity($users);
+        $notExistingUsers = $this->getInvalidUsersOfPresences($presences);
 
         if (!empty($notExistingUsers)) {
-            return $response->withJson([
-                'errors' => [
-                    'invalidUsers' => $notExistingUsers
-                ]
-            ], 400);
+            return $this->getInvalidUsersErrorResponse($response, $notExistingUsers);
         }
 
         $optional = $this->eventService->getEventById($eventId);
         if ($optional->isFailure()) {
-            $this->logger->error('Failed to get event with the id ' . $eventId . '.');
-            return $response->withStatus(500);
+            $errorMessage = 'Failed to get event with the id ' . $eventId . '.';
+            return $this->getInternalServerErrorResponse($response, $errorMessage);
         }
 
         $result = [
             'event' => $optional->getData()
         ];
 
+        $presences = $this->getPresencesFromArray($presences, $eventId);
+
+        $optional = $this->presencesService->createPresences($eventId, $presences);
+        if ($optional->isFailure()) {
+            $errorMessage = 'Failed to create presences of the event ' . $eventId . '.';
+            return $this->getInternalServerErrorResponse($response, $errorMessage);
+        }
+
+        $result['presences'] = $optional->getData();
+
+        return $this->getResultResponse($response, $result);
+    }
+
+    /**
+     * @param $presences
+     * @return array
+     */
+    private function getInvalidUsersOfPresences(array $presences): array
+    {
+        $users = [];
+        foreach ($presences as $presence) {
+            $users[] = $presence['user'];
+        }
+
+        return $this->getInvalidUsers($users);
+    }
+
+    /**
+     * @param array $users
+     * @return array
+     */
+    private function getInvalidUsers(array $users): array
+    {
+        list($existingUsers, $notExistingUsers) = $this->userService->groupUsersByValidity($users);
+        return $notExistingUsers;
+    }
+
+    /**
+     * @param Response $response
+     * @param array $notExistingUsers
+     * @return Response
+     */
+    private function getInvalidUsersErrorResponse(Response $response, array $notExistingUsers): Response
+    {
+        return $response->withJson([
+            'errors' => [
+                'invalidUsers' => $notExistingUsers
+            ]
+        ], 400);
+    }
+
+    /**
+     * @param Request $request
+     * @param array $args
+     * @return array
+     */
+    private function parseParamsWithUsers(Request $request, array $args): array
+    {
+        $eventId = $args['id'];
+        $users = $request->getParsedBodyParam('users');
+        return array($eventId, $users);
+    }
+
+    /**
+     * @param Request $request
+     * @param array $args
+     * @return array
+     */
+    private function parseParamsWithPresences(Request $request, array $args): array
+    {
+        $eventId = $args['id'];
+        $presences = $request->getParsedBodyParam('presences');
+        return array($eventId, $presences);
+    }
+
+    /**
+     * @param Response $response
+     * @param string $errorMessage
+     * @return Response
+     */
+    private function getInternalServerErrorResponse(Response $response, string $errorMessage): Response
+    {
+        $this->logger->error($errorMessage);
+        return $response->withStatus(500);
+    }
+
+    /**
+     * @param $eventId
+     * @return bool
+     */
+    private function eventExists($eventId): bool
+    {
+        return $this->eventService->eventExists($eventId) === false;
+    }
+
+    /**
+     * @param Response $response
+     * @return Response
+     */
+    private function getNotFoundErrorResponse(Response $response): Response
+    {
+        return $response->withStatus(404);
+    }
+
+    /**
+     * @param $presences
+     * @param $eventId
+     * @return mixed
+     */
+    private function getPresencesFromArray($presences, $eventId): array
+    {
         foreach ($presences as $key => $presence) {
             $presence['event'] = $eventId;
             $presence['auditor'] = $this->user->id;
             $presences[$key] = new Presence($presence);
         }
+        return $presences;
+    }
 
-        $optional = $this->presencesService->createPresences($eventId, $presences);
-        if ($optional->isFailure()) {
-            $this->logger->error('Failed to create presences of the event ' . $eventId . '.');
-            return $response->withStatus(500);
+    /**
+     * @param $users
+     * @param $eventId
+     * @return array
+     */
+    private function getPresencesFromUsersArray($users, $eventId): array
+    {
+        $presences = [];
+        foreach ($users as $user) {
+            $presence = [];
+            $presence['event'] = $eventId;
+            $presence['auditor'] = $this->user->id;
+            $presence['user'] = $user;
+            $presences[] = new Presence($presence);
         }
+        return $presences;
+    }
 
-        $result['presences'] = $optional->getData();
-
+    /**
+     * @param Response $response
+     * @param array $result
+     * @return Response
+     */
+    private function getResultResponse(Response $response, array $result): Response
+    {
         return $response->withJson(Converter::convertArray($result));
     }
 }
