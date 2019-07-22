@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/jmp-app/jmp.svg?branch=master)](https://travis-ci.com/jmp-app/jmp)
 [![Maintainability](https://api.codeclimate.com/v1/badges/600b1583b9c1bb08a7f5/maintainability)](https://codeclimate.com/github/jmp-app/jmp/maintainability)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjmp-app%2Fjmp.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjmp-app%2Fjmp?ref=badge_shield)
 
 # Demo
 **Link:** [jmp-app.tk](https://jmp-app.tk)  
@@ -125,3 +126,6 @@ Everything related to the backend is located in [api](api). The backend uses the
 # License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjmp-app%2Fjmp.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjmp-app%2Fjmp?ref=badge_large)
