@@ -36,6 +36,7 @@
   "event.groups": "Groups",
   "event.overview.showAll": "Show events from all groups",
   "event.overview.showElapsed": "Show elapsed events",
+  "registration": "Registration | Registrations",
   "registration.reason": "Reason",
   "registration.reasonRequired": "Reason is required",
   "registration.reasonPlaceholder": "Enter reason",

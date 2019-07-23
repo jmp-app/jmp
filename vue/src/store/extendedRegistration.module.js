@@ -7,7 +7,8 @@ export const extendedRegistration = {
             registration: {
                 event: {},
                 registrations: []
-            }
+            },
+            loading: true
         }
     },
     actions: {

@@ -23,6 +23,13 @@
                         <td>{{ formatDateTime(props.item.from) }}</td>
                         <td>{{ formatDateTime(props.item.to) }}</td>
                         <td>{{ props.item.eventType.title }}</td>
+                        <td class="justify-center layout px-0">
+                            <v-icon
+                                    @click.stop="$router.push(`/events/${props.item.id}/registrations`)"
+                                    outline
+                            >view_list
+                            </v-icon>
+                        </td>
                     </tr>
                 </template>
             </v-data-table>
@@ -72,6 +79,12 @@
                         align: 'left',
                         sortable: true,
                         value: 'eventType.title'
+                    },
+                    {
+                        text: this.$tc('registration', 2),
+                        align: 'right',
+                        sortable: false,
+                        value: 'registrations'
                     }
                 ]
             };
