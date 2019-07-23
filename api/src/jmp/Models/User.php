@@ -54,8 +54,8 @@ class User implements ArrayConvertable
         $this->firstname = $args['firstname'];
         $this->password = $args['password'];
         $this->email = $args['email'];
-        $this->passwordChange = $args['passwordChange'] === '1' ? true : false;
-        $this->isAdmin = $args['isAdmin'] === '1' ? true : false;
+        $this->passwordChange = $args['passwordChange'] === '1' || $args['passwordChange'] === true ? true : false;
+        $this->isAdmin = $args['isAdmin'] === '1' || $args['isAdmin'] === true ? true : false;
     }
 
     public function __toString(): string

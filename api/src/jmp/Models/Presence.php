@@ -36,7 +36,7 @@ class Presence implements ArrayConvertable
         $this->event = (int)$args['event'];
         $this->user = (int)$args['user'];
         $this->auditor = (int)$args['auditor'];
-        $this->hasAttended = $args['hasAttended'] === '1' ? true : false;
+        $this->hasAttended = $args['hasAttended'] === '1' || $args['hasAttended'] === true ? true : false;
     }
 
 
