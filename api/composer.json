@@ -8,7 +8,7 @@
         {"name": "Kay Mattern"}
     ],
     "require": {
-      "slim/slim": "^3.12",
+      "slim/slim": "^4.2",
         "davidepastore/slim-validation": "^0.5.1",
         "ext-pdo": "*",
       "monolog/monolog": "^1.24",
