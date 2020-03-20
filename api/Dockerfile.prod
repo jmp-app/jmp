@@ -17,7 +17,7 @@ USER www
 # Run a composer install with the classmap-authoritative optimization. Read more at https://getcomposer.org/doc/articles/autoloader-optimization.md
 RUN composer install --classmap-authoritative --no-suggest --no-dev --no-progress --no-interaction
 
-FROM php:7.3-fpm-alpine
+FROM php:7.4.4-fpm-alpine
 
 # Install extensions
 RUN docker-php-ext-install pdo_mysql
