@@ -13,7 +13,7 @@
         "ext-pdo": "*",
       "monolog/monolog": "^1.24",
       "tuupola/slim-jwt-auth": "^3.2",
-      "vlucas/phpdotenv": "^3.3.3",
+      "vlucas/phpdotenv": "^4.1.7",
         "ext-json": "*"
     },
     "autoload": {
